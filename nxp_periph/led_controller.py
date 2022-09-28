@@ -1,17 +1,58 @@
+"""
+LED controller operation library for MicroPython
+Akifumi (Tedd) OKANO / Released under the MIT license
+
+version	0.1 (29-Sep-2022)
+"""
 from nxp_periph.I2C_interface	import	I2C_target
 
 class LED_controller_base:
+	"""
+	An abstraction class to make user interface.
+	"""
+	
 	def pwm( self, *args ):
+		"""
+		PWM setting
+
+		Takes 1 or 2 arguments.
+		
+		If 2 arguments are geven, it takes as register-name/address
+		and PWM setting value.
+		
+		If only 1 argument is geven, it takes the agrgument as list.
+		The list may need to contain the number of LED controller
+		channels (self.CHANNELS) elements.
+
+		Parameters (if 2 arguments given)
+		----------
+		args[0] : string or int
+			Register name or pointer to the register.
+		args[1] : int or float
+			PWM ratio in range of 0~255 or 0.0~1.0
+			
+		Parameters (if 1 argument given)
+		----------
+		args[0] : list
+			The list may need to contain the number of LED
+			controller channels (self.CHANNELS) elements.
+			Values are PWM ratio should be in range of
+			0~255 or 0.0~1.0
+			
+		"""
 		if 2 == len( args ):
-			r	= self.__currctrl + args[ 0 ]
+			r	= self.__pwm_base + args[ 0 ]
 			v	= args[ 1 ] if isinstance( args[ 1 ], int ) else int( args[ 1 ] * 255.0 )
 			self.write_registers( r, v )
 		elif 1 == len( args ):
 			l	= [ v if isinstance( v, int ) else v * 255.0 for v in args[ 0 ] ]
-			self.write_registers( self.__currctrl, l )
+			self.write_registers( self.__pwm_base, l )
 
 
 class PCA995xB_base( LED_controller_base, I2C_target ):
+	"""
+	An abstraction class for PCA995x family
+	"""
 	DEFAULT_ADDR		= 0xE0 >> 1
 
 	AUTO_INCREMENT		= 0x80
@@ -19,8 +60,24 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 	IREF_INIT			= 0x10
 
 	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT, iref = IREF_INIT, current_control = False ):
+		"""
+		PCA995xB_base constructor
+	
+		Parameters
+		----------
+		i2c		: machine.I2C instance
+		address	: I2C target (device) address
+		pwm		: int, option
+			Initial PWM value
+		iref	: int, option
+			Initial IREF (current setting) value
+		current_control : bool, option
+			Brightness control switch PWM or current.
+			Default:PWM (False)
+
+		"""
 		super().__init__( i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
-		self.__currctrl	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
+		self.__pwm_base	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
 		
 		init	=	{
 						"LEDOUT0": [ 0xAA ] * (self.CHANNELS // 4),

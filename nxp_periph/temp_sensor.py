@@ -26,13 +26,14 @@ class temp_sensor_base():
 		"""
 		Write or read register
 		
-		If 2 argument is geven, it performs write.
+		Takes 1 or 2 arguments.
+		If 2 arguments are geven, it performs write.
 		If only 1 argument is geven, read is performed.
 
 		Parameters
 		----------
 		args[0] : string or int
-			Register name or pointer to the register.
+			Register name or pointer.
 		args[1] : int, optional
 			Data to be written.
 			
