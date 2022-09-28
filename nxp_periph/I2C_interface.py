@@ -16,7 +16,7 @@ class I2C_target():
 	
 	"""
 
-	def __init__( self, i2c, address ):
+	def __init__( self, i2c, address, auto_increment_flag = 0x00 ):
 		"""
 		I2C_target constructor
 	
@@ -28,6 +28,7 @@ class I2C_target():
 		"""
 		self.__adr	= address
 		self.__i2c	= i2c
+		self.__ai	= auto_increment_flag
 		
 	def send( self, tsfr, stop = True ):
 		"""
@@ -78,7 +79,8 @@ class I2C_target():
 			If the data is integer, single byte will be sent.
 			
 		"""
-		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		reg	   |= self.__ai
 		data	= [ reg, data ] if type(data) == int else [ reg ] + data
 		self.send( data, stop = True )
 		
@@ -100,6 +102,7 @@ class I2C_target():
 
 		"""
 		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		reg	   |= self.__ai
 		self.send( [ reg ], stop = not repeated_start )
 		r	= self.receive( length )
 		
