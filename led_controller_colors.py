@@ -21,8 +21,6 @@ def demo( led_ctlr ):
 	while True:
 		if EVB16:
 			white_val	= 0xFF if white_val == 0x00 else 0x00
-#			led_ctlr.PWM0, led_ctlr.PWM8	=  white_val,  white_val
-#			led_ctlr.PWM4, led_ctlr.PWM12	= ~white_val, ~white_val
 
 			led_ctlr.pwm(  0,  white_val )
 			led_ctlr.pwm(  8,  white_val )
