@@ -79,6 +79,8 @@ class I2C_target():
 			If the data is integer, single byte will be sent.
 			
 		"""
+		#print( "write_registers: {}, {}".format( reg, data ) )
+		
 		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
 		reg	   |= self.__ai
 		data	= [ reg, data ] if type(data) == int else [ reg ] + data
@@ -166,9 +168,16 @@ class I2C_target():
 		rv		= [ rv[ i ]            for i in index ]
 		lf		= [ {"end":""} if 0 == i % 2 else {"end":"\n"} for i in range( length ) ]
 
+		ml		= len( max( self.REG_NAME, key = len ) )
+		fmt		= "    {{:{}}}".format( ml )
+		fmt	   += " (0x{:02X}) : 0x{:02X}"
+		
 		print( "register dump: \"{}\", I2C target address 0x{:02X} (0x{:02X})".format( self.__class__.__name__, self.__adr, self.__adr << 1 ) )
 		for i, j, k, l in zip( reg, index, rv, lf ):
-			print( "    {:16} (0x{:02X}) : 0x{:02X}".format( i, j, k ), **l )
+			print( fmt.format( i, j, k ), **l )
 
 		if 1 == length % 2:
 			print( "" )
+
+	def info( self ):
+		return "an instance of {} target address 0x{:02X} (0x{:02X})".format( self.__class__.__name__, self.__adr, self.__adr << 1 )

@@ -5,6 +5,7 @@ def main():
 	i2c	= I2C( 0, freq = (400 * 1000) )
 	rtc	= PCF2131( i2c )
 	
+	print( rtc.info() )
 	print( "=== operation start ===" )
 	print( "oscillator_stopped ? : {}".format( rtc.oscillator_stopped() ) )
 

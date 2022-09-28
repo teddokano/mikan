@@ -357,7 +357,6 @@ class PCF2131( RTC_base, I2C_target ):
 		
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		super().__init__( i2c, address )
-		print( "an instance of {} has been constructed with target address 0x{:02X} (0x{:02X})".format( self.__class__.__name__, address, address << 1 ) )
 
 	def __software_reset( self ):
 		self.write_registers( "SR_Reset", 0xA5 )

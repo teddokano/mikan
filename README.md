@@ -9,3 +9,6 @@ Peripheral device driver collection for MicroPython
 	- PCF2131
 - Temperature sensor
 	- PCT2075
+- LED controller
+	- PCA9955B
+	- PCA9956B

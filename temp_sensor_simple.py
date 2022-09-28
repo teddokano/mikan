@@ -6,6 +6,8 @@ def main():
 	i2c			= I2C( 0, freq = (400 * 1000) )
 	temp_sensor	= PCT2075( i2c )
 
+	print( temp_sensor.info() )
+
 	while True:
 		value	= temp_sensor.read()
 		print( value )

@@ -98,7 +98,6 @@ class PCT2075( temp_sensor_base, I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		super().__init__( i2c, address )
-		print( "an instance of {} has been constructed with target address 0x{:02X} (0x{:02X})".format( self.__class__.__name__, address, address << 1 ) )
 
 	def __read( self ):
 		temp	= self.reg_access( "Temp" )
