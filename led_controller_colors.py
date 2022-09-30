@@ -40,7 +40,7 @@ def demo( led_ctlr ):
 def main():
 	i2c		= I2C( 0, freq = (400 * 1000) )
 	print( i2c.scan() )
-	led_c	= PCA9955B( i2c )
+	led_c	= PCA9956B( i2c )
 	
 	print( led_c.info() )
 	led_c.dump_reg()

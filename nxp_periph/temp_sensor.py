@@ -4,7 +4,7 @@ Akifumi (Tedd) OKANO / Released under the MIT license
 
 version	0.1 (25-Sep-2022)
 """
-from nxp_periph.I2C_interface	import	I2C_target
+from nxp_periph.interface	import	I2C_target
 
 class temp_sensor_base():
 	"""

@@ -6,9 +6,10 @@ Peripheral device driver collection for MicroPython
 
 ## Supported device
 - Real Time Clock (RTC)
-	- PCF2131
+	- PCF2131 (I2C)
 - Temperature sensor
 	- PCT2075
 - LED controller
 	- PCA9955B
 	- PCA9956B
+	- PCA9957
