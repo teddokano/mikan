@@ -46,7 +46,7 @@ class LED_controller_base:
 			v	= args[ 1 ] if isinstance( args[ 1 ], int ) else int( args[ 1 ] * 255.0 )
 			self.write_registers( r, v )
 		elif 1 == len( args ):
-			l	= [ v if isinstance( v, int ) else v * 255.0 for v in args[ 0 ] ]
+			l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in args[ 0 ] ]
 			self.write_registers( self.__pwm_base, l )
 
 
@@ -166,9 +166,10 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 			self.write_registers( r, v )
 
 		init	=	{
-						"LEDOUT0": [ 0xAA ] * (self.CHANNELS // 4),
-						"PWMALL" : pwm,
-						"IREFALL": iref
+						"MODE2"		: 0x18,		#	to forth the channel working when wrror happened
+						"LEDOUT0"	: [ 0xAA ] * (self.CHANNELS // 4),
+						"PWMALL"	: pwm,
+						"IREFALL"	: iref
 					}
 					
 		for r, v in init.items():	#	don't care: register access order

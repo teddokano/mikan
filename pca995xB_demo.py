@@ -4,6 +4,17 @@ import	math
 
 from	nxp_periph	import	PCA9955B, PCA9956B
 
+def main():
+	i2c		= I2C( 0, freq = (400 * 1000) )
+	print( i2c.scan() )
+	led_c	= PCA9956B( i2c )
+	
+	print( led_c.info() )
+	led_c.dump_reg()
+
+	demo( led_c )
+
+
 def demo( led_ctlr ):
 	EVB16	= True if led_ctlr.__class__.__name__ == "PCA9955B" else False
 
@@ -35,17 +46,6 @@ def demo( led_ctlr ):
 					data[ target_ch ]	= value
 					led_ctlr.pwm( data )
 			sleep( 0.02 )
-
-
-def main():
-	i2c		= I2C( 0, freq = (400 * 1000) )
-	print( i2c.scan() )
-	led_c	= PCA9956B( i2c )
-	
-	print( led_c.info() )
-	led_c.dump_reg()
-
-	demo( led_c )
 
 
 if __name__ == "__main__":
