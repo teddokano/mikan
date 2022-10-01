@@ -34,6 +34,8 @@ def main():
 	tim1.init( period = 50, mode = Timer.PERIODIC, callback = w_demo.change )
 
 	while True:
+		a	= input( "hit [return] key to see register dump >>" )
+		led_c.dump_reg()
 		pass
 
 
@@ -70,5 +72,4 @@ class Color_demo:
 
 
 if __name__ == "__main__":
-
 	main()
