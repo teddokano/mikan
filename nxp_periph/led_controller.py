@@ -7,6 +7,38 @@ version	0.1 (29-Sep-2022)
 """
 from nxp_periph.interface	import	I2C_target, SPI_target
 
+
+class LED():
+	"""
+	Make a LED instance
+	"""
+	
+	def __init__( self, controller, channel ):
+		"""
+		LED constructor
+	
+		Parameters
+		----------
+		controller	: machine.I2C instance
+		channel		: int
+			Output channel
+
+		"""
+		self.__dev	= controller
+		self.__ch	= channel
+	
+	@property
+	def v( self ):
+		pass
+
+	@v.setter
+	def v( self, v ):
+		"""
+		To use this instance by assignment
+		"""
+		self.__dev.pwm( self.__ch, v )
+
+
 class LED_controller_base:
 	"""
 	An abstraction class to make user interface.
@@ -67,7 +99,8 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		Parameters
 		----------
 		i2c		: machine.I2C instance
-		address	: I2C target (device) address
+		address	: int
+			I2C target (device) address
 		pwm		: int, option
 			Initial PWM value
 		iref	: int, option
