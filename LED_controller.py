@@ -12,7 +12,7 @@ def main():
 	led_c	= PCA9957( spi, cs )
 	"""
 	print( led_c.info() )
-	print( led_c.dump_reg() )
+	led_c.dump_reg()
 
 	while True:
 		led_c.pwm( 0, 0.5 )
