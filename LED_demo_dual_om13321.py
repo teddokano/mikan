@@ -17,6 +17,8 @@ def main():
 	i2c		= I2C( 0, freq = (400 * 1000) )
 	dev_adr	= ( 0x02, 0x04 )
 	
+	print( [hex(i<<1) for i in i2c.scan()] )
+	return
 	led_c	= []
 	leds	= []
 	for adr in dev_adr:
@@ -80,6 +82,7 @@ class Color_demo:
 
 if __name__ == "__main__":
 	main()
+
 
 
 

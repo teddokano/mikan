@@ -10,6 +10,7 @@ Peripheral device driver collection for MicroPython
 - Temperature sensor
 	- PCT2075
 - LED controller
+	- PCA9632 (PCA9633 compatible)
 	- PCA9955B
 	- PCA9956B
 	- PCA9957

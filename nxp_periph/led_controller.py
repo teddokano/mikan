@@ -2,6 +2,7 @@
 LED controller operation library for MicroPython
 Akifumi (Tedd) OKANO / Released under the MIT license
 
+version	0.4 (03-Oct-2022)
 version	0.3 (02-Oct-2022)
 version	0.2 (01-Oct-2022)
 version	0.1 (29-Sep-2022)
@@ -217,6 +218,60 @@ class PCA9956B( PCA995xB_base ):
 							"PWMALL", "IREFALL",
 							"EFLAG0", "EFLAG1", "EFLAG2", "EFLAG3", "EFLAG4", "EFLAG5"
 						)
+
+
+class PCA96xx_base( LED_controller_base, I2C_target ):
+	"""
+	An abstraction class for PCA995x family
+	"""
+	DEFAULT_ADDR		= 0xC4 >> 1
+
+	AUTO_INCREMENT		= 0x80
+	PWM_INIT			= 0x00
+
+	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT ):
+		"""
+		PCA995xB_base constructor
+	
+		Parameters
+		----------
+		i2c		: machine.I2C instance
+		address	: int
+			I2C target (device) address
+		pwm		: int, option
+			Initial PWM value
+
+		"""
+		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+		LED_controller_base.__init__( self, init_val = pwm )
+		
+		self.__pwm_base	= self.REG_NAME.index( "PWM0" )
+		
+
+
+class PCA9632( PCA96xx_base ):
+	CHANNELS		= 4
+	REG_NAME		=	(
+							"MODE1", "MODE2",
+							"PWM0",  "PWM1",  "PWM2",  "PWM3",
+							"GRPPWM", "GRPFREQ",
+							"LEDOUT",
+							"SUBADR1", "SUBADR2", "SUBADR3", "ALLCALLADR",
+						)
+	DEFAULT_ADDR	= 0xC4 >> 1
+	PWM_INIT		= 0x00
+
+	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT ):
+		super().__init__( i2c, address = address, pwm = pwm )
+		init	=	{
+						"MODE1": 0x81,
+						"MODE2": 0x01,
+						"LEDOUT": 0xAA,
+						"PWM0": [ pwm ] * self.CHANNELS
+					}
+					
+		for r, v in init.items():	#	don't care: register access order
+			self.write_registers( r, v )
 
 
 class PCA9957_base( LED_controller_base, SPI_target ):
