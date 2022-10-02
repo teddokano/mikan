@@ -9,19 +9,20 @@ import	math
 from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
 from	nxp_periph	import	PCA9955B, PCA9956B, PCA9957, LED
 
+IREF_INIT	= 0x10
 
 def main():
 	print( "Demo is running on {}".format( os.uname().machine ) )
 
 	"""
-	i2c		= I2C( 0, freq = (400 * 1000) )
-	led_c	= PCA9955B( i2c )
+	i2c		= I2C( 0, freq = (400 * 1000) )	
+	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
 
 	"""
 #	spi		= SPI( 1, SPI_target.FREQ, sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ) )
 	spi		= SoftSPI( baudrate = 1000*1000, mosi = Pin( "D6" ), miso = Pin( "D3" ), sck = Pin( "D7" ) )
 	cs		= Pin( "D4" )
-	led_c	= PCA9957( spi, cs, iref = 0x10 )
+	led_c	= PCA9957( spi, cs, iref = IREF_INIT )
 
 	print( led_c.info() )
 	led_c.dump_reg()

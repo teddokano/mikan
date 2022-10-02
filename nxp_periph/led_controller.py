@@ -2,6 +2,7 @@
 LED controller operation library for MicroPython
 Akifumi (Tedd) OKANO / Released under the MIT license
 
+version	0.3 (02-Oct-2022)
 version	0.2 (01-Oct-2022)
 version	0.1 (29-Sep-2022)
 """
@@ -34,16 +35,42 @@ class LED():
 	@v.setter
 	def v( self, v ):
 		"""
-		To use this instance by assignment
+		Change PWM setting
+		
+		Parameters
+		----------
+		v : int or float
+			PWM value
+			
 		"""
 		self.__dev.pwm( self.__ch, v )
+
+	@property
+	def b( self ):
+		pass
+
+	@v.setter
+	def b( self, b ):
+		"""
+		Writing PWM setting value into buffer
+		
+		Parameters
+		----------
+		b : int or float
+			PWM value stored in buffer
+			Need to flush to refrect device behavior.
+			
+		"""
+		self.__dev.buf( self.__ch, b )
 
 
 class LED_controller_base:
 	"""
 	An abstraction class to make user interface.
 	"""
-	
+	def __init__( self, init_val = 0 ):
+		self.buffer	= [ 0 ] * self.CHANNELS
+		
 	def pwm( self, *args ):
 		"""
 		PWM setting
@@ -59,8 +86,8 @@ class LED_controller_base:
 
 		Parameters (if 2 arguments given)
 		----------
-		args[0] : string or int
-			Register name or pointer to the register.
+		args[0] : int
+			Channel number
 		args[1] : int or float
 			PWM ratio in range of 0~255 or 0.0~1.0
 			
@@ -80,6 +107,28 @@ class LED_controller_base:
 		elif 1 == len( args ):
 			l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in args[ 0 ] ]
 			self.write_registers( self.__pwm_base, l )
+	
+	def buf( self, ch, val ):
+		"""
+		Writing PWM setting value into buffer
+		
+		Parameters
+		----------
+		ch : int
+			Channel number
+		val : int or float
+			PWM value stored in buffer
+			Need to flush to refrect device behavior.
+			
+		"""
+		self.buffer[ ch ]	= val
+		
+	def flush( self ):
+		"""
+		Flash buffer contents into device
+		"""
+		l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in self.buffer ]
+		self.write_registers( self.__pwm_base, l )
 
 
 class PCA995xB_base( LED_controller_base, I2C_target ):
@@ -110,7 +159,9 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 			Default:PWM (False)
 
 		"""
-		super().__init__( i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
+		
 		self.__pwm_base	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
 		
 		init	=	{
@@ -192,7 +243,9 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 			Default:PWM (False)
 
 		"""
-		super().__init__( spi, cs )
+		SPI_target.__init__( self, spi, cs )
+		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
+
 		self.__pwm_base	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
 
 		for r, v in { 0xFF: 0xFF, 0xFE: 0xFE, 0xFD: 0xFD }.items():
