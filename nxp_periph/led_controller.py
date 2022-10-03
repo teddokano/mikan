@@ -281,7 +281,7 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 	PWM_INIT			= 0x00
 	IREF_INIT			= 0x10
 
-	def __init__( self, spi, cs, pwm = PWM_INIT, iref = IREF_INIT, current_control = False ):
+	def __init__( self, spi, cs = None, pwm = PWM_INIT, iref = IREF_INIT, current_control = False, setup_EVB = False ):
 		"""
 		PCA995xB_base constructor
 	
@@ -299,6 +299,10 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 
 		"""
 		SPI_target.__init__( self, spi, cs )
+		
+		if setup_EVB:
+			self.__setup_EVB()
+			
 		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
 
 		self.__pwm_base	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
@@ -371,6 +375,19 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 			rtn	+= [ p[ 1 ] ]
 
 		return rtn[ 0 ] if 1 == length else rtn
+	
+	def __setup_EVB( self ):
+		"""
+		setting up RESET and OE pins on PCA9957HN_ARD evaluation board
+		
+		"""
+		from machine import Pin
+		print( "PCA9957HN_ARD setting done." )
+		rst	= Pin( "D8", Pin.OUT )
+		oe	= Pin( "D9", Pin.OUT )
+		rst.value( 1 )
+		oe.value( 0 )
+
 
 
 class PCA9957( PCA9957_base ):

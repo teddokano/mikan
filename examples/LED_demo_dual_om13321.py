@@ -6,7 +6,7 @@ version	0.1 (01-Oct-2022)
 """
 import	os
 import	math
-from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
+from	machine		import	I2C, Timer
 from	nxp_periph	import	PCA9956B, LED
 
 IREF_INIT	= 0x10

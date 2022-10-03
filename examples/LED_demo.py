@@ -15,14 +15,13 @@ def main():
 	print( "Demo is running on {}".format( os.uname().machine ) )
 
 	i2c		= I2C( 0, freq = (400 * 1000) )
+	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
 #	led_c	= PCA9955B( i2c, 0x02 >>1, iref = IREF_INIT )
-	led_c	= PCA9632( i2c )
+#	led_c	= PCA9632( i2c )
 
 	"""
-#	spi		= SPI( 1, SPI_target.FREQ, sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ) )
-	spi		= SoftSPI( baudrate = 1000*1000, mosi = Pin( "D6" ), miso = Pin( "D3" ), sck = Pin( "D7" ) )
-	cs		= Pin( "D4" )
-	led_c	= PCA9957( spi, cs, iref = IREF_INIT )
+	spi		= SPI( 0, 1000 * 1000 )
+	led_c	= PCA9957( spi, setup_EVB = True, iref = IREF_INIT )
 	"""
 
 	print( led_c.info() )
@@ -44,8 +43,6 @@ def main():
 		color_led_idx	= ( ( 0, 1, 2 ), )
 		white_led_idx	= ( 3, )
 
-	print( color_led_idx )
-	
 	c_demo	= Color_demo( [ [leds[ i ] for i in u] for u in color_led_idx ] )
 	w_demo	= White_demo( [ leds[ i ] for i in white_led_idx ] )
 

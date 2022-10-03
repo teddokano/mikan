@@ -221,7 +221,7 @@ class I2C_target( register_acc_utilities ):
 		return	r[ 0 ] if length is 1 else r
 
 class SPI_target( register_acc_utilities ):
-	def __init__( self, spi, cs ):
+	def __init__( self, spi, cs = None ):
 		"""
 		SPI_target constructor
 	
