@@ -84,6 +84,9 @@ class register_acc_utilities:
 		elif hasattr( self, "__cs" ):
 			return "cs_pin@{}".format( self.__cs )
 
+class I2C_target_Error( Exception ):
+	pass
+
 class I2C_target( register_acc_utilities ):
 	"""
 	An abstraction class to provide I2C device access.
@@ -109,7 +112,7 @@ class I2C_target( register_acc_utilities ):
 		self.__i2c	= i2c
 		self.__ai	= auto_increment_flag
 		
-	def send( self, tsfr, stop = True ):
+	def send( self, tsfr, stop = True, retry = 3 ):
 		"""
 		send data (generate write transaction)
 	
@@ -124,9 +127,22 @@ class I2C_target( register_acc_utilities ):
 			transaction.
 			
 		"""
-		self.__i2c.writeto( self.__adr, bytearray( tsfr ), stop )
+		retry_setting	= retry
 
-	def receive( self, length ):
+		while retry:
+			err	= False
+			try:
+				self.__i2c.writeto( self.__adr, bytearray( tsfr ), stop )
+			except Exception as e:
+				err		 = True
+				retry	-= 1
+			else:
+				retry	= 0
+			
+		if ( err ):
+			raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+
+	def receive( self, length, retry = 3 ):
 		"""
 		receive data (generate read transaction)
 	
@@ -141,7 +157,22 @@ class I2C_target( register_acc_utilities ):
 			List of integers which was converted from bytearray.
 
 		"""
-		return list( self.__i2c.readfrom( self.__adr, length ) )
+		retry_setting	= retry
+
+		while retry:
+			err	= False
+			try:
+				rtn	= list( self.__i2c.readfrom( self.__adr, length ) )
+			except Exception as e:
+				err		 = True
+				retry	-= 1
+			else:
+				retry	= 0
+			
+		if ( err ):
+			raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+
+		return rtn
 
 	def write_registers( self, reg, data ):
 		"""
