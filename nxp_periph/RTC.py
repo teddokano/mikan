@@ -139,6 +139,21 @@ class RTC_base():
 		self.__set_alarm( pin_select, dt )
 		return s
 		
+	def timer_alarm( self, hours = 0, minutes = 0, seconds = 0 ):
+		t	= self.datetime()
+		
+		seconds, m_carry	= (t[6] + seconds          ) % 60, (t[6] + seconds           ) // 60,
+		minutes, h_carry	= (t[5] + minutes + m_carry) % 60, (t[5] + minutes + m_carry)  // 60,
+		hours				= (t[4] + hours   + h_carry) % 24
+		
+		alarm_time	= {
+							"hours"		: hours,
+							"minutes"	: minutes,
+							"seconds"	: seconds
+					  }
+		alm	= self.alarm_int( "B", **alarm_time )
+		return	alm
+		
 	def cancel( self ):
 		"""
 		cancel alarm

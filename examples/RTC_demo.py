@@ -17,6 +17,24 @@ def main():
 
 	rtc.battery_switchover( BAT_SWOVR )
 
+	machine_rtc	= machine.RTC()
+	if osf:
+		source, target, msg	= machine_rtc, rtc, "stop is detected"
+		feature_test( rtc )
+	else:
+		source, target, msg	= rtc, machine_rtc,  "was kept running"
+
+	target.datetime( source.datetime() )
+	print( "since RTC device oscillator {}, Date&Time symchronized : {} --> {}".format( msg, source, target ) )
+
+	print( "rtc.now()\n --> ", end = "" )
+	print( rtc.now() )
+
+	demo( rtc )
+
+def feature_test( rtc ):
+	print( "\nDate&Time register operation test:" )
+
 	print( "rtc.datetime()\n --> ", end = "" )
 	print( rtc.datetime() )
 	
@@ -35,18 +53,7 @@ def main():
 	print( "rtc.now()\n --> ", end = "" )
 	print( rtc.now() )
 
-	machine_rtc	= machine.RTC()
-	if osf:
-		source, target, msg	= machine_rtc, rtc, "stop is detected"
-	else:
-		source, target, msg	= rtc, machine_rtc,  "was kept running"
-
-	target.datetime( source.datetime() )
-	"stop detected"
-	print( "since RTC device oscillator {}, Date&Time symchronized : {} --> {}".format( msg, source, target ) )
-	
-	demo( rtc )
-
+	print( "" )
 
 def demo( rtc ):
 	int_flag	= False
@@ -65,20 +72,10 @@ def demo( rtc ):
 	
 	rtc.periodic_interrupt( "A" )
 
-	t	= rtc.datetime()
-	alarm_time	= {
-						"hours"		: t[4],
-						"minutes"	: t[5],
-						"seconds"	: (t[6] + 5) % 60,
-				  }
-	alm	= rtc.alarm_int( "B", **alarm_time )
+	alm	= rtc.timer_alarm( seconds = 5 )
 	print( "alarm is set = {}".format( ", ".join( alm ) ) )
 
 	rtc.set_timestamp_interrupt( "B", 1 )
-
-#	rtc.dump_reg()
-
-	count	= 0
 
 	while True:
 		if int_flag:
@@ -87,16 +84,21 @@ def demo( rtc ):
 
 			event	= rtc.check_events( event )
 			
+			dt	= rtc.datetime()
+			
 			for e in event:
-				print( "{} {}".format( e, rtc.datetime() ) )
+				print( "{} {}".format( e, dt ), end = "\r" if e is "periodic" else "\n" )
+
+			if "alarm" in event:
+				print( "!!!!!!! ALARM !!!!!!!" )
+				alm	= rtc.timer_alarm( seconds = 5 )
+				print( "new alarm seting = {}".format( ", ".join( alm ) ) )
 
 			if "ts1" in event:
 				for i in range( 1, 5 ):
 					print( "timestamp{} = {}".format( i, rtc.timestamp( i ) ) )
 
-			count += 1
-			
-			if 0 == count % 10:
+			if not dt[ 6 ] % 30:
 				rtc.dump_reg()
 
 if __name__ == "__main__":
