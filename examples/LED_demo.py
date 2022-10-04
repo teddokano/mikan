@@ -20,7 +20,7 @@ def main():
 #	led_c	= PCA9632( i2c )
 
 	"""
-	spi		= SPI( 0, 1000 * 1000 )
+	spi		= SPI( 0, 1000 * 1000, cs = 0 )
 	led_c	= PCA9957( spi, setup_EVB = True, iref = IREF_INIT )
 	"""
 

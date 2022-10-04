@@ -7,7 +7,7 @@ def main():
 	i2c		= I2C( 0, freq = (400 * 1000) )
 	led_c	= PCA9956B( i2c, address = 0x02 >> 1 )
 	"""
-	spi		= SPI( 0, 1000 * 1000 )
+	spi		= SPI( 0, 1000 * 1000, cs = 0 )
 	led_c	= PCA9957( spi, setup_EVB = True )
 	"""
 
