@@ -1,5 +1,8 @@
 from	machine		import	Pin, I2C
 from	nxp_periph	import	PCF2131
+import	machine
+
+BAT_SWOVR	= True
 
 def main():
 	i2c	= I2C( 0, freq = (400 * 1000) )
@@ -7,27 +10,45 @@ def main():
 	
 	print( rtc.info() )
 	print( "=== operation start ===" )
-	print( "oscillator_stopped ? : {}".format( rtc.oscillator_stopped() ) )
-
-	print( rtc.datetime() )
-	rtc.dump_reg()
 	
-	rtc.battery_switchover( True )
+	osf	= rtc.oscillator_stopped()
+	print( "rtc.oscillator_stopped()\n  --> ", end = "" )
+	print( osf )
 
+	rtc.battery_switchover( BAT_SWOVR )
+
+	print( "rtc.datetime()\n --> ", end = "" )
+	print( rtc.datetime() )
+	
 	rtc.init( ( 2017, 9, 14 ) )
+	print( "tc.init( ( 2017, 9, 14 )\n --> ", end = "" )
 	print( rtc.datetime() )
 
 	rtc.deinit()
+	print( "rtc.deinit()\n --> ", end = "" )
 	print( rtc.datetime() )
 
 	rtc.datetime( (2022, 12, 21, 21, 23, 32, 99, None ), 1 )
+	print( "rtc.datetime( (2022, 12, 21, 21, 23, 32, 99, None ), 1 )\n --> ", end = "" )
 	print( rtc.datetime() )
+
+	print( "rtc.now()\n --> ", end = "" )
 	print( rtc.now() )
 
-	test_interrupt( rtc )
+	machine_rtc	= machine.RTC()
+	if osf:
+		source, target, msg	= machine_rtc, rtc, "stop is detected"
+	else:
+		source, target, msg	= rtc, machine_rtc,  "was kept running"
+
+	target.datetime( source.datetime() )
+	"stop detected"
+	print( "since RTC device oscillator {}, Date&Time symchronized : {} --> {}".format( msg, source, target ) )
+	
+	demo( rtc )
 
 
-def test_interrupt( rtc ):
+def demo( rtc ):
 	int_flag	= False
 
 	def callback( pin_obj ):
@@ -50,11 +71,12 @@ def test_interrupt( rtc ):
 						"minutes"	: t[5],
 						"seconds"	: (t[6] + 5) % 60,
 				  }
-	rtc.alarm_int( "B", **alarm_time )
+	alm	= rtc.alarm_int( "B", **alarm_time )
+	print( "alarm is set = {}".format( ", ".join( alm ) ) )
 
 	rtc.set_timestamp_interrupt( "B", 1 )
 
-	rtc.dump_reg()
+#	rtc.dump_reg()
 
 	count	= 0
 

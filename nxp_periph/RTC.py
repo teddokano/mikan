@@ -132,12 +132,12 @@ class RTC_base():
 			dt[ k ]	= i
 
 		s	= [ dt[ k ] for k in self.ALARM_KEYS ]
-		print( s )
 		s	= [ "off" if k == 80 else str( k ) for k in s ]
 		s	= [ i + ":" + j for i, j, in zip( self.ALARM_KEYS, s ) ]
-		print( "setting alarm: {}".format( ", ".join( s ) ) )
-		
+		#print( "setting alarm: {}".format( ", ".join( s ) ) )
+
 		self.__set_alarm( pin_select, dt )
+		return s
 		
 	def cancel( self ):
 		"""
