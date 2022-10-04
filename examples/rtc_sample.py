@@ -69,8 +69,6 @@ def test_interrupt( rtc ):
 				print( "{} {}".format( e, rtc.datetime() ) )
 
 			if "ts1" in event:
-				rtc.dump_reg()
-				
 				for i in range( 1, 5 ):
 					print( "timestamp{} = {}".format( i, rtc.timestamp( i ) ) )
 
@@ -81,3 +79,4 @@ def test_interrupt( rtc ):
 
 if __name__ == "__main__":
 	main()
+
