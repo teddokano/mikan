@@ -4,7 +4,7 @@ Akifumi (Tedd) OKANO / Released under the MIT license
 
 version	0.1 (01-Oct-2022)
 """
-class register_acc_utilities:
+class Interface:
 #	@classmethod
 	def bit_operation( self, reg, target_bits, value ):
 		"""
@@ -87,7 +87,7 @@ class register_acc_utilities:
 class I2C_target_Error( Exception ):
 	pass
 
-class I2C_target( register_acc_utilities ):
+class I2C_target( Interface ):
 	"""
 	An abstraction class to provide I2C device access.
 	It helps to keep target address and communication.
@@ -189,7 +189,7 @@ class I2C_target( register_acc_utilities ):
 			If the data is integer, single byte will be sent.
 			
 		"""
-		#print( "write_registers: {}, {}".format( reg, data ) )
+		#print( "I2C write_registers: {}, {}".format( reg, data ) )
 		
 		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
 		reg	   |= self.__ai
@@ -213,6 +213,8 @@ class I2C_target( register_acc_utilities ):
 			generated between write and read transactions.
 
 		"""
+		#print( "I2C read_registers: {}, {}".format( reg, data ) )
+
 		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
 		reg	   |= self.__ai
 		self.send( [ reg ], stop = not repeated_start )
@@ -220,7 +222,7 @@ class I2C_target( register_acc_utilities ):
 		
 		return	r[ 0 ] if length is 1 else r
 
-class SPI_target( register_acc_utilities ):
+class SPI_target( Interface ):
 	def __init__( self, spi, cs = None ):
 		"""
 		SPI_target constructor
@@ -232,8 +234,9 @@ class SPI_target( register_acc_utilities ):
 		
 		"""
 		self.__cs	= cs
-		self.chip_select	= 1
 		self.__spi	= spi
+
+		self.chip_select	= 1
 
 	def send( self, data ):
 		"""
@@ -284,13 +287,47 @@ class SPI_target( register_acc_utilities ):
 
 	def write_registers( self, reg, data ):
 		"""
-		A virtual method which may be overridden
+		writing register
+	
+		Parameters
+		----------
+		reg : string or int
+			Register name or register address/pointer.
+		data : list or int
+			Data for sending.
+			List for multibyte sending. List is converted to
+			bytearray before sending.
+			If the data is integer, single byte will be sent.
+			
 		"""
-		pass
+		#print( "SPI write_registers: {}, {}".format( reg, data ) )
+		
+		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		data	= [ reg, data ] if type(data) == int else [ reg ] + data
+
+		self.send( data )
 		
 	def read_registers( self, reg, length ):
 		"""
-		A virtual method which may be overridden
+		reading register
+	
+		Parameters
+		----------
+		reg : string or int
+			Register name or register address/pointer.
+		length : int
+			Number of bytes for receiveing.
+		repeated_start : bool, option
+			If True, a Repeated-START-condition generated between
+			write and read transactions.
+			If False, a STOP-condition and START-condition are
+			generated between write and read transactions.
 		"""
-		pass
+		#print( "SPI read_registers: {}, {}".format( reg, length ) )
+		
+		reg		 = self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		data	 = [reg | 0x80 ] + [ 0x00 ] * length
 
+		r	= self.receive( data )
+
+		return r[ 1 ] if 1 == length else r[ 1: ]

@@ -4,7 +4,9 @@ Akifumi (Tedd) OKANO / Released under the MIT license
 
 version	0.1 (25-Sep-2022)
 """
-from nxp_periph.interface	import	I2C_target
+
+from	machine				import	I2C, SPI
+from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 
 class RTC_base():
 	"""
@@ -348,7 +350,7 @@ class RTC_base():
 ##	@class		PCF2131
 #	@brief		A class to manage PCF2131 (RTC)
 #
-class PCF2131( RTC_base, I2C_target ):
+class PCF2131( RTC_base, SPI_target ):
 	"""
 	"""
 	DEFAULT_ADDR	= (0xA6 >> 1)
@@ -370,8 +372,11 @@ class PCF2131( RTC_base, I2C_target ):
 	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
 	REG_ORDER_TS	= ( "subseconds", "seconds", "minutes", "hours", "day", "month", "year" )
 		
-	def __init__( self, i2c, address = DEFAULT_ADDR ):
-		super().__init__( i2c, address )
+	def __init__( self, interface, address = DEFAULT_ADDR, cs = None ):
+		if isinstance( interface, I2C ):
+			I2C_target.__init__( self, interface, address )
+		if isinstance( interface, SPI ):
+			SPI_target.__init__( self, interface, cs )
 
 	def __software_reset( self ):
 		self.write_registers( "SR_Reset", 0xA5 )
@@ -502,3 +507,6 @@ class PCF2131( RTC_base, I2C_target ):
 
 	def __test( self ):
 		self.bit_operation( "Control_5", 0xF0, 0xF0 )
+
+
+

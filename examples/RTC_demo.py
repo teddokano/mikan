@@ -1,12 +1,18 @@
-from	machine		import	Pin, I2C
+from	machine		import	Pin, I2C, SPI
 from	nxp_periph	import	PCF2131
 import	machine
 
 BAT_SWOVR	= True
 
 def main():
+	"""
 	i2c	= I2C( 0, freq = (400 * 1000) )
 	rtc	= PCF2131( i2c )
+	"""
+	spi		= SPI( 0, 500 * 1000, cs = 0 )
+	rtc	= PCF2131( spi )
+	
+	print( dir( rtc ) )
 	
 	print( rtc.info() )
 	print( "=== operation start ===" )
