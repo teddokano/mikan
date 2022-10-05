@@ -90,7 +90,7 @@ class temp_sensor_base():
 			print( ("    {:6} (0x{:02X}) : 0x" + fmt[ self.REG_ACC[ k ] ]).format( k, i, v ) )
 
 
-class PCT2075( temp_sensor_base, I2C_target ):
+class LM75B( temp_sensor_base, I2C_target ):
 	DEFAULT_ADDR		= 0x90 >> 1
 
 	REG_NAME	= ( "Temp", "Conf", "Thyst", "Tos", "Tidle" )
@@ -115,3 +115,10 @@ class PCT2075( temp_sensor_base, I2C_target ):
 		
 		return [ v / 256.0 for v in sv ]
 		
+		
+class PCT2075( LM75B ):
+	DEFAULT_ADDR		= 0x90 >> 1
+
+	REG_NAME	= ( "Temp", "Conf", "Thyst", "Tos", "Tidle" )
+	REG_LEN		= (      2,      1,       2,     2,       1 )
+	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
