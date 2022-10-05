@@ -347,13 +347,12 @@ class RTC_base():
 		return (value >> 4) * 10 + (value & 0x0F)
 
 
-##	@class		PCF2131
+##	@class		PCF2131_base
 #	@brief		A class to manage PCF2131 (RTC)
 #
-class PCF2131( RTC_base, SPI_target ):
+class PCF2131_base( RTC_base ):
 	"""
 	"""
-	DEFAULT_ADDR	= (0xA6 >> 1)
 	REG_NAME		= (		"Control_1", "Control_2", "Control_3", "Control_4", "Control_5",
 							"SR_Reset",
 							"_100th_Seconds", "Seconds", "Minutes","Hours", "Days", "Weekdays", "Months", "Years",
@@ -372,12 +371,6 @@ class PCF2131( RTC_base, SPI_target ):
 	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
 	REG_ORDER_TS	= ( "subseconds", "seconds", "minutes", "hours", "day", "month", "year" )
 		
-	def __init__( self, interface, address = DEFAULT_ADDR, cs = None ):
-		if isinstance( interface, I2C ):
-			I2C_target.__init__( self, interface, address )
-		if isinstance( interface, SPI ):
-			SPI_target.__init__( self, interface, cs )
-
 	def __software_reset( self ):
 		self.write_registers( "SR_Reset", 0xA5 )
 
@@ -507,6 +500,30 @@ class PCF2131( RTC_base, SPI_target ):
 
 	def __test( self ):
 		self.bit_operation( "Control_5", 0xF0, 0xF0 )
+
+
+class PCF2131_I2C( PCF2131_base, I2C_target ):
+	AUTO_INCREMENT	= 0x00
+	def __init__( self, interface, address ):
+		#super().__init__( interface, address )
+		I2C_target.__init__( self, interface, address, auto_increment_flag = self.AUTO_INCREMENT )
+
+class PCF2131_SPI( PCF2131_base, SPI_target ):
+	def __init__( self, interface, cs ):
+		#super().__init__( interface, cs )
+		SPI_target.__init__( self, interface, cs )
+
+class PCF2131():
+	DEFAULT_ADDR	= (0xA6 >> 1)
+
+	def __new__( cls, interface, address = DEFAULT_ADDR, cs = None ):
+		print( "__new__(), {}, {}".format( cls, interface ) )
+		
+		if isinstance( interface, I2C ):
+			return super().__new__( type( PCF2131_I2C( interface, address ) ) )
+
+		if isinstance( interface, SPI ):
+			return super().__new__( type( PCF2131_SPI( interface, cs ) ) )
 
 
 
