@@ -26,7 +26,7 @@ The drivers provided to operate I2C/SPI peripheral devices easy.
 
 ## Supported devicesgit a
 - Real Time Clock (RTC)
-	- PCF2131 (I2C)
+	- PCF2131 (I2C / SPI)
 - Temperature sensor
 	- LM75B
 	- PCT2075

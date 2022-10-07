@@ -100,7 +100,7 @@ class I2C_target( Interface ):
 
 	def __init__( self, i2c, address, auto_increment_flag = 0x00 ):
 		"""
-		I2C_target constructor
+		I2C_target initializer
 	
 		Parameters
 		----------
@@ -225,7 +225,7 @@ class I2C_target( Interface ):
 class SPI_target( Interface ):
 	def __init__( self, spi, cs = None ):
 		"""
-		SPI_target constructor
+		SPI_target initializer
 	
 		Parameters
 		----------

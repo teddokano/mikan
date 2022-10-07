@@ -17,7 +17,7 @@ class LED():
 	
 	def __init__( self, controller, channel ):
 		"""
-		LED constructor
+		LED initializer
 	
 		Parameters
 		----------
@@ -144,7 +144,7 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT, iref = IREF_INIT, current_control = False ):
 		"""
-		PCA995xB_base constructor
+		PCA995xB_base initializer
 	
 		Parameters
 		----------
@@ -231,7 +231,7 @@ class PCA96xx_base( LED_controller_base, I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT ):
 		"""
-		PCA995xB_base constructor
+		PCA995xB_base initializer
 	
 		Parameters
 		----------
@@ -283,7 +283,7 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 
 	def __init__( self, spi, cs = None, pwm = PWM_INIT, iref = IREF_INIT, current_control = False, setup_EVB = False ):
 		"""
-		PCA995xB_base constructor
+		PCA995xB_base initializer
 	
 		Parameters
 		----------
