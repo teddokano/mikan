@@ -503,17 +503,18 @@ class PCF2131_base( RTC_base ):
 
 
 class PCF2131_I2C( PCF2131_base, I2C_target ):
-	AUTO_INCREMENT	= 0x00
 	def __init__( self, interface, address ):
-		#super().__init__( interface, address )
-		I2C_target.__init__( self, interface, address, auto_increment_flag = self.AUTO_INCREMENT )
+		I2C_target.__init__( self, interface, address )
 
 class PCF2131_SPI( PCF2131_base, SPI_target ):
 	def __init__( self, interface, cs ):
-		#super().__init__( interface, cs )
 		SPI_target.__init__( self, interface, cs )
 
-class PCF2131():
+class __PCF2131__doesnt_work():
+	"""
+	Doesn't work :(
+	Parent class member doesn't appear in instance
+	"""
 	DEFAULT_ADDR	= (0xA6 >> 1)
 
 	def __new__( cls, interface, address = DEFAULT_ADDR, cs = None ):
@@ -525,5 +526,15 @@ class PCF2131():
 		if isinstance( interface, SPI ):
 			return super().__new__( type( PCF2131_SPI( interface, cs ) ) )
 
+DEFAULT_ADDR	= (0xA6 >> 1)
+DEFAULT_CS		= None
 
+def PCF2131( interface, id, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
+	"""
+	This works!
+	"""
+	if isinstance( interface, I2C ):
+		return PCF2131_I2C( interface, address )
 
+	if isinstance( interface, SPI ):
+		return PCF2131_SPI( interface, cs )
