@@ -1,16 +1,10 @@
-from	machine		import	Pin, I2C, SPI
-from	nxp_periph	import	PCF2131
+from	machine		import	Pin, I2C
+from	nxp_periph	import	PCF85063
 import	machine
 
-BAT_SWOVR	= True
-
 def main():
-	"""
-	i2c	= I2C( 0, freq = (400 * 1000) )
-	rtc	= PCF2131( i2c, (0xA6 >> 1) )
-	"""
-	spi	= SPI( 0, 500 * 1000, cs = 0 )
-	rtc	= PCF2131( spi, None )
+	intf	= I2C( 0, freq = (400 * 1000) )
+	rtc	= PCF85063( intf )
 
 	print( rtc.info() )
 	print( "=== operation start ===" )
@@ -18,8 +12,6 @@ def main():
 	osf	= rtc.oscillator_stopped()
 	print( "rtc.oscillator_stopped()\n  --> ", end = "" )
 	print( osf )
-
-	rtc.battery_switchover( BAT_SWOVR )
 
 	machine_rtc	= machine.RTC()
 	if osf:
@@ -68,18 +60,13 @@ def demo( rtc ):
 		
 	rtc.interrupt_clear()
 
-	intA	= Pin( "D8", Pin.IN )
-	intA.irq( trigger = Pin.IRQ_FALLING, handler = callback )
-	
-	intB	= Pin( "D9", Pin.IN )
-	intB.irq( trigger = Pin.IRQ_FALLING, handler = callback )
-	
-	rtc.periodic_interrupt( "A" )
+	intr	= Pin( "D2", Pin.IN )
+	intr.irq( trigger = Pin.IRQ_FALLING, handler = callback )
+
+	rtc.periodic_interrupt( period = 1 )
 
 	alm	= rtc.timer_alarm( seconds = 5 )
 	print( "alarm is set = {}".format( ", ".join( alm ) ) )
-
-	rtc.set_timestamp_interrupt( "B", 1 )
 
 	while True:
 		if int_flag:
@@ -97,10 +84,6 @@ def demo( rtc ):
 				print( "!!!!!!! ALARM !!!!!!!" )
 				alm	= rtc.timer_alarm( seconds = 5 )
 				print( "new alarm seting = {}".format( ", ".join( alm ) ) )
-
-			if "ts1" in event:
-				for i in range( 1, 5 ):
-					print( "timestamp{} = {}".format( i, rtc.timestamp( i ) ) )
 
 			if not dt[ 6 ] % 30:
 				rtc.dump_reg()

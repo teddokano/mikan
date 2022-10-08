@@ -24,9 +24,10 @@ The drivers provided to operate I2C/SPI peripheral devices easy.
 1. Copy "nxp_periph" into target's' "lib" (it could be '/flash/lib' or '/lib') nameed folder. 
 1. Now it's ready to play! Choose an example code in "example" folder and run.
 
-## Supported devicesgit a
+## Supported devices
 - Real Time Clock (RTC)
 	- PCF2131 (I2C / SPI)
+	- PCF85063
 - Temperature sensor
 	- LM75B
 	- PCT2075

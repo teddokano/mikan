@@ -141,7 +141,7 @@ class RTC_base():
 		self.__set_alarm( pin_select, dt )
 		return s
 		
-	def timer_alarm( self, hours = 0, minutes = 0, seconds = 0 ):
+	def timer_alarm( self, hours = 0, minutes = 0, seconds = 0, pin_select = "B" ):
 		t	= self.datetime()
 		
 		seconds, m_carry	= (t[6] + seconds          ) % 60, (t[6] + seconds           ) // 60,
@@ -153,7 +153,7 @@ class RTC_base():
 							"minutes"	: minutes,
 							"seconds"	: seconds
 					  }
-		alm	= self.alarm_int( "B", **alarm_time )
+		alm	= self.alarm_int( pin_select, **alarm_time )
 		return	alm
 		
 	def cancel( self ):
@@ -162,7 +162,7 @@ class RTC_base():
 		"""
 		self.__cancel_alarm()
 
-	def periodic_interrupt( self, pin_select, min = False ):
+	def periodic_interrupt( self, pin_select = "A", period = 1 ):
 		"""
 		set periodic (every minutes or seconds) interrupt
 	
@@ -178,9 +178,9 @@ class RTC_base():
 			If min is not given or False, every second intrerupt is set.
 
 		"""
-		self.__set_periodic_interrupt( min, pin_select )
+		self.__set_periodic_interrupt( pin_select, period )
 
-	def set_timestamp_interrupt( self, pin_select, num, last_event = True ):
+	def set_timestamp_interrupt( self, num, pin_select = "B", last_event = True ):
 		"""
 		set timestamp interrupt
 	
@@ -418,12 +418,19 @@ class PCF2131_base( RTC_base ):
 	def __cancel_alarm( self, int_pin, dt ):
 		self.bit_operation( "Control_2", 0x02, 0x00 )
 
-	def __set_periodic_interrupt( self, min, int_pin ):
-		v	= 0x02 if min else 0x01
-		self.bit_operation( "Control_1", 0x03, v )
-		
+	def __set_periodic_interrupt( self, int_pin, period ):
 		select	= "A" if "A" in int_pin else "B"
+		
+		if period == 0:
+			self.bit_operation( "Control_1", 0x03, 0x00 )
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x30, 0x30 )
+			return 0
+
+		v	= 0x02 if period == 60 else 0x01
+		self.bit_operation( "Control_1", 0x03, v )
 		self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x30, ~(v << 4) )
+
+		return 60 if period == 60 else 1
 
 	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
 		num		-= 1
@@ -461,7 +468,7 @@ class PCF2131_base( RTC_base ):
 
 	def __interrupt_clear( self ):
 		r	= self.REG_NAME.index( "Control_2" )
-		rv	= self.read_registers( r, 3 )
+		rv	= self.read_registers( "Control_2", 3 )
 		
 		if rv[ 0 ] & 0x90:	# if interrupt flag set in Control_2
 			self.write_registers( r + 0, rv[ 0 ] & ~((rv[ 0 ] & 0x90) | 0x49) )	#	datasheet 7.11.5
@@ -529,7 +536,7 @@ class __PCF2131__doesnt_work():
 DEFAULT_ADDR	= (0xA6 >> 1)
 DEFAULT_CS		= None
 
-def PCF2131( interface, id, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
+def PCF2131( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 	"""
 	This works!
 	"""
@@ -538,3 +545,114 @@ def PCF2131( interface, id, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 
 	if isinstance( interface, SPI ):
 		return PCF2131_SPI( interface, cs )
+
+class PCF85063( RTC_base, I2C_target ):
+	"""
+	"""
+	DEFAULT_ADDR	= (0xA2 >> 1)
+	REG_NAME		= (	"Control_1", "Control_2",
+						"Offset",
+						"RAM_byte",
+						"Seconds", "Minutes", "Hours", "Days", "Weekdays", "Months", "Years",
+						"Second_alarm", "Minute_alarm", "Hour_alarm", "Day_alarm", "Weekday_alarm",
+						"Timer_value", "Timer_mode"
+						)
+	INT_MASK		= { "A": ["INT_A_MASK1", "INT_A_MASK2"], "B": [ "INT_B_MASK1", "INT_B_MASK2" ] }
+	REG_ORDER_DT	= ( "seconds", "minutes", "hours", "day", "weekday", "month", "year" )
+	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		super().__init__( i2c, address = address )
+
+	def __software_reset( self ):
+		self.bit_operation( "Control_1", 0x10, 0x10 )
+
+	def __get_datetime_reg( self ):
+		dt		= {}
+		length	= len( self.REG_ORDER_DT )
+		
+		data	= self.read_registers( "Seconds", length )
+		data[ 1 ]	&= ~0x80	#	mask OS flag
+
+		for i, k in zip( range( length ), self.REG_ORDER_DT ):
+			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
+
+		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
+		dt[ "subseconds" ]	 = 0	#	dummy
+		dt[ "tzinfo" ]		 = None
+			
+		return dt
+
+	def __set_datetime_reg( self, dt ):
+		dt[ "year" ]		-= 2000
+		dt[ "subseconds" ]	 = 0	#	dummy
+
+		data	= [ dt[ k ] for k in self.REG_ORDER_DT ]
+		data	= list( map( RTC_base.bin2bcd, data ) )
+
+		self.bit_operation( "Control_1", 0x20, 0x20 )	#	set STOP
+		self.write_registers( "Seconds", data )
+		self.bit_operation( "Control_1", 0x20, 0x00 )	#	clear STOP
+
+	def __set_alarm( self, int_pin, dt ):
+		data	= [ dt[ k ] for k in self.REG_ORDER_ALRM ]
+		data	= list( map( RTC_base.bin2bcd, data ) )
+
+		self.write_registers( "Second_alarm", data )
+		self.bit_operation( "Control_2", 0x80, 0x80 )
+
+	def __cancel_alarm( self, int_pin, dt ):
+		self.bit_operation( "Control_2", 0x80, 0x00 )
+
+	def __set_periodic_interrupt( self, int_pin, period ):
+		self.bit_operation( "Timer_mode", 0x06, 0x00 )
+		if period == 0:
+			return 0
+	
+		timer_max	= [ r * 255 for r in ( (1 / 4096), (1 / 64), 1, 60 ) ]
+
+		res, tcf	= 60, 0x3
+		for m, i in zip( timer_max, range( len( timer_max ) ) ):
+			if period <= m:
+				res, tcf	= m / 255, i
+				break
+
+		tv	= int( period / res )
+		self.write_registers( "Timer_value", tv )
+		self.bit_operation( "Timer_mode", 0x1E, tcf << 3 | 0x06 )
+		
+		return tv * res
+
+	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
+		pass
+
+	def __get_timestamp_reg( self, num ):
+		pass
+
+	def __interrupt_clear( self ):
+		rv, wv	= self.bit_operation( "Control_2", 0x48, 0x00 )
+		return rv
+
+	def __oscillator_stopped( self ):
+		return True if 0x80 & self.read_registers( "Seconds", 1 ) else False
+	
+	def __battery_switchover( self, switch ):
+		pass
+
+	EVENT_NAME		= ( "periodic", "alarm" )
+	EVENT_FLAG		= { 0x08, 0x40 }
+	EVENTS			= dict( zip( EVENT_NAME, EVENT_FLAG ) )
+	
+	def __check_events( self, event ):
+		list	= []
+
+		for k, v in self.EVENTS.items():
+			if event & v:
+				list	+= [ k ]
+	
+		return list
+
+	def __test( self ):
+		self.bit_operation( "RAM_byte", 0xF0, 0xF0 )
+
+
