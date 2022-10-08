@@ -21,7 +21,7 @@ class temp_sensor_base():
 			
 		"""
 		return self.__read()
-		
+
 	def reg_access( self, *args ):
 		"""
 		Write or read register
@@ -89,6 +89,17 @@ class temp_sensor_base():
 		for k, i, v in zip( self.REG_NAME, range( len( self.REG_NAME ) ), data ):
 			print( ("    {:6} (0x{:02X}) : 0x" + fmt[ self.REG_ACC[ k ] ]).format( k, i, v ) )
 
+	@property
+	def temp( self ):
+		"""
+		Read temperature
+	
+		Returns
+		-------
+		float : temperature in degree-Celsius
+			
+		"""
+		return self.__read()
 
 class LM75B( temp_sensor_base, I2C_target ):
 	DEFAULT_ADDR		= 0x90 >> 1

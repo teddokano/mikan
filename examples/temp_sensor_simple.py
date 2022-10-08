@@ -10,7 +10,7 @@ def main():
 	print( temp_sensor.info() )
 
 	while True:
-		value	= temp_sensor.read()
+		value	= temp_sensor.temp
 		print( value )
 		sleep( 1 )
 

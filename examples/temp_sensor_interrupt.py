@@ -52,7 +52,7 @@ def main():
 			
 		if tim_flag:
 			tim_flag	= False
-			value	= temp_sensor.read()
+			value	= temp_sensor.temp
 			print( "{:.3f} deg-C   Tots/Thys setting: {:.1f}/{:.1f}   on-board heater {}".format( value, t_ots, t_hys, "ON" if heater_on else "OFF" ) )
 			#sleep( 1.0 )
 
