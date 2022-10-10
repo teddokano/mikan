@@ -37,5 +37,5 @@ The drivers provided to operate I2C/SPI peripheral devices easy.
 	- PCA9956B
 	- PCA9957
 - GPIO expander
-	- PCA9555 (PCA9555A compatible)
-	- PCA9554 (PCA9554A, PCA9554B, PCA9554C compatible)
+	- PCA9555 (PCA9555A, PCA9539 compatible)
+	- PCA9554 (PCA9554A, PCA9554B, PCA9554C, PCA9538 compatible)
