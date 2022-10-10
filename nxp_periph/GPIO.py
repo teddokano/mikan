@@ -1,5 +1,5 @@
 """
-Temperature sensor operation library for MicroPython
+GPIO expander operation library for MicroPython
 Akifumi (Tedd) OKANO / Released under the MIT license
 
 version	0.1 (09-Oct-2022)
@@ -172,20 +172,3 @@ class PCA9554( GPIO_base, I2C_target ):
 		self.__pol	= "Polarity_Inversion"
 		self.__cfg	= "Configuration"
 		self.__np	= self.N_PORTS
-
-from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
-
-def main():
-	i2c		= I2C( 0, freq = (400 * 1000) )
-	gpio	= PCA9555( i2c )
-
-	gpio.config( [ 0x00, 0xFF ] )
-
-	while True:
-		for i in range( 256 ):
-			gpio.value	= [ i, i ]
-		
-		print( "port read = {}".format( gpio.value ), end = "\r" )
-
-if __name__ == "__main__":
-	main()
