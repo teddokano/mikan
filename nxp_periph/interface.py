@@ -2,6 +2,7 @@
 Serial interface management library for MicroPython
 Akifumi (Tedd) OKANO / Released under the MIT license
 
+version	0.2 (10-Oct-2022)
 version	0.1 (01-Oct-2022)
 """
 class Interface:
@@ -331,3 +332,28 @@ class SPI_target( Interface ):
 		r	= self.receive( data )
 
 		return r[ 1 ] if 1 == length else r[ 1: ]
+
+class abstract_target( Interface ):
+	"""
+	An abstraction class for off-line test.
+	"""
+
+	def send( self, tsfr ):
+		print( "send: ", tsfr )
+
+	def receive( self, length ):
+		print( "receive: ", length )
+		return 0
+
+	def write_registers( self, reg, data ):
+		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		data	= [ reg, data ] if type(data) == int else [ reg ] + data
+		self.send( data )
+		
+	def read_registers( self, reg, length, repeated_start = True ):
+		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		self.send( [ reg ], stop = not repeated_start )
+		r	= self.receive( length )
+		
+		return	r[ 0 ] if length is 1 else r
+
