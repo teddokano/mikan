@@ -12,18 +12,75 @@ class GPIO_base():
 	"""
 
 	def input( self ):
+		"""
+		read input
+		
+		Returns
+		-------
+		int or list : port value
+			It returns an integer value if 8 bit GPIO.
+			Returns a list if the GPIO has multiple ports. First value is for port-0
+
+		"""
+
 		return 	self.read_registers( self.__in, self.__np )
 
 	def output( self, v ):
+		"""
+		set output
+		
+		Parameters
+		----------
+		int or list : port value
+			It takes an integer value if 8 bit GPIO.
+			Takes a list if the GPIO has multiple ports. First value is for port-0
+
+		"""
 		self.write_registers( self.__out, v )
 
 	def polarity( self, *args ):
+		"""
+		set/read polarity
+		
+		Parameters
+		----------
+		int or list : port value for setting
+			When this method takes 1 argument, the value is set in register
+			It takes an integer value if 8 bit GPIO.
+			Takes a list if the GPIO has multiple ports. First value is for port-0
+
+		Returns
+		-------
+		int or list : port value
+			When this method takes no argument, the value is read from register
+			It returns an integer value if 8 bit GPIO.
+			Returns a list if the GPIO has multiple ports. First value is for port-0
+
+		"""
 		if 0 == len( args ):
 			return self.read_registers( self.__pol, self.__np )
 		else:
 			self.write_registers( self.__pol, args[ 0 ] )
 
 	def config( self, *args ):
+		"""
+		set/read configuration
+		
+		Parameters
+		----------
+		int or list : port value for setting
+			When this method takes 1 argument, the value is set in register
+			It takes an integer value if 8 bit GPIO.
+			Takes a list if the GPIO has multiple ports. First value is for port-0
+
+		Returns
+		-------
+		int or list : port value
+			When this method takes no argument, the value is read from register
+			It returns an integer value if 8 bit GPIO.
+			Returns a list if the GPIO has multiple ports. First value is for port-0
+
+		"""
 		if 0 == len( args ):
 			return self.read_registers( self.__cfg, self.__np )
 		else:
@@ -47,6 +104,23 @@ class GPIO_base():
 
 
 class PCA9555( GPIO_base, I2C_target ):
+	"""
+	PCA9555: 16 bit GPIO expander
+	
+	A device class for an industry standard 16 bit GPIO expander
+	This class can operate its family devices of
+	  PCA9555A and PCA9539
+	
+	Parameters
+	----------
+	i2c		: I2C instance
+	address	: int, option
+	
+	Returns
+	-------
+	PCA9555 object
+	
+	"""
 	DEFAULT_ADDR	= 0x40 >> 1
 	N_PORTS			= 2
 	
@@ -65,6 +139,23 @@ class PCA9555( GPIO_base, I2C_target ):
 		self.__np	= self.N_PORTS
 
 class PCA9554( GPIO_base, I2C_target ):
+	"""
+	PCA9554: 8 bit GPIO expander
+	
+	A device class for an industry standard 8 bit GPIO expander
+	This class can operate its family devices of
+	  PCA9554A, PCA9554B, PCA954C and PCA9538
+	
+	Parameters
+	----------
+	i2c		: I2C instance
+	address	: int, option
+	
+	Returns
+	-------
+	PCA9554 object
+	
+	"""
 	DEFAULT_ADDR	= 0x40 >> 1
 	N_PORTS			= 1
 	
