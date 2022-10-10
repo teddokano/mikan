@@ -78,7 +78,7 @@ class PCA9629A( StepperMotor_base, abstract_target ):
 	
 	def __start( self, start = True, reverse = False ):
 		if start:
-			self.write_registers( "MCNTL", 0xC0 & 1 if reverse else 0 )
+			self.write_registers( "MCNTL", 0xC0 | (1 if reverse else 0) )
 		else:
 			self.write_registers( "MCNTL", 0xA0 )
 
