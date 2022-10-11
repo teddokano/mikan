@@ -10,7 +10,7 @@ from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 
 class RTC_base():
 	"""
-	An abstraction class to make user interface.
+	An abstraction class to make RTC user interface.
 	"machine.RTC" like interface available but this class
 	doesn't inherit machine.RTC to separate its behavior
 	"""
@@ -352,6 +352,8 @@ class RTC_base():
 #
 class PCF2131_base( RTC_base ):
 	"""
+	An abstraction class for PCF2131
+	The PCF2131 class can be composed with one of interface class: I2C_target or SPI_target
 	"""
 	REG_NAME		= (		"Control_1", "Control_2", "Control_3", "Control_4", "Control_5",
 							"SR_Reset",
@@ -510,10 +512,16 @@ class PCF2131_base( RTC_base ):
 
 
 class PCF2131_I2C( PCF2131_base, I2C_target ):
+	"""
+	PCF2131 class with I2C interface
+	"""
 	def __init__( self, interface, address ):
 		I2C_target.__init__( self, interface, address )
 
 class PCF2131_SPI( PCF2131_base, SPI_target ):
+	"""
+	PCF2131 class with SPI interface
+	"""
 	def __init__( self, interface, cs ):
 		SPI_target.__init__( self, interface, cs )
 
@@ -538,7 +546,22 @@ DEFAULT_CS		= None
 
 def PCF2131( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 	"""
-	This works!
+	A constructor interface for PCF2131
+
+	Parameters
+	----------
+	interface	: machine.I2C or machine.SPI object
+	address		: int, option
+		If need to specify (for I2C interface)
+	cs			: machine.Pin object
+		If need to specify (for SPI interface)
+
+	Returns
+	-------
+	PCF2131_I2C or PCF2131_SPI object
+		returns PCF2131_I2C when interface == I2C
+		returns PCF2131_SPI when interface == SPI
+
 	"""
 	if isinstance( interface, I2C ):
 		return PCF2131_I2C( interface, address )
@@ -548,6 +571,7 @@ def PCF2131( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 
 class PCF85063( RTC_base, I2C_target ):
 	"""
+	PCF85063 class
 	"""
 	DEFAULT_ADDR	= (0xA2 >> 1)
 	REG_NAME		= (	"Control_1", "Control_2",
@@ -562,6 +586,14 @@ class PCF85063( RTC_base, I2C_target ):
 	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
 	
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Parameters
+		----------
+		i2c		: machine.I2C object
+		address	: int, option
+			If need to set I2C target address
+		
+		"""
 		super().__init__( i2c, address = address )
 
 	def __software_reset( self ):
