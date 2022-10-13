@@ -39,3 +39,5 @@ The drivers provided to operate I2C/SPI peripheral devices easy.
 - GPIO expander
 	- PCA9555 (PCA9555A, PCA9539 compatible)
 	- PCA9554 (PCA9554A, PCA9554B, PCA9554C, PCA9538 compatible)
+- Stepper motor controller
+	- PCA9629A

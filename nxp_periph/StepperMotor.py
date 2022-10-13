@@ -5,8 +5,8 @@ Akifumi (Tedd) OKANO / Released under the MIT license
 version	0.1 (10-Oct-2022)
 this code based on https://os.mbed.com/users/nxp_ip/code/PCA9629A/
 """
-from nxp_periph.interface	import	I2C_target
-from nxp_periph.interface	import	abstract_target
+from	nxp_periph.interface	import	I2C_target
+from	utime					import	sleep
 
 class StepperMotor_base():
 	"""
@@ -26,7 +26,7 @@ class StepperMotor_base():
 		self.__pps( pps, reverse = reverse )
 
 	def home( self ):
-		pass
+		self.__home()
 	
 	def init():
 		__init_reg()
@@ -38,7 +38,7 @@ class StepperMotor_base():
 		r	= self.read_registers( reg, 2 )
 		return r[ 0 ] | ( r[ 1 ] << 8 )
 
-class PCA9629A( StepperMotor_base, abstract_target ):
+class PCA9629A( StepperMotor_base, I2C_target ):
 	STEP_RESOLUTION	= 1/(3e-6)
 	DEFAULT_ADDR	= 0x40 >> 1
 	AUTO_INCREMENT	= 0x80
@@ -61,11 +61,12 @@ class PCA9629A( StepperMotor_base, abstract_target ):
 					"STEPCOUNT0", "STEPCOUNT1", "STEPCOUNT2", "STEPCOUNT3",
 					)
 
-	def __init__( self, i2c, address = DEFAULT_ADDR ):
+	def __init__( self, i2c, address = DEFAULT_ADDR, steps_per_rotation = 48 ):
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+		self.steps_per_rotation	= steps_per_rotation
 
 	def __init_reg( self ):
-		data	= (
+		data	= [
 					 0x20, 0x0A, 0x00, 0x03, 0x13, 0x1C,             #	for registers MODE - MSK (0x00 - 0x07)
 					 0x00, 0x00, 0x68, 0x00, 0x00,                   #	for registers INTSTAT - EXTRASTEPS1 (0x06, 0xA)
 					 0x10, 0x80,                                     #	for registers OP_CFG_PHS and OP_STAT_TO (0x0B - 0xC)
@@ -73,7 +74,7 @@ class PCA9629A( StepperMotor_base, abstract_target ):
 					 0xFF, 0x01, 0xFF, 0x01, 0x05, 0x0D, 0x05, 0x0D, #	for registers CWSCOUNTL - MCNTL (0x12 - 0x1A)
 					 0x20,                                           #	for register MCNTL (0x1A)
 					 0xE2, 0xE4, 0xE6, 0xE0                          #	for registers SUBADR1 - ALLCALLADR (0x1B - 0x1E)
-					)
+					]
 		self.write_registers( "MODE", data )
 	
 	def __start( self, start = True, reverse = False ):
@@ -100,19 +101,40 @@ class PCA9629A( StepperMotor_base, abstract_target ):
 	def __steps( self, step, reverse = False ):
 		self.w16( "CCWSCOUNTL" if reverse else "CWSCOUNTL", step )
 
+	def __home( self, pps = 48, reverse = False, extrasteps = 0 ):
+		data	= [
+					0x21, 0x0A, 0x00, 0x03, 0x13, 0x1C,             #  for registers MODE - MSK (0x00 - 0x07
+					0x00, 0x00, 0x01, 0x00, 0x00,                   #  for registers INTSTAT - EXTRASTEPS1 (0x06, 0xA)
+					0x10, 0xE5,                                     #  for registers OP_CFG_PHS and OP_STAT_TO (0x0B - 0xC)
+					0x09, 0x09, 0x01, 0x00, 0x00,                   #  for registers RUCNTL - LOOPDLY_CCW (0xD- 0x10)
+					0x60, 0x00, 0x60, 0x00, 0x82, 0x06, 0x82, 0x06, #  for registers CWSCOUNTL - CCWPWH (0x12 - 0x19)
+					0x20,                                           #  for register MCNTL (0x1A)
+					]
+		self.write_registers( "MODE", data )
+		self.pps( pps, reverse = reverse )
+		self.start( reverse = reverse )
+
+		sleep( (self.steps_per_rotation + 3 + extrasteps) / pps );
+
+
 
 from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
 
 def main():
 	i2c		= I2C( 0, freq = (400 * 1000) )
 	mtr	= PCA9629A( i2c )
+	all_mtr	= PCA9629A( i2c, address = 0xE0 >> 1 )
 
 	mtr.stop()
-	mtr.steps( 120 )
-	mtr.steps( 240, reverse = True )
-	mtr.pps( 100 )
-	mtr.pps( 200, reverse = True )
+	all_mtr.home()
+	sleep( 1 )
+
+	mtr.steps( 48 )
+	mtr.steps( 48, reverse = True )
+	mtr.pps( 48 )
+	mtr.pps( 48, reverse = True )
 	mtr.start()
+	sleep( 2.1 )
 	mtr.start( reverse = True )
 
 if __name__ == "__main__":
