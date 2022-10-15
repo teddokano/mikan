@@ -56,7 +56,10 @@ def main( micropython_optimize=False ):
 	s.listen( 1 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
-	html	= page_setup( led_c, 6, 3, iref = False )
+	n_sliders	= 6
+	separator	= 3
+
+	html	= page_setup( led_c, n_sliders, separator )
 
 	while True:
 		res = s.accept()
@@ -201,7 +204,5 @@ def get_slider_html( count, separator, offset, iref ):
 		s	+= [ '<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>' ]
 		
 	return "\n".join( s )
-
-
 
 main()

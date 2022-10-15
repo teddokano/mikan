@@ -6,6 +6,13 @@ NXP peripheral device drivers and sample/demo codes.
 The drivers provided to operate I2C/SPI peripheral devices easy. 
 
 ## Getting started
+
+### Video
+YouTube video available for guiding easy install and demo ;)
+
+[![](https://img.youtube.com/vi/miob6jZ-87g/0.jpg)](https://www.youtube.com/watch?v=miob6jZ-87g)
+
+### Steps
 1. Check sys.path on target board
 	1. Connect your MCU board and PC, get REPL environment
 	1. Chack path setting by typing.. 
