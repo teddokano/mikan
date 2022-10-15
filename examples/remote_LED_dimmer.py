@@ -24,98 +24,24 @@ import	machine
 import	os
 import	ure
 
-from	nxp_periph	import	PCA9956B, LED
+from	nxp_periph	import	PCA9956B, PCA9957, LED
 
 try:
     import usocket as socket
 except:
     import socket
 
-
-#Setup LED
-iref_init	= 0x10
+IREF_INIT	= 0x10
+regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 
 interface	= machine.I2C( 0, freq = (400 * 1000) )
-led_c		= PCA9956B( interface, address = 0x02 >> 1, iref = iref_init )
-led			= [ LED( led_c, i ) for i in range( 24 ) ]
-
-def start_network( port = 0, ifcnfg_param = "dhcp" ):
-	print( "starting network" )
-
-	lan = network.LAN( port )
-	lan.active( True )
-
-	print( "ethernet port %d is activated" % port )
-
-	lan.ifconfig( ifcnfg_param )
-	return lan.ifconfig()
-
-
-#HTML to send to browsers
-html = """\
-HTTP/1.0 200 OK
-
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta name="viewport"
-			content="width=320, height=480, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
-
-		<title>MIMXRT1050 LED ON/OFF</title>
-		<style>
-			html { font-family: Arial; display: inline-block; text-align: center; }
-			h2 { font-size: 2.0rem; }
-			p { font-size: 1.2rem; }
-			body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
-			input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 70%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
-			input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
-			input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
-		</style>
-	</head>
-	<body>
-		<h2>{% dev_name %} server</h2>
-		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 0 )" id="pwmSlider0" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#00FF00>LED1:</font> <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 2 )" id="pwmSlider2" min="0" max="255" step="1" value="0" class="slider"></p>
-		<hr/>
-		<p><font color=#FF0000>LED3:</font> <input type="range" oninput="updateSliderPWM( this, 3 )" id="pwmSlider3" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#00FF00>LED4:</font> <input type="range" oninput="updateSliderPWM( this, 4 )" id="pwmSlider4" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#0000FF>LED5:</font> <input type="range" oninput="updateSliderPWM( this, 5 )" id="pwmSlider5" min="0" max="255" step="1" value="0" class="slider"></p>
-		<hr/>
-		<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>
-		<!--
-		<span id="textSliderValue">%%SLIDERVALUE%%</span>
-		-->
-		
-		<script>
-		function updateSliderPWM( element, idx ) {
-			var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
-			//document.getElementById( "textSliderValue" ).innerHTML = sliderValue;
-			console.log( sliderValue );
-			var xhr = new XMLHttpRequest();
-			xhr.open("GET", "/slider?value=" + sliderValue + "idx=" + idx, true);
-			xhr.send();
-		}
-		
-		</script>
-
-		HTTP server on <br>{% mcu %}<br/><br/>
-
-		0100111101101011011000010110111001101111
-	</body>
-</html>
+led_c		= PCA9956B( interface, address = 0x02 >> 1, iref = IREF_INIT )
+"""
+interface	= machine.SPI( 0, 1000 * 1000, cs = 0 )
+led_c		= PCA9957( interface, setup_EVB = True, iref = IREF_INIT )
 """
 
-page_data	= {}
-page_data[ "dev_name"  ]	= led_c.__class__.__name__
-page_data[ "interface" ]	= interface.__class__.__name__
-page_data[ "mcu"       ]	= os.uname().machine
-
-for key, value in page_data.items():
-    html = html.replace('{% ' + key + ' %}', value)
-
-
-regex	= ure.compile( r".*value=(\d+)idx=(\d+)" )
+led			= [ LED( led_c, i ) for i in range( led_c.CHANNELS ) ]
 
 def main( micropython_optimize=False ):
 	ip_info	= start_network()
@@ -129,6 +55,8 @@ def main( micropython_optimize=False ):
 	s.bind( addr )
 	s.listen( 1 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
+
+	html	= page_setup( led_c, 6, 3, iref = False )
 
 	while True:
 		res = s.accept()
@@ -144,15 +72,14 @@ def main( micropython_optimize=False ):
 
 		print("Request:")
 		req = client_stream.readline()
-		print("==== print(req) ====")
 		print( req )
 		
 		if "?" not in req:
-			led_c.write_registers( "IREFALL", iref_init )
-			for i in range( 24 ):
+			led_c.write_registers( "IREFALL", IREF_INIT )
+			for i in range( led_c.CHANNELS ):
 				led[ i ].v	= 0.0
 		else:
-			m	= regex.match( req )
+			m	= regex_pwm.match( req )
 			if m:
 				print( m.groups() )
 				pwm	= int( m.group( 1 ) )
@@ -168,11 +95,113 @@ def main( micropython_optimize=False ):
 			if h == b"" or h == b"\r\n":
 				break
 			#print(h)
+#		client_stream.read()
+					
 		client_stream.write( html )
 
 		client_stream.close()
 		if not micropython_optimize:
 			client_sock.close()
 		print()
+
+
+def start_network( port = 0, ifcnfg_param = "dhcp" ):
+	print( "starting network" )
+
+	lan = network.LAN( port )
+	lan.active( True )
+
+	print( "ethernet port %d is activated" % port )
+
+	lan.ifconfig( ifcnfg_param )
+	return lan.ifconfig()
+
+def page_setup( led_c, count, separator, iref = True ):
+	#HTML to send to browsers
+	html = """\
+	HTTP/1.0 200 OK
+
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta name="viewport"
+				content="width=320, height=480, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+
+			<title>MIMXRT1050 LED ON/OFF</title>
+			<style>
+				html { font-family: Arial; display: inline-block; text-align: center; }
+				h2 { font-size: 2.0rem; }
+				p { font-size: 1.2rem; }
+				body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
+				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 70%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
+				input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
+				input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
+			</style>
+		</head>
+		<body>
+		
+			<h2>{% dev_name %} server</h2>
+			{% sliders %}
+			
+			<!--
+			<span id="textSliderValue">%%SLIDERVALUE%%</span>
+			-->
+			
+			<script>
+			function updateSliderPWM( element, idx ) {
+				var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
+				//document.getElementById( "textSliderValue" ).innerHTML = sliderValue;
+				console.log( sliderValue );
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "/slider?value=" + sliderValue + "&idx=" + idx, true);
+				xhr.send();
+			}
+			
+			</script>
+
+			<!--
+			<form method="submit">
+				ch offset:
+				<select name="cch">
+					{% ch-offset %}
+				</select>
+				<input type="submit" value="OK">
+			</form><br/>
+			-->
+
+			HTTP server on <br>{% mcu %}<br/><br/>
+
+			0100111101101011011000010110111001101111
+		</body>
+	</html>
+	"""
+	
+	page_data	= {}
+	page_data[ "dev_name"  ]	= led_c.__class__.__name__
+	page_data[ "mcu"       ]	= os.uname().machine
+	page_data[ "ch-offset" ]	= "".join( [ '<option value="{}">{}</option>'.format( i, i ) for i in range( 0, led_c.CHANNELS, 3 ) ] )
+	page_data[ "sliders"   ]	= get_slider_html( count, separator, 0, iref )
+
+	for key, value in page_data.items():
+		html = html.replace('{% ' + key + ' %}', value)
+	
+	return html
+
+def get_slider_html( count, separator, offset, iref ):
+	c	= [ "#FF0000", "#00FF00", "#0000FF", "#000000" ]
+	s	= []
+
+	for x in range( count ):
+		i	= x + offset
+		s	+= [ '<p><font color={}>LED{}:</font> <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider"></p>'.format( c[ i % separator ], i, i, i ) ]
+		if (i + 1) % separator is 0:
+			s	+= [ "<hr/>" ]
+		
+	if iref:
+		s	+= [ '<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>' ]
+		
+	return "\n".join( s )
+
+
 
 main()
