@@ -10,6 +10,7 @@
 #	https://randomnerdtutorials.com/esp32-web-server-slider-pwm/
 #	https://developer.mozilla.org/ja/docs/Web/CSS/::-webkit-slider-thumb
 #	https://code-kitchen.dev/html/input-range/
+#	https://memorva.jp/memo/mobile/sp_viewport.php
 #
 #	Tedd OKANO / Released under the MIT license
 #	15-Oct-2022
@@ -27,7 +28,10 @@ except:
     import socket
 
 
-regex	= ure.compile( r".*value=(\d+)idx=(\d+)" )
+#Setup LED
+i2c		= machine.I2C( 0, freq = (400 * 1000) )
+led_c	= PCA9956B( i2c, address = 0x02 >> 1 )
+led		= [ LED( led_c, i ) for i in range( 24 ) ]
 
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
@@ -35,7 +39,7 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	lan = network.LAN( port )
 	lan.active( True )
 
-	print( "ethernet port {} is activated".format( port ) )
+	print( "ethernet port %d is activated" % port )
 
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
@@ -48,12 +52,15 @@ HTTP/1.0 200 OK
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta name="viewport"
+			content="width=320, height=480, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+
 		<title>MIMXRT1050 LED ON/OFF</title>
 		<style>
 			html { font-family: Arial; display: inline-block; text-align: center; }
 			h2 { font-size: 2.3rem; }
 			p { font-size: 1.9rem; }
-			body { max-width: 400px; margin:100px auto; padding-bottom: 25px; }
+			body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
 			input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 100%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
 			input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
 			input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
@@ -84,12 +91,7 @@ HTTP/1.0 200 OK
 </html>
 """
 
-#Setup LED
-i2c		= machine.I2C( 0, freq = (400 * 1000) )
-led_c	= PCA9956B( i2c, address = 0x02 >> 1 )
-
-led		= [ LED( led_c, i ) for i in range( 24 ) ]
-
+regex	= ure.compile( r".*value=(\d+)idx=(\d+)" )
 
 def main( micropython_optimize=False ):
 	ip_info	= start_network()
