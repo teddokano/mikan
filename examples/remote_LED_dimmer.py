@@ -69,8 +69,9 @@ HTTP/1.0 200 OK
 	<body>
 		<h2>LED dimmer server</h2>
 		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 0 )" id="pwmSlider0" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#00FF00">LED1:</font> <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#00FF00>LED1:</font> <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
 		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 2 )" id="pwmSlider2" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>
 		<!--
 		<span id="textSliderValue">%%SLIDERVALUE%%</span>
 		-->
@@ -128,8 +129,11 @@ def main( micropython_optimize=False ):
 			print( m.groups() )
 			pwm	= int( m.group( 1 ) )
 			ch	= int( m.group( 2 ) )
-
-			led[ ch ].v	= pwm / 255
+			
+			if ch is 99:
+				led_c.write_registers( "IREFALL", pwm )
+			else:
+				led[ ch ].v	= pwm / 255
 
 		while True:
 			h = client_stream.readline()
