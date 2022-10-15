@@ -12,12 +12,16 @@
 #	https://code-kitchen.dev/html/input-range/
 #	https://memorva.jp/memo/mobile/sp_viewport.php
 #
+#	HTML modification
+#	https://1-notes.com/python-replace-html/
+#
 #	Tedd OKANO / Released under the MIT license
 #	15-Oct-2022
 #	version	0.1
 
 import	network
 import	machine
+import	os
 import	ure
 
 from	nxp_periph	import	PCA9956B, LED
@@ -31,11 +35,9 @@ except:
 #Setup LED
 iref_init	= 0x10
 
-i2c		= machine.I2C( 0, freq = (400 * 1000) )
-led_c	= PCA9956B( i2c, address = 0x02 >> 1, iref = iref_init )
-led		= [ LED( led_c, i ) for i in range( 24 ) ]
-
-
+interface	= machine.I2C( 0, freq = (400 * 1000) )
+led_c		= PCA9956B( interface, address = 0x02 >> 1, iref = iref_init )
+led			= [ LED( led_c, i ) for i in range( 24 ) ]
 
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
@@ -50,7 +52,7 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 
 
 #HTML to send to browsers
-html = b"""\
+html = """\
 HTTP/1.0 200 OK
 
 <!DOCTYPE html>
@@ -71,14 +73,14 @@ HTTP/1.0 200 OK
 		</style>
 	</head>
 	<body>
-		<h2>LED dimmer server</h2>
+		<h2>{% dev_name %} server</h2>
 		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 0 )" id="pwmSlider0" min="0" max="255" step="1" value="0" class="slider"></p>
 		<p><font color=#00FF00>LED1:</font> <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
 		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 2 )" id="pwmSlider2" min="0" max="255" step="1" value="0" class="slider"></p>
 		<hr/>
-		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 3 )" id="pwmSlider3" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#00FF00>LED1:</font> <input type="range" oninput="updateSliderPWM( this, 4 )" id="pwmSlider4" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 5 )" id="pwmSlider5" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#FF0000>LED3:</font> <input type="range" oninput="updateSliderPWM( this, 3 )" id="pwmSlider3" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#00FF00>LED4:</font> <input type="range" oninput="updateSliderPWM( this, 4 )" id="pwmSlider4" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#0000FF>LED5:</font> <input type="range" oninput="updateSliderPWM( this, 5 )" id="pwmSlider5" min="0" max="255" step="1" value="0" class="slider"></p>
 		<hr/>
 		<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>
 		<!--
@@ -96,10 +98,22 @@ HTTP/1.0 200 OK
 		}
 		
 		</script>
+
+		HTTP server on <br>{% mcu %}<br/><br/>
+
 		0100111101101011011000010110111001101111
 	</body>
 </html>
 """
+
+page_data	= {}
+page_data[ "dev_name"  ]	= led_c.__class__.__name__
+page_data[ "interface" ]	= interface.__class__.__name__
+page_data[ "mcu"       ]	= os.uname().machine
+
+for key, value in page_data.items():
+    html = html.replace('{% ' + key + ' %}', value)
+
 
 regex	= ure.compile( r".*value=(\d+)idx=(\d+)" )
 
