@@ -1,10 +1,15 @@
 #	MicroPython HTTP server sample code based on "http_server_simplistic.py".
 #	https://github.com/micropython/micropython/blob/master/examples/network/http_server_simplistic.py
 #
-#
 #	Based on simple HTTP server code, Trying LED ON/OFF via web
 #	https://gist.github.com/teddokano/45b99cd906e63a23105ab427ae70d1dc
 #	https://forum.micropython.org/viewtopic.php?t=1940#p10926
+#
+#	*** MEMO ***
+#	  You may thonk the intefaceon web page may be better than this.
+#	  A tggle button could be smarter interface.
+#	  However I kept this interface to show very simple code.
+#	  More attractive sample can be found at "remote_LED_dimmer.py"
 #
 #	Tedd OKANO / Released under the MIT license
 #	15-Oct-2022
