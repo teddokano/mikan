@@ -29,9 +29,13 @@ except:
 
 
 #Setup LED
+iref_init	= 0x10
+
 i2c		= machine.I2C( 0, freq = (400 * 1000) )
-led_c	= PCA9956B( i2c, address = 0x02 >> 1 )
+led_c	= PCA9956B( i2c, address = 0x02 >> 1, iref = iref_init )
 led		= [ LED( led_c, i ) for i in range( 24 ) ]
+
+
 
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
@@ -71,6 +75,11 @@ HTTP/1.0 200 OK
 		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 0 )" id="pwmSlider0" min="0" max="255" step="1" value="0" class="slider"></p>
 		<p><font color=#00FF00>LED1:</font> <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
 		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 2 )" id="pwmSlider2" min="0" max="255" step="1" value="0" class="slider"></p>
+		<hr/>
+		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 3 )" id="pwmSlider3" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#00FF00>LED1:</font> <input type="range" oninput="updateSliderPWM( this, 4 )" id="pwmSlider4" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 5 )" id="pwmSlider5" min="0" max="255" step="1" value="0" class="slider"></p>
+		<hr/>
 		<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>
 		<!--
 		<span id="textSliderValue">%%SLIDERVALUE%%</span>
@@ -124,16 +133,21 @@ def main( micropython_optimize=False ):
 		print("==== print(req) ====")
 		print( req )
 		
-		m	= regex.match( req )
-		if m:
-			print( m.groups() )
-			pwm	= int( m.group( 1 ) )
-			ch	= int( m.group( 2 ) )
-			
-			if ch is 99:
-				led_c.write_registers( "IREFALL", pwm )
-			else:
-				led[ ch ].v	= pwm / 255
+		if "?" not in req:
+			led_c.write_registers( "IREFALL", iref_init )
+			for i in range( 24 ):
+				led[ i ].v	= 0.0
+		else:
+			m	= regex.match( req )
+			if m:
+				print( m.groups() )
+				pwm	= int( m.group( 1 ) )
+				ch	= int( m.group( 2 ) )
+				
+				if ch is 99:
+					led_c.write_registers( "IREFALL", pwm )
+				else:
+					led[ ch ].v	= pwm / 255
 
 		while True:
 			h = client_stream.readline()
