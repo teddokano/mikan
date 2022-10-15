@@ -24,7 +24,7 @@ import	machine
 import	os
 import	ure
 
-from	nxp_periph	import	PCA9956B, PCA9957, LED
+from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 
 try:
     import usocket as socket
@@ -36,6 +36,7 @@ regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 
 interface	= machine.I2C( 0, freq = (400 * 1000) )
 led_c		= PCA9956B( interface, address = 0x02 >> 1, iref = IREF_INIT )
+#led_c		= PCA9632( interface )
 """
 interface	= machine.SPI( 0, 1000 * 1000, cs = 0 )
 led_c		= PCA9957( interface, setup_EVB = True, iref = IREF_INIT )
@@ -56,10 +57,8 @@ def main( micropython_optimize=False ):
 	s.listen( 1 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
-	n_sliders	= 6
-	separator	= 3
-
-	html	= page_setup( led_c, n_sliders, separator )
+	maax_sliders	= 6
+	html	= page_setup( led_c, maax_sliders )
 
 	while True:
 		res = s.accept()
@@ -78,7 +77,9 @@ def main( micropython_optimize=False ):
 		print( req )
 		
 		if "?" not in req:
-			led_c.write_registers( "IREFALL", IREF_INIT )
+			if "PCA9632" not in led_c.info():
+				led_c.write_registers( "IREFALL", IREF_INIT )
+
 			for i in range( led_c.CHANNELS ):
 				led[ i ].v	= 0.0
 		else:
@@ -119,7 +120,7 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
 
-def page_setup( led_c, count, separator, iref = True ):
+def page_setup( led_c, count_max ):
 	#HTML to send to browsers
 	html = """\
 	HTTP/1.0 200 OK
@@ -183,6 +184,14 @@ def page_setup( led_c, count, separator, iref = True ):
 	page_data[ "dev_name"  ]	= led_c.__class__.__name__
 	page_data[ "mcu"       ]	= os.uname().machine
 	page_data[ "ch-offset" ]	= "".join( [ '<option value="{}">{}</option>'.format( i, i ) for i in range( 0, led_c.CHANNELS, 3 ) ] )
+
+	count	= led_c.CHANNELS
+	count	= count if count < count_max else count_max
+	
+	info		= led_c.info()
+	separator	= 4 if ("PCA9955B" in info) or ("PCA9632" in info) else 3
+	iref		= False if "PCA9632" in info else True
+
 	page_data[ "sliders"   ]	= get_slider_html( count, separator, 0, iref )
 
 	for key, value in page_data.items():
