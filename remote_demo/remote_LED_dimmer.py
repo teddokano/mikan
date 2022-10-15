@@ -130,7 +130,7 @@ def page_setup( led_c, count, separator, iref = True ):
 			<meta name="viewport"
 				content="width=320, height=480, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
 
-			<title>MIMXRT1050 LED ON/OFF</title>
+			<title>{% dev_name %} server</title>
 			<style>
 				html { font-family: Arial; display: inline-block; text-align: center; }
 				h2 { font-size: 2.0rem; }
