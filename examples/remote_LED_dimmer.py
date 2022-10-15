@@ -58,19 +58,19 @@ HTTP/1.0 200 OK
 		<title>MIMXRT1050 LED ON/OFF</title>
 		<style>
 			html { font-family: Arial; display: inline-block; text-align: center; }
-			h2 { font-size: 2.3rem; }
-			p { font-size: 1.9rem; }
+			h2 { font-size: 2.0rem; }
+			p { font-size: 1.2rem; }
 			body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
-			input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 100%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
+			input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 70%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
 			input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
 			input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
 		</style>
 	</head>
 	<body>
 		<h2>LED dimmer server</h2>
-		<p>LED0: <input type="range" oninput="updateSliderPWM( this, 0 )" id="pwmSlider0" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p>LED1: <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
-		<p>LED2: <input type="range" oninput="updateSliderPWM( this, 2 )" id="pwmSlider2" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#FF0000>LED0:</font> <input type="range" oninput="updateSliderPWM( this, 0 )" id="pwmSlider0" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#00FF00">LED1:</font> <input type="range" oninput="updateSliderPWM( this, 1 )" id="pwmSlider1" min="0" max="255" step="1" value="0" class="slider"></p>
+		<p><font color=#0000FF>LED2:</font> <input type="range" oninput="updateSliderPWM( this, 2 )" id="pwmSlider2" min="0" max="255" step="1" value="0" class="slider"></p>
 		<!--
 		<span id="textSliderValue">%%SLIDERVALUE%%</span>
 		-->
