@@ -152,6 +152,7 @@ def page_setup( led_c, count_max ):
 			-->
 			
 			<script>
+			
 			function updateSliderPWM( element, idx ) {
 				var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
 				document.getElementById( "valField" + idx ).value = ('00' + Number( sliderValue ).toString( 16 )).slice( -2 )
@@ -164,13 +165,19 @@ def page_setup( led_c, count_max ):
 			function updateValField( element, idx ) {
 				var valueFieldElement = document.getElementById( "valField" + idx );
 				var value	= parseInt( valueFieldElement.value, 16 )
+				var no_submit	= 0
+				
 				if ( isNaN( value ) ) {
+					no_submit	= 1
 					value = document.getElementById( "pwmSlider" + idx ).value;
-					valueFieldElement.value = ('00' + Number( value ).toString( 16 )).slice( -2 )
-					return
 				}
 				value	= (value < 0  ) ?   0 : value
 				value	= (255 < value) ? 255 : value
+				valueFieldElement.value = ('00' + Number( value ).toString( 16 )).slice( -2 )
+
+				//if ( no_submit )
+				//	return;
+
 				document.getElementById( "pwmSlider" + idx ).value = value;
 				console.log( value );
 				var xhr = new XMLHttpRequest();
