@@ -136,10 +136,11 @@ def page_setup( led_c, count_max ):
 				html { font-family: Arial; display: inline-block; text-align: center; }
 				h2 { font-size: 1.8rem; }
 				p { font-size: 1.1rem; }
-				body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
+				body { max-width: 300px; margin:100px auto; padding-bottom: 25px; font-size: 0.8rem; }
 				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 50%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
 				input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
 				input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
+				input[type="text"] { width: 2em; height: 1em; font-size: 100%; }
 			</style>
 		</head>
 		<body>
@@ -225,18 +226,19 @@ def page_setup( led_c, count_max ):
 
 def get_slider_html( count, separator, offset, iref ):
 	c	= [ "#FF0000", "#00FF00", "#0000FF", "#000000" ]
+	cs	= [ "item_R", "item_G", "item_B", "item_K" ]
 	s	= []
 
 	for x in range( count ):
 		i	= x + offset
 		s	+= [ '<p><font color={}>PWM{}: <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider">'.format( c[ i % separator ], i, i, i ) ]
-		s	+= [ '<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00" class="text"></font></p>'.format( i, i ) ]
+		s	+= [ '<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00" class="{}"></font></p>'.format( i, i, cs[ i % separator ] ) ]
 		if (i + 1) % separator is 0:
 			s	+= [ "<hr/>" ]
 		
 	if iref:
 		s	+= [ '<p><font color=#000000>IREFALL:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider">' ]
-		s	+= [ '<input type="text" onchange="updateValField( this, 99 )" id="valField99" minlength=2 size=2 value="00" class="text"></font></p>' ]
+		s	+= [ '<input type="text" onchange="updateValField( this, 99 )" id="valField99" minlength=2 size=2 value="00" class="item_K"></font></p>' ]
 
 	return "\n".join( s )
 
