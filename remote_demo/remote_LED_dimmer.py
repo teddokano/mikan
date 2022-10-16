@@ -137,7 +137,7 @@ def page_setup( led_c, count_max ):
 				h2 { font-size: 1.8rem; }
 				p { font-size: 1.1rem; }
 				body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
-				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 70%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
+				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 50%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
 				input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
 				input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
 			</style>
@@ -154,10 +154,22 @@ def page_setup( led_c, count_max ):
 			<script>
 			function updateSliderPWM( element, idx ) {
 				var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
-				//document.getElementById( "textSliderValue" ).innerHTML = sliderValue;
+				document.getElementById( "valField" + idx ).value = ('00' + Number(sliderValue).toString( 16 )).slice( -2 )
 				console.log( sliderValue );
 				var xhr = new XMLHttpRequest();
 				xhr.open("GET", "/slider?value=" + sliderValue + "&idx=" + idx, true);
+				xhr.send();
+			}
+			
+			function updateValField( element, idx ) {
+				var textValue = document.getElementById( "valField" + idx ).value;
+				value	= parseInt( textValue, 16 )
+				value	= (value < 0  ) ?   0 : value
+				value	= (255 < value) ? 255 : value
+				document.getElementById( "pwmSlider" + idx ).value = value;
+				console.log( value );
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "/slider?value=" + value + "&idx=" + idx, true);
 				xhr.send();
 			}
 			
@@ -206,7 +218,7 @@ def get_slider_html( count, separator, offset, iref ):
 	for x in range( count ):
 		i	= x + offset
 		s	+= [ '<p><font color={}>PWM{}: <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider">'.format( c[ i % separator ], i, i, i ) ]
-		s	+= [ '</font></p>' ]
+		s	+= [ '<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="0" class="text"></font></p>'.format( i, i ) ]
 		if (i + 1) % separator is 0:
 			s	+= [ "<hr/>" ]
 		
