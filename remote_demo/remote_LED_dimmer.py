@@ -134,8 +134,8 @@ def page_setup( led_c, count_max ):
 			<title>{% dev_name %} server</title>
 			<style>
 				html { font-family: Arial; display: inline-block; text-align: center; }
-				h2 { font-size: 2.0rem; }
-				p { font-size: 1.2rem; }
+				h2 { font-size: 1.8rem; }
+				p { font-size: 1.1rem; }
 				body { max-width: 300px; margin:100px auto; padding-bottom: 25px; }
 				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 14px; width: 70%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
 				input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 24px; height: 24px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
@@ -205,12 +205,13 @@ def get_slider_html( count, separator, offset, iref ):
 
 	for x in range( count ):
 		i	= x + offset
-		s	+= [ '<p><font color={}>LED{}:</font> <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider"></p>'.format( c[ i % separator ], i, i, i ) ]
+		s	+= [ '<p><font color={}>PWM{}: <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider">'.format( c[ i % separator ], i, i, i ) ]
+		s	+= [ '</font></p>' ]
 		if (i + 1) % separator is 0:
 			s	+= [ "<hr/>" ]
 		
 	if iref:
-		s	+= [ '<p><font color=#000000>IREF:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>' ]
+		s	+= [ '<p><font color=#000000>IREFALL:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>' ]
 		
 	return "\n".join( s )
 
