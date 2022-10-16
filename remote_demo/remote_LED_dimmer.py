@@ -218,13 +218,14 @@ def get_slider_html( count, separator, offset, iref ):
 	for x in range( count ):
 		i	= x + offset
 		s	+= [ '<p><font color={}>PWM{}: <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider">'.format( c[ i % separator ], i, i, i ) ]
-		s	+= [ '<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="0" class="text"></font></p>'.format( i, i ) ]
+		s	+= [ '<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00" class="text"></font></p>'.format( i, i ) ]
 		if (i + 1) % separator is 0:
 			s	+= [ "<hr/>" ]
 		
 	if iref:
-		s	+= [ '<p><font color=#000000>IREFALL:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider"></p>' ]
-		
+		s	+= [ '<p><font color=#000000>IREFALL:</font> <input type="range" oninput="updateSliderPWM( this,99 )" id="pwmSlider99" min="0" max="255" step="1" value="16" class="slider">' ]
+		s	+= [ '<input type="text" onchange="updateValField( this, 99 )" id="valField99" minlength=2 size=2 value="00" class="text"></font></p>' ]
+
 	return "\n".join( s )
 
 main()
