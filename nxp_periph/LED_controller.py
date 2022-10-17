@@ -47,6 +47,23 @@ class LED():
 		self.__dev.pwm( self.__ch, v )
 
 	@property
+	def i( self ):
+		pass
+
+	@i.setter
+	def i( self, v ):
+		"""
+		Change PWM setting
+		
+		Parameters
+		----------
+		v : int or float
+			Current value
+			
+		"""
+		self.__dev.pwm( self.__ch, v, alt = True )
+
+	@property
 	def b( self ):
 		pass
 
@@ -72,7 +89,7 @@ class LED_controller_base:
 	def __init__( self, init_val = 0 ):
 		self.buffer	= [ 0 ] * self.CHANNELS
 		
-	def pwm( self, *args ):
+	def pwm( self, *args, alt = False ):
 		"""
 		PWM setting
 
@@ -101,13 +118,15 @@ class LED_controller_base:
 			0~255 or 0.0~1.0
 			
 		"""
+		reg	= self.__iref_base if alt else self.__pwm_base
+		
 		if 2 == len( args ):
-			r	= self.__pwm_base + args[ 0 ]
+			r	= reg + args[ 0 ]
 			v	= args[ 1 ] if isinstance( args[ 1 ], int ) else int( args[ 1 ] * 255.0 )
 			self.write_registers( r, v )
 		elif 1 == len( args ):
 			l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in args[ 0 ] ]
-			self.write_registers( self.__pwm_base, l )
+			self.write_registers( reg, l )
 	
 	def buf( self, ch, val ):
 		"""
@@ -163,8 +182,9 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
 		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
 		
-		self.__pwm_base	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
-		
+		self.__pwm_base		= self.REG_NAME.index( "IREF0" if current_control else "PWM0"  )
+		self.__iref_base	= self.REG_NAME.index( "PWM0"  if current_control else "IREF0" )
+
 		init	=	{
 						"LEDOUT0": [ 0xAA ] * (self.CHANNELS // 4),
 						"PWMALL" : pwm,
