@@ -142,7 +142,7 @@ def page_setup( led_c, count_max ):
 				html { font-family: Arial; display: inline-block; text-align: center; }
 				h2 { font-size: 1.8rem; }
 				p { font-size: 1.1rem; }
-				body { margin:100px auto; padding-bottom: 25px; font-size: 0.8rem; }
+				body { margin:100px auto; padding: 5px; font-size: 0.8rem; }
 				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 5px; width: 80%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
 				input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 20px; height: 20px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
 				input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
@@ -164,12 +164,11 @@ def page_setup( led_c, count_max ):
 						timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
 					}
 					
-					if ( idx == 99 ) {
-						for ( let i = 0; i < 24; i++ ) {
-							document.getElementById( "Slider" + i ).value = sliderValue;
-							document.getElementById( "valField" + i ).value = ('00' + Number( sliderValue ).toString( 16 )).slice( -2 )
-						}
-					}
+					if ( idx == ({% iref_ofst %} - 1) )
+						setSliderValues( 0, 24, sliderValue );
+
+					if ( idx == ({% iref_ofst %} * 2 - 1) )
+						setSliderValues( {% iref_ofst %}, 24, sliderValue );
 
 					console.log( 'pwm' + idx + ': ' + sliderValue + ', moving?: ' + moving );
 					var xhr = new XMLHttpRequest();
@@ -194,11 +193,33 @@ def page_setup( led_c, count_max ):
 					//	return;
 
 					document.getElementById( "Slider" + idx ).value = value;
+					
+					if ( idx == ({% iref_ofst %} - 1) )
+						setSliderValues( 0, 24, value );
+
+					if ( idx == ({% iref_ofst %} * 2 - 1) )
+						setSliderValues( {% iref_ofst %}, 24, value );
+
 					console.log( 'pwm' + idx + ': ' + value );
 					var xhr = new XMLHttpRequest();
 					xhr.open("GET", "/slider?value=" + value + "&idx=" + idx, true);
 					xhr.send();
 				}
+				
+				function loadFinished(){
+					setSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
+					setSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+				}
+
+				window.addEventListener('load', loadFinished);
+
+				function setSliderValues( start, length, val ) {
+					for ( let i = start; i < start + length; i++ ) {
+						document.getElementById( "Slider" + i ).value = val;
+						document.getElementById( "valField" + i ).value = ('00' + Number( val ).toString( 16 )).slice( -2 )
+					}
+				}
+
 			</script>
 
 			<h2>{% dev_name %} server</h2>
@@ -218,6 +239,9 @@ def page_setup( led_c, count_max ):
 	page_data[ "dev_name"  ]	= led_c.__class__.__name__
 	page_data[ "mcu"       ]	= os.uname().machine
 	page_data[ "ch-offset" ]	= "".join( [ '<option value="{}">{}</option>'.format( i, i ) for i in range( 0, led_c.CHANNELS, 3 ) ] )
+	page_data[ "num_ch"    ]	= str( led_c.CHANNELS )
+	page_data[ "iref_ofst" ]	= str( IREF_ID_OFFSET )
+	page_data[ "iref_init" ]	= str( IREF_INIT )
 
 	count	= led_c.CHANNELS
 	count	= count if count < count_max else count_max
