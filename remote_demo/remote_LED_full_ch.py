@@ -148,7 +148,7 @@ def page_setup( led_c, count_max ):
 				input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
 				input[type="text"] { width: 2em; height: 1em; font-size: 100%; }
 				table { background-color: #EEEEEE; border-collapse: collapse; width: 100%; }
-				th,td { border: solid 1px; color: #FFFFFF; }
+				td { border: solid 1px; color: #FFFFFF; }
 			</style>
 		</head>
 		<body>
@@ -249,8 +249,9 @@ def page_setup( led_c, count_max ):
 	info		= led_c.info()
 	separator	= 4 if ("PCA9955B" in info) or ("PCA9632" in info) else 3
 	iref		= False if "PCA9632" in info else True
-	cols		= 4	if led_c.CHANNELS % 3 else 3
-	
+	#cols		= 4	if led_c.CHANNELS % 3 else 3
+	cols		= 4
+
 	page_data[ "sliders_PWM"  ]	= get_slider_table( led_c.CHANNELS, cols, separator, iref = False, all_reg = True )
 	page_data[ "sliders_IREF" ]	= get_slider_table( led_c.CHANNELS, cols, separator, iref = True,  all_reg = True  )
 
@@ -262,7 +263,7 @@ def page_setup( led_c, count_max ):
 def get_slider_table( total, cols, separator, iref, all_reg = False ):
 	rows	= (total + cols - 1) // cols
 	label	= "IREF" if iref else "PWM"
-	c		= [ "#FF0000", "#00FF00", "#0000FF", "#000000" ]
+	c		= [ "#FF0000", "#008000", "#0000FF", "#000000" ]
 	cs		= [ "item_R", "item_G", "item_B", "item_K" ]
 	template	= [	'<p><font color={}>{}</font></p>',
 					'<p><input type="range" oninput="updateSlider( this, 1, {} )" onchange="updateSlider( this, 0, {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider"></p>',
@@ -291,7 +292,7 @@ def get_slider_table( total, cols, separator, iref, all_reg = False ):
 	return "\n".join( s )
 
 def table_item( template, i, id, c_l, cs_l, label ):
-	s	 = [ '<td align ="left">' ]
+	s	 = [ '<td align ="right">' ]
 	s	+= [ template[ 0 ].format( c_l, label ) ]
 	s	+= [ '</td><td>' ]
 	s	+= [ template[ 1 ].format( id, id, id ) ]
