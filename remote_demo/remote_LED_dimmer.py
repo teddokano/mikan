@@ -155,8 +155,10 @@ def page_setup( led_c, count_max ):
 			<script>
 			
 			timeoutId	= null;
-			function updateSliderPWM( element, moving, idx ) {
-			
+			function updateSliderPWM( element, moving, idx ) {			
+				var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
+				document.getElementById( "valField" + idx ).value = ('00' + Number( sliderValue ).toString( 16 )).slice( -2 )
+
 				if ( moving )
 				{
 					//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
@@ -164,8 +166,6 @@ def page_setup( led_c, count_max ):
 					timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
 				}
 
-				var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
-				document.getElementById( "valField" + idx ).value = ('00' + Number( sliderValue ).toString( 16 )).slice( -2 )
 				console.log( 'pwm' + idx + ': ' + sliderValue + ', moving?: ' + moving );
 				var xhr = new XMLHttpRequest();
 				xhr.open("GET", "/slider?value=" + sliderValue + "&idx=" + idx, true);
