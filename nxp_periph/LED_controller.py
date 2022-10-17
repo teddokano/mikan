@@ -325,7 +325,8 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 			
 		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
 
-		self.__pwm_base	= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
+		self.__pwm_base		= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
+		self.__iref_base	= self.REG_NAME.index( "PWM0"  if current_control else "IREF0" )
 
 		for r, v in { 0xFF: 0xFF, 0xFE: 0xFE, 0xFD: 0xFD }.items():
 			self.write_registers( r, v )

@@ -165,10 +165,10 @@ def page_setup( led_c, count_max ):
 					}
 					
 					if ( idx == ({% iref_ofst %} - 1) )
-						setSliderValues( 0, 24, sliderValue );
+						setSliderValues( 0, {% num_ch %}, sliderValue );
 
 					if ( idx == ({% iref_ofst %} * 2 - 1) )
-						setSliderValues( {% iref_ofst %}, 24, sliderValue );
+						setSliderValues( {% iref_ofst %}, {% num_ch %}, sliderValue );
 
 					console.log( 'pwm' + idx + ': ' + sliderValue + ', moving?: ' + moving );
 					var xhr = new XMLHttpRequest();
@@ -195,10 +195,10 @@ def page_setup( led_c, count_max ):
 					document.getElementById( "Slider" + idx ).value = value;
 					
 					if ( idx == ({% iref_ofst %} - 1) )
-						setSliderValues( 0, 24, value );
+						setSliderValues( 0, {% num_ch %}, value );
 
 					if ( idx == ({% iref_ofst %} * 2 - 1) )
-						setSliderValues( {% iref_ofst %}, 24, value );
+						setSliderValues( {% iref_ofst %}, {% num_ch %}, value );
 
 					console.log( 'pwm' + idx + ': ' + value );
 					var xhr = new XMLHttpRequest();
@@ -247,24 +247,45 @@ def page_setup( led_c, count_max ):
 	count	= count if count < count_max else count_max
 	
 	info		= led_c.info()
-	separator	= 4 if ("PCA9955B" in info) or ("PCA9632" in info) else 3
-	iref		= False if "PCA9632" in info else True
-	#cols		= 4	if led_c.CHANNELS % 3 else 3
-	cols		= 4
+	
+	if "PCA9956B" in info:
+		col_pat	= sum( tuple( ("R", "G", "B") for i in range( 8 ) ), () )
+		all_reg = True
+	elif "PCA9955B" in info:
+		col_pat	= sum( tuple( ("K", "R", "G", "B") for i in range( 4 ) ), () )
+		all_reg = True
+	elif "PCA9957" in info:
+		col_pat	= sum( tuple( ("R", "G", "B") for i in range( 4 ) ), () )
+		col_pat	+= tuple( "K" for i in range( 12 ) )
+		all_reg = True
+	elif "PCA9632" in info:
+		col_pat	= ("R", "G", "B", "K")
+		all_reg = False
+	else:
+		separator	= 4
+		all_reg = False
 
-	page_data[ "sliders_PWM"  ]	= get_slider_table( led_c.CHANNELS, cols, separator, iref = False, all_reg = True )
-	page_data[ "sliders_IREF" ]	= get_slider_table( led_c.CHANNELS, cols, separator, iref = True,  all_reg = True  )
+	iref		= hasattr( led_c, "__iref_base" )
+	#cols		= 4	if led_c.CHANNELS % 3 else 3
+	cols		= 4	if all_reg else 1
+
+	page_data[ "sliders_PWM"  ]	= get_slider_table( led_c.CHANNELS, cols, col_pat, iref = False, all_reg = all_reg )
+	
+	if iref:
+		page_data[ "sliders_IREF" ]	= get_slider_table( led_c.CHANNELS, cols, col_pat, iref = True, all_reg = all_reg )
+	else:
+		page_data[ "sliders_IREF" ]	= ""
 
 	for key, value in page_data.items():
-		html = html.replace('{% ' + key + ' %}', value)
+		html = html.replace('{% ' + key + ' %}', value )
 	
 	return html
 
-def get_slider_table( total, cols, separator, iref, all_reg = False ):
+def get_slider_table( total, cols, pat, iref, all_reg = False ):
 	rows	= (total + cols - 1) // cols
 	label	= "IREF" if iref else "PWM"
-	c		= [ "#FF0000", "#008000", "#0000FF", "#000000" ]
-	cs		= [ "item_R", "item_G", "item_B", "item_K" ]
+	c		= { "R": "#FF0000", "G": "#008000", "B": "#0000FF", "K": "#000000" }
+	cs		= { "R": "item_R",  "G": "item_G",  "B": "item_B",  "K": "item_K"  }
 	template	= [	'<p><font color={}>{}</font></p>',
 					'<p><input type="range" oninput="updateSlider( this, 1, {} )" onchange="updateSlider( this, 0, {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider"></p>',
 					'<p><input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00" class="{}"></p>'
@@ -276,7 +297,7 @@ def get_slider_table( total, cols, separator, iref, all_reg = False ):
 		s	 	+= [ '<tr>' ]
 		for i in range( y, total, rows ):
 			id	 = i + (IREF_ID_OFFSET if iref else 0)
-			s	+= [ table_item( template, i, id, c[ i % separator ], cs[ i % separator ], label + str( i ) ) ]
+			s	+= [ table_item( template, i, id, c[ pat[ i ] ], cs[ pat[ i ] ], label + str( i ) ) ]
 
 		s	+= [ '</tr>' ]
 
@@ -285,7 +306,7 @@ def get_slider_table( total, cols, separator, iref, all_reg = False ):
 		id	 	 = i + (IREF_ID_OFFSET if iref else 0)
 
 		s	+= [ '<tr>' ]
-		s	+= [ table_item( template, i, id, c[ 3 ], cs[ 3 ], label + "ALL" ) ]
+		s	+= [ table_item( template, i, id, c[ "K" ], cs[ "K" ], label + "ALL" ) ]
 		s	+= [ '</tr>' ]
 
 	s	+= [ '</table>' ]
