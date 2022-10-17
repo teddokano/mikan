@@ -154,10 +154,19 @@ def page_setup( led_c, count_max ):
 			
 			<script>
 			
-			function updateSliderPWM( element, idx ) {
+			timeoutId	= null;
+			function updateSliderPWM( element, moving, idx ) {
+			
+				if ( moving )
+				{
+					//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
+					if ( timeoutId ) return ;
+					timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
+				}
+
 				var sliderValue = document.getElementById( "pwmSlider" + idx ).value;
 				document.getElementById( "valField" + idx ).value = ('00' + Number( sliderValue ).toString( 16 )).slice( -2 )
-				console.log( sliderValue );
+				console.log( 'pwm' + idx + ': ' + sliderValue + ', moving?: ' + moving );
 				var xhr = new XMLHttpRequest();
 				xhr.open("GET", "/slider?value=" + sliderValue + "&idx=" + idx, true);
 				xhr.send();
@@ -231,7 +240,7 @@ def get_slider_html( count, separator, offset, iref ):
 
 	for x in range( count ):
 		i	= x + offset
-		s	+= [ '<p><font color={}>PWM{}: <input type="range" oninput="updateSliderPWM( this, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider">'.format( c[ i % separator ], i, i, i ) ]
+		s	+= [ '<p><font color={}>PWM{}: <input type="range" oninput="updateSliderPWM( this, 1, {} )" onchange="updateSliderPWM( this, 0, {} )" id="pwmSlider{}" min="0" max="255" step="1" value="0" class="slider">'.format( c[ i % separator ], i, i, i, i ) ]
 		s	+= [ '<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00" class="{}"></font></p>'.format( i, i, cs[ i % separator ] ) ]
 		if (i + 1) % separator is 0:
 			s	+= [ "<hr/>" ]
