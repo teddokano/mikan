@@ -97,7 +97,7 @@ def demo( rtc ):
 			dt	= rtc.datetime()
 			
 			for e in event:
-				print( "{} {}".format( e, dt ), end = "     \r" if e is "periodic" else "     \n" )
+				print( "{} {}".format( e, dt ), end = "     \n" if e is "periodic" else "     \n" )
 
 			if "alarm" in event:
 				print( "!!!!!!! ALARM !!!!!!!" )
