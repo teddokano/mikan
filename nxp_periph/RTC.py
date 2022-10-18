@@ -278,7 +278,12 @@ class RTC_base():
 		for key, item in zip( form, datetime ):
 			dt[ key ]	= item
 
-		dt[ "weekday" ]	= weekday
+		print( dt )
+
+		if "weekday" not in dt:
+			dt[ "weekday" ]	= weekday
+
+		print( dt )
 
 		return dt
 
