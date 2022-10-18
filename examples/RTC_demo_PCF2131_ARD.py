@@ -56,8 +56,8 @@ def feature_test( rtc ):
 	print( "rtc.deinit()\n --> ", end = "" )
 	print( rtc.datetime() )
 
-	rtc.datetime( (2022, 12, 21, 3, 21, 23, 32, 99 ), 1 )
-	print( "rtc.datetime( (2022, 12, 21, 21, 23, 32, 99, None ), 1 )\n --> ", end = "" )
+	rtc.datetime( (2022, 12, 21, 3, 21, 23, 32, 99) )
+	print( "rtc.datetime( (2022, 12, 21, 3, 21, 23, 32, 99) )\n --> ", end = "" )
 	print( rtc.datetime() )
 
 	print( "rtc.now()\n --> ", end = "" )
@@ -97,7 +97,7 @@ def demo( rtc ):
 			dt	= rtc.datetime()
 			
 			for e in event:
-				print( "{} {}".format( e, dt ), end = "\r" if e is "periodic" else "\n" )
+				print( "{} {}".format( e, dt ), end = "     \r" if e is "periodic" else "     \n" )
 
 			if "alarm" in event:
 				print( "!!!!!!! ALARM !!!!!!!" )
