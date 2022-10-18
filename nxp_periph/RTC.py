@@ -14,10 +14,12 @@ class RTC_base():
 	"machine.RTC" like interface available but this class
 	doesn't inherit machine.RTC to separate its behavior
 	"""
-	DATETIME_TUPPLE_FORM	= ( "year", "month", "day", "hours",
+	DATETIME_TUPPLE_FORM	= ( "year", "month", "day", "weekday",
+								"hours", "minutes", "seconds", "subseconds" )
+	NOW_TUPPLE_FORM			= ( "year", "month", "day", "hours",
 								"minutes", "seconds", "subseconds", "tzinfo" )
 	DEINIT_VAL				= ( 2015, 1, 1, 0, 0, 0, 0, None )
-	DEINIT_TUPLE			= dict( zip( DATETIME_TUPPLE_FORM, DEINIT_VAL ) )
+	DEINIT_TUPLE			= dict( zip( NOW_TUPPLE_FORM, DEINIT_VAL ) )
 	DEINIT_TUPLE[ "weekday" ]	= 0		# dummy
 	ALARM_KEYS				= ( "day", "hours", "minutes", "seconds", "weekday" )
 
@@ -38,8 +40,6 @@ class RTC_base():
 		----------
 		args[0] : 8-tuple, optional
 			tuple of date&time
-		args[1] : int, optional
-			weekday number : 0~6
 			
 		Returns
 		-------
@@ -51,18 +51,13 @@ class RTC_base():
 		"""
 		length	= len( args )
 		if 1 <= length:
-			if 2 <= length:
-				self.init( args[ 0 ], weekday = args[ 1 ] )
-			else:
-				self.init( args[ 0 ] )	# args[1:] will be ignored
+			if 1 <= length:
+				self.init( args[ 0 ], form = self.DATETIME_TUPPLE_FORM )	# args[1:] will be ignored
 			return
 
-		RTN_FORM		= ( "year", "month", "day", "weekday",
-							"hours", "minutes", "seconds", "subseconds" )
-		
 		dt	= self.__get_datetime_reg()
 
-		return tuple( dt[ key ] for key in RTN_FORM )
+		return tuple( dt[ key ] for key in self.DATETIME_TUPPLE_FORM )
 
 	def now( self ):
 		"""
@@ -78,9 +73,9 @@ class RTC_base():
 		"""
 		dt	= self.__get_datetime_reg()
 		
-		return tuple( dt[ key ] for key in self.DATETIME_TUPPLE_FORM )
+		return tuple( dt[ key ] for key in self.NOW_TUPPLE_FORM )
 
-	def init( self, datetime, weekday = 0 ):
+	def init( self, datetime, form = NOW_TUPPLE_FORM, weekday = 0 ):
 		"""
 		set date&time
 	
@@ -97,7 +92,7 @@ class RTC_base():
 			weekday number : 0~6 (default=0)
 			
 		"""
-		dt	= RTC_base.tuple2dt( datetime, weekday )
+		dt	= RTC_base.tuple2dt( datetime, form, weekday = weekday )
 		self.__set_datetime_reg( dt )
 
 	def deinit( self ):
@@ -108,7 +103,7 @@ class RTC_base():
 		and date&time is set to ( 2015, 1, 1, 0, 0, 0, 0, None )
 		"""
 		self.__software_reset()
-		self.__set_datetime_reg( self.DEINIT_TUPLE )
+		self.init( self.DEINIT_VAL )
 
 	def alarm_int( self, pin_select, **kwargs ):
 		"""
@@ -278,32 +273,9 @@ class RTC_base():
 		return self.__check_events( events )
 
 	@classmethod
-	def tuple2dt( cls, datetime, weekday = 0 ):
-		"""
-		converts date&time tuple to dict
-
-		Parameters
-		----------
-		datetime : tuple, optional
-			date&time tuple.
-			( "year", "month", "day", "hours",
-			  "minutes", "seconds", "subseconds", "tzinfo" )
-			tzinfo is not required (ignored)
-		weekday : int, optional
-			weekday number : 0~6 (default=0)
-		
-		Returns
-		-------
-		dict : date&time info
-			dictionary with keys of
-			"year", "month", "day", "hours", "minutes",
-			"seconds", "subseconds", "tzinfo" and "weekday".
-			tzinfo is a dummy
-
-		"""
+	def tuple2dt( cls, datetime, form, weekday = 0 ):
 		dt	= cls.DEINIT_TUPLE.copy()	# to prepare initialized dict to overwrite neccessary items
-
-		for key, item in zip( cls.DATETIME_TUPPLE_FORM, datetime ):
+		for key, item in zip( form, datetime ):
 			dt[ key ]	= item
 
 		dt[ "weekday" ]	= weekday

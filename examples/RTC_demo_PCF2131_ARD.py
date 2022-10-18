@@ -19,6 +19,15 @@ def main():
 	rtc.battery_switchover( BAT_SWOVR )
 
 	machine_rtc	= machine.RTC()
+	
+	print( "== now ==" )
+	print( "machine.rtc = {}".format( machine_rtc.now() ) )
+	print( "PCF2131     = {}".format( rtc.now() ) )
+	
+	print( "== datetime ==" )
+	print( "machine.rtc = {}".format( machine_rtc.datetime() ) )
+	print( "PCF2131     = {}".format( rtc.datetime() ) )
+
 	if osf:
 		source, target, msg	= machine_rtc, rtc, "stop is detected"
 		feature_test( rtc )
@@ -40,14 +49,14 @@ def feature_test( rtc ):
 	print( rtc.datetime() )
 	
 	rtc.init( ( 2017, 9, 14 ) )
-	print( "tc.init( ( 2017, 9, 14 )\n --> ", end = "" )
+	print( "rtc.init( ( 2017, 9, 14 )\n --> ", end = "" )
 	print( rtc.datetime() )
 
 	rtc.deinit()
 	print( "rtc.deinit()\n --> ", end = "" )
 	print( rtc.datetime() )
 
-	rtc.datetime( (2022, 12, 21, 21, 23, 32, 99, None ), 1 )
+	rtc.datetime( (2022, 12, 21, 3, 21, 23, 32, 99 ), 1 )
 	print( "rtc.datetime( (2022, 12, 21, 21, 23, 32, 99, None ), 1 )\n --> ", end = "" )
 	print( rtc.datetime() )
 
