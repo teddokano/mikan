@@ -28,14 +28,6 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	return lan.ifconfig()
 
 
-#HTML to send to browsers
-html = b"""\
-HTTP/1.0 200 OK
-
-
-
-"""
-
 #Setup temp sensor
 i2c	= machine.I2C( 0, freq = (400 * 1000) )
 ts	= PCT2075( i2c )
@@ -109,6 +101,7 @@ def page_setup( dev, time, temp ):
 	<html>
 
 	<head>
+		<meta charset="utf-8" />
 		<title>temp sensor</title>
 		<style>
 			html { font-family: Arial; display: inline-block; text-align: center; }
