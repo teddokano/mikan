@@ -80,11 +80,9 @@ def main( micropython_optimize=False ):
 		req = client_stream.readline()
 		print( req )
 		
-		td		= rtc.__get_datetime_reg()
-
 		if "newdata.html" in req:
 			print(  "new data request!" )
-			html	= sending_data( td )
+			html	= sending_data( rtc )
 		else:
 			html	= page_setup( rtc, time, temp )
 
@@ -130,6 +128,7 @@ def page_setup( dev, time, temp ):
 			table { background-color: #FFFFFF; border-collapse: collapse; width: 30%; }
 			td { border: solid 1px; color: #000000; }
 			.datetime { font-size: 3.0rem; }
+			.reg_table { font-size: 1.1rem; }
 		</style>
 	</head>
 	<body>
@@ -146,6 +145,10 @@ def page_setup( dev, time, temp ):
 
 					var elem = document.getElementById( "datetime" );
 					elem.innerText = obj.datetime.str;
+					
+					for ( let i = 0; i < obj.reg.length; i++ ) {
+						document.getElementById('regField' + i ).value	= ('00' + Number( obj.reg[ i ] ).toString( 16 )).slice( -2 );
+					}
 				};
 
 				ajax.send( null );
@@ -163,26 +166,49 @@ def page_setup( dev, time, temp ):
 
 			</script>			
 			<div id="datetime" class="datetime"></div>
-	
+			<div id="reg_table" class="reg_table">
+				register table<br/>
+				{% reg_table %}
+			</div>
 	</body>
 	</html>
 	"""
 	page_data	= {}
-	page_data[ "dev_name" ]	= dev.__class__.__name__
+	page_data[ "dev_name"   ]	= dev.__class__.__name__
+	page_data[ "reg_table"  ]	= get_reg_table( rtc, 4 )
 
 	for key, value in page_data.items():
 		html = html.replace('{% ' + key + ' %}', value )
 	
 	return html
 
-def sending_data( td ):
+def sending_data( rtc ):
+	reg	= rtc.dump()
+	td	= rtc.__get_datetime_reg()
+	
 	td[ "weekday" ]	= WKDY[ td[ "weekday" ] ]
 	td[ "month"   ]	= MNTH[ td[ "month"   ] ]
 	td[ "str"   ]	 = "%04d %s %02d (%s) %02d:%02d:%02d" % \
 						(td[ "year" ], td[ "month" ], td[ "day" ], td[ "weekday" ], \
 						td[ "hours" ], td[ "minutes" ], td[ "seconds" ] )
-	s	 = 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td } )
 	
-	return s
-	
+	return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg } )
+
+def get_reg_table( dev, cols ):
+	total	= len( dev.REG_NAME )
+	rows	= (total + cols - 1) // cols
+
+	s	 	= [ '<table>' ]
+
+	for y in range( rows ):
+		s	 	+= [ '<tr>' ]
+		for i in range( y, total, rows ):
+			s	+= [ '<td>{}</td><td>0x{:02X}</td>'.format( dev.REG_NAME[ i ], i ) ]
+			s	+= [ '<td><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="00" class="regfield"></td>'.format( i, i ) ]
+
+		s	+= [ '</tr>' ]
+
+	s	+= [ '</table>' ]
+	return "\n".join( s )
+
 main()

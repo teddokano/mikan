@@ -53,12 +53,24 @@ class Interface:
 		rv	= self.read_registers( r, 1 )
 		print( "{:16} (0x{:02X}) : 0x{:02X}".format( reg_name, r, rv ) )
 
+	def dump( self ):
+		"""
+		dump register values
+	
+		Returns
+		-------
+		list : register data
+			List of integers
+
+		"""
+		return self.read_registers( 0, len( self.REG_NAME ) )
+
 	def dump_reg( self ):
 		"""
 		showing all register name, address/pointer and value
 		"""
-		length	= len( self.REG_NAME )
-		rv		= self.read_registers( 0, length )
+		rv		= self.dump()
+		length	= len( rv )
 
 		index	= [ (i // 2) if 0 == i % 2 else (i // 2) + ((length + 1) // 2) for i in range( length ) ]
 		reg		= [ self.REG_NAME[ i ] for i in index ]
