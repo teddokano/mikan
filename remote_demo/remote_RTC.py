@@ -44,8 +44,8 @@ regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 
 #Setup RTC
 i2c	= machine.I2C( 0, freq = (400 * 1000) )
-#rtc	= PCF2131( i2c )
-rtc	= PCF85063( i2c )
+rtc	= PCF2131( i2c )
+#rtc	= PCF85063( i2c )
 mrtc = machine.RTC()
 
 def main( micropython_optimize=False ):
@@ -137,17 +137,18 @@ def page_setup( dev, time, temp ):
 				 ****	time display
 				 ****************************/
 				 
-				/******** updateRegField ********/
+				/******** getTimeAndShow ********/
 
 				function getTimeAndShow() {
 					var url	= "/{% dev_name %}?"
 					ajaxUpdate( url, getTimeAndShowDone )
-
 				}
+
+				/******** getTimeAndShowDone ********/
 
 				var prev_reg	= [];
 				
-				function getTimeAndShowDone() {
+ 				function getTimeAndShowDone() {
 					var obj = JSON.parse( this.responseText )
 					console.log( obj.datetime.str );
 
@@ -217,12 +218,9 @@ def page_setup( dev, time, temp ):
 				}
 
 
-
-
 				window.addEventListener('load', function () {
 					console.log( 'window.addEventListener' );
 					setInterval( getTimeAndShow, 1000 );
-									
 				});
 
 				</script>
@@ -231,7 +229,6 @@ def page_setup( dev, time, temp ):
 					<p>{% dev_name %} server</p>
 					<p class="info">{% dev_info %}</p>
 				</div>
-				
 
 				<div id="datetime" class="datetime"></div>
 				
@@ -313,7 +310,7 @@ def get_style():
 	s	= """\
 	<style>
 	html {
-		font-size: 100%;
+		font-size: 80%;
 		font-family: Arial;
 		display: inline-block;
 		text-align: center;

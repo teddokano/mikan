@@ -88,7 +88,7 @@ def main( micropython_optimize=False ):
 
 		print( len( time ) )
 
-		if "newdata.html" in req:
+		if ts.__class__.__name__ in req:
 			print(  "new data request!" )
 			html	= sending_data( time, temp )
 		else:
@@ -208,42 +208,44 @@ def page_setup( dev, time, temp ):
 				window.location.reload();
 			}
 
-			function ajaxUpdate( url, element ) {
-				url			= url + '?ver=' + new Date().getTime();
-				var ajax	= new XMLHttpRequest;
-				ajax.open( 'GET', url, true );
-				
-				ajax.onload = function () {
-					var obj = JSON.parse( ajax.responseText )
-					
-					//	server sends multiple data.
-					//	pick one sample from last and store local memory
-					time.push( obj.time[ obj.time.length - 1 ] )
-					temp.push( obj.temp[ obj.temp.length - 1 ] )
-					drawChart( time, temp );
-					
-					for ( let i = 0; i < {% table_len %}; i++ )
-					{
-						document.getElementById( "timeField" + i ).value = time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
-						document.getElementById( "tempField" + i ).value = temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
-					}
-					
-					document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
-					document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
-					document.getElementById( "infoFieldValue2" ).value = time.length;
-				};
 
-				ajax.send( null );
+			/****************************
+			 ****	time display
+			 ****************************/
+
+			/******** getTempAndShow ********/
+
+			function getTempAndShow() {
+				var url	= "/{% dev_name %}?"
+				ajaxUpdate( url, getTimeAndShowDone )
 			}
+
+			var prev_reg	= [];
+			
+			function getTimeAndShowDone() {
+				var obj = JSON.parse( this.responseText )
+
+				//	server sends multiple data.
+				//	pick one sample from last and store local memory
+				time.push( obj.time[ obj.time.length - 1 ] )
+				temp.push( obj.temp[ obj.temp.length - 1 ] )
+				drawChart( time, temp );
+				
+				for ( let i = 0; i < {% table_len %}; i++ )
+				{
+					document.getElementById( "timeField" + i ).value = time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+					document.getElementById( "tempField" + i ).value = temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+				}
+				
+				document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
+				document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
+				document.getElementById( "infoFieldValue2" ).value = time.length;
+			}
+
 
 			window.addEventListener('load', function () {
 				console.log( 'window.addEventListener' );
-
-				var url = "newdata.html";
-				var div = document.getElementById('ajaxreload');
-				setInterval(function () {
-				ajaxUpdate(url, div);
-				}, 1000);
+				setInterval( getTempAndShow, 1000 );
 			});
 			
 			function csvFileOut(  time, temp  ) {
