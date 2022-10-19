@@ -227,6 +227,10 @@ def page_setup( dev, time, temp ):
 						document.getElementById( "timeField" + i ).value = time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
 						document.getElementById( "tempField" + i ).value = temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
 					}
+					
+					document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
+					document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
+					document.getElementById( "infoFieldValue2" ).value = time.length;
 				};
 
 				ajax.send( null );
@@ -261,8 +265,13 @@ def page_setup( dev, time, temp ):
 
 		</div>
 		<div id="reg_table" class="control_panel reg_table">
-			{% table %}
-			<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
+			<div class="log_panel">
+				{% table %}
+				<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
+			</div>
+			<div class="info_panel">
+				{% info_tab %}
+			</div>
 		</div>
 
 	</body>
@@ -274,6 +283,7 @@ def page_setup( dev, time, temp ):
 	page_data[ "time"      ]	= str( time )
 	page_data[ "temp"      ]	= str( temp )
 	page_data[ "table"     ]	= get_table( time, temp, max )
+	page_data[ "info_tab"  ]	= get_info_table( 3 )
 	page_data[ "table_len" ]	= str( TABLE_LENGTH )
 	page_data[ "style"     ]	= get_style()
 
@@ -291,6 +301,18 @@ def get_table( time, temp, max ):
 	s	+= [ '</table>' ]
 
 	return "\n".join( s )
+
+def get_info_table( length ):
+	lb	= [ "start time", "last time", "sample count" ]
+	s	= [ '<table><tr>' ]
+
+	for i, l in zip( range( length ), lb ):
+		s	+= [ '<tr><td text_align="center">{}</td><td><input type="text" id="infoFieldValue{}"></td></tr>'.format( l, i ) ]
+
+	s	+= [ '</table>' ]
+
+	return "\n".join( s )
+
 
 def sending_data( time, temp ):
 	s	 = [ 'HTTP/1.0 200 OK\n\n' ]
