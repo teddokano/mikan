@@ -20,6 +20,7 @@
 #	version	0.1
 
 import	network
+import	ujson
 import	machine
 import	os
 import	ure
@@ -59,9 +60,6 @@ def main( micropython_optimize=False ):
 	s.listen( 1 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
-	maax_sliders	= 6
-	html	= page_setup( led_c, maax_sliders )
-
 	while True:
 		res = s.accept()
 		client_sock = res[0]
@@ -79,11 +77,16 @@ def main( micropython_optimize=False ):
 		print( req )
 		
 		if "?" not in req:
+			html	= page_setup( led_c )
+
 			if "PCA9632" not in led_c.info():
 				led_c.write_registers( "IREFALL", IREF_INIT )
 
 			for i in range( led_c.CHANNELS ):
 				led[ i ].v	= 0.0
+		elif "allreg" in req:
+			html	= sending_data( led_c )
+			print( html )
 		else:
 			m	= regex_pwm.match( req )
 			if m:
@@ -101,6 +104,8 @@ def main( micropython_optimize=False ):
 					led_c.write_registers( "IREFALL", pwm )
 				else:
 					pass
+					
+				html	= sending_data( led_c )
 
 		while True:
 			h = client_stream.readline()
@@ -116,6 +121,9 @@ def main( micropython_optimize=False ):
 			client_sock.close()
 		print()
 
+def sending_data( dev ):
+	return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": dev.dump(), "str": "test message" } )
+
 
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
@@ -129,7 +137,7 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	return lan.ifconfig()
 	
 
-def page_setup( led_c, count_max ):
+def page_setup( led_c ):
 	#HTML to send to browsers
 	html = """\
 	HTTP/1.0 200 OK
@@ -138,18 +146,7 @@ def page_setup( led_c, count_max ):
 	<html>
 		<head>
 			<title>{% dev_name %} server</title>
-			<style>
-				html { font-family: Arial; display: inline-block; text-align: center; }
-				h2 { font-size: 1.8rem; }
-				p { font-size: 1.1rem; }
-				body { margin:100px auto; padding: 5px; font-size: 0.8rem; }
-				input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 5px; width: 80%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
-				input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 20px; height: 20px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
-				input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
-				input[type="text"] { width: 2em; height: 1em; font-size: 100%; }
-				table { background-color: #EEEEEE; border-collapse: collapse; width: 100%; }
-				td { border: solid 1px; color: #FFFFFF; }
-			</style>
+			{% style %}
 		</head>
 		<body>
 			<script>
@@ -171,9 +168,9 @@ def page_setup( led_c, count_max ):
 						setSliderValues( {% iref_ofst %}, {% num_ch %}, sliderValue );
 
 					console.log( 'pwm' + idx + ': ' + sliderValue + ', moving?: ' + moving );
-					var xhr = new XMLHttpRequest();
-					xhr.open("GET", "/slider?value=" + sliderValue + "&idx=" + idx, true);
-					xhr.send();
+
+					var url	= "/slider?value=" + sliderValue + "&idx=" + idx
+					ajaxUpdate( url )
 				}
 				
 				function updateValField( element, idx ) {
@@ -201,9 +198,9 @@ def page_setup( led_c, count_max ):
 						setSliderValues( {% iref_ofst %}, {% num_ch %}, value );
 
 					console.log( 'pwm' + idx + ': ' + value );
-					var xhr = new XMLHttpRequest();
-					xhr.open("GET", "/slider?value=" + value + "&idx=" + idx, true);
-					xhr.send();
+					
+					var url	= "/slider?value=" + value + "&idx=" + idx
+					ajaxUpdate( url )
 				}
 				
 				function loadFinished(){
@@ -219,19 +216,54 @@ def page_setup( led_c, count_max ):
 						document.getElementById( "valField" + i ).value = ('00' + Number( val ).toString( 16 )).slice( -2 )
 					}
 				}
+				
+				function allRegLoad() {
+					ajax_rtn	= ajaxUpdate( 'allreg', allRegLoadDone );
+				}
+
+				function allRegLoadDone() {
+					obj = JSON.parse( this.responseText );
+
+					for ( let i = 0; i < obj.reg.length; i++ ) {
+						document.getElementById('regField' + i ).value	= ('00' + Number( obj.reg[ i ] ).toString( 16 )).slice( -2 );
+					}
+				}
+				
+				function ajaxUpdate( url, func ) {
+					url			= url + '?ver=' + new Date().getTime();
+					var	ajax	= new XMLHttpRequest;
+					ajax.open( 'GET', url, true );
+					
+					ajax.onload = func;
+					ajax.send( null );
+				}
 
 			</script>
 
-			<h2>{% dev_name %} server</h2>
-			PWM registers
-			{% sliders_PWM %}
-			IREF registers
-			{% sliders_IREF %}
+			<div class="header">{% dev_name %} server</div>
+			
+			<div class="control_panel slider_panel">
+				PWM registers
+				{% sliders_PWM %}
+			</div>
+			
+			<div class="control_panel slider_panel">
+				IREF registers
+				{% sliders_IREF %}
+			</div>
 
-			<br/>HTTP server on <br>{% mcu %}<br/><br/>
-
-			0100111101101011011000010110111001101111
-		</body>
+			<div id="reg_table" class="control_panel reg_table">
+				register table<br/>
+				{% reg_table %}
+				<div aligh=left><input type="button" onclick="allRegLoad();" value="load" class="all_reg_load"></div>
+			</div>
+			
+			<div class="foot_note">
+				<b>HTTP server on<br/>
+				{% mcu %}</b><br/>
+				0100111101101011011000010110111001101111
+			</div>
+	</body>
 	</html>
 	"""
 	
@@ -242,11 +274,11 @@ def page_setup( led_c, count_max ):
 	page_data[ "num_ch"    ]	= str( led_c.CHANNELS )
 	page_data[ "iref_ofst" ]	= str( IREF_ID_OFFSET )
 	page_data[ "iref_init" ]	= str( IREF_INIT )
+	page_data[ "style"     ]	= get_style()
+	page_data[ "reg_table" ]	= get_reg_table( led_c, 4 )
 
 	count	= led_c.CHANNELS
-	count	= count if count < count_max else count_max
-	
-	info		= led_c.info()
+	info	= led_c.info()
 	
 	if "PCA9956B" in info:
 		col_pat	= sum( tuple( ("R", "G", "B") for i in range( 8 ) ), () )
@@ -286,15 +318,15 @@ def get_slider_table( total, cols, pat, iref, all_reg = False ):
 	label	= "IREF" if iref else "PWM"
 	c		= { "R": "#FF0000", "G": "#008000", "B": "#0000FF", "K": "#000000" }
 	cs		= { "R": "item_R",  "G": "item_G",  "B": "item_B",  "K": "item_K"  }
-	template	= [	'<p><font color={}>{}</font></p>',
-					'<p><input type="range" oninput="updateSlider( this, 1, {} )" onchange="updateSlider( this, 0, {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider"></p>',
-					'<p><input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00" class="{}"></p>'
+	template	= [	'<font color={}>{}</font>',
+					'<input type="range" oninput="updateSlider( this, 1, {} )" onchange="updateSlider( this, 0, {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider">',
+					'<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00"">'
 					]
-					
+
 	s	 	= [ '<table>' ]
 
 	for y in range( rows ):
-		s	 	+= [ '<tr>' ]
+		s	 	+= [ '<tr class="slider_table_row">' ]
 		for i in range( y, total, rows ):
 			id	 = i + (IREF_ID_OFFSET if iref else 0)
 			s	+= [ table_item( template, i, id, c[ pat[ i ] ], cs[ pat[ i ] ], label + str( i ) ) ]
@@ -305,7 +337,7 @@ def get_slider_table( total, cols, pat, iref, all_reg = False ):
 		i		 = (IREF_ID_OFFSET - 1)
 		id	 	 = i + (IREF_ID_OFFSET if iref else 0)
 
-		s	+= [ '<tr>' ]
+		s	+= [ '<tr class="slider_table_row">' ]
 		s	+= [ table_item( template, i, id, c[ "K" ], cs[ "K" ], label + "ALL" ) ]
 		s	+= [ '</tr>' ]
 
@@ -313,14 +345,129 @@ def get_slider_table( total, cols, pat, iref, all_reg = False ):
 	return "\n".join( s )
 
 def table_item( template, i, id, c_l, cs_l, label ):
-	s	 = [ '<td align ="right">' ]
+	s	 = [ '<td align ="right" class="{}">'.format( cs_l ) ]
 	s	+= [ template[ 0 ].format( c_l, label ) ]
-	s	+= [ '</td><td>' ]
+	s	+= [ '</td><td class="{}">'.format( cs_l ) ]
 	s	+= [ template[ 1 ].format( id, id, id ) ]
-	s	+= [ '</td><td>' ]
-	s	+= [ template[ 2 ].format( id, id, cs_l ) ]
+	s	+= [ '</td><td class="{}">'.format( cs_l ) ]
+	s	+= [ template[ 2 ].format( id, id ) ]
 	s	+= [ '</td>' ]
 
 	return "\n".join( s )
 
+def get_reg_table( dev, cols ):
+	total	= len( dev.REG_NAME )
+	rows	= (total + cols - 1) // cols
+
+	s	 	= [ '<table>' ]
+
+	for y in range( rows ):
+		s	 	+= [ '<tr class="reg_table_row">' ]
+		for i in range( y, total, rows ):
+			s	+= [ '<td class="reg_table_name">{}</td><td class="reg_table_val">0x{:02X}</td>'.format( dev.REG_NAME[ i ], i ) ]
+			s	+= [ '<td  class="reg_table_val"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="00" class="regfield"></td>'.format( i, i ) ]
+
+		s	+= [ '</tr>' ]
+
+	s	+= [ '</table>' ]
+	return "\n".join( s )
+
+def get_style():
+	s	= """\
+	<style>
+	html {
+		font-size: 100%;
+		font-family: Arial;
+		display: inline-block;
+		text-align: center;
+	}
+	body {
+		font-size: 1.0rem;
+		font-color: #000000;
+		vertical-align: middle;
+	}
+	div {
+		border: solid 1px #EEEEEE;
+		box-sizing: border-box;
+		text-align: center;
+		font-size: 1.5rem;
+		padding: 5px;
+	}
+	.header {
+		border: solid 1px #EEEEEE;
+		text-align: center;
+		font-size: 1.5rem;
+		padding: 1.0rem;
+	}
+	.control_panel {
+		box-sizing: border-box;
+		text-align: left;
+		font-size: 1.0rem;
+	}
+	.slider_table_row {
+		height: 3.0rem;
+	}
+	.item_R {
+		background-color: #FFEEEE;
+	}
+	.item_G {
+		background-color: #EEFFEE;
+	}
+	.item_B {
+		background-color: #EEEEFF;
+	}
+	.reg_table {
+		box-sizing: border-box;
+		text-align: left;
+		font-size: 1.0rem;
+	}
+	.reg_table_row {
+		height: 1.0rem;
+	}
+	.foot_note {
+		text-align: center;
+		font-size: 1rem;
+		padding: 0.5rem;
+	}
+	
+	input[type="range"] {
+		-webkit-appearance: none;
+		appearance: none;
+		cursor: pointer;
+		outline: none;
+		height: 5px; width: 85%;
+		background: #E0E0E0;
+		border-radius: 10px;
+		border: solid 3px #C0C0C0;
+	}
+	input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		background: #707070;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
+	}
+	input[type="range"]:active::-webkit-slider-thumb {
+		box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
+	}
+	input[type="text"] {
+		width: 2em;
+		height: 1em;
+		font-size: 100%;
+	}
+	table {
+		background-color: #EEEEEE;
+		border-collapse: collapse;
+		width: 100%;
+	}
+	td {
+		border: solid 1px #FFFFFF;
+		text-align: center;
+	}
+	</style>
+	"""
+	return s
+
 main()
+
