@@ -88,6 +88,8 @@ def main( micropython_optimize=False ):
 		elif "allreg" in req:
 			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": led_c.dump() } )
 		else:
+			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+
 			m	= regex_pwm.match( req )
 			if m:
 				print( m.groups() )
@@ -122,7 +124,6 @@ def main( micropython_optimize=False ):
 			if h == b"" or h == b"\r\n":
 				break
 			#print(h)
-#		client_stream.read()
 					
 		client_stream.write( html )
 
@@ -151,6 +152,7 @@ def page_setup( led_c ):
 	<!DOCTYPE html>
 	<html>
 		<head>
+			<meta charset="utf-8" />
 			<title>{% dev_name %} server</title>
 			{% style %}
 		</head>
