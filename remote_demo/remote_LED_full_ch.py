@@ -86,8 +86,7 @@ def main( micropython_optimize=False ):
 			for i in range( led_c.CHANNELS ):
 				led[ i ].v	= 0.0
 		elif "allreg" in req:
-			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": led_c.dump(), "str": "test message" } )
-			print( html )
+			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": led_c.dump() } )
 		else:
 			m	= regex_pwm.match( req )
 			if m:
@@ -105,6 +104,8 @@ def main( micropython_optimize=False ):
 					led_c.write_registers( "IREFALL", pwm )
 				else:
 					pass
+
+				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "val": pwm, "idx": ch } )
 
 			m	= regex_reg.match( req )
 			if m:
@@ -168,22 +169,26 @@ def page_setup( led_c ):
 					var value = document.getElementById( "Slider" + idx ).value;
 					document.getElementById( "valField" + idx ).value = hex( value )
 
-					if ( moving ) {
-						//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
-						if ( timeoutId ) return ;
-						timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
-					}
-					
 					if ( idx == ({% iref_ofst %} - 1) )
 						setSliderValues( 0, {% num_ch %}, value );
 
 					if ( idx == ({% iref_ofst %} * 2 - 1) )
 						setSliderValues( {% iref_ofst %}, {% num_ch %}, value );
 
+					if ( moving ) {
+						//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
+						if ( timeoutId ) return ;
+						timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
+					}
+					
 					console.log( 'pwm' + idx + ': ' + value + ', moving?: ' + moving );
 
 					var url	= "/{% dev_name %}?value=" + value + "&idx=" + idx
 					ajaxUpdate( url )
+				}
+				
+				function updateSliderDone() {
+					obj = JSON.parse( this.responseText );
 				}
 				
 				/******** updateValField ********/
