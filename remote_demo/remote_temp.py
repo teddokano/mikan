@@ -121,24 +121,20 @@ def page_setup( dev, time, temp ):
 	<html>
 
 	<head>
-		<meta charset="utf-8" />
-		<title>temp sensor</title>
-		<style>
-			html { font-family: Arial; display: inline-block; text-align: center; }
-			h2 { font-size: 1.8rem; }
-			p { font-size: 1.1rem; }
-			body { margin:100px auto; padding: 5px; font-size: 0.8rem; }
-			input[type="range"] { -webkit-appearance: none; appearance: none; cursor: pointer; outline: none; height: 5px; width: 80%; background: #E0E0E0; border-radius: 10px; border: solid 3px #C0C0C0; }
-			input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background: #707070; width: 20px; height: 20px; border-radius: 50%; box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15); }
-			input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3); }
-			input[type="text"] { width: 8em; height: 1em; font-size: 100%; border: solid 0px; }
-			table { background-color: #FFFFFF; border-collapse: collapse; width: 30%; }
-			td { border: solid 1px; color: #000000; }
-		</style>
+			<meta charset="utf-8" />
+			<title>{% dev_name %} server</title>
+			{% style %}
 	</head>
 	<body>
-		<h1>{% dev_name %} server</h1>
+		<div class="header">
+			<p>{% dev_name %} server</p>
+			<p class="info">{% dev_info %}</p>
+		</div>
+		
+		<div>
 		<canvas id="myLineChart"></canvas>
+
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 		
 		<script>
@@ -263,18 +259,23 @@ def page_setup( dev, time, temp ):
 			}
 		</script>
 
-		{% table %}	<br/>
-		
-		<div aligh=left><input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save"></div>
+		</div>
+		<div id="reg_table" class="control_panel reg_table">
+			{% table %}
+			<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
+		</div>
+
 	</body>
 	</html>
 	"""
 	page_data	= {}
-	page_data[ "dev_name" ]	= dev.__class__.__name__
-	page_data[ "time"     ]	= str( time )
-	page_data[ "temp"     ]	= str( temp )
-	page_data[ "table"    ]	= get_table( time, temp, max )
-	page_data[ "table_len"]	= str( TABLE_LENGTH )
+	page_data[ "dev_name"  ]	= dev.__class__.__name__
+	page_data[ "dev_info"  ]	= dev.info()
+	page_data[ "time"      ]	= str( time )
+	page_data[ "temp"      ]	= str( temp )
+	page_data[ "table"     ]	= get_table( time, temp, max )
+	page_data[ "table_len" ]	= str( TABLE_LENGTH )
+	page_data[ "style"     ]	= get_style()
 
 	for key, value in page_data.items():
 		html = html.replace('{% ' + key + ' %}', value )
@@ -295,5 +296,111 @@ def sending_data( time, temp ):
 	s	 = [ 'HTTP/1.0 200 OK\n\n' ]
 	s	+= [ ujson.dumps( { "time": time, "temp": temp } ) ]
 	return "".join( s )
+
+def get_style():
+	s	= """\
+	<style>
+	html {
+		font-size: 100%;
+		font-family: Arial;
+		display: inline-block;
+		text-align: center;
+	}
+	body {
+		font-size: 1.0rem;
+		font-color: #000000;
+		vertical-align: middle;
+	}
+	div {
+		border: solid 1px #EEEEEE;
+		box-sizing: border-box;
+		text-align: center;
+		font-size: 1.5rem;
+		padding: 5px;
+	}
+	.header {
+		border: solid 1px #EEEEEE;
+		text-align: center;
+		font-size: 1.5rem;
+		padding: 1.0rem;
+	}
+	.info {
+		text-align: center;
+		font-size: 1.0rem;
+	}
+	.datetime {
+		font-size: 3.0rem;
+	}
+	.control_panel {
+		box-sizing: border-box;
+		text-align: left;
+		font-size: 1.0rem;
+	}
+	.slider_table_row {
+		height: 3.0rem;
+	}
+	.item_R {
+		background-color: #FFEEEE;
+	}
+	.item_G {
+		background-color: #EEFFEE;
+	}
+	.item_B {
+		background-color: #EEEEFF;
+	}
+	.reg_table {
+		box-sizing: border-box;
+		text-align: left;
+		font-size: 1.0rem;
+	}
+	.reg_table_row {
+		height: 1.0rem;
+	}
+	.foot_note {
+		text-align: center;
+		font-size: 1rem;
+		padding: 0.5rem;
+	}
 	
+	input[type="range"] {
+		-webkit-appearance: none;
+		appearance: none;
+		cursor: pointer;
+		outline: none;
+		height: 5px; width: 85%;
+		background: #E0E0E0;
+		border-radius: 10px;
+		border: solid 3px #C0C0C0;
+	}
+	input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		background: #707070;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
+	}
+	input[type="range"]:active::-webkit-slider-thumb {
+		box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
+	}
+	input[type="text"] {
+		/* width: 2em; */
+		height: 1em;
+		font-size: 100%;
+		text-align: center;
+		border: solid 0px #FFFFFF;
+	}
+	table {
+		background-color: #FFFFFF;
+		border-collapse: collapse;
+		width: 50%;
+	}
+	td {
+		border: solid 1px #EEEEEE;
+		text-align: center;
+	}
+	</style>
+	"""
+	return s
+
 main()
