@@ -264,13 +264,14 @@ def page_setup( dev, time, temp ):
 		</script>
 
 		</div>
-		<div id="reg_table" class="control_panel reg_table">
-			<div class="log_panel">
-				{% table %}
-				<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
+		
+		<div class="para">
+			<div id="reg_table" class="control_panel reg_table log_panel">
+					{% table %}
 			</div>
-			<div class="info_panel">
-				{% info_tab %}
+			<div id="reg_table" class="control_panel reg_table info_panel">
+				{% info_tab %}<br/>
+				<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
 			</div>
 		</div>
 
@@ -323,7 +324,7 @@ def get_style():
 	s	= """\
 	<style>
 	html {
-		font-size: 100%;
+		font-size: 80%;
 		font-family: Arial;
 		display: inline-block;
 		text-align: center;
@@ -415,12 +416,22 @@ def get_style():
 	table {
 		background-color: #FFFFFF;
 		border-collapse: collapse;
-		width: 50%;
 	}
 	td {
 		border: solid 1px #EEEEEE;
 		text-align: center;
 	}
+	
+	.para {
+		display: flex;
+	}
+
+	.log_panel, .info_panel {
+		border: solid 0px #FFFFFF;
+		padding: 5px;
+	}
+
+	
 	</style>
 	"""
 	return s
