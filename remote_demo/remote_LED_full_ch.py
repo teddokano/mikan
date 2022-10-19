@@ -39,7 +39,7 @@ regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 IREF_ID_OFFSET	= 100
 
 interface	= machine.I2C( 0, freq = (400 * 1000) )
-led_c		= PCA9956B( interface, address = 0x02 >> 1, iref = IREF_INIT )
+led_c		= PCA9955B( interface, address = 0x02 >> 1, iref = IREF_INIT )
 #led_c		= PCA9632( interface )
 """
 interface	= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -86,7 +86,7 @@ def main( micropython_optimize=False ):
 			for i in range( led_c.CHANNELS ):
 				led[ i ].v	= 0.0
 		elif "allreg" in req:
-			html	= sending_data( led_c )
+			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": led_c.dump(), "str": "test message" } )
 			print( html )
 		else:
 			m	= regex_pwm.match( req )
@@ -114,7 +114,7 @@ def main( micropython_optimize=False ):
 
 				led_c.write_registers( reg, val )
 
-				html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
 
 		while True:
 			h = client_stream.readline()
@@ -129,10 +129,6 @@ def main( micropython_optimize=False ):
 		if not micropython_optimize:
 			client_sock.close()
 		print()
-
-def sending_data( dev ):
-	return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": dev.dump(), "str": "test message" } )
-
 
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
@@ -159,10 +155,18 @@ def page_setup( led_c ):
 		</head>
 		<body>
 			<script>
-				timeoutId	= null;
+			
+				/****************************
+				 ****	slider controls
+				 ****************************/
+				 
+				var timeoutId	= null;
+
+				/******** updateSlider ********/
+
 				function updateSlider( element, moving, idx ) {
-					var sliderValue = document.getElementById( "Slider" + idx ).value;
-					document.getElementById( "valField" + idx ).value = ('00' + Number( sliderValue ).toString( 16 )).slice( -2 )
+					var value = document.getElementById( "Slider" + idx ).value;
+					document.getElementById( "valField" + idx ).value = hex( value )
 
 					if ( moving ) {
 						//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
@@ -171,17 +175,19 @@ def page_setup( led_c ):
 					}
 					
 					if ( idx == ({% iref_ofst %} - 1) )
-						setSliderValues( 0, {% num_ch %}, sliderValue );
+						setSliderValues( 0, {% num_ch %}, value );
 
 					if ( idx == ({% iref_ofst %} * 2 - 1) )
-						setSliderValues( {% iref_ofst %}, {% num_ch %}, sliderValue );
+						setSliderValues( {% iref_ofst %}, {% num_ch %}, value );
 
-					console.log( 'pwm' + idx + ': ' + sliderValue + ', moving?: ' + moving );
+					console.log( 'pwm' + idx + ': ' + value + ', moving?: ' + moving );
 
-					var url	= "/slider?value=" + sliderValue + "&idx=" + idx
+					var url	= "/{% dev_name %}?value=" + value + "&idx=" + idx
 					ajaxUpdate( url )
 				}
 				
+				/******** updateValField ********/
+
 				function updateValField( element, idx ) {
 					var valueFieldElement = document.getElementById( "valField" + idx );
 					var value	= parseInt( valueFieldElement.value, 16 )
@@ -193,10 +199,10 @@ def page_setup( led_c ):
 					}
 					value	= (value < 0  ) ?   0 : value
 					value	= (255 < value) ? 255 : value
-					valueFieldElement.value = ('00' + Number( value ).toString( 16 )).slice( -2 )
+					valueFieldElement.value = hex( value )
 
-					//if ( no_submit )
-					//	return;
+					if ( no_submit )
+						return;
 
 					document.getElementById( "Slider" + idx ).value = value;
 					
@@ -208,37 +214,79 @@ def page_setup( led_c ):
 
 					console.log( 'pwm' + idx + ': ' + value );
 					
-					var url	= "/slider?value=" + value + "&idx=" + idx
+					var url	= "/{% dev_name %}?value=" + value + "&idx=" + idx
 					ajaxUpdate( url )
 				}
 				
+				/******** setSliderValues ********/
+
+				function setSliderValues( start, length, value ) {
+					for ( let i = start; i < start + length; i++ ) {
+						document.getElementById( "Slider" + i ).value = value;
+						document.getElementById( "valField" + i ).value = hex( value )
+					}
+				}
+				
+				
+				
+				/****************************
+				 ****	register controls
+				 ****************************/
+				 
+				/******** updateRegField ********/
+
 				function updateRegField( element, idx ) {
 					var valueFieldElement = document.getElementById( "regField" + idx );
 					var value	= parseInt( valueFieldElement.value, 16 )
 					
-					var url	= "/register?reg=" + idx + "&val=" + value
-					ajaxUpdate( url )
+					var url	= "/{% dev_name %}?reg=" + idx + "&val=" + value
+					ajaxUpdate( url, updateRegFieldDone )
 				}
 				
-				function setSliderValues( start, length, val ) {
-					for ( let i = start; i < start + length; i++ ) {
-						document.getElementById( "Slider" + i ).value = val;
-						document.getElementById( "valField" + i ).value = ('00' + Number( val ).toString( 16 )).slice( -2 )
-					}
+				function updateRegFieldDone() {
+					obj = JSON.parse( this.responseText );
+					
+					document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
 				}
-				
+
+				/******** allRegLoad ********/
+
 				function allRegLoad() {
-					ajax_rtn	= ajaxUpdate( 'allreg', allRegLoadDone );
+					ajaxUpdate( 'allreg', allRegLoadDone );
 				}
+
+				/******** allRegLoadDone ********/
 
 				function allRegLoadDone() {
 					obj = JSON.parse( this.responseText );
 
 					for ( let i = 0; i < obj.reg.length; i++ ) {
-						document.getElementById('regField' + i ).value	= ('00' + Number( obj.reg[ i ] ).toString( 16 )).slice( -2 );
+						document.getElementById('regField' + i ).value	= hex( obj.reg[ i ] )
 					}
 				}
 				
+				
+				
+				/****************************
+				 ****	page load controls
+				 ****************************/
+				 
+				function loadFinished(){
+					setSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
+					setSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+					allRegLoad();
+				}
+
+				window.addEventListener('load', loadFinished);
+
+
+
+				/****************************
+				 ****	service routine
+				 ****************************/
+				 
+				/******** ajaxUpdate ********/
+
 				function ajaxUpdate( url, func ) {
 					url			= url + '?ver=' + new Date().getTime();
 					var	ajax	= new XMLHttpRequest;
@@ -247,17 +295,17 @@ def page_setup( led_c ):
 					ajax.onload = func;
 					ajax.send( null );
 				}
-
-				function loadFinished(){
-					setSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
-					setSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+				
+				function hex( num ) {
+					return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 )
 				}
-
-				window.addEventListener('load', loadFinished);
 
 			</script>
 
-			<div class="header">{% dev_name %} server</div>
+			<div class="header">
+				<p>{% dev_name %} server</p>
+				<p class="info">{% dev_info %}</p>
+			</div>
 			
 			<div class="control_panel slider_panel">
 				PWM registers
@@ -286,6 +334,7 @@ def page_setup( led_c ):
 	
 	page_data	= {}
 	page_data[ "dev_name"  ]	= led_c.__class__.__name__
+	page_data[ "dev_info"  ]	= led_c.info()
 	page_data[ "mcu"       ]	= os.uname().machine
 	page_data[ "ch-offset" ]	= "".join( [ '<option value="{}">{}</option>'.format( i, i ) for i in range( 0, led_c.CHANNELS, 3 ) ] )
 	page_data[ "num_ch"    ]	= str( led_c.CHANNELS )
@@ -415,6 +464,10 @@ def get_style():
 		text-align: center;
 		font-size: 1.5rem;
 		padding: 1.0rem;
+	}
+	.info {
+		text-align: center;
+		font-size: 1.0rem;
 	}
 	.control_panel {
 		box-sizing: border-box;
