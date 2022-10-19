@@ -34,6 +34,7 @@ except:
 
 IREF_INIT	= 0x10
 regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
+regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 
 IREF_ID_OFFSET	= 100
 
@@ -104,8 +105,16 @@ def main( micropython_optimize=False ):
 					led_c.write_registers( "IREFALL", pwm )
 				else:
 					pass
-					
-				html	= sending_data( led_c )
+
+			m	= regex_reg.match( req )
+			if m:
+				print( m.groups() )
+				reg	= int( m.group( 1 ) )
+				val	= int( m.group( 2 ) )
+
+				led_c.write_registers( reg, val )
+
+				html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
 		while True:
 			h = client_stream.readline()
@@ -203,13 +212,14 @@ def page_setup( led_c ):
 					ajaxUpdate( url )
 				}
 				
-				function loadFinished(){
-					setSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
-					setSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+				function updateRegField( element, idx ) {
+					var valueFieldElement = document.getElementById( "regField" + idx );
+					var value	= parseInt( valueFieldElement.value, 16 )
+					
+					var url	= "/register?reg=" + idx + "&val=" + value
+					ajaxUpdate( url )
 				}
-
-				window.addEventListener('load', loadFinished);
-
+				
 				function setSliderValues( start, length, val ) {
 					for ( let i = start; i < start + length; i++ ) {
 						document.getElementById( "Slider" + i ).value = val;
@@ -237,6 +247,13 @@ def page_setup( led_c ):
 					ajax.onload = func;
 					ajax.send( null );
 				}
+
+				function loadFinished(){
+					setSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
+					setSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+				}
+
+				window.addEventListener('load', loadFinished);
 
 			</script>
 
@@ -365,7 +382,7 @@ def get_reg_table( dev, cols ):
 		s	 	+= [ '<tr class="reg_table_row">' ]
 		for i in range( y, total, rows ):
 			s	+= [ '<td class="reg_table_name">{}</td><td class="reg_table_val">0x{:02X}</td>'.format( dev.REG_NAME[ i ], i ) ]
-			s	+= [ '<td  class="reg_table_val"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="00" class="regfield"></td>'.format( i, i ) ]
+			s	+= [ '<td  class="reg_table_val"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 		s	+= [ '</tr>' ]
 
