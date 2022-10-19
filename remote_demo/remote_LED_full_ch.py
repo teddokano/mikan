@@ -186,8 +186,7 @@ def page_setup( led_c ):
 				
 				function updateSliderDone() {
 					obj = JSON.parse( this.responseText );
-					
-					//setSliderValues( idx, value );
+					setSliderValues( obj.idx, obj.value );
 				}
 				
 				/******** updateValField ********/
@@ -463,7 +462,7 @@ def get_style():
 	s	= """\
 	<style>
 	html {
-		font-size: 100%;
+		font-size: 80%;
 		font-family: Arial;
 		display: inline-block;
 		text-align: center;
