@@ -167,13 +167,8 @@ def page_setup( led_c ):
 
 				function updateSlider( element, moving, idx ) {
 					var value = document.getElementById( "Slider" + idx ).value;
-					document.getElementById( "valField" + idx ).value = hex( value )
-
-					if ( idx == ({% iref_ofst %} - 1) )
-						setSliderValues( 0, {% num_ch %}, value );
-
-					if ( idx == ({% iref_ofst %} * 2 - 1) )
-						setSliderValues( {% iref_ofst %}, {% num_ch %}, value );
+					
+					setSliderValues( idx, value );
 
 					if ( moving ) {
 						//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
@@ -189,6 +184,8 @@ def page_setup( led_c ):
 				
 				function updateSliderDone() {
 					obj = JSON.parse( this.responseText );
+					
+					//setSliderValues( idx, value );
 				}
 				
 				/******** updateValField ********/
@@ -209,14 +206,7 @@ def page_setup( led_c ):
 					if ( no_submit )
 						return;
 
-					document.getElementById( "Slider" + idx ).value = value;
-					
-					if ( idx == ({% iref_ofst %} - 1) )
-						setSliderValues( 0, {% num_ch %}, value );
-
-					if ( idx == ({% iref_ofst %} * 2 - 1) )
-						setSliderValues( {% iref_ofst %}, {% num_ch %}, value );
-
+					setSliderValues( idx, value );
 					console.log( 'pwm' + idx + ': ' + value );
 					
 					var url	= "/{% dev_name %}?value=" + value + "&idx=" + idx
@@ -225,14 +215,26 @@ def page_setup( led_c ):
 				
 				/******** setSliderValues ********/
 
-				function setSliderValues( start, length, value ) {
+				function setSliderValues( i, value ) {
+					document.getElementById( "Slider" + i ).value = value;
+					document.getElementById( "valField" + i ).value = hex( value )
+
+					if ( i == ({% iref_ofst %} - 1) )
+						setAllSliderValues( 0, {% num_ch %}, value );
+					else if ( i == ({% iref_ofst %} * 2 - 1) )
+						setAllSliderValues( {% iref_ofst %}, {% num_ch %}, value );
+				}
+				
+				/******** setAllSliderValues ********/
+
+				function setAllSliderValues( start, length, value ) {
 					for ( let i = start; i < start + length; i++ ) {
 						document.getElementById( "Slider" + i ).value = value;
 						document.getElementById( "valField" + i ).value = hex( value )
 					}
 				}
 				
-				
+
 				
 				/****************************
 				 ****	register controls
@@ -243,7 +245,19 @@ def page_setup( led_c ):
 				function updateRegField( element, idx ) {
 					var valueFieldElement = document.getElementById( "regField" + idx );
 					var value	= parseInt( valueFieldElement.value, 16 )
+					var no_submit	= 0
 					
+					if ( isNaN( value ) ) {
+						no_submit	= 1
+						value = document.getElementById( "Slider" + idx ).value;
+					}
+					value	= (value < 0  ) ?   0 : value
+					value	= (255 < value) ? 255 : value
+					valueFieldElement.value = hex( value )
+
+					if ( no_submit )
+						return;
+
 					var url	= "/{% dev_name %}?reg=" + idx + "&val=" + value
 					ajaxUpdate( url, updateRegFieldDone )
 				}
@@ -277,8 +291,8 @@ def page_setup( led_c ):
 				 ****************************/
 				 
 				function loadFinished(){
-					setSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
-					setSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+					setAllSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
+					setAllSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
 					allRegLoad();
 				}
 
