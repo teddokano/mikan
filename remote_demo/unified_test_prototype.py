@@ -87,7 +87,6 @@ def main( micropython_optimize=False ):
 				break
 			#print(h)
 		
-		print( html )
 		client_stream.write( html )
 
 		client_stream.close()
@@ -416,10 +415,10 @@ class DUT_LEDC():
 		#cols		= 4	if led_c.CHANNELS % 3 else 3
 		cols		= 4	if all_reg else 1
 
-		page_data[ "sliders_PWM"  ]	= self.get_slider_table( self.dev.CHANNELS, cols, col_pat, iref = False, all_reg = all_reg )
+		page_data[ "sliders_PWM"  ]	= self.get_slider_table( cols, col_pat, iref = False, all_reg = all_reg )
 		
 		if iref:
-			page_data[ "sliders_IREF" ]	= self.get_slider_table( self.dev.CHANNELS, cols, col_pat, iref = True, all_reg = all_reg )
+			page_data[ "sliders_IREF" ]	= self.get_slider_table( cols, col_pat, iref = True, all_reg = all_reg )
 		else:
 			page_data[ "sliders_IREF" ]	= ""
 
@@ -428,8 +427,8 @@ class DUT_LEDC():
 		
 		return html
 
-	def get_slider_table( self, total, cols, pat, iref, all_reg = False ):
-		rows	= (total + cols - 1) // cols
+	def get_slider_table( self, cols, pat, iref, all_reg = False ):
+		rows	= (self.dev.CHANNELS + cols - 1) // cols
 		label	= "IREF" if iref else "PWM"
 		c		= { "R": "#FF0000", "G": "#008000", "B": "#0000FF", "K": "#000000" }
 		cs		= { "R": "item_R",  "G": "item_G",  "B": "item_B",  "K": "item_K"  }
@@ -442,7 +441,7 @@ class DUT_LEDC():
 
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
-			for i in range( y, total, rows ):
+			for i in range( y, self.dev.CHANNELS, rows ):
 				id	 = i + (self.IREF_ID_OFFSET if iref else 0)
 				s	+= [ self.table_item( template, i, id, c[ pat[ i ] ], cs[ pat[ i ] ], label + str( i ) ) ]
 
