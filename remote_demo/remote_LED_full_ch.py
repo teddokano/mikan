@@ -38,6 +38,7 @@ regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 
 IREF_ID_OFFSET	= 100
 
+
 interface	= machine.I2C( 0, freq = (400 * 1000) )
 led_c		= PCA9955B( interface, address = 0x02 >> 1, iref = IREF_INIT )
 #led_c		= PCA9632( interface )
@@ -45,7 +46,6 @@ led_c		= PCA9955B( interface, address = 0x02 >> 1, iref = IREF_INIT )
 interface	= machine.SPI( 0, 1000 * 1000, cs = 0 )
 led_c		= PCA9957( interface, setup_EVB = True, iref = IREF_INIT )
 """
-
 led			= [ LED( led_c, i ) for i in range( led_c.CHANNELS ) ]
 
 def main( micropython_optimize=False ):

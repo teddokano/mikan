@@ -35,16 +35,30 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	return lan.ifconfig()
 
 TABLE_LENGTH	= 10
+SAMPLE_LENGTH	= 10
 	
+
 #Setup temp sensor
 i2c	= machine.I2C( 0, freq = (400 * 1000) )
 ts	= PCT2075( i2c )
 rtc = machine.RTC()
 
+data	= { "time": [], "temp": [] }
+
+def tim_cb( tim_obj ):
+	tm	= rtc.now()
+	tp	= ts.temp
+	data[ "time" ]	+= [ "%02d:%02d:%02d" % (tm[3], tm[4], tm[5]) ]
+	data[ "temp" ]	+= [ tp ]
+
+	over	= len( data[ "time" ] ) - SAMPLE_LENGTH
+	if  0 < over:
+		data[ "time" ]	= data[ "time" ][ over : ]
+		data[ "temp" ]	= data[ "temp" ][ over : ]
+
+	print( "sampled: {} @ {}".format( tp, tm ) )
 
 def main( micropython_optimize=False ):
-	time	= []
-	temp	= []
 	
 	ip_info	= start_network()
 
@@ -56,9 +70,9 @@ def main( micropython_optimize=False ):
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	s.bind(addr)
 	s.listen(5)
-	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
-	SAMPLE_LENGTH	= 10
+	tim0 = machine.Timer(0)
+	tim0.init( period= 1000, callback = tim_cb)
 
 	while True:
 		res = s.accept()
@@ -76,23 +90,11 @@ def main( micropython_optimize=False ):
 		req = client_stream.readline()
 		print( req )
 		
-		t		= rtc.now()
-		print( t )
-		time	+= [ "%02d:%02d:%02d" % (t[3], t[4], t[5]) ]
-		temp	+= [ ts.temp ]
-
-		over	= len( time ) - SAMPLE_LENGTH
-		if  0 < over:
-			time	= time[ over : ]
-			temp	= temp[ over : ]
-
-		print( len( time ) )
-
 		if ts.__class__.__name__ in req:
 			print(  "new data request!" )
-			html	= sending_data( time, temp )
+			html	= sending_data( data )
 		else:
-			html	= page_setup( ts, time, temp )
+			html	= page_setup( ts )
 
 		while True:
 			h = client_stream.readline()
@@ -108,7 +110,7 @@ def main( micropython_optimize=False ):
 			
 		print()
 
-def page_setup( dev, time, temp ):
+def page_setup( dev ):
 	#HTML to send to browsers
 	html = """\
 	HTTP/1.0 200 OK
@@ -210,25 +212,26 @@ def page_setup( dev, time, temp ):
 
 
 			/****************************
-			 ****	time display
+			 ****	temp display
 			 ****************************/
 
 			/******** getTempAndShow ********/
 
 			function getTempAndShow() {
 				var url	= "/{% dev_name %}?"
-				ajaxUpdate( url, getTimeAndShowDone )
+				ajaxUpdate( url, getTempAndShowDone )
 			}
 
 			var prev_reg	= [];
 			
-			function getTimeAndShowDone() {
+			function getTempAndShowDone() {
 				var obj = JSON.parse( this.responseText )
 
 				//	server sends multiple data.
 				//	pick one sample from last and store local memory
-				time.push( obj.time[ obj.time.length - 1 ] )
-				temp.push( obj.temp[ obj.temp.length - 1 ] )
+				time.push( obj.data.time[ obj.data.time.length - 1 ] );
+				temp.push( obj.data.temp[ obj.data.time.length - 1 ] );
+
 				drawChart( time, temp );
 				
 				for ( let i = 0; i < {% table_len %}; i++ )
@@ -240,6 +243,26 @@ def page_setup( dev, time, temp ):
 				document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
 				document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
 				document.getElementById( "infoFieldValue2" ).value = time.length;
+			}
+
+
+			/****************************
+			 ****	service routine
+			 ****************************/
+			 
+			/******** ajaxUpdate ********/
+
+			function ajaxUpdate( url, func ) {
+				url			= url + '?ver=' + new Date().getTime();
+				var	ajax	= new XMLHttpRequest;
+				ajax.open( 'GET', url, true );
+				
+				ajax.onload = func;
+				ajax.send( null );
+			}
+
+			function hex( num ) {
+				return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 )
 			}
 
 
@@ -283,9 +306,7 @@ def page_setup( dev, time, temp ):
 	page_data	= {}
 	page_data[ "dev_name"  ]	= dev.__class__.__name__
 	page_data[ "dev_info"  ]	= dev.info()
-	page_data[ "time"      ]	= str( time )
-	page_data[ "temp"      ]	= str( temp )
-	page_data[ "table"     ]	= get_table( time, temp, max )
+	page_data[ "table"     ]	= get_table( TABLE_LENGTH )
 	page_data[ "info_tab"  ]	= get_info_table( 3 )
 	page_data[ "table_len" ]	= str( TABLE_LENGTH )
 	page_data[ "style"     ]	= get_style()
@@ -295,10 +316,10 @@ def page_setup( dev, time, temp ):
 	
 	return html
 
-def get_table( time, temp, max ):
+def get_table( max ):
 	s	= [ '<table><tr><td>time</td><td>temp [˚C]</td></tr>' ]
 
-	for i in range( TABLE_LENGTH ):
+	for i in range( max ):
 		s	+= [ '<tr><td text_align="center"><input type="text" id="timeField{}" value = "---"></td><td><input type="text" id="tempField{}"></td></tr>'.format( i, i ) ]
 
 	s	+= [ '</table>' ]
@@ -317,9 +338,10 @@ def get_info_table( length ):
 	return "\n".join( s )
 
 
-def sending_data( time, temp ):
+def sending_data( data ):
 	s	 = [ 'HTTP/1.0 200 OK\n\n' ]
-	s	+= [ ujson.dumps( { "time": time, "temp": temp } ) ]
+	s	+= [ ujson.dumps( { "data": data } ) ]
+
 	return "".join( s )
 
 def get_style():
