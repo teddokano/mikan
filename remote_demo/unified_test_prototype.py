@@ -75,9 +75,8 @@ def main( micropython_optimize=False ):
 		else:
 			client_stream = client_sock
 
-		print("Request:")
 		req = client_stream.readline()
-		print( req )
+		print( "Request: {}".format( req.decode() ) )
 
 		html	= dut.parse( req )
 
@@ -87,6 +86,7 @@ def main( micropython_optimize=False ):
 				break
 			#print(h)
 		
+		print( html )
 		client_stream.write( html )
 
 		client_stream.close()
@@ -107,7 +107,21 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	
 
 
+front_page = """\
+HTTP/1.0 200 OK
 
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>test</title>
+	</head>
+	<body>
+		<a href = "/PCA9955B">test page</a>
+	</body>
+</html>
+"""
+		
 
 
 
@@ -125,7 +139,7 @@ class DUT_LEDC():
 
 	def parse( self, req ):
 		if self.dev.__class__.__name__ not in req:
-			html	= self.page_setup()
+			return front_page
 
 		if "?" not in req:
 			html	= self.page_setup()
