@@ -35,6 +35,20 @@ except:
 
 
 
+front_page = """\
+HTTP/1.0 200 OK
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>test</title>
+	</head>
+	<body>
+		<a href = "/PCA9955B">test page</a>
+	</body>
+</html>
+"""
 
 
 
@@ -60,7 +74,7 @@ def main( micropython_optimize=False ):
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
-	s.listen( 1 )
+	s.listen( 5 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
 	while True:
@@ -79,6 +93,9 @@ def main( micropython_optimize=False ):
 		print( "Request: {}".format( req.decode() ) )
 
 		html	= dut.parse( req )
+
+		if html is None:
+			html	= front_page
 
 		while True:
 			h = client_stream.readline()
@@ -107,20 +124,6 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	
 
 
-front_page = """\
-HTTP/1.0 200 OK
-
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>test</title>
-	</head>
-	<body>
-		<a href = "/PCA9955B">test page</a>
-	</body>
-</html>
-"""
 		
 
 
@@ -136,11 +139,15 @@ class DUT_LEDC():
 		self.interface	= machine.I2C( 0, freq = (400 * 1000) )
 		self.dev		= PCA9955B( self.interface, address = 0x02 >> 1, iref = self.IREF_INIT )
 		self.led		= [ LED( self.dev, i ) for i in range( self.dev.CHANNELS ) ]
+		self.dev_name	= self.dev.__class__.__name__
 
 	def parse( self, req ):
-		if self.dev.__class__.__name__ not in req:
-			return front_page
-
+		print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )
+		if self.dev_name not in req:
+			return
+	
+		print( "parsing: %s" % req )
+	
 		if "?" not in req:
 			html	= self.page_setup()
 
@@ -200,17 +207,22 @@ class DUT_LEDC():
 			</head>
 			<body>
 				<script>
-				
+					const	DEV_NAME	= '{% dev_name %}';
+					const	N_CHANNELS	= {% n_ch %};
+					const	IREF_OFST	= {% iref_ofst %};
+					const	IREF_INIT	= {% iref_init %};
+					const	REQ_HEADER	= '/' + DEV_NAME + '?';
+					
 					/****************************
 					 ****	slider controls
 					 ****************************/
 					 
-					var timeoutId	= null;
+					let timeoutId	= null;
 
 					/******** updateSlider ********/
 
 					function updateSlider( element, moving, idx ) {
-						var value = document.getElementById( "Slider" + idx ).value;
+						let value = document.getElementById( "Slider" + idx ).value;
 						
 						setSliderValues( idx, value );
 
@@ -222,7 +234,7 @@ class DUT_LEDC():
 						
 						console.log( 'pwm' + idx + ': ' + value + ', moving?: ' + moving );
 
-						var url	= "/{% dev_name %}?value=" + value + "&idx=" + idx
+						let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx
 						ajaxUpdate( url )
 					}
 					
@@ -234,9 +246,9 @@ class DUT_LEDC():
 					/******** updateValField ********/
 
 					function updateValField( element, idx ) {
-						var valueFieldElement = document.getElementById( "valField" + idx );
-						var value	= parseInt( valueFieldElement.value, 16 )
-						var no_submit	= 0
+						let valueFieldElement = document.getElementById( "valField" + idx );
+						let value	= parseInt( valueFieldElement.value, 16 )
+						let no_submit	= 0
 						
 						if ( isNaN( value ) ) {
 							no_submit	= 1
@@ -252,7 +264,7 @@ class DUT_LEDC():
 						setSliderValues( idx, value );
 						console.log( 'pwm' + idx + ': ' + value );
 						
-						var url	= "/{% dev_name %}?value=" + value + "&idx=" + idx
+						let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx
 						ajaxUpdate( url )
 					}
 					
@@ -262,10 +274,10 @@ class DUT_LEDC():
 						document.getElementById( "Slider" + i ).value = value;
 						document.getElementById( "valField" + i ).value = hex( value )
 
-						if ( i == ({% iref_ofst %} - 1) )
-							setAllSliderValues( 0, {% num_ch %}, value );
-						else if ( i == ({% iref_ofst %} * 2 - 1) )
-							setAllSliderValues( {% iref_ofst %}, {% num_ch %}, value );
+						if ( i == (IREF_OFST - 1) )
+							setAllSliderValues( 0, N_CHANNELS, value );
+						else if ( i == (IREF_OFST* 2 - 1) )
+							setAllSliderValues( IREF_OFST, N_CHANNELS, value );
 					}
 					
 					/******** setAllSliderValues ********/
@@ -286,9 +298,9 @@ class DUT_LEDC():
 					/******** updateRegField ********/
 
 					function updateRegField( element, idx ) {
-						var valueFieldElement = document.getElementById( "regField" + idx );
-						var value	= parseInt( valueFieldElement.value, 16 )
-						var no_submit	= 0
+						let valueFieldElement = document.getElementById( "regField" + idx );
+						let value	= parseInt( valueFieldElement.value, 16 )
+						let no_submit	= 0
 						
 						if ( isNaN( value ) ) {
 							no_submit	= 1
@@ -301,7 +313,7 @@ class DUT_LEDC():
 						if ( no_submit )
 							return;
 
-						var url	= "/{% dev_name %}?reg=" + idx + "&val=" + value
+						let url	= REQ_HEADER + 'reg=' + idx + '&val=' + value
 						ajaxUpdate( url, updateRegFieldDone )
 					}
 					
@@ -314,7 +326,8 @@ class DUT_LEDC():
 					/******** allRegLoad ********/
 
 					function allRegLoad() {
-						ajaxUpdate( 'allreg', allRegLoadDone );
+						let url	= REQ_HEADER + 'allreg='
+						ajaxUpdate( url, allRegLoadDone );
 					}
 
 					/******** allRegLoadDone ********/
@@ -334,8 +347,8 @@ class DUT_LEDC():
 					 ****************************/
 					 
 					function loadFinished(){
-						setAllSliderValues( {% iref_ofst %}, {% num_ch %}, {% iref_init %} );
-						setAllSliderValues( {% iref_ofst %} * 2 - 1, 1, {% iref_init %} );
+						setAllSliderValues( IREF_OFST, N_CHANNELS, IREF_INIT );
+						setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
 						allRegLoad();
 					}
 
@@ -351,7 +364,7 @@ class DUT_LEDC():
 
 					function ajaxUpdate( url, func ) {
 						url			= url + '?ver=' + new Date().getTime();
-						var	ajax	= new XMLHttpRequest;
+						let	ajax	= new XMLHttpRequest;
 						ajax.open( 'GET', url, true );
 						
 						ajax.onload = func;
@@ -395,11 +408,10 @@ class DUT_LEDC():
 		"""
 		
 		page_data	= {}
-		page_data[ "dev_name"  ]	= self.dev.__class__.__name__
+		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "mcu"       ]	= os.uname().machine
-		page_data[ "ch-offset" ]	= "".join( [ '<option value="{}">{}</option>'.format( i, i ) for i in range( 0, self.dev.CHANNELS, 3 ) ] )
-		page_data[ "num_ch"    ]	= str( self.dev.CHANNELS )
+		page_data[ "n_ch"      ]	= str( self.dev.CHANNELS )
 		page_data[ "iref_ofst" ]	= str( self.IREF_ID_OFFSET )
 		page_data[ "iref_init" ]	= str( self.IREF_INIT )
 		page_data[ "style"     ]	= self.get_style()
