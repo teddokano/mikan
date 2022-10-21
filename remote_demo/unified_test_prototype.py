@@ -239,7 +239,7 @@ class DUT_LEDC():
 					}
 					
 					function updateSliderDone() {
-						obj = JSON.parse( this.responseText );
+						let obj = JSON.parse( this.responseText );
 						setSliderValues( obj.idx, obj.value );
 					}
 					
@@ -318,7 +318,7 @@ class DUT_LEDC():
 					}
 					
 					function updateRegFieldDone() {
-						obj = JSON.parse( this.responseText );
+						let obj = JSON.parse( this.responseText );
 						
 						document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
 					}
@@ -333,7 +333,7 @@ class DUT_LEDC():
 					/******** allRegLoadDone ********/
 
 					function allRegLoadDone() {
-						obj = JSON.parse( this.responseText );
+						let obj = JSON.parse( this.responseText );
 
 						for ( let i = 0; i < obj.reg.length; i++ ) {
 							document.getElementById('regField' + i ).value	= hex( obj.reg[ i ] )
