@@ -34,26 +34,131 @@ except:
 
 
 
+def front_page_setup( dev_list ):
+	html = """\
+	HTTP/1.0 200 OK
 
-front_page = """\
-HTTP/1.0 200 OK
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="utf-8" />
+			<title>device list</title>
+			<style>
+			html {
+				font-size: 80%;
+				font-family: Arial;
+				display: inline-block;
+				text-align: center;
+			}
+			body {
+				font-size: 1.0rem;
+				font-color: #000000;
+				vertical-align: middle;
+			}
+			div {
+				border: solid 1px #EEEEEE;
+				box-sizing: border-box;
+				text-align: center;
+				font-size: 1.5rem;
+				padding: 5px;
+			}
+			.header {
+				border: solid 1px #EEEEEE;
+				text-align: center;
+				font-size: 1.5rem;
+				padding: 1.0rem;
+			}
+			table {
+				background-color: #EEEEEE;
+				border-collapse: collapse;
+				width: 100%;
+			}
+			td {
+				border: solid 1px #FFFFFF;
+				text-align: center;
+			}
+			.Green_cell {
+				background-color: #00FF00;
+			}
+			.Red_cell {
+				background-color: #FF0000;
+			}
+			</style>
+		</head>
+		<body>
+			<div class="header">
+				<p>device demo server</p>
+			</div>
 
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>test</title>
-	</head>
-	<body>
-		<a href = "/PCA9955B">test page</a>
-	</body>
-</html>
-"""
+			{% front_page_table %}
+		</body>
+	</html>
+	"""
+	
+	
+	page_data	= {}
+	page_data[ "front_page_table"  ]	= front_page_table( dev_list )
 
+	for key, value in page_data.items():
+		html = html.replace('{% ' + key + ' %}', value )
+	
+	return html
+
+def front_page_table( dev_list ):
+	s	 = [ '<table>' ]
+
+	s	+= [ '<tr>' ]
+	s	+= [ '<td class="reg_table_name">device</td>' ]
+	s	+= [ '<td class="reg_table_name">address</td>' ]
+	s	+= [ '<td class="reg_table_name">live?</td>' ]
+	s	+= [ '<td class="reg_table_name">interface</td>' ]
+	s	+= [ '</tr>' ]
+
+
+	for dut in dev_list:
+		s	+= [ '<tr>' ]
+		
+		if "I2C" in str( dut.interface ):
+			live	= dut.dev.live
+		else:
+			live	= None
+
+		if live:
+			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.dev_name ) ]
+		else:
+			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.dev_name, dut.dev_name ) ]
+		
+		if dut.address:
+			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]
+		else:
+			s	+= [ '<td class="reg_table_name">n/a</td>' ]
+
+		s	+= [ '<td class="reg_table_name {}">{}</td>'.format( "Red_cell" if live is False else "Green_cell", live ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.interface ) ]
+		s	+= [ '</tr>' ]
+		
+	s	+= [ '</table>' ]
+	return "\n".join( s )
 
 
 def main( micropython_optimize=False ):
-	dut	= DUT_LEDC()
+	i2c			= machine.I2C( 0, freq = (400 * 1000) )
+	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
+
+	pca9956b_0	= PCA9956B( i2c, 0x02 >>1 )
+	pca9956b_1	= PCA9956B( i2c, 0x04 >>1 )
+	pca9955b	= PCA9955B( i2c, 0x06 >>1 )
+	pca9632		= PCA9632( i2c )
+	pca9957		= PCA9957( spi, setup_EVB = True )
+
+	dev_list	= [	DUT_LEDC( pca9956b_0, i2c, ),
+					DUT_LEDC( pca9956b_1, i2c, ),
+					DUT_LEDC( pca9955b, i2c, ),
+					DUT_LEDC( pca9632, i2c, ),
+					DUT_LEDC( pca9957, spi, ),
+					]
+
+	front_page	= front_page_setup( dev_list )
 
 	ip_info	= start_network()
 
@@ -82,7 +187,10 @@ def main( micropython_optimize=False ):
 		req = client_stream.readline()
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
-		html	= dut.parse( req )
+		for dut in dev_list:
+			html	= dut.parse( req )
+			if html:
+				break
 
 		if html is None:
 			html	= front_page
@@ -119,21 +227,29 @@ class DUT_LEDC():
 
 	IREF_ID_OFFSET	= 100
 
-	def __init__( self ):
-		self.interface	= machine.I2C( 0, freq = (400 * 1000) )
-		self.dev		= PCA9955B( self.interface, address = 0x02 >> 1, iref = self.IREF_INIT )
+	def __init__( self, dev, interface ):
+		self.interface	= interface
+		self.dev		= dev
 		self.led		= [ LED( self.dev, i ) for i in range( self.dev.CHANNELS ) ]
-		self.dev_name	= self.dev.__class__.__name__
+		self.type		= self.dev.__class__.__name__
+		
+		if isinstance( interface, machine.I2C ):
+			self.address	= dev.__adr
+			self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
+		else:
+			self.address	= dev.__cs
+			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
+
 
 	def parse( self, req ):
 		#print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )
 		if self.dev_name not in req:
-			return
+			return None
 	
 		if "?" not in req:
 			html	= self.page_setup()
 
-			if "PCA9632" not in self.dev.info():
+			if hasattr( self.dev, "__iref_base" ):
 				self.dev.write_registers( "IREFALL", self.IREF_INIT )
 
 			for i in range( self.dev.CHANNELS ):

@@ -111,7 +111,7 @@ class I2C_target( Interface ):
 	
 	"""
 
-	def __init__( self, i2c, address, auto_increment_flag = 0x00 ):
+	def __init__( self, i2c, address, auto_increment_flag = 0x00, ignore_fail = True ):
 		"""
 		I2C_target initializer
 	
@@ -125,6 +125,9 @@ class I2C_target( Interface ):
 		self.__i2c	= i2c
 		self.__ai	= auto_increment_flag
 		
+		self.ignore_fail	= ignore_fail
+		self.live			= True
+
 	def send( self, tsfr, stop = True, retry = 3 ):
 		"""
 		send data (generate write transaction)
@@ -140,6 +143,10 @@ class I2C_target( Interface ):
 			transaction.
 			
 		"""
+		
+		if not self.live:
+			return
+			
 		retry_setting	= retry
 
 		while retry:
@@ -153,7 +160,11 @@ class I2C_target( Interface ):
 				retry	= 0
 			
 		if ( err ):
-			raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+			if self.ignore_fail:
+				print( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+				self.live	= False
+			else:
+				raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
 
 	def receive( self, length, retry = 3 ):
 		"""
@@ -170,6 +181,9 @@ class I2C_target( Interface ):
 			List of integers which was converted from bytearray.
 
 		"""
+		if not self.live:
+			return
+			
 		retry_setting	= retry
 
 		while retry:
@@ -183,7 +197,12 @@ class I2C_target( Interface ):
 				retry	= 0
 			
 		if ( err ):
-			raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+			if self.ignore_fail:
+				print( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+				self.live	= False
+			else:
+				raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
+
 
 		return rtn
 
