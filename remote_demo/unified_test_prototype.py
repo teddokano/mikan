@@ -53,17 +53,7 @@ HTTP/1.0 200 OK
 
 
 def main( micropython_optimize=False ):
-
-
 	dut	= DUT_LEDC()
-
-
-
-
-
-
-
-
 
 	ip_info	= start_network()
 
@@ -74,15 +64,15 @@ def main( micropython_optimize=False ):
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
-	s.listen( 5 )
+	s.listen( 1 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
 	while True:
 		res = s.accept()
 		client_sock = res[0]
 		client_addr = res[1]
-		print("Client address:", client_addr)
-		print("Client socket:", client_sock)
+		print( "Client address: ", client_addr, end = "" )
+		print( " / socket: ", client_sock )
 
 		if not micropython_optimize:
 			client_stream = client_sock.makefile("rwb")
@@ -90,7 +80,7 @@ def main( micropython_optimize=False ):
 			client_stream = client_sock
 
 		req = client_stream.readline()
-		print( "Request: {}".format( req.decode() ) )
+		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
 		html	= dut.parse( req )
 
@@ -103,7 +93,6 @@ def main( micropython_optimize=False ):
 				break
 			#print(h)
 		
-		print( html )
 		client_stream.write( html )
 
 		client_stream.close()
@@ -123,11 +112,6 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	return lan.ifconfig()
 	
 
-
-		
-
-
-
 class DUT_LEDC():
 	IREF_INIT	= 0x10
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
@@ -142,11 +126,9 @@ class DUT_LEDC():
 		self.dev_name	= self.dev.__class__.__name__
 
 	def parse( self, req ):
-		print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )
+		#print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )
 		if self.dev_name not in req:
 			return
-	
-		print( "parsing: %s" % req )
 	
 		if "?" not in req:
 			html	= self.page_setup()
@@ -163,7 +145,7 @@ class DUT_LEDC():
 
 			m	= self.regex_pwm.match( req )
 			if m:
-				print( m.groups() )
+				#print( m.groups() )
 				pwm	= int( m.group( 1 ) )
 				ch	= int( m.group( 2 ) )
 				
@@ -182,7 +164,7 @@ class DUT_LEDC():
 
 			m	= self.regex_reg.match( req )
 			if m:
-				print( m.groups() )
+				#print( m.groups() )
 				reg	= int( m.group( 1 ) )
 				val	= int( m.group( 2 ) )
 
