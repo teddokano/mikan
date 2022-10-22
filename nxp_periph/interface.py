@@ -122,9 +122,9 @@ class I2C_target( Interface ):
 		
 		"""
 		self.__adr	= address
-		self.__i2c	= i2c
+		self.__if	= i2c
 		self.__ai	= auto_increment_flag
-		
+
 		self.ignore_fail	= ignore_fail
 		self.live			= True
 
@@ -156,7 +156,7 @@ class I2C_target( Interface ):
 		while retry:
 			err	= False
 			try:
-				self.__i2c.writeto( self.__adr, bytearray( tsfr ), stop )
+				self.__if.writeto( self.__adr, bytearray( tsfr ), stop )
 			except Exception as e:
 				err		 = True
 				retry	-= 1
@@ -193,7 +193,7 @@ class I2C_target( Interface ):
 		while retry:
 			err	= False
 			try:
-				rtn	= list( self.__i2c.readfrom( self.__adr, length ) )
+				rtn	= list( self.__if.readfrom( self.__adr, length ) )
 			except Exception as e:
 				err		 = True
 				retry	-= 1
@@ -270,7 +270,7 @@ class SPI_target( Interface ):
 		
 		"""
 		self.__cs	= cs
-		self.__spi	= spi
+		self.__if	= spi
 
 		self.chip_select	= 1
 
@@ -286,7 +286,7 @@ class SPI_target( Interface ):
 			
 		"""
 		self.chip_select	= 0
-		self.__spi.write( bytearray( data ) )
+		self.__if.write( bytearray( data ) )
 		self.chip_select	= 1
 
 	def receive( self, tsfr ):
@@ -307,7 +307,7 @@ class SPI_target( Interface ):
 		"""
 		tsfr	= bytearray( tsfr )
 		self.chip_select	= 0
-		self.__spi.write_readinto( tsfr, tsfr )
+		self.__if.write_readinto( tsfr, tsfr )
 		self.chip_select	= 1
 		
 		return list( tsfr )
