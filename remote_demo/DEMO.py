@@ -24,9 +24,8 @@ from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	PCF2131, PCF85063
 
-from DUT_LEDC	import	DUT_LEDC
-from DUT_TEMP	import	DUT_TEMP
-from DUT_RTC	import	DUT_RTC
+from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
+
 
 def main( micropython_optimize = False ):
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
