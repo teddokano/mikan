@@ -128,6 +128,10 @@ class I2C_target( Interface ):
 		self.ignore_fail	= ignore_fail
 		self.live			= True
 
+	def ping( self ):
+		self.live	= True
+		self.send( [] )
+
 	def send( self, tsfr, stop = True, retry = 3 ):
 		"""
 		send data (generate write transaction)
@@ -200,9 +204,9 @@ class I2C_target( Interface ):
 			if self.ignore_fail:
 				print( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
 				self.live	= False
+				rtn			= None
 			else:
 				raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
-
 
 		return rtn
 

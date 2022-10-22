@@ -58,8 +58,8 @@ def front_page_setup( dev_list ):
 			div {
 				border: solid 1px #EEEEEE;
 				box-sizing: border-box;
-				text-align: center;
-				font-size: 1.5rem;
+				text-align: left;
+				font-size: 1.0rem;
 				padding: 5px;
 			}
 			.header {
@@ -69,12 +69,19 @@ def front_page_setup( dev_list ):
 				padding: 1.0rem;
 			}
 			table {
-				background-color: #EEEEEE;
+				background-color: #FFFFFF;
 				border-collapse: collapse;
 				width: 100%;
 			}
 			td {
+				border: solid 1px #EEEEEE;
+				text-align: left;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+			.table_header {
 				border: solid 1px #FFFFFF;
+				background-color: #EEEEEE;
 				text-align: center;
 			}
 			.Green_cell {
@@ -82,6 +89,7 @@ def front_page_setup( dev_list ):
 			}
 			.Red_cell {
 				background-color: #FF0000;
+				color: #FFFFFF;
 			}
 			</style>
 		</head>
@@ -90,11 +98,13 @@ def front_page_setup( dev_list ):
 				<p>device demo server</p>
 			</div>
 
-			{% front_page_table %}
+			<div>
+				Device list
+				{% front_page_table %}
+			</div>
 		</body>
 	</html>
 	"""
-	
 	
 	page_data	= {}
 	page_data[ "front_page_table"  ]	= front_page_table( dev_list )
@@ -108,10 +118,10 @@ def front_page_table( dev_list ):
 	s	 = [ '<table>' ]
 
 	s	+= [ '<tr>' ]
-	s	+= [ '<td class="reg_table_name">device</td>' ]
-	s	+= [ '<td class="reg_table_name">address</td>' ]
-	s	+= [ '<td class="reg_table_name">live?</td>' ]
-	s	+= [ '<td class="reg_table_name">interface</td>' ]
+	s	+= [ '<td class="table_header">device type</td>' ]
+	s	+= [ '<td class="table_header">address</td>' ]
+	s	+= [ '<td class="table_header">live?</td>' ]
+	s	+= [ '<td class="table_header">interface</td>' ]
 	s	+= [ '</tr>' ]
 
 
@@ -119,14 +129,16 @@ def front_page_table( dev_list ):
 		s	+= [ '<tr>' ]
 		
 		if "I2C" in str( dut.interface ):
+			dut.dev.ping()
 			live	= dut.dev.live
+			
 		else:
 			live	= None
 
 		if live:
-			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.dev_name ) ]
+			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
 		else:
-			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.dev_name, dut.dev_name ) ]
+			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.type ) ]
 		
 		if dut.address:
 			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]
@@ -157,8 +169,6 @@ def main( micropython_optimize=False ):
 					DUT_LEDC( pca9632, i2c, ),
 					DUT_LEDC( pca9957, spi, ),
 					]
-
-	front_page	= front_page_setup( dev_list )
 
 	ip_info	= start_network()
 
@@ -193,7 +203,7 @@ def main( micropython_optimize=False ):
 				break
 
 		if html is None:
-			html	= front_page
+			html	= front_page_setup( dev_list )
 
 		while True:
 			h = client_stream.readline()
