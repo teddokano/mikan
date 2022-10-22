@@ -105,11 +105,15 @@ class DUT_LEDC():
 			<body>
 				<script>
 					const	DEV_NAME	= '{% dev_name %}';
+					const	PWM0_IDX	=  {% pwm0_idx %};
+					const	IREF0_IDX	=  {% iref0_idx %};
+					const	PWMALL_IDX	=  {% pwmall_idx %};
+					const	IREFALL_IDX	=  {% irefall_idx %};
 					const	N_CHANNELS	=  {% n_ch %};
 					const	IREF_OFST	=  {% iref_ofst %};
 					const	IREF_INIT	=  {% iref_init %};
 					const	REQ_HEADER	= '/' + DEV_NAME + '?';
-					
+
 					/****************************
 					 ****	slider controls
 					 ****************************/
@@ -168,8 +172,7 @@ class DUT_LEDC():
 					/******** setSliderValues ********/
 
 					function setSliderValues( i, value ) {
-						document.getElementById( "Slider" + i ).value = value;
-						document.getElementById( "valField" + i ).value = hex( value )
+						setSlider( i, value );
 
 						if ( 0 == IREF_OFST )
 							return;
@@ -184,11 +187,28 @@ class DUT_LEDC():
 
 					function setAllSliderValues( start, length, value ) {
 						for ( let i = start; i < start + length; i++ ) {
-							document.getElementById( "Slider" + i ).value = value;
-							document.getElementById( "valField" + i ).value = hex( value )
+							setSlider( i, value );
 						}
 					}
-					
+
+					function setSlider( idx, value ) {
+						document.getElementById( "Slider" + idx ).value = value;
+						document.getElementById( "valField" + idx ).value = hex( value );
+						
+						let reg_idx;
+						
+						if ( idx <= N_CHANNELS )
+							reg_idx	= PWM0_IDX + idx;
+						else if ( idx == (IREF_OFST - 1) )
+							reg_idx = PWMALL_IDX;
+						else if ( idx == (IREF_OFST * 2 - 1) )
+							reg_idx	= IREFALL_IDX;
+						else
+							reg_idx	= IREF0_IDX + (idx - IREF_OFST);
+						
+						setRefField( reg_idx, value )
+					}
+
 					/****************************
 					 ****	register controls
 					 ****************************/
@@ -218,7 +238,7 @@ class DUT_LEDC():
 					function updateRegFieldDone() {
 						let obj = JSON.parse( this.responseText );
 						
-						document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
+						setRefField( obj.reg, obj.val )
 					}
 
 					/******** allRegLoad ********/
@@ -234,8 +254,12 @@ class DUT_LEDC():
 						let obj = JSON.parse( this.responseText );
 
 						for ( let i = 0; i < obj.reg.length; i++ ) {
-							document.getElementById('regField' + i ).value	= hex( obj.reg[ i ] )
+							setRefField( i, obj.reg[ i ] )
 						}
+					}
+					
+					function setRefField( idx, value ) {
+						document.getElementById('regField' + idx ).value	= hex( value );
 					}
 					
 					/****************************
@@ -306,20 +330,8 @@ class DUT_LEDC():
 		</html>
 		"""
 		
-		page_data	= {}
-		page_data[ "dev_name"  ]	= self.dev_name
-		page_data[ "dev_type"  ]	= self.type
-		page_data[ "dev_info"  ]	= self.dev.info()
-		page_data[ "mcu"       ]	= os.uname().machine
-		page_data[ "n_ch"      ]	= str( self.dev.CHANNELS )
-		page_data[ "iref_ofst" ]	= str( self.IREF_ID_OFFSET )
-		page_data[ "iref_init" ]	= str( self.IREF_INIT )
-		page_data[ "reg_table" ]	= self.get_reg_table( self.dev, 4 )
-		page_data[ "style"     ]	= demo_lib.util.get_css()
-
-		count	= self.dev.CHANNELS
 		info	= self.dev.info()
-		
+
 		if "PCA9956B" in info:
 			col_pat	= sum( tuple( ("R", "G", "B") for i in range( 8 ) ), () )
 			all_reg = True
@@ -338,7 +350,29 @@ class DUT_LEDC():
 			all_reg = False
 
 		iref		= hasattr( self.dev, "__iref_base" )
-		#cols		= 4	if led_c.CHANNELS % 3 else 3
+		
+		count		= self.dev.CHANNELS
+		pwm0_idx	= self.dev.REG_NAME.index( "PWM0"  )
+		iref0_idx	= self.dev.REG_NAME.index( "IREF0" ) if iref else 0
+		pwmall_idx	= self.dev.REG_NAME.index( "PWMALL"  ) if all_reg else 0
+		irefall_idx	= self.dev.REG_NAME.index( "IREFALL" ) if all_reg else 0
+
+		page_data	= {}
+		page_data[ "dev_name"    ]	= self.dev_name
+		page_data[ "dev_type"    ]	= self.type
+		page_data[ "dev_info"    ]	= info
+		page_data[ "mcu"         ]	= os.uname().machine
+		page_data[ "n_ch"        ]	= str( count )
+		page_data[ "pwm0_idx"    ]	= str( pwm0_idx )
+		page_data[ "iref0_idx"   ]	= str( iref0_idx )
+		page_data[ "pwmall_idx"  ]	= str( pwmall_idx )
+		page_data[ "irefall_idx" ]	= str( irefall_idx )
+		page_data[ "iref_ofst"   ]	= str( self.IREF_ID_OFFSET )
+		page_data[ "iref_init"   ]	= str( self.IREF_INIT )
+		page_data[ "reg_table"   ]	= self.get_reg_table( self.dev, 4 )
+		page_data[ "style"       ]	= demo_lib.util.get_css()
+
+
 		cols		= 4	if all_reg else 1
 
 		page_data[ "sliders_PWM"  ]	= self.get_slider_table( cols, col_pat, iref = False, all_reg = all_reg )
