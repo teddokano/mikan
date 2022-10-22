@@ -6,17 +6,8 @@
 #	https://gist.github.com/teddokano/45b99cd906e63a23105ab427ae70d1dc
 #	https://forum.micropython.org/viewtopic.php?t=1940#p10926
 #
-#	Imprementing slider interface
-#	https://randomnerdtutorials.com/esp32-web-server-slider-pwm/
-#	https://developer.mozilla.org/ja/docs/Web/CSS/::-webkit-slider-thumb
-#	https://code-kitchen.dev/html/input-range/
-#	https://memorva.jp/memo/mobile/sp_viewport.php
-#
-#	HTML modification
-#	https://1-notes.com/python-replace-html/
-#
 #	Tedd OKANO / Released under the MIT license
-#	15-Oct-2022
+#	22-Oct-2022
 #	version	0.1
 
 import	network
@@ -91,10 +82,14 @@ def front_page_setup( dev_list ):
 				background-color: #FF0000;
 				color: #FFFFFF;
 			}
+			.table_note {
+				text-align: right;
+				font-size: 0.8rem;
+			}
 			.foot_note {
 				text-align: center;
 				font-size: 0.8rem;
-				padding: 1.0rem;
+				padding: 0.5rem;
 			}
 </style>
 		</head>
@@ -106,6 +101,7 @@ def front_page_setup( dev_list ):
 			<div>
 				Device list
 				{% front_page_table %}
+				<p class="table_note">* page reloading will refresh device live status</p>
 			</div>
 			
 			<div class="foot_note">
@@ -248,8 +244,6 @@ class DUT_LEDC():
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 
-	IREF_ID_OFFSET	= 100
-
 	def __init__( self, dev, interface ):
 		self.interface	= interface
 		self.dev		= dev
@@ -270,13 +264,17 @@ class DUT_LEDC():
 			return None
 	
 		if "?" not in req:
-			html	= self.page_setup()
-
 			if hasattr( self.dev, "__iref_base" ):
+				self.IREF_ID_OFFSET	= 100
 				self.dev.write_registers( "IREFALL", self.IREF_INIT )
+			else:
+				self.IREF_ID_OFFSET	= 0
 
 			for i in range( self.dev.CHANNELS ):
 				self.led[ i ].v	= 0.0
+
+			html	= self.page_setup()
+
 		elif "allreg" in req:
 			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
@@ -395,6 +393,9 @@ class DUT_LEDC():
 						document.getElementById( "Slider" + i ).value = value;
 						document.getElementById( "valField" + i ).value = hex( value )
 
+						if ( 0 == IREF_OFST )
+							return;
+							
 						if ( i == (IREF_OFST - 1) )
 							setAllSliderValues( 0, N_CHANNELS, value );
 						else if ( i == (IREF_OFST* 2 - 1) )
@@ -469,7 +470,11 @@ class DUT_LEDC():
 					 
 					function loadFinished(){
 						setAllSliderValues( IREF_OFST, N_CHANNELS, IREF_INIT );
-						setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
+						
+						if ( 0 < IREF_OFST ) {
+							setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
+						}
+						
 						allRegLoad();
 					}
 
