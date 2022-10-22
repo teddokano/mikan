@@ -10,11 +10,10 @@
 #	22-Oct-2022
 #	version	0.1
 
-import	network
-import	ujson
 import	machine
 import	os
 import	ure
+import	ujson
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 
@@ -28,7 +27,8 @@ class DUT_LEDC():
 		self.dev		= dev
 		self.led		= [ LED( self.dev, i ) for i in range( self.dev.CHANNELS ) ]
 		self.type		= self.dev.__class__.__name__
-		
+		self.info		= [ "LED controller", "{}ch".format( self.dev.CHANNELS ) ]
+
 		if isinstance( self.interface, machine.I2C ):
 			self.address	= dev.__adr
 			self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)

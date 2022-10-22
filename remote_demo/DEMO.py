@@ -15,21 +15,19 @@ import	ujson
 import	machine
 import	os
 import	ure
-
-from DUT_LEDC import	DUT_LEDC
-import	DUT_TEMP
-import	DUT_RTC
-
-from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
-from	nxp_periph	import	PCF2131, PCF85063
-from	nxp_periph	import	PCT2075, LM75B
-
 try:
     import usocket as socket
 except:
     import socket
 
 
+from DUT_LEDC import	DUT_LEDC
+from DUT_TEMP import	DUT_TEMP
+#import	DUT_RTC
+
+from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
+from	nxp_periph	import	PCT2075, LM75B
+from	nxp_periph	import	PCF2131, PCF85063
 
 
 def main( micropython_optimize=False ):
@@ -48,7 +46,7 @@ def main( micropython_optimize=False ):
 					DUT_LEDC( pca9955b ),
 					DUT_LEDC( pca9632 ),
 					DUT_LEDC( pca9957 ),
-#					DUT_TEMP( pct2075 ),
+					DUT_TEMP( pct2075 ),
 					]
 
 	ip_info	= start_network()
@@ -110,6 +108,46 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
 	
+def front_page_table( dev_list ):
+	s	 = [ '<table>' ]
+
+	s	+= [ '<tr>' ]
+	s	+= [ '<td class="table_header">device type</td>' ]
+	s	+= [ '<td class="table_header">address</td>' ]
+	s	+= [ '<td class="table_header">live?</td>' ]
+	s	+= [ '<td class="table_header">family</td>' ]
+	s	+= [ '<td class="table_header">info</td>' ]
+	s	+= [ '<td class="table_header">interface</td>' ]
+	s	+= [ '</tr>' ]
+
+
+	for dut in dev_list:
+		s	+= [ '<tr>' ]
+		
+		if "I2C" in str( dut.interface ):
+			dut.dev.ping()
+			live	= dut.dev.live
+		else:
+			live	= None
+
+		if live is not False:
+			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
+		else:
+			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.type ) ]
+		
+		if dut.address:
+			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]
+		else:
+			s	+= [ '<td class="reg_table_name">n/a</td>' ]
+
+		s	+= [ '<td class="reg_table_name {}">{}</td>'.format( "Red_cell" if live is False else "Green_cell", live ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.info[ 0 ] ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.info[ 1 ] ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.interface ) ]
+		s	+= [ '</tr>' ]
+		
+	s	+= [ '</table>' ]
+	return "\n".join( s )
 
 def front_page_setup( dev_list ):
 	html = """\
@@ -209,42 +247,6 @@ def front_page_setup( dev_list ):
 	
 	return html
 
-def front_page_table( dev_list ):
-	s	 = [ '<table>' ]
-
-	s	+= [ '<tr>' ]
-	s	+= [ '<td class="table_header">device type</td>' ]
-	s	+= [ '<td class="table_header">address</td>' ]
-	s	+= [ '<td class="table_header">live?</td>' ]
-	s	+= [ '<td class="table_header">interface</td>' ]
-	s	+= [ '</tr>' ]
-
-
-	for dut in dev_list:
-		s	+= [ '<tr>' ]
-		
-		if "I2C" in str( dut.interface ):
-			dut.dev.ping()
-			live	= dut.dev.live
-		else:
-			live	= None
-
-		if live is not False:
-			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
-		else:
-			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.type ) ]
-		
-		if dut.address:
-			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]
-		else:
-			s	+= [ '<td class="reg_table_name">n/a</td>' ]
-
-		s	+= [ '<td class="reg_table_name {}">{}</td>'.format( "Red_cell" if live is False else "Green_cell", live ) ]
-		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.interface ) ]
-		s	+= [ '</tr>' ]
-		
-	s	+= [ '</table>' ]
-	return "\n".join( s )
 
 main()
 

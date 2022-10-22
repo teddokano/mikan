@@ -18,11 +18,6 @@ import	ure
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 
-try:
-    import usocket as socket
-except:
-    import socket
-
 
 
 def front_page_setup( dev_list ):
