@@ -91,7 +91,12 @@ def front_page_setup( dev_list ):
 				background-color: #FF0000;
 				color: #FFFFFF;
 			}
-			</style>
+			.foot_note {
+				text-align: center;
+				font-size: 0.8rem;
+				padding: 1.0rem;
+			}
+</style>
 		</head>
 		<body>
 			<div class="header">
@@ -102,12 +107,20 @@ def front_page_setup( dev_list ):
 				Device list
 				{% front_page_table %}
 			</div>
+			
+			<div class="foot_note">
+				<b>HTTP server on<br/>
+				{% mcu %}</b><br/>
+				0100111101101011011000010110111001101111
+			</div>
 		</body>
 	</html>
 	"""
 	
 	page_data	= {}
 	page_data[ "front_page_table"  ]	= front_page_table( dev_list )
+	page_data[ "mcu"               ]	= os.uname().machine
+
 
 	for key, value in page_data.items():
 		html = html.replace('{% ' + key + ' %}', value )
