@@ -286,7 +286,7 @@ class DUT_LEDC():
 				pwm	= int( m.group( 1 ) )
 				ch	= int( m.group( 2 ) )
 				
-				if ch < (self.IREF_ID_OFFSET - 1):
+				if (self.IREF_ID_OFFSET is 0) or (ch < (self.IREF_ID_OFFSET - 1)):
 					self.led[ ch ].v	= pwm / 255
 				elif ch is (self.IREF_ID_OFFSET - 1):
 					self.dev.write_registers( "PWMALL", pwm )
@@ -469,11 +469,12 @@ class DUT_LEDC():
 					 ****************************/
 					 
 					function loadFinished(){
+console.log( 'IREF_OFST ' + IREF_OFST )
+						if ( 0 == IREF_OFST )
+							return;
+
 						setAllSliderValues( IREF_OFST, N_CHANNELS, IREF_INIT );
-						
-						if ( 0 < IREF_OFST ) {
-							setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
-						}
+						setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
 						
 						allRegLoad();
 					}
