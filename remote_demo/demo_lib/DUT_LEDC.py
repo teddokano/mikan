@@ -16,6 +16,7 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
+import	demo_lib.util
 
 class DUT_LEDC():
 	IREF_INIT	= 0x10
@@ -35,7 +36,6 @@ class DUT_LEDC():
 		else:
 			self.address	= dev.__cs
 			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
-
 
 	def parse( self, req ):
 		#print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )
@@ -90,7 +90,6 @@ class DUT_LEDC():
 
 		return html
 
-
 	def page_setup( self ):
 		#HTML to send to browsers
 		html = """\
@@ -106,9 +105,9 @@ class DUT_LEDC():
 			<body>
 				<script>
 					const	DEV_NAME	= '{% dev_name %}';
-					const	N_CHANNELS	= {% n_ch %};
-					const	IREF_OFST	= {% iref_ofst %};
-					const	IREF_INIT	= {% iref_init %};
+					const	N_CHANNELS	=  {% n_ch %};
+					const	IREF_OFST	=  {% iref_ofst %};
+					const	IREF_INIT	=  {% iref_init %};
 					const	REQ_HEADER	= '/' + DEV_NAME + '?';
 					
 					/****************************
@@ -190,8 +189,6 @@ class DUT_LEDC():
 						}
 					}
 					
-
-					
 					/****************************
 					 ****	register controls
 					 ****************************/
@@ -241,8 +238,6 @@ class DUT_LEDC():
 						}
 					}
 					
-					
-					
 					/****************************
 					 ****	page load controls
 					 ****************************/
@@ -259,8 +254,6 @@ class DUT_LEDC():
 					}
 
 					window.addEventListener('load', loadFinished);
-
-
 
 					/****************************
 					 ****	service routine
@@ -321,8 +314,8 @@ class DUT_LEDC():
 		page_data[ "n_ch"      ]	= str( self.dev.CHANNELS )
 		page_data[ "iref_ofst" ]	= str( self.IREF_ID_OFFSET )
 		page_data[ "iref_init" ]	= str( self.IREF_INIT )
-		page_data[ "style"     ]	= self.get_style()
 		page_data[ "reg_table" ]	= self.get_reg_table( self.dev, 4 )
+		page_data[ "style"     ]	= demo_lib.util.get_css()
 
 		count	= self.dev.CHANNELS
 		info	= self.dev.info()
@@ -370,7 +363,7 @@ class DUT_LEDC():
 						'<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00"">'
 						]
 
-		s	 	= [ '<table>' ]
+		s	 	= [ '<table class="table_LEDC">' ]
 
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
@@ -392,11 +385,11 @@ class DUT_LEDC():
 		return "\n".join( s )
 
 	def table_item( self, template, i, id, c_l, cs_l, label ):
-		s	 = [ '<td align ="right" class="{}">'.format( cs_l ) ]
+		s	 = [ '<td align ="right" class="{} td_LEDC">'.format( cs_l ) ]
 		s	+= [ template[ 0 ].format( c_l, label ) ]
-		s	+= [ '</td><td class="{}">'.format( cs_l ) ]
+		s	+= [ '</td><td class="{} td_LEDC">'.format( cs_l ) ]
 		s	+= [ template[ 1 ].format( id, id, id ) ]
-		s	+= [ '</td><td class="{}">'.format( cs_l ) ]
+		s	+= [ '</td><td class="{} td_LEDC">'.format( cs_l ) ]
 		s	+= [ template[ 2 ].format( id, id ) ]
 		s	+= [ '</td>' ]
 
@@ -406,116 +399,15 @@ class DUT_LEDC():
 		total	= len( dev.REG_NAME )
 		rows	= (total + cols - 1) // cols
 
-		s	 	= [ '<table>' ]
+		s	 	= [ '<table class="table_LEDC">' ]
 
 		for y in range( rows ):
 			s	 	+= [ '<tr class="reg_table_row">' ]
 			for i in range( y, total, rows ):
-				s	+= [ '<td class="reg_table_name">{}</td><td class="reg_table_val">0x{:02X}</td>'.format( dev.REG_NAME[ i ], i ) ]
-				s	+= [ '<td  class="reg_table_val"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC">{}</td><td class="reg_table_val td_LEDC">0x{:02X}</td>'.format( dev.REG_NAME[ i ], i ) ]
+				s	+= [ '<td class="reg_table_val td_LEDC"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
 		return "\n".join( s )
-
-	def get_style( self ):
-		s	= """\
-		<style>
-		html {
-			font-size: 80%;
-			font-family: Arial;
-			display: inline-block;
-			text-align: center;
-		}
-		body {
-			font-size: 1.0rem;
-			font-color: #000000;
-			vertical-align: middle;
-		}
-		div {
-			border: solid 1px #EEEEEE;
-			box-sizing: border-box;
-			text-align: center;
-			font-size: 1.5rem;
-			padding: 5px;
-		}
-		.header {
-			border: solid 1px #EEEEEE;
-			text-align: center;
-			font-size: 1.5rem;
-			padding: 1.0rem;
-		}
-		.info {
-			text-align: center;
-			font-size: 1.0rem;
-		}
-		.control_panel {
-			box-sizing: border-box;
-			text-align: left;
-			font-size: 1.0rem;
-		}
-		.slider_table_row {
-			height: 3.0rem;
-		}
-		.item_R {
-			background-color: #FFEEEE;
-		}
-		.item_G {
-			background-color: #EEFFEE;
-		}
-		.item_B {
-			background-color: #EEEEFF;
-		}
-		.reg_table {
-			box-sizing: border-box;
-			text-align: left;
-			font-size: 1.0rem;
-		}
-		.reg_table_row {
-			height: 1.0rem;
-		}
-		.foot_note {
-			text-align: center;
-			font-size: 1rem;
-			padding: 0.5rem;
-		}
-		
-		input[type="range"] {
-			-webkit-appearance: none;
-			appearance: none;
-			cursor: pointer;
-			outline: none;
-			height: 5px; width: 85%;
-			background: #E0E0E0;
-			border-radius: 10px;
-			border: solid 3px #C0C0C0;
-		}
-		input[type="range"]::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			background: #707070;
-			width: 20px;
-			height: 20px;
-			border-radius: 50%;
-			box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
-		}
-		input[type="range"]:active::-webkit-slider-thumb {
-			box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
-		}
-		input[type="text"] {
-			width: 2em;
-			height: 1em;
-			font-size: 100%;
-		}
-		table {
-			background-color: #EEEEEE;
-			border-collapse: collapse;
-			width: 100%;
-		}
-		td {
-			border: solid 1px #FFFFFF;
-			text-align: center;
-		}
-		</style>
-		"""
-		return s

@@ -17,6 +17,7 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCT2075, LM75B
+import	demo_lib.util
 
 class DUT_TEMP():
 	TABLE_LENGTH	= 10
@@ -262,7 +263,7 @@ class DUT_TEMP():
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "table"     ]	= self.get_table()
 		page_data[ "info_tab"  ]	= self.get_info_table()
-		page_data[ "style"     ]	= self.get_style()
+		page_data[ "style"     ]	= demo_lib.util.get_css()
 
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
@@ -270,10 +271,10 @@ class DUT_TEMP():
 		return html
 
 	def get_table( self ):
-		s	= [ '<table><tr><td>time</td><td>temp [˚C]</td></tr>' ]
+		s	= [ '<table class="table_TEMP"><tr><td class="td_TEMP">time</td><td class="td_TEMP">temp [˚C]</td></tr>' ]
 
 		for i in range( self.TABLE_LENGTH ):
-			s	+= [ '<tr><td text_align="center"><input type="text" id="timeField{}" value = "---"></td><td><input type="text" id="tempField{}"></td></tr>'.format( i, i ) ]
+			s	+= [ '<tr><td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="timeField{}" value = "---"></td><td class="td_TEMP"><input class="input_text_TMP" type="text" id="tempField{}"></td></tr>'.format( i, i ) ]
 
 		s	+= [ '</table>' ]
 
@@ -281,10 +282,10 @@ class DUT_TEMP():
 
 	def get_info_table( self ):
 		lb	= [ "start time", "last time", "sample count" ]
-		s	= [ '<table><tr>' ]
+		s	= [ '<table class="table_TEMP"><tr>' ]
 
 		for i, l in zip( range( len( lb ) ), lb ):
-			s	+= [ '<tr><td text_align="center">{}</td><td><input type="text" id="infoFieldValue{}"></td></tr>'.format( l, i ) ]
+			s	+= [ '<tr><td class="td_TEMP" text_align="center">{}</td><td class="td_TEMP"><input class="input_text_TMP" type="text" id="infoFieldValue{}"></td></tr>'.format( l, i ) ]
 
 		s	+= [ '</table>' ]
 
@@ -296,120 +297,3 @@ class DUT_TEMP():
 		s	+= [ ujson.dumps( { "data": self.data } ) ]
 
 		return "".join( s )
-
-	def get_style( self ):
-		s	= """\
-		<style>
-		html {
-			font-size: 80%;
-			font-family: Arial;
-			display: inline-block;
-			text-align: center;
-		}
-		body {
-			font-size: 1.0rem;
-			font-color: #000000;
-			vertical-align: middle;
-		}
-		div {
-			border: solid 1px #EEEEEE;
-			box-sizing: border-box;
-			text-align: center;
-			font-size: 1.5rem;
-			padding: 5px;
-		}
-		.header {
-			border: solid 1px #EEEEEE;
-			text-align: center;
-			font-size: 1.5rem;
-			padding: 1.0rem;
-		}
-		.info {
-			text-align: center;
-			font-size: 1.0rem;
-		}
-		.datetime {
-			font-size: 3.0rem;
-		}
-		.control_panel {
-			box-sizing: border-box;
-			text-align: left;
-			font-size: 1.0rem;
-		}
-		.slider_table_row {
-			height: 3.0rem;
-		}
-		.item_R {
-			background-color: #FFEEEE;
-		}
-		.item_G {
-			background-color: #EEFFEE;
-		}
-		.item_B {
-			background-color: #EEEEFF;
-		}
-		.reg_table {
-			box-sizing: border-box;
-			text-align: left;
-			font-size: 1.0rem;
-		}
-		.reg_table_row {
-			height: 1.0rem;
-		}
-		.foot_note {
-			text-align: center;
-			font-size: 1rem;
-			padding: 0.5rem;
-		}
-		
-		input[type="range"] {
-			-webkit-appearance: none;
-			appearance: none;
-			cursor: pointer;
-			outline: none;
-			height: 5px; width: 85%;
-			background: #E0E0E0;
-			border-radius: 10px;
-			border: solid 3px #C0C0C0;
-		}
-		input[type="range"]::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			background: #707070;
-			width: 20px;
-			height: 20px;
-			border-radius: 50%;
-			box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
-		}
-		input[type="range"]:active::-webkit-slider-thumb {
-			box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
-		}
-		input[type="text"] {
-			/* width: 2em; */
-			height: 1em;
-			font-size: 100%;
-			text-align: center;
-			border: solid 0px #FFFFFF;
-		}
-		table {
-			background-color: #FFFFFF;
-			border-collapse: collapse;
-		}
-		td {
-			border: solid 1px #EEEEEE;
-			text-align: center;
-		}
-		
-		.para {
-			display: flex;
-		}
-
-		.log_panel, .info_panel {
-			border: solid 0px #FFFFFF;
-			padding: 5px;
-		}
-
-		
-		</style>
-		"""
-		return s
-

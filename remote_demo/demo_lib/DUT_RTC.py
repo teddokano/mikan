@@ -17,6 +17,7 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCF2131, PCF85063
+import	demo_lib.util
 
 class DUT_RTC():
 	WKDY	= ( "Monday", "Tuesday", "Wednesday",
@@ -198,7 +199,7 @@ class DUT_RTC():
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
-		page_data[ "style"     ]	= self.get_style()
+		page_data[ "style"     ]	= demo_lib.util.get_css()
 
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
@@ -223,121 +224,15 @@ class DUT_RTC():
 		total	= len( self.dev.REG_NAME )
 		rows	= (total + cols - 1) // cols
 
-		s	 	= [ '<table>' ]
+		s	 	= [ '<table class="table_RTC">' ]
 
 		for y in range( rows ):
 			s	 	+= [ '<tr class="reg_table_row">' ]
 			for i in range( y, total, rows ):
-				s	+= [ '<td class="reg_table_name">{}</td><td class="reg_table_val">0x{:02X}</td>'.format( self.dev.REG_NAME[ i ], i ) ]
-				s	+= [ '<td  class="reg_table_val"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
+				s	+= [ '<td class="td_RTC reg_table_name">{}</td><td class="td_RTC reg_table_val">0x{:02X}</td>'.format( self.dev.REG_NAME[ i ], i ) ]
+				s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
 		return "\n".join( s )
-
-
-
-	def get_style( self ):
-		s	= """\
-		<style>
-		html {
-			font-size: 80%;
-			font-family: Arial;
-			display: inline-block;
-			text-align: center;
-		}
-		body {
-			font-size: 1.0rem;
-			font-color: #000000;
-			vertical-align: middle;
-		}
-		div {
-			border: solid 1px #EEEEEE;
-			box-sizing: border-box;
-			text-align: center;
-			font-size: 1.5rem;
-			padding: 5px;
-		}
-		.header {
-			border: solid 1px #EEEEEE;
-			text-align: center;
-			font-size: 1.5rem;
-			padding: 1.0rem;
-		}
-		.info {
-			text-align: center;
-			font-size: 1.0rem;
-		}
-		.datetime {
-			font-size: 3.0rem;
-		}
-		.control_panel {
-			box-sizing: border-box;
-			text-align: left;
-			font-size: 1.0rem;
-		}
-		.slider_table_row {
-			height: 3.0rem;
-		}
-		.item_R {
-			background-color: #FFEEEE;
-		}
-		.item_G {
-			background-color: #EEFFEE;
-		}
-		.item_B {
-			background-color: #EEEEFF;
-		}
-		.reg_table {
-			box-sizing: border-box;
-			text-align: left;
-			font-size: 1.0rem;
-		}
-		.reg_table_row {
-			height: 1.0rem;
-		}
-		.foot_note {
-			text-align: center;
-			font-size: 1rem;
-			padding: 0.5rem;
-		}
-		
-		input[type="range"] {
-			-webkit-appearance: none;
-			appearance: none;
-			cursor: pointer;
-			outline: none;
-			height: 5px; width: 85%;
-			background: #E0E0E0;
-			border-radius: 10px;
-			border: solid 3px #C0C0C0;
-		}
-		input[type="range"]::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			background: #707070;
-			width: 20px;
-			height: 20px;
-			border-radius: 50%;
-			box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.15);
-		}
-		input[type="range"]:active::-webkit-slider-thumb {
-			box-shadow: 0px 5px 10px -2px rgba(0, 0, 0, 0.3);
-		}
-		input[type="text"] {
-			width: 2em;
-			height: 1em;
-			font-size: 100%;
-		}
-		table {
-			background-color: #EEEEEE;
-			border-collapse: collapse;
-			width: 100%;
-		}
-		td {
-			border: solid 1px #FFFFFF;
-			text-align: center;
-		}
-		</style>
-		"""
-		return s
