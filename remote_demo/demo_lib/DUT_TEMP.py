@@ -250,6 +250,12 @@ class DUT_TEMP():
 					{% info_tab %}<br/>
 					<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
 				</div>
+
+				<div class="foot_note">
+					<b>HTTP server on<br/>
+					{% mcu %}</b><br/>
+					0100111101101011011000010110111001101111
+				</div>
 			</div>
 
 		</body>
