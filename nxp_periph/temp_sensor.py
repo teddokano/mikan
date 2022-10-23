@@ -47,7 +47,7 @@ class temp_sensor_base():
 
 		if 2 == len( args ):
 			data	= [ args[ 1 ] >> 8, args[ 1 ] & 0x00FF ] if 2 == length else args[ 1 ]
-			print( args[0], data )
+			#print( args[0], data )
 			self.write_registers( args[ 0 ], data )
 		else:
 			data	= self.read_registers( args[ 0 ], length )

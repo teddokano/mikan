@@ -72,12 +72,13 @@ class DUT_TEMP():
 				tos		= int( m.group( 1 ) )
 				thyst	= int( m.group( 2 ) )
 				self.dev.temp_setting( [ tos, thyst ] )
-			
+				print( "********** THRESHOLDS {} {} **********".format( tos, thyst ) )
+
+
 			m	= self.regex_heater.match( req )
 			if m:
 				val	= int( m.group( 1 ) )
 				self.heater.value( val )
-				
 				print( "********** {} HEATER {} **********".format( self.type, "ON" if val else "OFF" ) )
 
 		return html
@@ -381,7 +382,12 @@ class DUT_TEMP():
 				
 				<div id="reg_table" class="control_panel reg_table info_panel">
 					<table class="table_LEDC">
-						<tr>
+						<tr class="slider_table_row">
+							<td class="td_LEDC" text_align="center">
+								Tos
+							</td>
+						</tr>
+						<tr class="slider_table_row">
 							<td class="td_LEDC" text_align="center">
 								Tos
 							</td>
@@ -391,6 +397,11 @@ class DUT_TEMP():
 							<td class="td_LEDC" text_align="center">
 								<input type="text" onchange="updateValField( this, 0 )" id="valField0" minlength=4 size=5 value="80""><br/>
 								
+							</td>
+						</tr>
+						<tr class="slider_table_row">
+							<td class="td_LEDC" text_align="center">
+								Tos
 							</td>
 						</tr>
 						<tr class="slider_table_row">
