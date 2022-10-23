@@ -127,14 +127,14 @@ class DUT_TEMP():
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 			
 			<script>
-				const	TABLE_LEN = {% table_len %}
+				const	TABLE_LEN	= {% table_len %}
 				const	DEV_NAME	= '{% dev_name %}';
 				const	GRAPH_HIGH	= {% graph_high %}
 				const	GRAPH_LOW	= {% graph_low %}
 				const	TOS_INIT	= {% tos_init %}
 				const	THYST_INIT	= {% thyst_init %}
 				const	REQ_HEADER	= '/' + DEV_NAME + '?';
-				const	OS_LABEL	= 'OS ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
+				const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 
 				let	time	= []
 				let	temp	= []
@@ -271,29 +271,29 @@ class DUT_TEMP():
 				/****************************
 				 ****	widget handling
 				 ****************************/
+				
+				let timeoutId	= null;
 
 				/******** updateSlider ********/
 
 				function updateSlider( element, moving, idx ) {
-					let value = document.getElementById( "Slider" + idx ).value;
-					
-					setSliderValues( idx, value );
+					let tos		= document.getElementById( "Slider0" ).value;
+					let thyst	= document.getElementById( "Slider1" ).value;
 
-					if ( moving ) {
-						//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
-						if ( timeoutId ) return ;
-						timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
+					tos		= parseFloat( tos );	//	<-- this is required to let correct compare
+					thyst	= parseFloat( thyst );	//	<-- this is required to let correct compare
+
+					if ( idx == 0 ) {
+						thyst	= ( tos < thyst ) ? tos : thyst;
+						//thyst=tos;
 					}
-					
-					console.log( 'pwm' + idx + ': ' + value + ', moving?: ' + moving );
+					else {
+						tos		= ( tos < thyst ) ? thyst : tos;
+						//tos=thyst;
+					}
 
-					let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx;
-					ajaxUpdate( url );
-				}
-				
-				function updateSliderDone() {
-					let obj = JSON.parse( this.responseText );
-					setSliderValues( obj.idx, obj.value );
+					setSliderValues( 0, tos   );
+					setSliderValues( 1, thyst );
 				}
 				
 				/******** updateValField ********/
@@ -309,10 +309,6 @@ class DUT_TEMP():
 					}
 					value	= (value < -55  ) ? -55 : value;
 					value	= (125   < value) ? 125 : value;
-					valueFieldElement.value = value.toFixed( 1 );
-
-					if ( no_submit )
-						return;
 
 					setSliderValues( idx, value );
 					console.log( 'pwm' + idx + ': ' + value );
@@ -323,22 +319,13 @@ class DUT_TEMP():
 				
 				/******** setSliderValues ********/
 
-				function setSliderValues( i, value ) {
-					setSlider( i, value );
-				}
-				
-				/******** setAllSliderValues ********/
+				function setSliderValues( idx, value ) {
 
-				function setAllSliderValues( start, length, value ) {
-					for ( let i = start; i < start + length; i++ ) {
-						setSlider( i, value );
-					}
-				}
-
-				function setSlider( idx, value ) {
 					document.getElementById( "Slider" + idx ).value = value;
 					document.getElementById( "valField" + idx ).value = value;
 				}
+
+				/******** setTosThyst ********/
 
 				function setTosThyst() {
 					let valueFieldElementTos	= document.getElementById( "valField0" );
