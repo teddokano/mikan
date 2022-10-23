@@ -208,7 +208,6 @@ class DUT_LEDC():
 						
 						writeRegisterField( reg_idx, value );
 					}
-					
 
 					/****************************
 					 ****	register controls
@@ -255,18 +254,19 @@ class DUT_LEDC():
 						let obj = JSON.parse( this.responseText );
 
 						for ( let i = 0; i < obj.reg.length; i++ ) {
-							setRegField( i, obj.reg[ i ] )
+							setRegField( i, obj.reg[ i ], manual_input = false )
 						}
 					}
 					
-					function setRegField( idx, value ) {
+					function setRegField( idx, value, manual_input = true ) {
+
 						if ( (PWM0_IDX <= idx) && (idx < (PWM0_IDX + N_CHANNELS)) )
 							setSliderValues( idx - PWM0_IDX, value );
 						else if ( (IREF0_IDX <= idx) && (idx < (IREF0_IDX + N_CHANNELS)) )
 							setSliderValues( (idx - IREF0_IDX) + IREF_OFST, value );
-						else if ( idx == PWMALL_IDX )
+						else if ( manual_input && (idx == PWMALL_IDX) )
 							setSliderValues( IREF_OFST - 1, value );
-						else if ( idx == IREFALL_IDX )
+						else if ( manual_input && (idx == IREFALL_IDX) )
 							setSliderValues( IREF_OFST * 2 - 1, value );
 						else
 							writeRegisterField( idx, value );
@@ -275,7 +275,6 @@ class DUT_LEDC():
 					function writeRegisterField( idx, value ) {
 						document.getElementById( 'regField' + idx ).value	= hex( value );
 					}
-
 
 										
 					/****************************
@@ -293,7 +292,7 @@ class DUT_LEDC():
 						
 					}
 
-					window.addEventListener('load', loadFinished);
+					window.addEventListener( 'load', loadFinished );
 
 					/****************************
 					 ****	service routine
