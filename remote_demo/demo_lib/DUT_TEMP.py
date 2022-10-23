@@ -25,7 +25,7 @@ class DUT_TEMP():
 	GRAPH_HIGH		= 30
 	GRAPH_LOW		= 20
 
-	regex_thresh	= ure.compile( r".*tos=(\d+)&thyst=(\d+)" )
+	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )
 	regex_heater	= ure.compile( r".*heater=(\d+)" )
 
 	def __init__( self, dev, timer = 0, sampling_interbal = 1.0 ):
@@ -85,8 +85,8 @@ class DUT_TEMP():
 
 			m	= self.regex_thresh.match( req )
 			if m:
-				self.tos	= int( m.group( 1 ) )
-				self.thyst	= int( m.group( 2 ) )
+				self.tos	= float( m.group( 1 ) )
+				self.thyst	= float( m.group( 2 ) )
 				self.dev.temp_setting( [ self.tos, self.thyst ] )
 				print( "********** THRESHOLDS {} {} **********".format( self.tos, self.thyst ) )
 
@@ -211,9 +211,6 @@ class DUT_TEMP():
 				
 				drawChart( time, temp );
 				
-
-				
-
 				/****************************
 				 ****	temp display
 				 ****************************/
@@ -300,7 +297,7 @@ class DUT_TEMP():
 
 				function updateValField( element, idx ) {
 					let valueFieldElement = document.getElementById( "valField" + idx );
-					let value	= valueFieldElement.value;
+					let value	= parseFloat( valueFieldElement.value );
 					let no_submit	= 0;
 					
 					if ( isNaN( value ) ) {
@@ -311,10 +308,6 @@ class DUT_TEMP():
 					value	= (125   < value) ? 125 : value;
 
 					setSliderValues( idx, value );
-					console.log( 'pwm' + idx + ': ' + value );
-					
-					let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx;
-					ajaxUpdate( url );
 				}
 				
 				/******** setSliderValues ********/
@@ -322,7 +315,7 @@ class DUT_TEMP():
 				function setSliderValues( idx, value ) {
 
 					document.getElementById( "Slider" + idx ).value = value;
-					document.getElementById( "valField" + idx ).value = value;
+					document.getElementById( "valField" + idx ).value = value.toFixed( 1 );
 				}
 
 				/******** setTosThyst ********/
@@ -330,10 +323,10 @@ class DUT_TEMP():
 				function setTosThyst() {
 					let valueFieldElementTos	= document.getElementById( "valField0" );
 					let valueFieldElementThyst	= document.getElementById( "valField1" );
-					let tos		= valueFieldElementTos.value;
-					let thyst	= valueFieldElementThyst.value;
+					let tos		= parseFloat( valueFieldElementTos.value );
+					let thyst	= parseFloat( valueFieldElementThyst.value );
 
-					let url	= REQ_HEADER + 'tos=' + tos + '&thyst=' + thyst;
+					let url	= REQ_HEADER + 'tos=' + tos.toFixed( 1 ) + '&thyst=' + thyst.toFixed( 1 );
 					ajaxUpdate( url, setTosThystDone );
 				}
 				
@@ -436,12 +429,14 @@ class DUT_TEMP():
 								<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="{% thyst_init %}" class="slider">
 							</td>
 							<td class="td_TEMP_slider">
-								<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
+								<input type="text" oninput="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
 							</td>
 						</tr>
 					</table>
-					<input type="button" onclick="setTosThyst();" value="Update Tos&Thys" class="tmp_button">
-					<br/><br/>
+					<input type="button" onclick="setTosThyst();" value="Update Tos&Thys" class="tmp_button"><br/>
+					<br/>
+					<hr/>
+					<br/>
 					<input type="checkbox" onchange="updateHeaterSwitch( this );" id="heaterSwitch">
 					<label for="heaterSwitch">heater</label>
 				</div>
