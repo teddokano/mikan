@@ -49,8 +49,8 @@ class DUT_LEDC():
 			else:
 				self.IREF_ID_OFFSET	= 0
 
-			for i in range( self.dev.CHANNELS ):
-				self.led[ i ].v	= 0.0
+#			for i in range( self.dev.CHANNELS ):
+#				self.led[ i ].v	= 0.0
 
 			html	= self.page_setup()
 
@@ -206,8 +206,9 @@ class DUT_LEDC():
 						else
 							reg_idx	= IREF0_IDX + (idx - IREF_OFST);
 						
-						setRefField( reg_idx, value )
+						writeRegisterField( reg_idx, value );
 					}
+					
 
 					/****************************
 					 ****	register controls
@@ -238,7 +239,7 @@ class DUT_LEDC():
 					function updateRegFieldDone() {
 						let obj = JSON.parse( this.responseText );
 						
-						setRefField( obj.reg, obj.val )
+						setRegField( obj.reg, obj.val )
 					}
 
 					/******** allRegLoad ********/
@@ -254,14 +255,29 @@ class DUT_LEDC():
 						let obj = JSON.parse( this.responseText );
 
 						for ( let i = 0; i < obj.reg.length; i++ ) {
-							setRefField( i, obj.reg[ i ] )
+							setRegField( i, obj.reg[ i ] )
 						}
 					}
 					
-					function setRefField( idx, value ) {
-						document.getElementById('regField' + idx ).value	= hex( value );
+					function setRegField( idx, value ) {
+						if ( (PWM0_IDX <= idx) && (idx < (PWM0_IDX + N_CHANNELS)) )
+							setSliderValues( idx - PWM0_IDX, value );
+						else if ( (IREF0_IDX <= idx) && (idx < (IREF0_IDX + N_CHANNELS)) )
+							setSliderValues( (idx - IREF0_IDX) + IREF_OFST, value );
+						else if ( idx == PWMALL_IDX )
+							setSliderValues( IREF_OFST - 1, value );
+						else if ( idx == IREFALL_IDX )
+							setSliderValues( IREF_OFST * 2 - 1, value );
+						else
+							writeRegisterField( idx, value );
 					}
 					
+					function writeRegisterField( idx, value ) {
+						document.getElementById( 'regField' + idx ).value	= hex( value );
+					}
+
+
+										
 					/****************************
 					 ****	page load controls
 					 ****************************/
@@ -272,8 +288,8 @@ class DUT_LEDC():
 						if ( 0 == IREF_OFST )
 							return;
 
-						setAllSliderValues( IREF_OFST, N_CHANNELS, IREF_INIT );						
-						setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
+						//setAllSliderValues( IREF_OFST, N_CHANNELS, IREF_INIT );
+						//setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
 						
 					}
 

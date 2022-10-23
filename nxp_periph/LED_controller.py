@@ -184,7 +184,7 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		
 		self.__pwm_base		= self.REG_NAME.index( "IREF0" if current_control else "PWM0"  )
 		self.__iref_base	= self.REG_NAME.index( "PWM0"  if current_control else "IREF0" )
-
+		
 		init	=	{
 						"LEDOUT0": [ 0xAA ] * (self.CHANNELS // 4),
 						"PWMALL" : pwm,
@@ -194,6 +194,14 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		for r, v in init.items():	#	don't care: register access order
 			self.write_registers( r, v )
 
+	def dump( self ):
+		data	= super().dump()
+		start	= self.REG_NAME.index( "PWMALL" )
+
+		for i in range( start, len( self.REG_NAME ) ):
+			data[ i ]	= self.read_registers( i, 1 )
+			
+		return data
 
 class PCA9955B( PCA995xB_base ):
 	CHANNELS		= 16
@@ -217,8 +225,7 @@ class PCA9955B( PCA995xB_base ):
 							"PWMALL", "IREFALL",
 							"EFLAG0", "EFLAG1", "EFLAG2", "EFLAG3"
 						)
-
-
+	
 class PCA9956B( PCA995xB_base ):
 	CHANNELS		= 24
 	REG_NAME		=	(
@@ -238,7 +245,6 @@ class PCA9956B( PCA995xB_base ):
 							"PWMALL", "IREFALL",
 							"EFLAG0", "EFLAG1", "EFLAG2", "EFLAG3", "EFLAG4", "EFLAG5"
 						)
-
 
 class PCA96xx_base( LED_controller_base, I2C_target ):
 	"""
@@ -330,7 +336,7 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 
 		for r, v in { 0xFF: 0xFF, 0xFE: 0xFE, 0xFD: 0xFD }.items():
 			self.write_registers( r, v )
-
+		
 		init	=	{
 						"MODE2"		: 0x18,		#	to forth the channel working when wrror happened
 						"LEDOUT0"	: [ 0xAA ] * (self.CHANNELS // 4),
@@ -365,7 +371,7 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 
 		for r, v in zip( reg_list, data ):
 			self.send( [ r, v ] )
-		
+			
 	def read_registers( self, reg, length ):
 		"""
 		reading register
@@ -396,7 +402,7 @@ class PCA9957_base( LED_controller_base, SPI_target ):
 			rtn	+= [ p[ 1 ] ]
 
 		return rtn[ 0 ] if 1 == length else rtn
-	
+
 	def __setup_EVB( self ):
 		"""
 		setting up RESET and OE pins on PCA9957HN_ARD evaluation board

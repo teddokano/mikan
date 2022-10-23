@@ -93,6 +93,7 @@ def main( micropython_optimize = False ):
 				break
 			#print(h)
 		
+		#print( html )
 		client_stream.write( html )
 
 		client_stream.close()

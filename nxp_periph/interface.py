@@ -228,7 +228,12 @@ class I2C_target( Interface ):
 		#print( "I2C write_registers: {}, {}".format( reg, data ) )
 		
 		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
-		reg	   |= self.__ai
+		
+		if ( type(data) == int ) or ( 1 == len( data ) ):
+			pass
+		else:
+			reg	   |= self.__ai
+		
 		data	= [ reg, data ] if type(data) == int else [ reg ] + data
 		self.send( data, stop = True )
 		
@@ -252,7 +257,10 @@ class I2C_target( Interface ):
 		#print( "I2C read_registers: {}, {}".format( reg, data ) )
 
 		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
-		reg	   |= self.__ai
+
+		if length != 1:
+			reg	   |= self.__ai
+		
 		self.send( [ reg ], stop = not repeated_start )
 		r	= self.receive( length )
 		
