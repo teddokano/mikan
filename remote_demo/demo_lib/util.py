@@ -114,7 +114,11 @@ input[type="text"] {
 }
 .para {
 	display: flex;
-}
+     flex-wrap: nowrap;
+     align-items: stretch;
+     justify-content: flex-start;
+     align-content: stretch;
+     }
 .log_panel, .info_panel {
 	border: solid 0px #FFFFFF;
 	padding: 5px;

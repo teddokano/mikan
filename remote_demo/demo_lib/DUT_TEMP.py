@@ -22,7 +22,9 @@ import	demo_lib.util
 class DUT_TEMP():
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 10
-		
+	regex_thresh	= ure.compile( r".*tos=(\d+)&thyst=(\d+)" )
+	regex_heater	= ure.compile( r".*heater=(\d+)" )
+
 	def __init__( self, dev, timer = 0, sampling_interbal = 1.0 ):
 		self.interface	= dev.__if
 		self.dev		= dev
@@ -32,6 +34,9 @@ class DUT_TEMP():
 		self.data		= { "time": [], "temp": [] }
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
+
+		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
+		self.heater		= machine.Pin( "D3", machine.Pin.OUT )	#	R19 as heater
 
 		self.dev.ping()
 		if self.dev.live:
@@ -57,9 +62,23 @@ class DUT_TEMP():
 
 		if "?" not in req:
 			html	= self.page_setup()
+		elif "update" in req:
+				html	= self.sending_data()
 		else:
-			print(  "new data request!" )
-			html	= self.sending_data()
+			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+
+			m	= self.regex_thresh.match( req )
+			if m:
+				tos		= int( m.group( 1 ) )
+				thyst	= int( m.group( 2 ) )
+				self.dev.temp_setting( [ tos, thyst ] )
+			
+			m	= self.regex_heater.match( req )
+			if m:
+				val	= int( m.group( 1 ) )
+				self.heater.value( val )
+				
+				print( "********** {} HEATER {} **********".format( self.type, "ON" if val else "OFF" ) )
 
 		return html
 
@@ -92,6 +111,9 @@ class DUT_TEMP():
 			
 			<script>
 				const	TABLE_LEN = {% table_len %}
+				const	DEV_NAME	= '{% dev_name %}';
+				const	REQ_HEADER	= '/' + DEV_NAME + '?';
+
 				let		time	= []
 				let		temp	= []
 
@@ -158,10 +180,8 @@ class DUT_TEMP():
 				
 				drawChart( time, temp );
 				
-				function doReload() {
-					window.location.reload();
-				}
 
+				
 
 				/****************************
 				 ****	temp display
@@ -170,14 +190,14 @@ class DUT_TEMP():
 				/******** getTempAndShow ********/
 
 				function getTempAndShow() {
-					let url	= "/{% dev_name %}?"
-					ajaxUpdate( url, getTempAndShowDone )
+					let url	= REQ_HEADER + "update";
+					ajaxUpdate( url, getTempAndShowDone );
 				}
 
 				let prev_reg	= [];
 				
 				function getTempAndShowDone() {
-					let obj = JSON.parse( this.responseText )
+					let obj = JSON.parse( this.responseText );
 
 					//	server sends multiple data.
 					//	pick one sample from last and store local memory
@@ -197,7 +217,113 @@ class DUT_TEMP():
 					document.getElementById( "infoFieldValue2" ).value = time.length;
 				}
 
+				function doReload() {
+					window.location.reload();
+				}
 
+				/****************************
+				 ****	widget handling
+				 ****************************/
+
+				/******** updateSlider ********/
+
+				function updateSlider( element, moving, idx ) {
+					let value = document.getElementById( "Slider" + idx ).value;
+					
+					setSliderValues( idx, value );
+
+					if ( moving ) {
+						//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
+						if ( timeoutId ) return ;
+						timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
+					}
+					
+					console.log( 'pwm' + idx + ': ' + value + ', moving?: ' + moving );
+
+					let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx;
+					ajaxUpdate( url );
+				}
+				
+				function updateSliderDone() {
+					let obj = JSON.parse( this.responseText );
+					setSliderValues( obj.idx, obj.value );
+				}
+				
+				/******** updateValField ********/
+
+				function updateValField( element, idx ) {
+					let valueFieldElement = document.getElementById( "valField" + idx );
+					let value	= parseInt( valueFieldElement.value, 16 );
+					let no_submit	= 0;
+					
+					if ( isNaN( value ) ) {
+						no_submit	= 1;
+						value = document.getElementById( "Slider" + idx ).value;
+					}
+					value	= (value < -55  ) ? -55 : value;
+					value	= (125   < value) ? 125 : value;
+					valueFieldElement.value = value;
+
+					if ( no_submit )
+						return;
+
+					setSliderValues( idx, value );
+					console.log( 'pwm' + idx + ': ' + value );
+					
+					let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx;
+					ajaxUpdate( url );
+				}
+				
+				/******** setSliderValues ********/
+
+				function setSliderValues( i, value ) {
+					setSlider( i, value );
+				}
+				
+				/******** setAllSliderValues ********/
+
+				function setAllSliderValues( start, length, value ) {
+					for ( let i = start; i < start + length; i++ ) {
+						setSlider( i, value );
+					}
+				}
+
+				function setSlider( idx, value ) {
+					document.getElementById( "Slider" + idx ).value = value;
+					document.getElementById( "valField" + idx ).value = value;
+				}
+
+				function setTosThyst() {
+					let valueFieldElementTos	= document.getElementById( "valField0" );
+					let valueFieldElementThyst	= document.getElementById( "valField1" );
+					let tos		= valueFieldElementTos.value;
+					let thyst	= valueFieldElementThyst.value;
+
+					let url	= REQ_HEADER + 'tos=' + tos + '&thyst=' + thyst;
+					ajaxUpdate( url, setTosThystDone );
+				}
+				
+				/******** setTosThystDone ********/
+
+				function setTosThystDone() {
+					let obj = JSON.parse( this.responseText );
+				}
+
+				/******** updateHeaterSwitch ********/
+
+				function updateHeaterSwitch( element ) {
+					let heaterSwitchElement	= document.getElementById( "heaterSwitch" );
+					let	val;
+					
+					if ( heaterSwitchElement.checked )
+						val	= 1;
+					else
+						val	= 0;
+						
+					let url	= REQ_HEADER + 'heater=' + val;
+					ajaxUpdate( url );
+				}
+				
 				/****************************
 				 ****	service routine
 				 ****************************/
@@ -214,7 +340,7 @@ class DUT_TEMP():
 				}
 
 				function hex( num ) {
-					return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 )
+					return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 );
 				}
 
 
@@ -235,7 +361,7 @@ class DUT_TEMP():
 					let blob	= new Blob( [str], {type:"text/csv"} );
 					let link	= document.createElement( 'a' );
 					link.href	= URL.createObjectURL( blob );
-					link.download	= "{% dev_name %}_measurement_result.csv";
+					link.download	= DEV_NAME + "_measurement_result.csv";
 					link.click();
 				}
 			</script>
@@ -243,19 +369,52 @@ class DUT_TEMP():
 			</div>
 			
 			<div class="para">
+				
 				<div id="reg_table" class="control_panel reg_table log_panel">
 					{% table %}
 				</div>
+				
 				<div id="reg_table" class="control_panel reg_table info_panel">
 					{% info_tab %}<br/>
-					<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="save">
+					<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="tmp_button">
+				</div>
+				
+				<div id="reg_table" class="control_panel reg_table info_panel">
+					<table class="table_LEDC">
+						<tr>
+							<td class="td_LEDC" text_align="center">
+								Tos
+							</td>
+							<td class="td_LEDC" text_align="center">
+								<input type="range" oninput="updateSlider( this, 1, 0 )" onchange="updateSlider( this, 0, 0 )" id="Slider0" min="-55" max="125" step="0.5" value="80" class="slider">
+							</td>
+							<td class="td_LEDC" text_align="center">
+								<input type="text" onchange="updateValField( this, 0 )" id="valField0" minlength=4 size=5 value="80""><br/>
+								
+							</td>
+						</tr>
+						<tr class="slider_table_row">
+							<td class="td_LEDC" text_align="center">
+								Thyst
+							</td>
+							<td class="td_LEDC">
+								<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="75" class="slider">
+							</td>
+							<td class="td_LEDC">
+								<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="75"">
+							</td>
+						</tr>
+					</table>
+					<input type="button" onclick="setTosThyst();" value="Update Tos&Thys" class="tmp_button">
+					<input type="checkbox" onchange="updateHeaterSwitch( this );" id="heaterSwitch">
+					<label for="heaterSwitch">heater</label>
 				</div>
 
-				<div class="foot_note">
-					<b>HTTP server on<br/>
-					{% mcu %}</b><br/>
-					0100111101101011011000010110111001101111
-				</div>
+			</div>
+			<div class="foot_note">
+				<b>HTTP server on<br/>
+				{% mcu %}</b><br/>
+				0100111101101011011000010110111001101111
 			</div>
 
 		</body>
