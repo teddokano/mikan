@@ -40,8 +40,8 @@ class DUT_TEMP():
 
 		tp	= self.dev.temp
 
-		self.tos		= tp + 2
-		self.thyst		= tp + 1
+		self.tos		= int( (tp + 2) * 2 ) / 2
+		self.thyst		= int( (tp + 1) * 2 ) / 2
 
 		self.dev.temp_setting( [ self.tos, self.thyst ] )
 
@@ -120,7 +120,8 @@ class DUT_TEMP():
 				<p>{% dev_type %} server</p>
 				<p class="info">{% dev_info %}</p>
 			</div>
-			
+			<div id="temperature" class="datetime"></div>
+
 			<div>
 			<canvas id="myLineChart"></canvas>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
@@ -133,7 +134,7 @@ class DUT_TEMP():
 				const	TOS_INIT	= {% tos_init %}
 				const	THYST_INIT	= {% thyst_init %}
 				const	REQ_HEADER	= '/' + DEV_NAME + '?';
-				const	OS_LABEL	= 'OS (HIGH@' + GRAPH_HIGH + '/LOW@' + GRAPH_LOW + ')'
+				const	OS_LABEL	= 'OS ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 
 				let	time	= []
 				let	temp	= []
@@ -231,20 +232,31 @@ class DUT_TEMP():
 
 					//	server sends multiple data.
 					//	pick one sample from last and store local memory
+					idx	= obj.data.time.length - 1;
+					temperature	= obj.data.temp[ idx ];
 					
-					idx	= obj.data.time.length - 1
 					time.push( obj.data.time[ idx ] );
-					temp.push( obj.data.temp[ idx ] );
+					temp.push( temperature );
 					tos.push( obj.data.tos[ idx ] );
 					thyst.push( obj.data.thyst[ idx ] );
 					os.push( obj.data.os[ idx ] );
 
 					drawChart( time, temp );
 					
+					var elem = document.getElementById( "temperature" );
+					elem.innerText = temperature.toFixed( 3 ) + '˚C';
+
+					
 					for ( let i = 0; i < TABLE_LEN; i++ )
 					{
 						document.getElementById( "timeField" + i ).value = time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
-						document.getElementById( "tempField" + i ).value = temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+						
+						let	value	= temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+						
+						if ( !isNaN( value ) )
+							value	= value.toFixed( 3 );
+							
+						document.getElementById( "tempField" + i ).value = value;
 					}
 					
 					document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
@@ -297,7 +309,7 @@ class DUT_TEMP():
 					}
 					value	= (value < -55  ) ? -55 : value;
 					value	= (125   < value) ? 125 : value;
-					valueFieldElement.value = value;
+					valueFieldElement.value = value.toFixed( 1 );
 
 					if ( no_submit )
 						return;
@@ -442,6 +454,7 @@ class DUT_TEMP():
 						</tr>
 					</table>
 					<input type="button" onclick="setTosThyst();" value="Update Tos&Thys" class="tmp_button">
+					<br/><br/>
 					<input type="checkbox" onchange="updateHeaterSwitch( this );" id="heaterSwitch">
 					<label for="heaterSwitch">heater</label>
 				</div>
