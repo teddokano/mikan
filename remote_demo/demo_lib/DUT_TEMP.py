@@ -22,6 +22,9 @@ import	demo_lib.util
 class DUT_TEMP():
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 10
+	GRAPH_HIGH		= 30
+	GRAPH_LOW		= 20
+
 	regex_thresh	= ure.compile( r".*tos=(\d+)&thyst=(\d+)" )
 	regex_heater	= ure.compile( r".*heater=(\d+)" )
 
@@ -31,9 +34,16 @@ class DUT_TEMP():
 		self.type		= self.dev.__class__.__name__
 		self.address	= dev.__adr
 		self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
-		self.data		= { "time": [], "temp": [] }
+		self.data		= { "time": [], "temp": [], "tos": [], "thyst": [], "os": [] }
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
+
+		tp	= self.dev.temp
+
+		self.tos		= tp + 2
+		self.thyst		= tp + 1
+
+		self.dev.temp_setting( [ self.tos, self.thyst ] )
 
 		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
 		self.heater		= machine.Pin( "D3", machine.Pin.OUT )	#	R19 as heater
@@ -46,13 +56,19 @@ class DUT_TEMP():
 	def tim_cb( self, tim_obj ):
 		tp	= self.dev.temp
 		tm	= self.rtc.now()
-		self.data[ "time" ]	+= [ "%02d:%02d:%02d" % (tm[3], tm[4], tm[5]) ]
-		self.data[ "temp" ]	+= [ tp ]
+		self.data[ "time"  ]	+= [ "%02d:%02d:%02d" % (tm[3], tm[4], tm[5]) ]
+		self.data[ "temp"  ]	+= [ tp ]
+		self.data[ "tos"   ]	+= [ self.tos ]
+		self.data[ "thyst" ]	+= [ self.thyst ]
+		self.data[ "os"    ]	+= [ self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW ]
 
 		over	= len( self.data[ "time" ] ) - self.SAMPLE_LENGTH
 		if  0 < over:
-			self.data[ "time" ]	= self.data[ "time" ][ over : ]
-			self.data[ "temp" ]	= self.data[ "temp" ][ over : ]
+			self.data[ "time"  ]	= self.data[ "time"  ][ over : ]
+			self.data[ "temp"  ]	= self.data[ "temp"  ][ over : ]
+			self.data[ "tos"   ]	= self.data[ "tos"   ][ over : ]
+			self.data[ "thyst" ]	= self.data[ "thyst" ][ over : ]
+			self.data[ "os"    ]	= self.data[ "os"    ][ over : ]
 
 		#print( "sampled: {} @ {}".format( tp, tm ) )
 
@@ -69,11 +85,10 @@ class DUT_TEMP():
 
 			m	= self.regex_thresh.match( req )
 			if m:
-				tos		= int( m.group( 1 ) )
-				thyst	= int( m.group( 2 ) )
-				self.dev.temp_setting( [ tos, thyst ] )
-				print( "********** THRESHOLDS {} {} **********".format( tos, thyst ) )
-
+				self.tos	= int( m.group( 1 ) )
+				self.thyst	= int( m.group( 2 ) )
+				self.dev.temp_setting( [ self.tos, self.thyst ] )
+				print( "********** THRESHOLDS {} {} **********".format( self.tos, self.thyst ) )
 
 			m	= self.regex_heater.match( req )
 			if m:
@@ -113,10 +128,18 @@ class DUT_TEMP():
 			<script>
 				const	TABLE_LEN = {% table_len %}
 				const	DEV_NAME	= '{% dev_name %}';
+				const	GRAPH_HIGH	= {% graph_high %}
+				const	GRAPH_LOW	= {% graph_low %}
+				const	TOS_INIT	= {% tos_init %}
+				const	THYST_INIT	= {% thyst_init %}
 				const	REQ_HEADER	= '/' + DEV_NAME + '?';
+				const	OS_LABEL	= 'OS (HIGH@' + GRAPH_HIGH + '/LOW@' + GRAPH_LOW + ')'
 
-				let		time	= []
-				let		temp	= []
+				let	time	= []
+				let	temp	= []
+				let	tos		= []
+				let	thyst	= []
+				let	os		= []
 
 				function drawChart( time, temp ) {
 					console.log( 'drawing' );
@@ -130,20 +153,26 @@ class DUT_TEMP():
 								{
 									label: 'temperature',
 									data: temp,
-									borderColor: "rgba(255,0,0,1)",
-									backgroundColor: "rgba(0,0,0,0)"
+									borderColor: "rgba( 255, 0, 0, 1 )",
+									backgroundColor: "rgba( 0, 0, 0, 0 )"
 								},
 								{
-									label: 'sample2',
-									data: [],
-									borderColor: "rgba(0,0,255,1)",
-									backgroundColor: "rgba(0,0,0,0)"
+									label: 'Tos',
+									data: tos,
+									borderColor: "rgba( 255, 0, 0, 0.3 )",
+									backgroundColor: "rgba( 0, 0, 0, 0 )"
 								},
 								{
-									label: 'test',
-									data: [],
-									borderColor: "rgba(0,255,0,1)",
-									backgroundColor: "rgba(0,0,0,0)"
+									label: 'Thyst',
+									data: thyst,
+									borderColor: "rgba( 0, 0, 255, 0.3 )",
+									backgroundColor: "rgba( 0, 0, 0, 0 )"
+								},
+								{
+									label: OS_LABEL,
+									data: os,
+									borderColor: "rgba( 0, 255, 0, 0.5 )",
+									backgroundColor: "rgba( 0, 0, 0, 0 )"
 								},
 							],
 						},
@@ -156,8 +185,8 @@ class DUT_TEMP():
 							scales: {
 								yAxes: [{
 									ticks: {
-										suggestedMax: 30,
-										suggestedMin: 20,
+										suggestedMax: GRAPH_HIGH,
+										suggestedMin: GRAPH_LOW,
 										stepSize: 1,
 										callback: function(value, index, values){
 										return  value +  ' ˚C'
@@ -202,8 +231,13 @@ class DUT_TEMP():
 
 					//	server sends multiple data.
 					//	pick one sample from last and store local memory
-					time.push( obj.data.time[ obj.data.time.length - 1 ] );
-					temp.push( obj.data.temp[ obj.data.time.length - 1 ] );
+					
+					idx	= obj.data.time.length - 1
+					time.push( obj.data.time[ idx ] );
+					temp.push( obj.data.temp[ idx ] );
+					tos.push( obj.data.tos[ idx ] );
+					thyst.push( obj.data.thyst[ idx ] );
+					os.push( obj.data.os[ idx ] );
 
 					drawChart( time, temp );
 					
@@ -254,7 +288,7 @@ class DUT_TEMP():
 
 				function updateValField( element, idx ) {
 					let valueFieldElement = document.getElementById( "valField" + idx );
-					let value	= parseInt( valueFieldElement.value, 16 );
+					let value	= valueFieldElement.value;
 					let no_submit	= 0;
 					
 					if ( isNaN( value ) ) {
@@ -355,8 +389,9 @@ class DUT_TEMP():
 					let str	= [];
 					let	len	= time.length;
 					
+					str	+= "time,temp,tos,thyst,os\\n";
 					for ( let i = 0; i < len; i++ ) {
-						str	+= time[ i ] + "," +  temp[ i ] + ",\\n";
+						str	+= time[ i ] + "," +  temp[ i ] + "," + tos[ i ] + "," + thyst[ i ] + "," + os[ i ] + "\\n";
 					}
 					
 					let blob	= new Blob( [str], {type:"text/csv"} );
@@ -381,38 +416,28 @@ class DUT_TEMP():
 				</div>
 				
 				<div id="reg_table" class="control_panel reg_table info_panel">
-					<table class="table_LEDC">
+					<table class="table_TEMP_slider">
 						<tr class="slider_table_row">
-							<td class="td_LEDC" text_align="center">
+							<td class="td_TEMP_slider" text_align="center">
 								Tos
 							</td>
-						</tr>
-						<tr class="slider_table_row">
-							<td class="td_LEDC" text_align="center">
-								Tos
+							<td class="td_TEMP_slider" text_align="center">
+								<input type="range" oninput="updateSlider( this, 1, 0 )" onchange="updateSlider( this, 0, 0 )" id="Slider0" min="-55" max="125" step="0.5" value="{% tos_init %}" class="slider">
 							</td>
-							<td class="td_LEDC" text_align="center">
-								<input type="range" oninput="updateSlider( this, 1, 0 )" onchange="updateSlider( this, 0, 0 )" id="Slider0" min="-55" max="125" step="0.5" value="80" class="slider">
-							</td>
-							<td class="td_LEDC" text_align="center">
-								<input type="text" onchange="updateValField( this, 0 )" id="valField0" minlength=4 size=5 value="80""><br/>
+							<td class="td_TEMP_slider" text_align="center">
+								<input type="text" onchange="updateValField( this, 0 )" id="valField0" minlength=4 size=5 value="{% tos_init %}""><br/>
 								
 							</td>
 						</tr>
 						<tr class="slider_table_row">
-							<td class="td_LEDC" text_align="center">
-								Tos
-							</td>
-						</tr>
-						<tr class="slider_table_row">
-							<td class="td_LEDC" text_align="center">
+							<td class="td_TEMP_slider" text_align="center">
 								Thyst
 							</td>
-							<td class="td_LEDC">
-								<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="75" class="slider">
+							<td class="td_TEMP_slider">
+								<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="{% thyst_init %}" class="slider">
 							</td>
-							<td class="td_LEDC">
-								<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="75"">
+							<td class="td_TEMP_slider">
+								<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
 							</td>
 						</tr>
 					</table>
@@ -440,6 +465,11 @@ class DUT_TEMP():
 		page_data[ "table"     ]	= self.get_table()
 		page_data[ "info_tab"  ]	= self.get_info_table()
 		page_data[ "style"     ]	= demo_lib.util.get_css()
+
+		page_data[ "graph_high"]	= str( self.GRAPH_HIGH )
+		page_data[ "graph_low" ]	= str( self.GRAPH_LOW  )
+		page_data[ "tos_init"  ]	= str( self.tos   )
+		page_data[ "thyst_init"]	= str( self.thyst )
 
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )

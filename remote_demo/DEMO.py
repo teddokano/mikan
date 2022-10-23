@@ -219,7 +219,7 @@ def front_page_setup( dev_list ):
 				font-size: 0.8rem;
 				padding: 0.5rem;
 			}
-</style>
+			</style>
 		</head>
 		<body>
 			<div class="header">
