@@ -128,6 +128,10 @@ input[type="text"] {
 	border: solid 1px #FFFFFF;
 	text-align: center;
 }
+.button_and_note {
+	font-size: 1rem;
+	padding: 0.5rem;
+}
 </style>
 """
 	return s

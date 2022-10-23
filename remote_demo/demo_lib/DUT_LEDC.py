@@ -333,7 +333,10 @@ class DUT_LEDC():
 				<div id="reg_table" class="control_panel reg_table">
 					register table<br/>
 					{% reg_table %}
-					<div aligh=left><input type="button" onclick="allRegLoad();" value="load" class="all_reg_load"></div>
+					<div class="button_and_note">
+					<input type="button" onclick="allRegLoad();" value="reload" class="all_reg_load">
+					{% allreg_note %}
+					</div>
 				</div>
 				
 				<div class="foot_note">
@@ -371,6 +374,14 @@ class DUT_LEDC():
 		iref0_idx	= self.dev.REG_NAME.index( "IREF0" ) if iref else 0
 		pwmall_idx	= self.dev.REG_NAME.index( "PWMALL"  ) if all_reg else 0
 		irefall_idx	= self.dev.REG_NAME.index( "IREFALL" ) if all_reg else 0
+		
+		if all_reg:
+			if irefall_idx:
+				allreg_note	= "PWMAALL and OREFALL are write-only register. ignore loaded value"
+			else:
+				allreg_note	= "PWMAALL is a write-only register. ignore loaded value"
+		else:
+				allreg_note	= ""
 
 		page_data	= {}
 		page_data[ "dev_name"    ]	= self.dev_name
@@ -386,8 +397,9 @@ class DUT_LEDC():
 		page_data[ "iref_init"   ]	= str( self.IREF_INIT )
 		page_data[ "reg_table"   ]	= self.get_reg_table( self.dev, 4 )
 		page_data[ "style"       ]	= demo_lib.util.get_css()
+		page_data[ "allreg_note" ]	= allreg_note
 
-
+					
 		cols		= 4	if all_reg else 1
 
 		page_data[ "sliders_PWM"  ]	= self.get_slider_table( cols, col_pat, iref = False, all_reg = all_reg )
