@@ -23,37 +23,26 @@ except:
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	PCF2131, PCF85063
-from	nxp_periph	import	I2C_target
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
-
-class General_call( I2C_target ):
-	def __init__( self, i2c ):
-		super().__init__( i2c, 0 )
-		
-	def reset( self ):
-		self.live	= True
-		self.write_registers( 0x06, [] )
-
-	def reprogram( self ):
-		self.live	= True
-		self.write_registers( 0x04, [] )
+from	demo_lib	import	DUT_GENERAL, General_call
 
 def get_dut_list( devices, demo_harnesses ):
 	list	= []
 
 	for dev in devices:
+		if dev.__class__ == General_call:
+			last_dut	= DUT_GENERAL( dev )
+	
 		for dh in demo_harnesses:
 			if issubclass( dev.__class__, dh.APPLIED_TO ):
 				list	+= [ dh( dev ) ]
 
-	return list
+	return list + [ last_dut ]
 
 def main( micropython_optimize = False ):
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
-
-	gene_call	= General_call( i2c )
 
 	pca9956b_0	= PCA9956B( i2c, 0x02 >>1 )
 	pca9956b_1	= PCA9956B( i2c, 0x04 >>1 )
@@ -65,21 +54,25 @@ def main( micropython_optimize = False ):
 	pcf2131_spi	= PCF2131( spi )
 	pcf85063	= PCF85063( i2c )
 	
-	devices	= [	pca9956b_0,
-				pca9956b_1,
-				pca9955b,
-				pca9632,
-				pca9957,
-				pct2075,
-				pcf2131_i2c,
-				pcf2131_spi,
-				pcf85063,
-				]
+	gene_call	= General_call( i2c )
+
+	devices			= [	pca9956b_0,
+						pca9956b_1,
+						pca9955b,
+						pca9632,
+						pca9957,
+						pct2075,
+						pcf2131_i2c,
+						pcf2131_spi,
+						pcf85063,
+						gene_call,	# "gene_call" should be the last device in this list
+						]
 	
 	demo_harnesses	= [	DUT_LEDC,
 						DUT_TEMP,
-						DUT_RTC
-				]
+						DUT_RTC,
+						DUT_GENERAL,
+						]
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
 	
@@ -115,20 +108,8 @@ def main( micropython_optimize = False ):
 			if html:
 				break
 
-		if "GeneralCall?" in req:
-			if "reset" in req:
-				print( "********** General call: Software reset **********" )
-				gene_call.reset()
-			elif "reprogram" in req:
-				print( "********** General call: reprogram **********" )
-				gene_call.reprogram()
-			else:
-				pass
-			
-			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
-
-		if html is None:
-			html	= front_page_setup( dut_list )
+		if not html:
+			html	= page_setup( dut_list )
 
 		while True:
 			h = client_stream.readline()
@@ -154,49 +135,8 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
-	
-def front_page_table( dut_list ):
-	s	 = [ '<table>' ]
 
-	s	+= [ '<tr>' ]
-	s	+= [ '<td class="table_header">device type</td>' ]
-	s	+= [ '<td class="table_header">address</td>' ]
-	s	+= [ '<td class="table_header">live?</td>' ]
-	s	+= [ '<td class="table_header">family</td>' ]
-	s	+= [ '<td class="table_header">info</td>' ]
-	s	+= [ '<td class="table_header">interface</td>' ]
-	s	+= [ '</tr>' ]
-
-
-	for dut in dut_list:
-		s	+= [ '<tr>' ]
-		
-		if "I2C" in str( dut.interface ):
-			dut.dev.ping()
-			live	= dut.dev.live
-		else:
-			live	= None
-
-		if live is not False:
-			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
-		else:
-			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.type ) ]
-		
-		if dut.address:
-			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]
-		else:
-			s	+= [ '<td class="reg_table_name">n/a</td>' ]
-
-		s	+= [ '<td class="reg_table_name {}">{}</td>'.format( "Red_cell" if live is False else "Green_cell", live ) ]
-		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.info[ 0 ] ) ]
-		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.info[ 1 ] ) ]
-		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.interface ) ]
-		s	+= [ '</tr>' ]
-		
-	s	+= [ '</table>' ]
-	return "\n".join( s )
-
-def front_page_setup( dut_list ):
+def page_setup( dut_list ):
 	html = """\
 	HTTP/1.0 200 OK
 
@@ -266,6 +206,9 @@ def front_page_setup( dut_list ):
 		</head>
 		<body>
 			<script>
+				const	DEV_NAME	= '{% dev_name %}';
+				const	REQ_HEADER	= '/' + DEV_NAME + '?';
+
 				/****************************
 				 ****	service routine
 				 ****************************/
@@ -302,8 +245,8 @@ def front_page_setup( dut_list ):
 				<script>
 					function busReset( flag ) {
 						let url;
-						
-						url	= (flag == 0) ? '/GeneralCall?reset' : '/GeneralCall?reprogram'
+
+						url	= REQ_HEADER + ((flag == 0) ? 'reset' : 'reprogram')
 						ajaxUpdate( url );
 					}
 				</script>
@@ -320,15 +263,55 @@ def front_page_setup( dut_list ):
 	"""
 	
 	page_data	= {}
-	page_data[ "front_page_table"  ]	= front_page_table( dut_list )
+	page_data[ "dev_name"          ]	= "GENERAL"
+	page_data[ "front_page_table"  ]	= page_table( dut_list )
 	page_data[ "mcu"               ]	= os.uname().machine
-
 
 	for key, value in page_data.items():
 		html = html.replace('{% ' + key + ' %}', value )
 	
 	return html
 
+def page_table( dut_list ):
+	s	 = [ '<table>' ]
+
+	s	+= [ '<tr>' ]
+	s	+= [ '<td class="table_header">device type</td>' ]
+	s	+= [ '<td class="table_header">address</td>' ]
+	s	+= [ '<td class="table_header">live?</td>' ]
+	s	+= [ '<td class="table_header">family</td>' ]
+	s	+= [ '<td class="table_header">info</td>' ]
+	s	+= [ '<td class="table_header">interface</td>' ]
+	s	+= [ '</tr>' ]
+
+
+	for dut in dut_list:	#	ignore last DUT. It's a general call (virtual) device
+		s	+= [ '<tr>' ]
+		
+		if "I2C" in str( dut.interface ):
+			dut.dev.ping()
+			live	= dut.dev.live
+		else:
+			live	= None
+
+		if live is not False:
+			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
+		else:
+			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.type ) ]
+		
+		if dut.address:
+			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]
+		else:
+			s	+= [ '<td class="reg_table_name">n/a</td>' ]
+
+		s	+= [ '<td class="reg_table_name {}">{}</td>'.format( "Red_cell" if live is False else "Green_cell", live ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.info[ 0 ] ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.info[ 1 ] ) ]
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.interface ) ]
+		s	+= [ '</tr>' ]
+		
+	s	+= [ '</table>' ]
+	return "\n".join( s )
 
 main()
 
