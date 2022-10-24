@@ -109,6 +109,11 @@ input[type="text"] {
 	border: solid 1px #EEEEEE;
 	text-align: center;
 }
+.td_TEMP_la {
+	border: solid 1px #EEEEEE;
+	text-align: left;
+	padding: 5px;
+}
 .table_TEMP_slider {
 	background-color: #FFFFFF;
 	border-collapse: collapse;

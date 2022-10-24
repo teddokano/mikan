@@ -27,6 +27,7 @@ class DUT_TEMP():
 
 	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )
 	regex_heater	= ure.compile( r".*heater=(\d+)" )
+	regex_mode		= ure.compile( r".*os_polarity=(\d+)&os_mode=(\d+)" )
 
 	def __init__( self, dev, timer = 0, sampling_interbal = 1.0 ):
 		self.interface	= dev.__if
@@ -81,6 +82,7 @@ class DUT_TEMP():
 		elif "update" in req:
 				html	= self.sending_data()
 		else:
+			print( req )
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
 			m	= self.regex_thresh.match( req )
@@ -95,6 +97,14 @@ class DUT_TEMP():
 				val	= int( m.group( 1 ) )
 				self.heater.value( val )
 				print( "********** {} HEATER {} **********".format( self.type, "ON" if val else "OFF" ) )
+
+			m	= self.regex_mode.match( req )
+			if m:
+				pol	= int( m.group( 1 ) )
+				mod	= int( m.group( 2 ) )
+				self.dev.bit_operation( "Conf", 0x06, (pol << 2) | (mod << 1) )
+
+				print( "********** CONFIGURATION {} {} **********".format( "Active_HIGH" if pol else "Active_Low", "Interrupt" if mod else "Comparator" ) )
 
 		return html
 
@@ -336,21 +346,6 @@ class DUT_TEMP():
 					let obj = JSON.parse( this.responseText );
 				}
 
-				/******** updateHeaterSwitch ********/
-
-				function updateHeaterSwitch( element ) {
-					let heaterSwitchElement	= document.getElementById( "heaterSwitch" );
-					let	val;
-					
-					if ( heaterSwitchElement.checked )
-						val	= 1;
-					else
-						val	= 0;
-						
-					let url	= REQ_HEADER + 'heater=' + val;
-					ajaxUpdate( url );
-				}
-				
 				/****************************
 				 ****	service routine
 				 ****************************/
@@ -429,16 +424,67 @@ class DUT_TEMP():
 								<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="{% thyst_init %}" class="slider">
 							</td>
 							<td class="td_TEMP_slider">
-								<input type="text" oninput="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
+								<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
 							</td>
 						</tr>
 					</table>
 					<input type="button" onclick="setTosThyst();" value="Update Tos&Thys" class="tmp_button"><br/>
-					<br/>
+
 					<hr/>
-					<br/>
+
+					<form id="config_panel" class="control_panel reg_table log_panel"">
+						<table class="table_TEMP"><tr>
+							<td class="td_TEMP_la">OS polarity</td>
+							<td class="td_TEMP_la">
+								<input type="radio" name="os_polarity" id="active_low"  value="0" checked="checked"><label for="active_low">Active LOW<label><br>
+								<input type="radio" name="os_polarity" id="active_high" value="1"><label for="active_high">Active HIGH<label><br/>
+						</td></tr>
+						<tr>
+							<td class="td_TEMP_la">OS operation mode</td>
+							<td class="td_TEMP_la">
+								<input type="radio" name="os_mode" id="comparator" value="0" checked="checked"><label for="comparator">Comparator<label><br>
+								<input type="radio" name="os_mode" id="interrupt"  value="1"><label for="interrupt" >Interrupt <label>
+							</td>
+						</tr></table>
+					</form>
+					<input type="button" onclick="setConfig();" value="Set" class="tmp_button"><br/>
+
+					<script>
+						function setConfig() {
+							let config_panel = document.getElementById( 'config_panel' );
+							radioNodeList = config_panel.elements[ 'os_polarity' ];
+							let	pol	= radioNodeList.value;
+							radioNodeList = config_panel.elements[ 'os_mode' ];
+							let	mod	= radioNodeList.value;
+							
+							let url	= REQ_HEADER + 'os_polarity=' + pol + '&os_mode=' + mod;
+							ajaxUpdate( url );
+						}
+					</script>
+
+					<hr/>
+
 					<input type="checkbox" onchange="updateHeaterSwitch( this );" id="heaterSwitch">
 					<label for="heaterSwitch">heater</label>
+	
+	
+					<script>
+						function updateHeaterSwitch( element ) {
+							let heaterSwitchElement	= document.getElementById( "heaterSwitch" );
+							let	val;
+							
+							if ( heaterSwitchElement.checked )
+								val	= 1;
+							else
+								val	= 0;
+								
+							let url	= REQ_HEADER + 'heater=' + val;
+							ajaxUpdate( url );
+						}
+					</script>
+
+
+
 				</div>
 
 			</div>
