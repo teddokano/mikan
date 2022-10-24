@@ -39,6 +39,16 @@ class General_call( I2C_target ):
 		self.live	= True
 		self.write_registers( 0x04, [] )
 
+def get_dut_list( devices, demo_harnesses ):
+	list	= []
+
+	for dev in devices:
+		for dh in demo_harnesses:
+			if issubclass( dev.__class__, dh.APPLIED_TO ):
+				list	+= [ dh( dev ) ]
+
+	return list
+
 def main( micropython_optimize = False ):
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -55,17 +65,24 @@ def main( micropython_optimize = False ):
 	pcf2131_spi	= PCF2131( spi )
 	pcf85063	= PCF85063( i2c )
 	
-	dev_list	= [	DUT_LEDC( pca9956b_0 ),
-					DUT_LEDC( pca9956b_1 ),
-					DUT_LEDC( pca9955b ),
-					DUT_LEDC( pca9632 ),
-					DUT_LEDC( pca9957 ),
-					DUT_TEMP( pct2075 ),
-					DUT_RTC( pcf2131_i2c ),
-					DUT_RTC( pcf2131_spi ),
-					DUT_RTC( pcf85063 ),
-					]
-
+	devices	= [	pca9956b_0,
+				pca9956b_1,
+				pca9955b,
+				pca9632,
+				pca9957,
+				pct2075,
+				pcf2131_i2c,
+				pcf2131_spi,
+				pcf85063,
+				]
+	
+	demo_harnesses	= [	DUT_LEDC,
+						DUT_TEMP,
+						DUT_RTC
+				]
+	
+	dut_list	= get_dut_list( devices, demo_harnesses )
+	
 	ip_info	= start_network()
 
 	s = socket.socket()
@@ -93,7 +110,7 @@ def main( micropython_optimize = False ):
 		req = client_stream.readline()
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
-		for dut in dev_list:
+		for dut in dut_list:
 			html	= dut.parse( req )
 			if html:
 				break
@@ -111,7 +128,7 @@ def main( micropython_optimize = False ):
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
 		if html is None:
-			html	= front_page_setup( dev_list )
+			html	= front_page_setup( dut_list )
 
 		while True:
 			h = client_stream.readline()
@@ -138,7 +155,7 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
 	
-def front_page_table( dev_list ):
+def front_page_table( dut_list ):
 	s	 = [ '<table>' ]
 
 	s	+= [ '<tr>' ]
@@ -151,7 +168,7 @@ def front_page_table( dev_list ):
 	s	+= [ '</tr>' ]
 
 
-	for dut in dev_list:
+	for dut in dut_list:
 		s	+= [ '<tr>' ]
 		
 		if "I2C" in str( dut.interface ):
@@ -179,7 +196,7 @@ def front_page_table( dev_list ):
 	s	+= [ '</table>' ]
 	return "\n".join( s )
 
-def front_page_setup( dev_list ):
+def front_page_setup( dut_list ):
 	html = """\
 	HTTP/1.0 200 OK
 
@@ -303,7 +320,7 @@ def front_page_setup( dev_list ):
 	"""
 	
 	page_data	= {}
-	page_data[ "front_page_table"  ]	= front_page_table( dev_list )
+	page_data[ "front_page_table"  ]	= front_page_table( dut_list )
 	page_data[ "mcu"               ]	= os.uname().machine
 
 

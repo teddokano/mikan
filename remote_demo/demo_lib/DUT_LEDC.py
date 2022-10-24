@@ -16,9 +16,11 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
+from	nxp_periph	import	LED_controller_base
 import	demo_lib.util
 
 class DUT_LEDC():
+	APPLIED_TO	= LED_controller_base
 	IREF_INIT	= 0x10
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )

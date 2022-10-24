@@ -17,9 +17,11 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCT2075, LM75B
+from	nxp_periph	import	temp_sensor_base
 import	demo_lib.util
 
 class DUT_TEMP():
+	APPLIED_TO		= temp_sensor_base
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 10
 	GRAPH_HIGH		= 30

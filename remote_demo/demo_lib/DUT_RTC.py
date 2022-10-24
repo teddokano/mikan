@@ -17,9 +17,12 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCF2131, PCF85063
+from	nxp_periph	import	RTC_base
 import	demo_lib.util
 
 class DUT_RTC():
+	APPLIED_TO	= RTC_base
+	
 	WKDY	= ( "Monday", "Tuesday", "Wednesday",
 				"Thursday", "Friday", "Saturday", "Sunday" )
 	MNTH	= ( "None", "January", "February", "March",
