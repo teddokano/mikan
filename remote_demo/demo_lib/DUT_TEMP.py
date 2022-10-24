@@ -58,12 +58,11 @@ class DUT_TEMP():
 			tim0.init( period = int( sampling_interbal * 1000.0 ), callback = self.tim_cb )
 
 	def heater( self, *args ):
+		#	this function is made since machine.Pin.value() return is undefined when the pinis set as Pin.OUT
 		if args:
 			self.heater_state	= args[ 0 ]
 			self.heater_pin.value( self.heater_state )
-			print( "------------------------------ heater setting:%d" % self.heater_state )
 		else:
-			print( "------------------------------ heater setting read:%d" % self.heater_state )
 			return self.heater_state
 
 	def tim_cb( self, tim_obj ):
@@ -173,7 +172,7 @@ class DUT_TEMP():
 				let	os		= []
 				let	heater	= []
 
-				function drawChart( time, temp ) {
+				function drawChart() {
 					console.log( 'drawing' );
 
 					var ctx = document.getElementById("myLineChart");
@@ -246,7 +245,7 @@ class DUT_TEMP():
 					});
 				}
 				
-				drawChart( time, temp );
+				drawChart();
 				
 				/****************************
 				 ****	temp display
@@ -276,7 +275,7 @@ class DUT_TEMP():
 					os.push( obj.data.os[ idx ] );
 					heater.push( obj.data.heater[ idx ] );
 
-					drawChart( time, temp );
+					drawChart();
 					
 					var elem = document.getElementById( "temperature" );
 					elem.innerText = temperature.toFixed( 3 ) + '˚C';
