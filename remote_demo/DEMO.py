@@ -23,13 +23,27 @@ except:
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	PCF2131, PCF85063
+from	nxp_periph	import	I2C_target
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
 
+class General_call( I2C_target ):
+	def __init__( self, i2c ):
+		super().__init__( i2c, 0 )
+		
+	def reset( self ):
+		self.live	= True
+		self.write_registers( 0x06, [] )
+
+	def reprogram( self ):
+		self.live	= True
+		self.write_registers( 0x04, [] )
 
 def main( micropython_optimize = False ):
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
+
+	gene_call	= General_call( i2c )
 
 	pca9956b_0	= PCA9956B( i2c, 0x02 >>1 )
 	pca9956b_1	= PCA9956B( i2c, 0x04 >>1 )
@@ -83,6 +97,18 @@ def main( micropython_optimize = False ):
 			html	= dut.parse( req )
 			if html:
 				break
+
+		if "GeneralCall?" in req:
+			if "reset" in req:
+				print( "********** General call: Software reset **********" )
+				gene_call.reset()
+			elif "reprogram" in req:
+				print( "********** General call: reprogram **********" )
+				gene_call.reprogram()
+			else:
+				pass
+			
+			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
 		if html is None:
 			html	= front_page_setup( dev_list )
@@ -222,6 +248,28 @@ def front_page_setup( dev_list ):
 			</style>
 		</head>
 		<body>
+			<script>
+				/****************************
+				 ****	service routine
+				 ****************************/
+				 
+				/******** ajaxUpdate ********/
+
+				function ajaxUpdate( url, func ) {
+					url			= url + '?ver=' + new Date().getTime();
+					let	ajax	= new XMLHttpRequest;
+					ajax.open( 'GET', url, true );
+					
+					ajax.onload = func;
+					ajax.send( null );
+				}
+
+				function hex( num ) {
+					return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 );
+				}
+			</script>
+
+		
 			<div class="header">
 				<p>device demo server</p>
 			</div>
@@ -230,7 +278,20 @@ def front_page_setup( dev_list ):
 				Device list
 				{% front_page_table %}
 				<p class="table_note">* page reloading will refresh device live status</p>
+
+				<input type="button" onclick="busReset( 0 );" value="I²C Software reset" class="tmp_button"><!-- : send address=0x00 data=0x06 (S 0x00 0x06 P) --><br/>
+				<input type="button" onclick="busReset( 1 );" value="I²C Device reprogram" class="tmp_button"><!-- : send address=0x00 data=0x04 (S 0x00 0x04 P) -->
+
+				<script>
+					function busReset( flag ) {
+						let url;
+						
+						url	= (flag == 0) ? '/GeneralCall?reset' : '/GeneralCall?reprogram'
+						ajaxUpdate( url );
+					}
+				</script>
 			</div>
+
 			
 			<div class="foot_note">
 				<b>HTTP server on<br/>
