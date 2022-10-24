@@ -37,7 +37,7 @@ class DUT_TEMP():
 		self.type		= self.dev.__class__.__name__
 		self.address	= dev.__adr
 		self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
-		self.data		= { "time": [], "temp": [], "tos": [], "thyst": [], "os": [] }
+		self.data		= { "time": [], "temp": [], "tos": [], "thyst": [], "os": [], "heater": [] }
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
 
@@ -48,30 +48,42 @@ class DUT_TEMP():
 
 		self.dev.temp_setting( [ self.tos, self.thyst ] )
 
-		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
-		self.heater		= machine.Pin( "D3", machine.Pin.OUT )	#	R19 as heater
+		self.int_pin		= machine.Pin( "D2", machine.Pin.IN  )
+		self.heater_pin		= machine.Pin( "D3", machine.Pin.OUT )	#	R19 as heater
+		self.heater( 0 )
 
 		self.dev.ping()
 		if self.dev.live:
 			tim0	= machine.Timer( timer )
 			tim0.init( period = int( sampling_interbal * 1000.0 ), callback = self.tim_cb )
 
+	def heater( self, *args ):
+		if args:
+			self.heater_state	= args[ 0 ]
+			self.heater_pin.value( self.heater_state )
+			print( "------------------------------ heater setting:%d" % self.heater_state )
+		else:
+			print( "------------------------------ heater setting read:%d" % self.heater_state )
+			return self.heater_state
+
 	def tim_cb( self, tim_obj ):
 		tp	= self.dev.temp
 		tm	= self.rtc.now()
-		self.data[ "time"  ]	+= [ "%02d:%02d:%02d" % (tm[3], tm[4], tm[5]) ]
-		self.data[ "temp"  ]	+= [ tp ]
-		self.data[ "tos"   ]	+= [ self.tos ]
-		self.data[ "thyst" ]	+= [ self.thyst ]
-		self.data[ "os"    ]	+= [ self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW ]
+		self.data[ "time"   ]	+= [ "%02d:%02d:%02d" % (tm[3], tm[4], tm[5]) ]
+		self.data[ "temp"   ]	+= [ tp ]
+		self.data[ "tos"    ]	+= [ self.tos ]
+		self.data[ "thyst"  ]	+= [ self.thyst ]
+		self.data[ "os"     ]	+= [ self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW ]
+		self.data[ "heater" ]	+= [ self.GRAPH_HIGH if self.heater()        else self.GRAPH_LOW ]
 
 		over	= len( self.data[ "time" ] ) - self.SAMPLE_LENGTH
 		if  0 < over:
-			self.data[ "time"  ]	= self.data[ "time"  ][ over : ]
-			self.data[ "temp"  ]	= self.data[ "temp"  ][ over : ]
-			self.data[ "tos"   ]	= self.data[ "tos"   ][ over : ]
-			self.data[ "thyst" ]	= self.data[ "thyst" ][ over : ]
-			self.data[ "os"    ]	= self.data[ "os"    ][ over : ]
+			self.data[ "time"   ]	= self.data[ "time"   ][ over : ]
+			self.data[ "temp"   ]	= self.data[ "temp"   ][ over : ]
+			self.data[ "tos"    ]	= self.data[ "tos"    ][ over : ]
+			self.data[ "thyst"  ]	= self.data[ "thyst"  ][ over : ]
+			self.data[ "os"     ]	= self.data[ "os"     ][ over : ]
+			self.data[ "heater" ]	= self.data[ "heater" ][ over : ]
 
 		#print( "sampled: {} @ {}".format( tp, tm ) )
 
@@ -97,7 +109,7 @@ class DUT_TEMP():
 			m	= self.regex_heater.match( req )
 			if m:
 				val	= int( m.group( 1 ) )
-				self.heater.value( val )
+				self.heater( val )
 				print( "********** {} HEATER {} **********".format( self.type, "ON" if val else "OFF" ) )
 
 			m	= self.regex_mode.match( req )
@@ -109,6 +121,12 @@ class DUT_TEMP():
 				print( "********** CONFIGURATION {} {} **********".format( "Active_HIGH" if pol else "Active_Low", "Interrupt" if mod else "Comparator" ) )
 
 		return html
+
+	def sending_data( self ):
+		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
+		s	+= [ ujson.dumps( { "data": self.data } ) ]
+
+		return "".join( s )
 
 	def page_setup( self ):
 		#HTML to send to browsers
@@ -153,6 +171,7 @@ class DUT_TEMP():
 				let	tos		= []
 				let	thyst	= []
 				let	os		= []
+				let	heater	= []
 
 				function drawChart( time, temp ) {
 					console.log( 'drawing' );
@@ -186,6 +205,12 @@ class DUT_TEMP():
 									data: os,
 									borderColor: "rgba( 0, 255, 0, 0.5 )",
 									backgroundColor: "rgba( 0, 0, 0, 0 )"
+								},
+								{
+									label: 'Heater',
+									data: heater,
+									borderColor: "rgba( 255, 0, 0, 0.0 )",
+									backgroundColor: "rgba( 255, 0, 0, 0.1 )"
 								},
 							],
 						},
@@ -249,6 +274,7 @@ class DUT_TEMP():
 					tos.push( obj.data.tos[ idx ] );
 					thyst.push( obj.data.thyst[ idx ] );
 					os.push( obj.data.os[ idx ] );
+					heater.push( obj.data.heater[ idx ] );
 
 					drawChart( time, temp );
 					
@@ -539,10 +565,3 @@ class DUT_TEMP():
 		s	+= [ '</table>' ]
 
 		return "\n".join( s )
-
-
-	def sending_data( self ):
-		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
-		s	+= [ ujson.dumps( { "data": self.data } ) ]
-
-		return "".join( s )
