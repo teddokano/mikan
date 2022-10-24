@@ -264,11 +264,11 @@ class DUT_LEDC():
 
 						if ( (PWM0_IDX <= idx) && (idx < (PWM0_IDX + N_CHANNELS)) )
 							setSliderValues( idx - PWM0_IDX, value );
-						else if ( (IREF0_IDX <= idx) && (idx < (IREF0_IDX + N_CHANNELS)) )
+						else if ( IREF0_IDX && (IREF0_IDX <= idx) && (idx < (IREF0_IDX + N_CHANNELS)) )
 							setSliderValues( (idx - IREF0_IDX) + IREF_OFST, value );
-						else if ( manual_input && (idx == PWMALL_IDX) )
+						else if ( manual_input && PWMALL_IDX && (idx == PWMALL_IDX) )
 							setSliderValues( IREF_OFST - 1, value );
-						else if ( manual_input && (idx == IREFALL_IDX) )
+						else if ( manual_input && IREFALL_IDX && (idx == IREFALL_IDX) )
 							setSliderValues( IREF_OFST * 2 - 1, value );
 						else
 							writeRegisterField( idx, value );
