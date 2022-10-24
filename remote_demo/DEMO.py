@@ -33,6 +33,7 @@ def get_dut_list( devices, demo_harnesses ):
 	for dev in devices:
 		if dev.__class__ == General_call:
 			last_dut	= DUT_GENERAL( dev )
+			continue
 	
 		for dh in demo_harnesses:
 			if issubclass( dev.__class__, dh.APPLIED_TO ):
@@ -59,13 +60,13 @@ def main( micropython_optimize = False ):
 	devices			= [	pca9956b_0,
 						pca9956b_1,
 						pca9955b,
+						gene_call,
 						pca9632,
 						pca9957,
 						pct2075,
 						pcf2131_i2c,
 						pcf2131_spi,
 						pcf85063,
-						gene_call,	# "gene_call" should be the last device in this list
 						]
 	
 	demo_harnesses	= [	DUT_LEDC,
@@ -285,7 +286,7 @@ def page_table( dut_list ):
 	s	+= [ '</tr>' ]
 
 
-	for dut in dut_list:	#	ignore last DUT. It's a general call (virtual) device
+	for dut in dut_list[ :-1 ]:	#	ignore last DUT. It's a general call (virtual) device
 		s	+= [ '<tr>' ]
 		
 		if "I2C" in str( dut.interface ):
