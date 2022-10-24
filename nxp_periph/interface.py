@@ -131,6 +131,8 @@ class I2C_target( Interface ):
 	def ping( self ):
 		self.live	= True
 		self.send( [] )
+		
+		return self.live
 
 	def send( self, tsfr, stop = True, retry = 3 ):
 		"""

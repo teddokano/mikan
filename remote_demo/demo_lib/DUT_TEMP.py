@@ -41,8 +41,11 @@ class DUT_TEMP():
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
 
-		tp	= self.dev.temp
-
+		if self.dev.ping():
+			tp	= self.dev.temp
+		else:
+			tp	= 25	#	default value when device is not responding
+			
 		self.tos		= int( (tp + 2) * 2 ) / 2
 		self.thyst		= int( (tp + 1) * 2 ) / 2
 
@@ -52,7 +55,6 @@ class DUT_TEMP():
 		self.heater_pin		= machine.Pin( "D3", machine.Pin.OUT )	#	R19 as heater
 		self.heater( 0 )
 
-		self.dev.ping()
 		if self.dev.live:
 			tim0	= machine.Timer( timer )
 			tim0.init( period = int( sampling_interbal * 1000.0 ), callback = self.tim_cb )

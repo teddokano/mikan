@@ -290,8 +290,10 @@ def page_table( dut_list ):
 		s	+= [ '<tr>' ]
 		
 		if "I2C" in str( dut.interface ):
-			dut.dev.ping()
-			live	= dut.dev.live
+#			dut.dev.ping()
+#			live	= dut.dev.live
+			live	= dut.dev.ping()
+
 		else:
 			live	= None
 
