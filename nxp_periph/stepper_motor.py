@@ -1,5 +1,5 @@
 """
-Temperature sensor operation library for MicroPython
+Stepper motor operation library for MicroPython
 Akifumi (Tedd) OKANO / Released under the MIT license
 
 version	0.1 (10-Oct-2022)
@@ -24,6 +24,9 @@ class StepperMotor_base():
 
 	def pps( self, pps, reverse = False ):
 		self.__pps( pps, reverse = reverse )
+
+	def drv_phase( self, v ):
+		self.__drv_phase( v )
 
 	def home( self ):
 		self.__home()
@@ -98,6 +101,12 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 		
 		return pulse_width
 
+	def __drv_phase( self, v ):
+		v	= int( 0x3 if v == 0.5 else (v - 1)  )
+		
+		print( "__drv_phase {}".format( v ) )
+		self.bit_operation( "OP_CFG_PHS", 0xC0, v << 6 )
+
 	def __steps( self, step, reverse = False ):
 		self.w16( "CCWSCOUNTL" if reverse else "CWSCOUNTL", step )
 
@@ -115,29 +124,3 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 		self.start( reverse = reverse )
 
 		sleep( (self.steps_per_rotation + 3 + extrasteps) / pps );
-
-
-
-from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
-
-def main():
-	i2c		= I2C( 0, freq = (400 * 1000) )
-	mtr	= PCA9629A( i2c )
-	all_mtr	= PCA9629A( i2c, address = 0xE0 >> 1 )
-
-	mtr.stop()
-	all_mtr.home()
-	sleep( 1 )
-
-	mtr.steps( 48 )
-	mtr.steps( 48, reverse = True )
-	mtr.pps( 48 )
-	mtr.pps( 48, reverse = True )
-	mtr.start()
-	sleep( 2.1 )
-	mtr.start( reverse = True )
-
-if __name__ == "__main__":
-	main()
-
-
