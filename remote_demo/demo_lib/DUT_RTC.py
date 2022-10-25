@@ -29,7 +29,8 @@ class DUT_RTC():
 				"April", "May", "June", "July", "August",
 				"September", "October", "Nobemver", "Decemver" )
 
-	DS_URL		= { "PCF2131": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
+	DS_URL		= { "PCF2131_I2C": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
+					"PCF2131_SPI": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
 					"PCF85063": "https://www.nxp.com/docs/en/data-sheet/PCF85063A.pdf",
 					}
 
