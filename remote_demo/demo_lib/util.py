@@ -147,6 +147,11 @@ input[type="text"] {
 	border: solid 1px #FFFFFF;
 	text-align: center;
 }
+.timestamp {
+	text-align: left;
+	font-size: 1rem;
+	padding: 0.5rem;
+}
 .button_and_note {
 	font-size: 1rem;
 	padding: 0.5rem;

@@ -219,7 +219,7 @@ class RTC_base():
 
 		"""
 		dt	= self.__get_timestamp_reg( num )
-		return tuple( dt[ key ] for key in self.DATETIME_TUPPLE_FORM ), dt[ "last" ], dt[ "active" ]
+		return tuple( dt[ key ] for key in self.NOW_TUPPLE_FORM ), dt[ "last" ], dt[ "active" ]
 
 	def oscillator_stopped( self ):
 		"""

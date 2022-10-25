@@ -50,6 +50,9 @@ class DUT_RTC():
 	
 		if "?" not in req:
 			html	= self.page_setup()
+		elif "set_current_time" in req:
+			self.dev.datetime( machine.RTC().datetime() )
+			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
@@ -83,6 +86,8 @@ class DUT_RTC():
 			</head>
 			<body>
 				<script>
+					const	DEV_NAME	= '{% dev_name %}'
+					const	REQ_HEADER	= '/' + DEV_NAME + '?';
 
 					/****************************
 					 ****	time display
@@ -91,28 +96,32 @@ class DUT_RTC():
 					/******** getTimeAndShow ********/
 
 					function getTimeAndShow() {
-						var url	= "/{% dev_name %}?"
+						let url	= REQ_HEADER
 						ajaxUpdate( url, getTimeAndShowDone )
 					}
 
 					/******** getTimeAndShowDone ********/
 
-					var prev_reg	= [];
+					let prev_reg	= [];
 					
 					function getTimeAndShowDone() {
-						var obj = JSON.parse( this.responseText )
-						console.log( obj.datetime.str );
+						let obj = JSON.parse( this.responseText )
 
-						var elem = document.getElementById( "datetime" );
+						let elem = document.getElementById( "datetime" );
 						elem.innerText = obj.datetime.str;
+						console.log( obj.ts )
+						if ( obj.ts ) {
+							let elem = document.getElementById( "timestamp" );
+							elem.innerText = obj.ts;
+						}
 						
-							for ( let i = 0; i < obj.reg.length; i++ ) {
-								var value	= obj.reg[ i ];
-								if ( value != prev_reg[ i ] ) {
-									document.getElementById('regField' + i ).value	= hex( value );
-								}
+						for ( let i = 0; i < obj.reg.length; i++ ) {
+							let value	= obj.reg[ i ];
+							if ( value != prev_reg[ i ] ) {
+								document.getElementById('regField' + i ).value	= hex( value );
 							}
-							prev_reg	= obj.reg;
+						}
+						prev_reg	= obj.reg;
 					}
 
 
@@ -123,9 +132,9 @@ class DUT_RTC():
 					/******** updateRegField ********/
 
 					function updateRegField( element, idx ) {
-						var valueFieldElement = document.getElementById( "regField" + idx );
-						var value	= parseInt( valueFieldElement.value, 16 )
-						var no_submit	= 0
+						let valueFieldElement = document.getElementById( "regField" + idx );
+						let value	= parseInt( valueFieldElement.value, 16 )
+						let no_submit	= 0
 						
 						if ( isNaN( value ) ) {
 							no_submit	= 1
@@ -138,7 +147,7 @@ class DUT_RTC():
 						if ( no_submit )
 							return;
 
-						var url	= "/{% dev_name %}?reg=" + idx + "&val=" + value
+						let url	= REQ_HEADER + "reg=" + idx + "&val=" + value
 						ajaxUpdate( url, updateRegFieldDone )
 					}
 					
@@ -157,7 +166,7 @@ class DUT_RTC():
 
 					function ajaxUpdate( url, func ) {
 						url			= url + '?ver=' + new Date().getTime();
-						var	ajax	= new XMLHttpRequest;
+						let	ajax	= new XMLHttpRequest;
 						ajax.open( 'GET', url, true );
 						
 						ajax.onload = func;
@@ -183,6 +192,20 @@ class DUT_RTC():
 
 					<div id="datetime" class="datetime"></div>
 					
+					<div>
+						<input type="button" onclick="setCurrentTime();" value="set current time" class="tmp_button"><br/>
+		
+						<script>
+							function setCurrentTime( element ) {
+								let url	= REQ_HEADER + 'set_current_time';
+								ajaxUpdate( url );
+							}
+						</script>
+					</div>
+
+
+					{% timestamp %}
+
 					<div id="reg_table" class="control_panel reg_table">
 						register table<br/>
 						{% reg_table %}
@@ -202,6 +225,7 @@ class DUT_RTC():
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
+		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp"></div>' if "PCF2131" in self.type else ''
 		page_data[ "style"     ]	= demo_lib.util.get_css()
 
 		for key, value in page_data.items():
@@ -214,14 +238,22 @@ class DUT_RTC():
 		reg	= self.dev.dump()
 		td	= self.dev.__get_datetime_reg()
 		
+		if ( "PCF2131" in self.type ):
+			s	= []
+			for i in range( 1, 5 ):
+				s	+= [ "timestamp{} = {}".format( i, self.dev.timestamp( i ) ) ]
+			
+			ts	= "\n".join( s )
+		else:
+			ts	= None
+		
 		td[ "weekday" ]	= self.WKDY[ td[ "weekday" ] ]
 		td[ "month"   ]	= self.MNTH[ td[ "month"   ] ]
 		td[ "str"   ]	 = "%04d %s %02d (%s) %02d:%02d:%02d" % \
 							(td[ "year" ], td[ "month" ], td[ "day" ], td[ "weekday" ], \
 							td[ "hours" ], td[ "minutes" ], td[ "seconds" ] )
 		
-		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg } )
-
+		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts } )
 
 	def get_reg_table( self, cols ):
 		total	= len( self.dev.REG_NAME )
