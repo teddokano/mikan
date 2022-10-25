@@ -24,6 +24,12 @@ class DUT_LEDC():
 	IREF_INIT	= 0x10
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
+	
+	DS_URL		= { "PCA9956B": "https://www.nxp.com/docs/en/data-sheet/PCA9956B.pdf",
+					"PCA9955B": "https://www.nxp.com/docs/en/data-sheet/PCA9955B.pdf",
+					"PCA9632": "https://www.nxp.com/docs/en/data-sheet/PCA9632.pdf",
+					"PCA9957": "https://www.nxp.com/docs/en/data-sheet/PCA9957DS.pdf"
+					}
 
 	def __init__( self, dev ):
 		self.interface	= dev.__if
@@ -318,7 +324,7 @@ class DUT_LEDC():
 				</script>
 
 				<div class="header">
-					<p>{% dev_type %} server</p>
+					<p>{% dev_link %} server</p>
 					<p class="info">{% dev_info %}</p>
 				</div>
 				
@@ -388,6 +394,7 @@ class DUT_LEDC():
 		page_data	= {}
 		page_data[ "dev_name"    ]	= self.dev_name
 		page_data[ "dev_type"    ]	= self.type
+		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"    ]	= info
 		page_data[ "mcu"         ]	= os.uname().machine
 		page_data[ "n_ch"        ]	= str( count )

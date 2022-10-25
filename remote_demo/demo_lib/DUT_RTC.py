@@ -29,6 +29,10 @@ class DUT_RTC():
 				"April", "May", "June", "July", "August",
 				"September", "October", "Nobemver", "Decemver" )
 
+	DS_URL		= { "PCF2131": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
+					"PCF85063": "https://www.nxp.com/docs/en/data-sheet/PCF85063A.pdf",
+					}
+
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 
 	def __init__( self, dev ):
@@ -186,7 +190,7 @@ class DUT_RTC():
 					</script>
 
 					<div class="header">
-						<p>{% dev_type %} server</p>
+						<p>{% dev_link %} server</p>
 						<p class="info">{% dev_info %}</p>
 					</div>
 
@@ -222,6 +226,7 @@ class DUT_RTC():
 		page_data	= {}
 		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_type"  ]	= self.type
+		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )

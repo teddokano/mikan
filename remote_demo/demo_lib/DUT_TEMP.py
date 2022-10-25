@@ -27,6 +27,10 @@ class DUT_TEMP():
 	GRAPH_HIGH		= 30
 	GRAPH_LOW		= 20
 
+	DS_URL		= { "PCT2075": "https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf",
+					"LM75B": "https://www.nxp.com/docs/en/data-sheet/LM75B.pdf",
+					}
+
 	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )
 	regex_heater	= ure.compile( r".*heater=(\d+)" )
 	regex_mode		= ure.compile( r".*os_polarity=(\d+)&os_mode=(\d+)" )
@@ -148,7 +152,7 @@ class DUT_TEMP():
 		</head>
 		<body>
 			<div class="header">
-				<p>{% dev_type %} server</p>
+				<p>{% dev_link %} server</p>
 				<p class="info">{% dev_info %}</p>
 			</div>
 			<div id="temperature" class="datetime"></div>
@@ -529,6 +533,7 @@ class DUT_TEMP():
 		page_data	= {}
 		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_type"  ]	= self.type
+		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "table_len" ]	= str( self.TABLE_LENGTH )
 		page_data[ "mcu"       ]	= os.uname().machine
