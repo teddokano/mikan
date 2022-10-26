@@ -6,6 +6,27 @@ version	0.1 (25-Sep-2022)
 """
 from nxp_periph.interface	import	I2C_target
 
+def main():
+	from	machine		import	Pin, I2C
+	from utime import sleep
+	i2c			= I2C( 0, freq = (400 * 1000) )
+	temp_sensor	= PCT2075( i2c, setup_EVB = True )
+	temp_sensor	= P3T1085( i2c )
+	print( temp_sensor.info() )
+
+	temp_sensor.heater	= 0
+
+	count=0
+	while True:
+		value	= temp_sensor.temp
+		print( "%f, heater:%s" % ( value, "ON" if temp_sensor.heater else "OFF" ) )
+
+		temp_sensor.heater = (count // 20) & 0x1
+		count	+= 1
+
+		sleep( 1 )
+
+
 class temp_sensor_base():
 	"""
 	An abstraction class to make user interface.
@@ -132,8 +153,28 @@ class PCT2075( LM75B ):
 	REG_NAME	= ( "Temp", "Conf", "Thyst", "Tos", "Tidle" )
 	REG_LEN		= (      2,      1,       2,     2,       1 )
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR, setup_EVB = False ):
+		super().__init__( i2c, address )
 
-class P3T1108( temp_sensor_base, I2C_target ):
+		if setup_EVB:
+			self.heater_state	= False
+
+			from machine import Pin
+			#self.int_pin	= Pin( "D2", Pin.IN  )
+			self.heater_pin	= Pin( "D3", Pin.OUT )	#	R19 as heater
+	
+	@property
+	def heater( self ):
+		return self.heater_state
+
+	@heater.setter
+	def heater( self, v ):
+		self.heater_state	= v
+		self.heater_pin( v )
+
+
+class P3T1085( LM75B ):
 	"""
 	CAUTION THIS DEVICE IS NOT SUPPORTED YET
 	"""
@@ -143,21 +184,36 @@ class P3T1108( temp_sensor_base, I2C_target ):
 	REG_LEN		= (      2,      2,       2,        2 )
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
 
-	def __init__( self, i2c, address = DEFAULT_ADDR ):
+	def __init__( self, i2c, address = DEFAULT_ADDR, setup_EVB = False ):
 		super().__init__( i2c, address )
+
+		if setup_EVB:
+			self.heater_state	= False
+
+			from machine import Pin
+			self.alert	= Pin( "D8", Pin.IN  )
 
 	def __read( self ):
 		temp	= self.reg_access( "Temp" )
-		return (temp & 0xFFE0) / 256.0
+		return (temp & 0xFFF0) / 256.0
 
 	def __value_setting( self, lst ):
 		lst.sort()
 	
 		sv	= []
 		for r, v in zip( ( "T_LOW", "T_HOGH" ), lst ):
-			v	= int(v * 256.0) & 0xFF80
+			v	= int(v * 256.0) & 0xFFF0
 			self.reg_access( r, v )
 			sv	+= [ v ]
 		
 		return [ v / 256.0 for v in sv ]
+
+	@property
+	def alert( self ):
+		return self.alert
+
+if __name__ == "__main__":
+	main()
+
+
 
