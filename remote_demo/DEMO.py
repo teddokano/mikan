@@ -23,6 +23,7 @@ except:
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	PCF2131, PCF85063
+from	nxp_periph	import	i2c_fullscan
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
 from	demo_lib	import	DUT_GENERAL, General_call
@@ -76,6 +77,9 @@ def main( micropython_optimize = False ):
 						]
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
+	
+	for i in i2c_fullscan( i2c ):
+		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
 	
 	ip_info	= start_network()
 

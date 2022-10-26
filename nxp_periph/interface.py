@@ -402,3 +402,16 @@ class abstract_target( Interface ):
 		
 		return	r[ 0 ] if length is 1 else r
 
+def i2c_fullscan( i2c ):
+	list	= []
+	data	= []
+	
+	for i in range( 128 ):
+		try:
+			i2c.writeto( i, bytearray( data ) )
+		except Exception as e:
+			pass
+		else:
+			list	+= [ i ]
+			
+	return list

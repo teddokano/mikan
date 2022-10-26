@@ -126,10 +126,38 @@ class LM75B( temp_sensor_base, I2C_target ):
 		
 		return [ v / 256.0 for v in sv ]
 		
-		
 class PCT2075( LM75B ):
 	DEFAULT_ADDR		= 0x90 >> 1
 
 	REG_NAME	= ( "Temp", "Conf", "Thyst", "Tos", "Tidle" )
 	REG_LEN		= (      2,      1,       2,     2,       1 )
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
+
+class P3T1108( temp_sensor_base, I2C_target ):
+	"""
+	CAUTION THIS DEVICE IS NOT SUPPORTED YET
+	"""
+	DEFAULT_ADDR		= 0x90 >> 1
+
+	REG_NAME	= ( "Temp", "Conf", "T_LOW", "T_HOGH" )
+	REG_LEN		= (      2,      2,       2,        2 )
+	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
+
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		super().__init__( i2c, address )
+
+	def __read( self ):
+		temp	= self.reg_access( "Temp" )
+		return (temp & 0xFFE0) / 256.0
+
+	def __value_setting( self, lst ):
+		lst.sort()
+	
+		sv	= []
+		for r, v in zip( ( "T_LOW", "T_HOGH" ), lst ):
+			v	= int(v * 256.0) & 0xFF80
+			self.reg_access( r, v )
+			sv	+= [ v ]
+		
+		return [ v / 256.0 for v in sv ]
+
