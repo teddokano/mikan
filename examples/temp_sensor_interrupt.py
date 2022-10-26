@@ -17,7 +17,11 @@ def main():
 	int.irq( trigger = Pin.IRQ_FALLING, handler = callback )
 
 	i2c			= I2C( 0, freq = (400 * 1000) )
-	temp_sensor	= PCT2075( i2c )
+
+	#	The PCT2075DP-ARB (Arduino type evaluation board) has an on-board heater (R19 resister)
+	#	The heater can be controlled by D3-pin
+	#	This instance declaration with "setup_EVB = True" enables to use the heater with "PCT2075.heater"
+	temp_sensor	= PCT2075( i2c, setup_EVB = True )
 
 	print( temp_sensor.info() )
 	temp_sensor.dump_reg()
@@ -27,16 +31,11 @@ def main():
 	t_hys	= thresholds[ 0 ]
 	t_ots	= thresholds[ 1 ]
 	temp_sensor.bit_operation( "Conf", 0x02, 0x02 )
-
-	#	The PCT2075DP-ARB (Arduino type evaluation board) has an on-board heater (R19 resister)
-	#	The heater can be controlled by D3-pin
-
-	heater	= Pin( "D3", Pin.OUT )	#	R19 as heater
-	heater_on	= True
-	heater.value( heater_on )
-
-	temp_sensor.dump_reg()
 	
+	temp_sensor.dump_reg()
+
+	temp_sensor.heater	= True
+
 	tim0 = Timer(0)
 	tim0.init( period= 1000, callback = tim_cb)
 
@@ -46,7 +45,7 @@ def main():
 			v	= temp_sensor.read()
 			
 			heater_on	= False if t_ots <= v else True
-			heater.value( heater_on )
+			temp_sensor.heater	= heater_on
 
 			print( "interrupt: heater is turned-{}".format( "ON" if heater_on else "OFF" ) )
 			
