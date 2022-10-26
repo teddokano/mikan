@@ -22,6 +22,12 @@ class RTC_base():
 	DEINIT_TUPLE			= dict( zip( NOW_TUPPLE_FORM, DEINIT_VAL ) )
 	DEINIT_TUPLE[ "weekday" ]	= 0		# dummy
 	ALARM_KEYS				= ( "day", "hours", "minutes", "seconds", "weekday" )
+	
+	WKDY	= ( "Monday", "Tuesday", "Wednesday",
+				"Thursday", "Friday", "Saturday", "Sunday" )
+	MNTH	= ( "None", "January", "February", "March",
+				"April", "May", "June", "July", "August",
+				"September", "October", "Nobemver", "Decemver" )
 
 	def datetime( self, *args ):
 		"""
@@ -195,7 +201,7 @@ class RTC_base():
 		"""
 		self.__set_timestamp_interrupt( pin_select, num, last_event )
 
-	def timestamp( self, num ):
+	def timestamp( self ):
 		"""
 		get timestamp
 	
@@ -218,8 +224,22 @@ class RTC_base():
 			False = disabled
 
 		"""
-		dt	= self.__get_timestamp_reg( num )
-		return tuple( dt[ key ] for key in self.NOW_TUPPLE_FORM ), dt[ "last" ], dt[ "active" ]
+		
+		ts_list	= []
+		for i in range( 1, self.NUMBER_OF_TIMESTAMP + 1 ):
+			dt	= self.__get_timestamp_reg( i )
+			dt[ "tuple" ]	= tuple( dt[ key ] for key in self.NOW_TUPPLE_FORM )
+			ts_list	+= [ dt ]
+		
+		return ts_list
+
+	def timestamp2str( self, ts_list ):
+		s	= []
+		for ts, i in zip( ts_list, range( 1, self.NUMBER_OF_TIMESTAMP + 1 ) ):
+			print( "timestamp2str --- {}".format(ts) )
+			s	+= [ "timestamp{} ({}, {}): {}".format( i, ts[ "active" ], ts[ "last" ], RTC_base.tuple2str( ts[ "tuple" ], RTC_base.NOW_TUPPLE_FORM ) ) ]
+
+		return "\n".join( s )
 
 	def oscillator_stopped( self ):
 		"""
@@ -278,14 +298,26 @@ class RTC_base():
 		for key, item in zip( form, datetime ):
 			dt[ key ]	= item
 
-		print( dt )
-
 		if "weekday" not in dt:
 			dt[ "weekday" ]	= weekday
 
-		print( dt )
-
 		return dt
+
+	@classmethod
+	def tuple2str( cls, tpl, form ):
+		dt	= dict( zip( form, tpl ) )
+
+		if "weekday" in dt:
+			dt[ "weekday" ]	= cls.WKDY[ dt[ "weekday" ] ]
+		else:
+			dt[ "weekday" ]	= ""
+
+		dt[ "month" ]	= cls.MNTH[ dt[ "month" ] ]
+		str	 = "%04d %s %02d %s %02d:%02d:%02d" % \
+					(dt[ "year" ], dt[ "month" ], dt[ "day" ], dt[ "weekday" ], \
+					dt[ "hours" ], dt[ "minutes" ], dt[ "seconds" ] )
+		
+		return str
 
 	@classmethod
 	def bin2bcd( cls, value ):
@@ -349,7 +381,9 @@ class PCF2131_base( RTC_base ):
 	REG_ORDER_DT	= ( "subseconds", "seconds", "minutes", "hours", "day", "weekday", "month", "year" )
 	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
 	REG_ORDER_TS	= ( "subseconds", "seconds", "minutes", "hours", "day", "month", "year" )
-		
+	
+	NUMBER_OF_TIMESTAMP	= 4
+	
 	def __software_reset( self ):
 		self.write_registers( "SR_Reset", 0xA5 )
 

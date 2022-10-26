@@ -241,9 +241,6 @@ class DUT_RTC():
 
 
 	def sending_data( self ):
-		reg	= self.dev.dump()
-		td	= self.dev.__get_datetime_reg()
-		
 		if ( "PCF2131" in self.type ):
 			s	= []
 			for i in range( 1, 5 ):
@@ -252,6 +249,9 @@ class DUT_RTC():
 			ts	= "\n".join( s )
 		else:
 			ts	= None
+		
+		reg	= self.dev.dump()
+		td	= self.dev.__get_datetime_reg()
 		
 		td[ "weekday" ]	= self.WKDY[ td[ "weekday" ] ]
 		td[ "month"   ]	= self.MNTH[ td[ "month"   ] ]

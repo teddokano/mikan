@@ -1,5 +1,5 @@
 from	machine		import	Pin, I2C, SPI
-from	nxp_periph	import	PCF2131
+from	nxp_periph	import	PCF2131, RTC_base
 import	machine
 
 BAT_SWOVR	= True
@@ -106,11 +106,14 @@ def demo( rtc ):
 
 			if "ts1" in event:
 				for i in range( 1, 5 ):
-					print( "timestamp{} = {}".format( i, rtc.timestamp( i ) ) )
+					tsl	= rtc.timestamp()
+					#print( "timestamp{} = {}".format( i, ts ) )
+					#print( "timestamp{} = {}".format( i, RTC_base.tuple2str( ts[0], RTC_base.NOW_TUPPLE_FORM ) ) )
+					print( rtc.timestamp2str( tsl ) )
 
 			if not dt[ 6 ] % 30:
 				rtc.dump_reg()
-
+	
 if __name__ == "__main__":
 	main()
 
