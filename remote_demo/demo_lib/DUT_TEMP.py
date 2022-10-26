@@ -55,21 +55,12 @@ class DUT_TEMP():
 
 		self.dev.temp_setting( [ self.tos, self.thyst ] )
 
-		self.int_pin		= machine.Pin( "D2", machine.Pin.IN  )
-		self.heater_pin		= machine.Pin( "D3", machine.Pin.OUT )	#	R19 as heater
-		self.heater( 0 )
+		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
+		self.dev.heater	= 0
 
 		if self.dev.live:
 			tim0	= machine.Timer( timer )
 			tim0.init( period = int( sampling_interbal * 1000.0 ), callback = self.tim_cb )
-
-	def heater( self, *args ):
-		#	this function is made since machine.Pin.value() return is undefined when the pinis set as Pin.OUT
-		if args:
-			self.heater_state	= args[ 0 ]
-			self.heater_pin.value( self.heater_state )
-		else:
-			return self.heater_state
 
 	def tim_cb( self, tim_obj ):
 		tp	= self.dev.temp
@@ -79,7 +70,7 @@ class DUT_TEMP():
 		self.data[ "tos"    ]	+= [ self.tos ]
 		self.data[ "thyst"  ]	+= [ self.thyst ]
 		self.data[ "os"     ]	+= [ self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW ]
-		self.data[ "heater" ]	+= [ self.GRAPH_HIGH if self.heater()        else self.GRAPH_LOW ]
+		self.data[ "heater" ]	+= [ self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW ]
 
 		over	= len( self.data[ "time" ] ) - self.SAMPLE_LENGTH
 		if  0 < over:
@@ -114,7 +105,7 @@ class DUT_TEMP():
 			m	= self.regex_heater.match( req )
 			if m:
 				val	= int( m.group( 1 ) )
-				self.heater( val )
+				self.dev.heater	= val
 				print( "********** {} HEATER {} **********".format( self.type, "ON" if val else "OFF" ) )
 
 			m	= self.regex_mode.match( req )
