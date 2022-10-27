@@ -156,7 +156,10 @@ class RTC_base():
 					  }
 		alm	= self.alarm_int( pin_select, **alarm_time )
 		return	alm
-		
+	
+	def clear_alarm( self ):
+		self.__clear_alarm()
+	
 	def cancel( self ):
 		"""
 		cancel alarm
@@ -236,7 +239,6 @@ class RTC_base():
 	def timestamp2str( self, ts_list ):
 		s	= []
 		for ts, i in zip( ts_list, range( 1, self.NUMBER_OF_TIMESTAMP + 1 ) ):
-			print( "timestamp2str --- {}".format(ts) )
 			s	+= [ "timestamp{} ({}, {}): {}".format( i, ts[ "active" ], ts[ "last" ], RTC_base.tuple2str( ts[ "tuple" ], RTC_base.NOW_TUPPLE_FORM ) ) ]
 
 		return "\n".join( s )
@@ -427,6 +429,9 @@ class PCF2131_base( RTC_base ):
 		select	= "A" if "A" in int_pin else "B"
 		self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x04, 0x00 )
 		self.bit_operation( "Control_2", 0x02, 0x02 )
+
+	def __clear_alarm( self ):
+		self.bit_operation( "Control_2", 0x10, 0x00 )
 
 	def __cancel_alarm( self, int_pin, dt ):
 		self.bit_operation( "Control_2", 0x02, 0x00 )
@@ -643,6 +648,9 @@ class PCF85063( RTC_base, I2C_target ):
 
 		self.write_registers( "Second_alarm", data )
 		self.bit_operation( "Control_2", 0x80, 0x80 )
+
+	def __clear_alarm( self ):
+		pass	# will be implemented later
 
 	def __cancel_alarm( self, int_pin, dt ):
 		self.bit_operation( "Control_2", 0x80, 0x00 )

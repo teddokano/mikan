@@ -139,7 +139,7 @@ input[type="text"] {
 	padding: 5px;
 }
 .table_RTC {
-	background-color: #EEEEEE;
+    background-color: #EEEEEE;
 	border-collapse: collapse;
 	width: 100%;
 }
@@ -147,6 +147,17 @@ input[type="text"] {
 	border: solid 1px #FFFFFF;
 	text-align: center;
 }
+.table_RTC_alarm {
+	background-color: #EEEEEE;
+	border-collapse: collapse;
+	width: 50%;
+}
+.td_RTC_alarm {
+	border: solid 1px #FFFFFF;
+	text-align: center;
+	font-size: 1.0rem
+}
+
 .timestamp {
 	text-align: left;
 	font-size: 1rem;

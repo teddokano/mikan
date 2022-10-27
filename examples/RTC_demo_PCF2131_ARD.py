@@ -107,8 +107,6 @@ def demo( rtc ):
 			if "ts1" in event:
 				for i in range( 1, 5 ):
 					tsl	= rtc.timestamp()
-					#print( "timestamp{} = {}".format( i, ts ) )
-					#print( "timestamp{} = {}".format( i, RTC_base.tuple2str( ts[0], RTC_base.NOW_TUPPLE_FORM ) ) )
 					print( rtc.timestamp2str( tsl ) )
 
 			if not dt[ 6 ] % 30:

@@ -35,6 +35,7 @@ class DUT_RTC():
 					}
 
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
+	regex_alarm	= ure.compile( r".*alarm&weekday=(\d+)&day=(\d+)&hour=(\d+)&minute=(\d+)&second=(\d+)" )
 
 	def __init__( self, dev ):
 		self.interface	= dev.__if
@@ -58,20 +59,55 @@ class DUT_RTC():
 		elif "set_current_time" in req:
 			self.dev.datetime( machine.RTC().datetime() )
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+		elif "clear_alarm" in req:
+			self.dev.clear_alarm()
+			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
-				print( m.groups() )
 				reg	= int( m.group( 1 ) )
 				val	= int( m.group( 2 ) )
 
 				self.dev.write_registers( reg, val )
 				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
 
+			m	= self.regex_alarm.match( req )
+			if m:
+				alarm_time	= {
+									"weekday"	: int( m.group( 1 ) ),
+									"day"		: int( m.group( 2 ) ),
+									"hours"		: int( m.group( 3 ) ),
+									"minutes"	: int( m.group( 4 ) ),
+									"seconds"	: int( m.group( 5 ) ),
+							  }
+				
+				self.dev.clear_alarm()
+				self.dev.alarm_int( "A", **alarm_time )
+				html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+
 			else:
 				html	= self.sending_data()
 
 		return html
+
+	def sending_data( self ):
+		if ( "PCF2131" in self.type ):
+			tsl	= self.dev.timestamp()
+			ts	= self.dev.timestamp2str( tsl )
+		else:
+			ts	= None
+		
+		reg		= self.dev.dump()
+		alarm	= True if reg[1] & 0x10 else False
+		td		= self.dev.__get_datetime_reg()
+		
+		td[ "weekday" ]	= self.WKDY[ td[ "weekday" ] ]
+		td[ "month"   ]	= self.MNTH[ td[ "month"   ] ]
+		td[ "str"   ]	 = "%04d %s %02d (%s) %02d:%02d:%02d" % \
+							(td[ "year" ], td[ "month" ], td[ "day" ], td[ "weekday" ], \
+							td[ "hours" ], td[ "minutes" ], td[ "seconds" ] )
+		
+		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm": alarm } )
 
 	def page_setup( self ):
 		#HTML to send to browsers
@@ -127,6 +163,11 @@ class DUT_RTC():
 							}
 						}
 						prev_reg	= obj.reg;
+						
+						if ( obj.alarm ) {
+							let elm = document.getElementById( "alarm_div" );
+							elm.style.display ="block";
+						}
 					}
 
 
@@ -196,9 +237,9 @@ class DUT_RTC():
 					</div>
 
 					<div id="datetime" class="datetime"></div>
-					
+
 					<div>
-						<input type="button" onclick="setCurrentTime();" value="set current time" class="tmp_button"><br/>
+						<input type="button" onclick="setCurrentTime();" value="Set current time" class="tmp_button"><br/>
 		
 						<script>
 							function setCurrentTime( element ) {
@@ -208,6 +249,101 @@ class DUT_RTC():
 						</script>
 					</div>
 
+					<div id="alarm_div" class="header">
+						DING! DING!  -- ALARM TRIGGERED --
+
+						<input type="button" onclick="clarAlarm();" value="Clear alarm" class="tmp_button"><br/>
+						
+						<script>
+							document.getElementById( "alarm_div" ).style.display	= "none";
+						
+							function clarAlarm( element ) {
+								let elm = document.getElementById( "alarm_div" );
+								elm.style.display ="none";
+								
+								let url	= REQ_HEADER + 'clear_alarm'
+								ajaxUpdate( url );
+							}
+						</script>
+
+
+					</div>
+
+					<div>
+
+<!-- alarm setting<br/> -->
+
+<table class="table_RTC_alarm">
+<tr class="reg_table_row">
+<td class="td_RTC_alarm reg_table_val">
+<table class="table_RTC_alarm">
+<tr class="reg_table_row">
+<td class="td_RTC_alarm reg_table_val"> weekday<input type="text" id="alarmField4" minlength=2 size=2 value="--" class="regfield">
+<td class="td_RTC_alarm reg_table_val"> day    <input type="text" id="alarmField3" minlength=2 size=2 value="--" class="regfield">
+<td class="td_RTC_alarm reg_table_val"> hour   <input type="text" id="alarmField2" minlength=2 size=2 value="--" class="regfield">
+<td class="td_RTC_alarm reg_table_val"> minute <input type="text" id="alarmField1" minlength=2 size=2 value="--" class="regfield">
+<td class="td_RTC_alarm reg_table_val"> second <input type="text" id="alarmField0" minlength=2 size=2 value="--" class="regfield">
+<t/d>
+</tr>
+</table>
+
+<td class="td_RTC_alarm reg_table_val">
+						<input type="button" onclick="setAlarm();" value="Set alarm" class="tmp_button"><br/>
+		
+						<script>
+							function setAlarm( element ) {
+							
+								let weekday = document.getElementById( "alarmField4" ).value;
+								let day		= document.getElementById( "alarmField3" ).value;
+								let hour	= document.getElementById( "alarmField2" ).value;
+								let minute	= document.getElementById( "alarmField1" ).value;
+								let second	= document.getElementById( "alarmField0" ).value;
+console.log( weekday );
+console.log( day );
+console.log( hour );
+console.log( minute );
+console.log( second );
+								weekday	= ('--' == weekday) ? 80 : weekday;
+								day		= ('--' == day)     ? 80 : day;
+								hour	= ('--' == hour)    ? 80 : hour;
+								minute	= ('--' == minute)  ? 80 : minute;
+								second	= ('--' == second)  ? 80 : second;
+
+								weekday	= '&weekday=' + weekday;
+								day		= '&day='     + day;
+								hour	= '&hour='    + hour;
+								minute	= '&minute='  + minute;
+								second	= '&second='  + second;
+
+								let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
+								ajaxUpdate( url );
+							}
+						</script>
+
+						<input type="button" onclick="clearAlarmSetting();" value="Clear alarm seting" class="tmp_button"><br/>
+</tr>
+</table>
+
+						<script>
+							function clearAlarmSetting( element ) {
+								document.getElementById( "alarmField4" ).value	= '--';
+								document.getElementById( "alarmField3" ).value	= '--';
+								document.getElementById( "alarmField2" ).value	= '--';
+								document.getElementById( "alarmField1" ).value	= '--';
+								document.getElementById( "alarmField0" ).value	= '--';
+
+								weekday	= '&weekday=' + 80;
+								day		= '&day='     + 80;
+								hour	= '&hour='    + 80;
+								minute	= '&minute='  + 80;
+								second	= '&second='  + 80;
+
+								let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
+								ajaxUpdate( url );
+							}
+						</script>
+
+					</div>
 
 					{% timestamp %}
 
@@ -231,35 +367,13 @@ class DUT_RTC():
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
-		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp"></div>' if "PCF2131" in self.type else ''
+		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
 		page_data[ "style"     ]	= demo_lib.util.get_css()
 
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
 		
 		return html
-
-
-	def sending_data( self ):
-		if ( "PCF2131" in self.type ):
-			s	= []
-			for i in range( 1, 5 ):
-				s	+= [ "timestamp{} = {}".format( i, self.dev.timestamp( i ) ) ]
-			
-			ts	= "\n".join( s )
-		else:
-			ts	= None
-		
-		reg	= self.dev.dump()
-		td	= self.dev.__get_datetime_reg()
-		
-		td[ "weekday" ]	= self.WKDY[ td[ "weekday" ] ]
-		td[ "month"   ]	= self.MNTH[ td[ "month"   ] ]
-		td[ "str"   ]	 = "%04d %s %02d (%s) %02d:%02d:%02d" % \
-							(td[ "year" ], td[ "month" ], td[ "day" ], td[ "weekday" ], \
-							td[ "hours" ], td[ "minutes" ], td[ "seconds" ] )
-		
-		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts } )
 
 	def get_reg_table( self, cols ):
 		total	= len( self.dev.REG_NAME )
