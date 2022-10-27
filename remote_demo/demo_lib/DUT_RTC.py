@@ -97,9 +97,11 @@ class DUT_RTC():
 		else:
 			ts	= None
 		
-		reg		= self.dev.dump()
-		alarm	= True if reg[1] & 0x10 else False
-		td		= self.dev.__get_datetime_reg()
+		alm_ofst	= self.dev.REG_NAME.index( "Second_alarm" )
+		reg			= self.dev.dump()
+		alarm_flg	= True if reg[1] & 0x10 else False
+		alarm		= reg[ alm_ofst : alm_ofst + 5 ]
+		td			= self.dev.__get_datetime_reg()
 		
 		td[ "weekday" ]	= self.WKDY[ td[ "weekday" ] ]
 		td[ "month"   ]	= self.MNTH[ td[ "month"   ] ]
@@ -107,7 +109,7 @@ class DUT_RTC():
 							(td[ "year" ], td[ "month" ], td[ "day" ], td[ "weekday" ], \
 							td[ "hours" ], td[ "minutes" ], td[ "seconds" ] )
 		
-		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm": alarm } )
+		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm_flg": alarm_flg, "alarm": alarm } )
 
 	def page_setup( self ):
 		#HTML to send to browsers
@@ -144,18 +146,27 @@ class DUT_RTC():
 					/******** getTimeAndShowDone ********/
 
 					let prev_reg	= [];
-					
+					let prev_alarm	= [];
+
 					function getTimeAndShowDone() {
 						let obj = JSON.parse( this.responseText )
 
 						let elem = document.getElementById( "datetime" );
 						elem.innerText = obj.datetime.str;
-						console.log( obj.ts )
+						//console.log( obj.ts )
 						if ( obj.ts ) {
 							let elem = document.getElementById( "timestamp" );
 							elem.innerText = obj.ts;
 						}
-						
+
+						for ( let i = 0; i < 5; i++ ) {
+							let value	= obj.alarm[ i ];
+							if ( value != prev_alarm[ i ] ) {
+								document.getElementById( "alarmField" + i ).value	= ( value == 0x80 ) ? '--' : hex( value );
+							}
+						}
+						prev_alarm	= obj.alarm;
+												
 						for ( let i = 0; i < obj.reg.length; i++ ) {
 							let value	= obj.reg[ i ];
 							if ( value != prev_reg[ i ] ) {
@@ -164,9 +175,8 @@ class DUT_RTC():
 						}
 						prev_reg	= obj.reg;
 						
-						if ( obj.alarm ) {
-							let elm = document.getElementById( "alarm_div" );
-							elm.style.display ="block";
+						if ( obj.alarm_flg ) {
+							document.getElementById( 'dialog' ).showModal();
 						}
 					}
 
@@ -249,80 +259,70 @@ class DUT_RTC():
 						</script>
 					</div>
 
-					<div id="alarm_div" class="header">
-						DING! DING!  -- ALARM TRIGGERED --
-
+					<dialog id="dialog">
+						DING! DING!  -- ALARM TRIGGERED --<br/><br/>
 						<input type="button" onclick="clarAlarm();" value="Clear alarm" class="tmp_button"><br/>
+					</dialog>
 						
-						<script>
-							document.getElementById( "alarm_div" ).style.display	= "none";
-						
-							function clarAlarm( element ) {
-								let elm = document.getElementById( "alarm_div" );
-								elm.style.display ="none";
-								
-								let url	= REQ_HEADER + 'clear_alarm'
-								ajaxUpdate( url );
-							}
-						</script>
-
-
-					</div>
-
+					<script>
+						function clarAlarm( element ) {
+							document.getElementById( 'dialog' ).close();
+							
+							let url	= REQ_HEADER + 'clear_alarm'
+							ajaxUpdate( url );
+						}
+					</script>
+				
 					<div>
 
-<!-- alarm setting<br/> -->
+						<!-- alarm setting<br/> -->
 
-<table class="table_RTC_alarm">
-<tr class="reg_table_row">
-<td class="td_RTC_alarm reg_table_val">
-<table class="table_RTC_alarm">
-<tr class="reg_table_row">
-<td class="td_RTC_alarm reg_table_val"> weekday<input type="text" id="alarmField4" minlength=2 size=2 value="--" class="regfield">
-<td class="td_RTC_alarm reg_table_val"> day    <input type="text" id="alarmField3" minlength=2 size=2 value="--" class="regfield">
-<td class="td_RTC_alarm reg_table_val"> hour   <input type="text" id="alarmField2" minlength=2 size=2 value="--" class="regfield">
-<td class="td_RTC_alarm reg_table_val"> minute <input type="text" id="alarmField1" minlength=2 size=2 value="--" class="regfield">
-<td class="td_RTC_alarm reg_table_val"> second <input type="text" id="alarmField0" minlength=2 size=2 value="--" class="regfield">
-<t/d>
-</tr>
-</table>
+						<table class="table_RTC_alarm">
+							<tr class="reg_table_row">
+								<td class="td_RTC_alarm reg_table_val">
+									<table class="table_RTC_alarm">
+										<tr class="reg_table_row">
+											<td class="td_RTC_alarm reg_table_val"> weekday<input type="text" id="alarmField4" minlength=2 size=2 value="--" class="regfield">
+											<td class="td_RTC_alarm reg_table_val"> day    <input type="text" id="alarmField3" minlength=2 size=2 value="--" class="regfield">
+											<td class="td_RTC_alarm reg_table_val"> hour   <input type="text" id="alarmField2" minlength=2 size=2 value="--" class="regfield">
+											<td class="td_RTC_alarm reg_table_val"> minute <input type="text" id="alarmField1" minlength=2 size=2 value="--" class="regfield">
+											<td class="td_RTC_alarm reg_table_val"> second <input type="text" id="alarmField0" minlength=2 size=2 value="--" class="regfield">
+										<t/d>
+										</tr>
+									</table>
 
-<td class="td_RTC_alarm reg_table_val">
-						<input type="button" onclick="setAlarm();" value="Set alarm" class="tmp_button"><br/>
-		
-						<script>
-							function setAlarm( element ) {
-							
-								let weekday = document.getElementById( "alarmField4" ).value;
-								let day		= document.getElementById( "alarmField3" ).value;
-								let hour	= document.getElementById( "alarmField2" ).value;
-								let minute	= document.getElementById( "alarmField1" ).value;
-								let second	= document.getElementById( "alarmField0" ).value;
-console.log( weekday );
-console.log( day );
-console.log( hour );
-console.log( minute );
-console.log( second );
-								weekday	= ('--' == weekday) ? 80 : weekday;
-								day		= ('--' == day)     ? 80 : day;
-								hour	= ('--' == hour)    ? 80 : hour;
-								minute	= ('--' == minute)  ? 80 : minute;
-								second	= ('--' == second)  ? 80 : second;
+								<td class="td_RTC_alarm reg_table_val">
+									<input type="button" onclick="setAlarm();" value="Set alarm" class="tmp_button"><br/>
+									<input type="button" onclick="clearAlarmSetting();" value="Clear alarm seting" class="tmp_button"><br/>
 
-								weekday	= '&weekday=' + weekday;
-								day		= '&day='     + day;
-								hour	= '&hour='    + hour;
-								minute	= '&minute='  + minute;
-								second	= '&second='  + second;
+									<script>
+										function setAlarm( element ) {
+										
+											let weekday = document.getElementById( "alarmField4" ).value;
+											let day		= document.getElementById( "alarmField3" ).value;
+											let hour	= document.getElementById( "alarmField2" ).value;
+											let minute	= document.getElementById( "alarmField1" ).value;
+											let second	= document.getElementById( "alarmField0" ).value;
 
-								let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
-								ajaxUpdate( url );
-							}
-						</script>
+											weekday	= ('--' == weekday) ? 80 : weekday;
+											day		= ('--' == day)     ? 80 : day;
+											hour	= ('--' == hour)    ? 80 : hour;
+											minute	= ('--' == minute)  ? 80 : minute;
+											second	= ('--' == second)  ? 80 : second;
 
-						<input type="button" onclick="clearAlarmSetting();" value="Clear alarm seting" class="tmp_button"><br/>
-</tr>
-</table>
+											weekday	= '&weekday=' + weekday;
+											day		= '&day='     + day;
+											hour	= '&hour='    + hour;
+											minute	= '&minute='  + minute;
+											second	= '&second='  + second;
+
+											let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
+											ajaxUpdate( url );
+										}
+									</script>
+								</td>
+							</tr>
+						</table>
 
 						<script>
 							function clearAlarmSetting( element ) {
@@ -342,7 +342,6 @@ console.log( second );
 								ajaxUpdate( url );
 							}
 						</script>
-
 					</div>
 
 					{% timestamp %}
