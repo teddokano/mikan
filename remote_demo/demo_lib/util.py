@@ -175,4 +175,3 @@ input[type="text"] {
 </style>
 """
 	return s
-

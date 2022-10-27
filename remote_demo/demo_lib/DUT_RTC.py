@@ -20,6 +20,13 @@ from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	RTC_base
 import	demo_lib.util
 
+try:
+	import	demo_lib.sound_data as sound_data
+except:
+	import	demo_lib.no_sound_data as sound_data
+
+
+
 class DUT_RTC():
 	APPLIED_TO	= RTC_base
 	
@@ -99,7 +106,7 @@ class DUT_RTC():
 		
 		alm_ofst	= self.dev.REG_NAME.index( "Second_alarm" )
 		reg			= self.dev.dump()
-		alarm_flg	= True if reg[1] & 0x10 else False
+		alarm_flg	= True if "alarm" in self.dev.check_events( self.dev.interrupt_clear() ) else False
 		alarm		= reg[ alm_ofst : alm_ofst + 5 ]
 		td			= self.dev.__get_datetime_reg()
 		
@@ -131,7 +138,14 @@ class DUT_RTC():
 				<script>
 					const	DEV_NAME	= '{% dev_name %}'
 					const	REQ_HEADER	= '/' + DEV_NAME + '?';
+					const	SOUND_DATA	= '{% sound %}';
+					let		sound;
 
+					if ( '' != SOUND_DATA )
+						sound	= new Audio( SOUND_DATA );
+					else
+						sound	= null;
+						
 					/****************************
 					 ****	time display
 					 ****************************/
@@ -147,6 +161,7 @@ class DUT_RTC():
 
 					let prev_reg	= [];	//	to prevent refresh on user writing field
 					let prev_alarm	= [];	//	to prevent refresh on user writing field
+					let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
 
 					function getTimeAndShowDone() {
 						let obj = JSON.parse( this.responseText )
@@ -177,6 +192,12 @@ class DUT_RTC():
 						
 						if ( obj.alarm_flg ) {
 							document.getElementById( 'dialog' ).showModal();
+							prev_alarm_flg	= true;
+							
+							if ( sound )
+								sound.play();
+							else
+								console.log( 'Sound is not played' )
 						}
 					}
 
@@ -267,6 +288,7 @@ class DUT_RTC():
 					<script>
 						function clarAlarm( element ) {
 							document.getElementById( 'dialog' ).close();
+							prev_alarm_flg	= false
 							
 							let url	= REQ_HEADER + 'clear_alarm'
 							ajaxUpdate( url );
@@ -368,6 +390,15 @@ class DUT_RTC():
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
 		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
 		page_data[ "style"     ]	= demo_lib.util.get_css()
+		page_data[ "sound"     ]	= sound_data.get_sound()
+
+		if len( page_data[ "sound" ] ) is 0:
+			print( "####### DUT_RTC: No sound data loaded" )
+		else:
+			print( "####### DUT_RTC: Sound data loaded" )
+
+
+
 
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
