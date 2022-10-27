@@ -157,7 +157,12 @@ input[type="text"] {
 	text-align: center;
 	font-size: 1.0rem
 }
-
+.alarm_dialog {
+	background-color: #FF0000;
+	color: #FFFFFF;
+	text-align: center;
+	font-size: 2.0rem
+}
 .timestamp {
 	text-align: left;
 	font-size: 1rem;

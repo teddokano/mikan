@@ -145,8 +145,8 @@ class DUT_RTC():
 
 					/******** getTimeAndShowDone ********/
 
-					let prev_reg	= [];
-					let prev_alarm	= [];
+					let prev_reg	= [];	//	to prevent refresh on user writing field
+					let prev_alarm	= [];	//	to prevent refresh on user writing field
 
 					function getTimeAndShowDone() {
 						let obj = JSON.parse( this.responseText )
@@ -259,7 +259,7 @@ class DUT_RTC():
 						</script>
 					</div>
 
-					<dialog id="dialog">
+					<dialog class="alarm_dialog" id="dialog">
 						DING! DING!  -- ALARM TRIGGERED --<br/><br/>
 						<input type="button" onclick="clarAlarm();" value="Clear alarm" class="tmp_button"><br/>
 					</dialog>
