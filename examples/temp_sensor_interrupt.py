@@ -33,7 +33,6 @@ def main():
 	temp_sensor.bit_operation( "Conf", 0x02, 0x02 )
 	
 	temp_sensor.dump_reg()
-
 	temp_sensor.heater	= True
 
 	tim0 = Timer(0)
@@ -44,15 +43,14 @@ def main():
 			int_flag	= False
 			v	= temp_sensor.read()
 			
-			heater_on	= False if t_ots <= v else True
-			temp_sensor.heater	= heater_on
+			temp_sensor.heater	= False if t_ots <= v else True
 
-			print( "interrupt: heater is turned-{}".format( "ON" if heater_on else "OFF" ) )
+			print( "interrupt: heater is turned-{}".format( "ON" if temp_sensor.heater else "OFF" ) )
 			
 		if tim_flag:
 			tim_flag	= False
 			value	= temp_sensor.temp
-			print( "{:.3f} deg-C   Tots/Thys setting: {:.1f}/{:.1f}   on-board heater {}".format( value, t_ots, t_hys, "ON" if heater_on else "OFF" ) )
+			print( "{:.3f} deg-C   Tots/Thys setting: {:.1f}/{:.1f}   on-board heater {}".format( value, t_ots, t_hys, "ON" if temp_sensor.heater else "OFF" ) )
 			#sleep( 1.0 )
 
 
