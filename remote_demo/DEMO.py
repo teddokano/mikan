@@ -28,20 +28,6 @@ from	nxp_periph	import	i2c_fullscan
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
 from	demo_lib	import	DUT_GENERAL, General_call
 
-def get_dut_list( devices, demo_harnesses ):
-	list	= []
-
-	for dev in devices:
-		if dev.__class__ == General_call:
-			last_dut	= DUT_GENERAL( dev )
-			continue
-	
-		for dh in demo_harnesses:
-			if issubclass( dev.__class__, dh.APPLIED_TO ):
-				list	+= [ dh( dev ) ]
-
-	return list + [ last_dut ]
-
 def main( micropython_optimize = False ):
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -129,6 +115,21 @@ def main( micropython_optimize = False ):
 		if not micropython_optimize:
 			client_sock.close()
 		print()
+
+def get_dut_list( devices, demo_harnesses ):
+	list	= []
+
+	for dev in devices:
+		if dev.__class__ == General_call:
+			last_dut	= DUT_GENERAL( dev )
+			continue
+	
+		for dh in demo_harnesses:
+			if issubclass( dev.__class__, dh.APPLIED_TO ):
+				list	+= [ dh( dev ) ]
+
+	return list + [ last_dut ]
+
 
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )

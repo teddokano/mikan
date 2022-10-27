@@ -110,6 +110,10 @@ class temp_sensor_base():
 		for k, i, v in zip( self.REG_NAME, range( len( self.REG_NAME ) ), data ):
 			print( ("    {:6} (0x{:02X}) : 0x" + fmt[ self.REG_ACC[ k ] ]).format( k, i, v ) )
 
+	def dump( self ):
+		data	= [ self.reg_access( k ) for k in self.REG_NAME ]
+		return data
+
 	@property
 	def temp( self ):
 		"""
@@ -176,7 +180,7 @@ class PCT2075( LM75B ):
 
 class P3T1085( LM75B ):
 	"""
-	CAUTION THIS DEVICE IS NOT SUPPORTED YET
+	CAUTION: THIS DEVICE HAS NOT BEEN SUPPORTED YET
 	"""
 	DEFAULT_ADDR		= 0x90 >> 1
 
