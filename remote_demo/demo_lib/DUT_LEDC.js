@@ -68,7 +68,7 @@ function updateValField( element, id, i ) {
 function updateDone() {
 	let obj = JSON.parse( this.responseText );
 	
-//	setSliderValues( obj.idx, obj.value );
+	setSliderAndRegisterlistValues( value, "slider", i );
 }
 
 function setSliderAndRegisterlistValues( value, selector, i ) {
@@ -88,6 +88,11 @@ function setSliderAndRegisterlistValues( value, selector, i ) {
 	}
 	document.getElementById( 'regField' + reg_i ).value	= hex( value );	//	in register table
 	
+	console.log( 'IREF_OFST = ' + IREF_OFST + ', i = ' + i + ', IREF0_IDX = ' + IREF0_IDX )
+
+
+	let	start;
+	let	end;
 	if ( (IREF_OFST - 1) == i ) {
 		start	= 0;
 		end		= N_CHANNELS;
@@ -100,6 +105,9 @@ function setSliderAndRegisterlistValues( value, selector, i ) {
 		return;
 	}
 	
+	console.log( 'value = ' + value + ', start = ' + start + ', end = ' + end )
+
+
 	for ( let i = start; i < end; i++ )
 		setSliderAndRegisterlistValues( value, "slider", i )
 }
@@ -127,7 +135,7 @@ function index_register2slider( i ) {
 	else if ( IREFALL_IDX == i )
 		r	= (IREF_OFST * 2) - 1;
 	else
-		r	= -1;
+		r	= -2;
 	
 	return r;
 }

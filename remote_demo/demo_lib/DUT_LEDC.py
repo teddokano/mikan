@@ -64,6 +64,7 @@ class DUT_LEDC():
 			html	= self.page_setup()
 
 		elif "allreg" in req:
+			print( ujson.dumps( { "reg": self.dev.dump() } ) )
 			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
