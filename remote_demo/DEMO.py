@@ -123,13 +123,11 @@ def get_dut_list( devices, demo_harnesses ):
 	list	= []
 
 	for dev in devices:
-		print( dev.__class__ )
 		if dev.__class__ == General_call:
 			last_dut	= DUT_GENERALCALL( dev )
 			continue
 	
 		for dh in demo_harnesses:
-			print( dh.__class__ )
 			if issubclass( dev.__class__, dh.APPLIED_TO ):
 				list	+= [ dh( dev ) ]
 
@@ -154,8 +152,6 @@ def page_setup( dut_list ):
 	page_data[ "dev_name"          ]	= "GENERAL"
 	page_data[ "front_page_table"  ]	= page_table( dut_list )
 	page_data[ "mcu"               ]	= os.uname().machine
-
-	print( os.getcwd() )
 
 	files	= [	[	"html",		"demo_lib/DEMO"		],
 				[	"css", 		"demo_lib/DEMO"		],

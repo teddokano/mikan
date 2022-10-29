@@ -4,7 +4,6 @@
  *	This script will be processed in DUT_LEDC.py to replace "{%  %}" valriables
  */
 
-const	DEV_NAME	= '{% dev_name %}';
 const	PWM0_IDX	=  {% pwm0_idx %};
 const	IREF0_IDX	=  {% iref0_idx %};
 const	PWMALL_IDX	=  {% pwmall_idx %};
@@ -12,7 +11,6 @@ const	IREFALL_IDX	=  {% irefall_idx %};
 const	N_CHANNELS	=  {% n_ch %};
 const	IREF_OFST	=  {% iref_ofst %};
 const	IREF_INIT	=  {% iref_init %};
-const	REQ_HEADER	= '/' + DEV_NAME + '?';
 
 /****************************
  ****	slider controls
@@ -193,22 +191,3 @@ function loadFinished(){
 }
 
 window.addEventListener( 'load', loadFinished );
-
-/****************************
- ****	service routine
- ****************************/
- 
-/******** ajaxUpdate ********/
-
-function ajaxUpdate( url, func ) {
-	url			= url + '?ver=' + new Date().getTime();
-	let	ajax	= new XMLHttpRequest;
-	ajax.open( 'GET', url, true );
-	
-	ajax.onload = func;
-	ajax.send( null );
-}
-
-function hex( num ) {
-	return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 )
-}

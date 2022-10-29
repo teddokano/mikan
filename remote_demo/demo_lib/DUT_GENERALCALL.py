@@ -5,16 +5,6 @@
 #	25-Oct-2022
 #	version	0.1
 
-import	network
-import	ujson
-import	machine
-import	os
-import	ure
-try:
-    import usocket as socket
-except:
-    import socket
-
 from	nxp_periph	import	I2C_target
 
 class GENERAL:

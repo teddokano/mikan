@@ -4,8 +4,6 @@
  *	This script will be processed in DUT_RTC.py to replace "{%  %}" valriables
  */
 
-const	DEV_NAME	= '{% dev_name %}'
-const	REQ_HEADER	= '/' + DEV_NAME + '?';
 const	SOUND_DATA	= '{% sound %}';
 let		sound;
 
@@ -102,32 +100,6 @@ function updateRegFieldDone() {
 	document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
 }
 
-
-/****************************
- ****	service routine
- ****************************/
- 
-/******** ajaxUpdate ********/
-
-function ajaxUpdate( url, func ) {
-	url			= url + '?ver=' + new Date().getTime();
-	let	ajax	= new XMLHttpRequest;
-	ajax.open( 'GET', url, true );
-	
-	ajax.onload = func;
-	ajax.send( null );
-}
-
-function hex( num ) {
-	return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 )
-}
-
-
-window.addEventListener('load', function () {
-	console.log( 'window.addEventListener' );
-	setInterval( getTimeAndShow, 1000 );
-});
-
 function setCurrentTime( element ) {
 	let url	= REQ_HEADER + 'set_current_time';
 	ajaxUpdate( url );
@@ -181,3 +153,7 @@ function clearAlarmSetting( element ) {
 	let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
 	ajaxUpdate( url );
 }
+
+window.addEventListener('load', function () {
+	setInterval( getTimeAndShow, 1000 );
+});

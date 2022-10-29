@@ -1,11 +1,14 @@
+/*
+ *	Javascript code for DUT_TEMP.py
+ *
+ *	This script will be processed in DUT_LEDC.py to replace "{%  %}" valriables
+ */
 
 const	TABLE_LEN	= {% table_len %}
-const	DEV_NAME	= '{% dev_name %}';
 const	GRAPH_HIGH	= {% graph_high %}
 const	GRAPH_LOW	= {% graph_low %}
 const	TOS_INIT	= {% tos_init %}
 const	THYST_INIT	= {% thyst_init %}
-const	REQ_HEADER	= '/' + DEV_NAME + '?';
 const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 
 let	time	= []
@@ -216,31 +219,6 @@ function setTosThystDone() {
 	let obj = JSON.parse( this.responseText );
 }
 
-/****************************
- ****	service routine
- ****************************/
- 
-/******** ajaxUpdate ********/
-
-function ajaxUpdate( url, func ) {
-	url			= url + '?ver=' + new Date().getTime();
-	let	ajax	= new XMLHttpRequest;
-	ajax.open( 'GET', url, true );
-	
-	ajax.onload = func;
-	ajax.send( null );
-}
-
-function hex( num ) {
-	return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 );
-}
-
-
-window.addEventListener('load', function () {
-	console.log( 'window.addEventListener' );
-	setInterval( getTempAndShow, 1000 );
-});
-
 function csvFileOut(  time, temp  ) {
 	console.log( 'csvFileOut' );
 	let str	= [];
@@ -281,3 +259,7 @@ function updateHeaterSwitch( element ) {
 	let url	= REQ_HEADER + 'heater=' + val;
 	ajaxUpdate( url );
 }
+
+window.addEventListener( 'load', function () {
+	setInterval( getTempAndShow, 1000 );
+});
