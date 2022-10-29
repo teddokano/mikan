@@ -1,5 +1,4 @@
 def get_css():
-	print( "get_css()" )
 	s	= """\
 <style>
 html {

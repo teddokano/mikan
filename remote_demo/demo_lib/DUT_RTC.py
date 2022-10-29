@@ -136,252 +136,68 @@ class DUT_RTC():
 			</head>
 			<body>
 				<script>
-					const	DEV_NAME	= '{% dev_name %}'
-					const	REQ_HEADER	= '/' + DEV_NAME + '?';
-					const	SOUND_DATA	= '{% sound %}';
-					let		sound;
+					{% script %}
+				</script>
 
-					if ( '' != SOUND_DATA )
-						sound	= new Audio( SOUND_DATA );
-					else
-						sound	= null;
-						
-					/****************************
-					 ****	time display
-					 ****************************/
-					 
-					/******** getTimeAndShow ********/
+				<div class="header">
+					<p>{% dev_link %} server</p>
+					<p class="info">{% dev_info %}</p>
+				</div>
 
-					function getTimeAndShow() {
-						let url	= REQ_HEADER
-						ajaxUpdate( url, getTimeAndShowDone )
-					}
+				<div id="datetime" class="datetime"></div>
 
-					/******** getTimeAndShowDone ********/
+				<div>
+					<input type="button" onclick="setCurrentTime();" value="Set current time" class="tmp_button"><br/>
+				</div>
 
-					let prev_reg	= [];	//	to prevent refresh on user writing field
-					let prev_alarm	= [];	//	to prevent refresh on user writing field
-					let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
-
-					function getTimeAndShowDone() {
-						let obj = JSON.parse( this.responseText )
-
-						let elem = document.getElementById( "datetime" );
-						elem.innerText = obj.datetime.str;
-						//console.log( obj.ts )
-						if ( obj.ts ) {
-							let elem = document.getElementById( "timestamp" );
-							elem.innerText = obj.ts;
-						}
-
-						for ( let i = 0; i < 5; i++ ) {
-							let value	= obj.alarm[ i ];
-							if ( value != prev_alarm[ i ] ) {
-								document.getElementById( "alarmField" + i ).value	= ( value == 0x80 ) ? '--' : hex( value );
-							}
-						}
-						prev_alarm	= obj.alarm;
-												
-						for ( let i = 0; i < obj.reg.length; i++ ) {
-							let value	= obj.reg[ i ];
-							if ( value != prev_reg[ i ] ) {
-								document.getElementById('regField' + i ).value	= hex( value );
-							}
-						}
-						prev_reg	= obj.reg;
-						
-						if ( obj.alarm_flg ) {
-							document.getElementById( 'dialog' ).showModal();
-							prev_alarm_flg	= true;
-							
-							if ( sound )
-								sound.play();
-							else
-								console.log( 'Sound is not played' )
-						}
-					}
-
-
-					/****************************
-					 ****	register controls
-					 ****************************/
-					 
-					/******** updateRegField ********/
-
-					function updateRegField( element, idx ) {
-						let valueFieldElement = document.getElementById( "regField" + idx );
-						let value	= parseInt( valueFieldElement.value, 16 )
-						let no_submit	= 0
-						
-						if ( isNaN( value ) ) {
-							no_submit	= 1
-							value = document.getElementById( "Slider" + idx ).value;
-						}
-						value	= (value < 0  ) ?   0 : value
-						value	= (255 < value) ? 255 : value
-						valueFieldElement.value = hex( value )
-
-						if ( no_submit )
-							return;
-
-						let url	= REQ_HEADER + "reg=" + idx + "&val=" + value
-						ajaxUpdate( url, updateRegFieldDone )
-					}
+				<dialog class="alarm_dialog" id="dialog">
+					DING! DING!  -- ALARM TRIGGERED --<br/><br/>
+					<input type="button" onclick="clarAlarm();" value="Clear alarm" class="tmp_button"><br/>
+				</dialog>
 					
-					function updateRegFieldDone() {
-						obj = JSON.parse( this.responseText );
-						
-						document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
-					}
+				<div>
 
+					<!-- alarm setting<br/> -->
 
-					/****************************
-					 ****	service routine
-					 ****************************/
-					 
-					/******** ajaxUpdate ********/
+					<table class="table_RTC_alarm">
+						<tr class="reg_table_row">
+							<td class="td_RTC_alarm reg_table_val">
+								<table class="table_RTC_alarm">
+									<tr class="reg_table_row">
+										<td class="td_RTC_alarm reg_table_val"> weekday<input type="text" id="alarmField4" minlength=2 size=2 value="--" class="regfield">
+										<td class="td_RTC_alarm reg_table_val"> day    <input type="text" id="alarmField3" minlength=2 size=2 value="--" class="regfield">
+										<td class="td_RTC_alarm reg_table_val"> hour   <input type="text" id="alarmField2" minlength=2 size=2 value="--" class="regfield">
+										<td class="td_RTC_alarm reg_table_val"> minute <input type="text" id="alarmField1" minlength=2 size=2 value="--" class="regfield">
+										<td class="td_RTC_alarm reg_table_val"> second <input type="text" id="alarmField0" minlength=2 size=2 value="--" class="regfield">
+									<t/d>
+									</tr>
+								</table>
 
-					function ajaxUpdate( url, func ) {
-						url			= url + '?ver=' + new Date().getTime();
-						let	ajax	= new XMLHttpRequest;
-						ajax.open( 'GET', url, true );
-						
-						ajax.onload = func;
-						ajax.send( null );
-					}
+							<td class="td_RTC_alarm reg_table_val">
+								<input type="button" onclick="setAlarm();" value="Set alarm" class="tmp_button"><br/>
+								<input type="button" onclick="clearAlarmSetting();" value="Clear alarm seting" class="tmp_button"><br/>
+							</td>
+						</tr>
+					</table>
 
-					function hex( num ) {
-						return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 )
-					}
+				</div>
 
+				{% timestamp %}
 
-					window.addEventListener('load', function () {
-						console.log( 'window.addEventListener' );
-						setInterval( getTimeAndShow, 1000 );
-					});
-
-					</script>
-
-					<div class="header">
-						<p>{% dev_link %} server</p>
-						<p class="info">{% dev_info %}</p>
-					</div>
-
-					<div id="datetime" class="datetime"></div>
-
-					<div>
-						<input type="button" onclick="setCurrentTime();" value="Set current time" class="tmp_button"><br/>
-		
-						<script>
-							function setCurrentTime( element ) {
-								let url	= REQ_HEADER + 'set_current_time';
-								ajaxUpdate( url );
-							}
-						</script>
-					</div>
-
-					<dialog class="alarm_dialog" id="dialog">
-						DING! DING!  -- ALARM TRIGGERED --<br/><br/>
-						<input type="button" onclick="clarAlarm();" value="Clear alarm" class="tmp_button"><br/>
-					</dialog>
-						
-					<script>
-						function clarAlarm( element ) {
-							document.getElementById( 'dialog' ).close();
-							prev_alarm_flg	= false
-							
-							let url	= REQ_HEADER + 'clear_alarm'
-							ajaxUpdate( url );
-						}
-					</script>
+				<div id="reg_table" class="control_panel reg_table">
+					register table<br/>
+					{% reg_table %}
+				</div>
 				
-					<div>
-
-						<!-- alarm setting<br/> -->
-
-						<table class="table_RTC_alarm">
-							<tr class="reg_table_row">
-								<td class="td_RTC_alarm reg_table_val">
-									<table class="table_RTC_alarm">
-										<tr class="reg_table_row">
-											<td class="td_RTC_alarm reg_table_val"> weekday<input type="text" id="alarmField4" minlength=2 size=2 value="--" class="regfield">
-											<td class="td_RTC_alarm reg_table_val"> day    <input type="text" id="alarmField3" minlength=2 size=2 value="--" class="regfield">
-											<td class="td_RTC_alarm reg_table_val"> hour   <input type="text" id="alarmField2" minlength=2 size=2 value="--" class="regfield">
-											<td class="td_RTC_alarm reg_table_val"> minute <input type="text" id="alarmField1" minlength=2 size=2 value="--" class="regfield">
-											<td class="td_RTC_alarm reg_table_val"> second <input type="text" id="alarmField0" minlength=2 size=2 value="--" class="regfield">
-										<t/d>
-										</tr>
-									</table>
-
-								<td class="td_RTC_alarm reg_table_val">
-									<input type="button" onclick="setAlarm();" value="Set alarm" class="tmp_button"><br/>
-									<input type="button" onclick="clearAlarmSetting();" value="Clear alarm seting" class="tmp_button"><br/>
-
-									<script>
-										function setAlarm( element ) {
-										
-											let weekday = document.getElementById( "alarmField4" ).value;
-											let day		= document.getElementById( "alarmField3" ).value;
-											let hour	= document.getElementById( "alarmField2" ).value;
-											let minute	= document.getElementById( "alarmField1" ).value;
-											let second	= document.getElementById( "alarmField0" ).value;
-
-											weekday	= ('--' == weekday) ? 80 : weekday;
-											day		= ('--' == day)     ? 80 : day;
-											hour	= ('--' == hour)    ? 80 : hour;
-											minute	= ('--' == minute)  ? 80 : minute;
-											second	= ('--' == second)  ? 80 : second;
-
-											weekday	= '&weekday=' + weekday;
-											day		= '&day='     + day;
-											hour	= '&hour='    + hour;
-											minute	= '&minute='  + minute;
-											second	= '&second='  + second;
-
-											let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
-											ajaxUpdate( url );
-										}
-									</script>
-								</td>
-							</tr>
-						</table>
-
-						<script>
-							function clearAlarmSetting( element ) {
-								document.getElementById( "alarmField4" ).value	= '--';
-								document.getElementById( "alarmField3" ).value	= '--';
-								document.getElementById( "alarmField2" ).value	= '--';
-								document.getElementById( "alarmField1" ).value	= '--';
-								document.getElementById( "alarmField0" ).value	= '--';
-
-								weekday	= '&weekday=' + 80;
-								day		= '&day='     + 80;
-								hour	= '&hour='    + 80;
-								minute	= '&minute='  + 80;
-								second	= '&second='  + 80;
-
-								let url	= REQ_HEADER + 'alarm' + weekday + day + hour + minute + second;
-								ajaxUpdate( url );
-							}
-						</script>
-					</div>
-
-					{% timestamp %}
-
-					<div id="reg_table" class="control_panel reg_table">
-						register table<br/>
-						{% reg_table %}
-					</div>
-					
-					<div class="foot_note">
-						<b>HTTP server on<br/>
-						{% mcu %}</b><br/>
-						0100111101101011011000010110111001101111
-					</div>
+				<div class="foot_note">
+					<b>HTTP server on<br/>
+					{% mcu %}</b><br/>
+					0100111101101011011000010110111001101111
+				</div>
 			</body>
 		</html>
 		"""
-		page_data	= {}
+		page_data	= {}		
 		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_type"  ]	= self.type
 		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
@@ -397,9 +213,10 @@ class DUT_RTC():
 		else:
 			print( "####### DUT_RTC: Sound data loaded" )
 
-
-
-
+		jsf	= open( "demo_lib/" + self.__class__.__name__ + ".js" )
+		html = html.replace('{% script %}', jsf.read() )
+		jsf.close
+		
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
 		
