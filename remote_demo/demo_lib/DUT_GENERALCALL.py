@@ -33,7 +33,11 @@ class General_call( GENERAL, I2C_target ):
 		self.write_registers( 0x04, [] )
 
 
-class DUT_GENERAL():
+class DUT_GENERALCALL():
+	"""
+	This is a special class to implement "I2C general call" feature.
+	This class doesn't have html page.
+	"""
 	APPLIED_TO	= GENERAL
 	dev_name	= "GENERAL"
 	

@@ -1,0 +1,104 @@
+<!--
+https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>{% dev_name %} server</title>
+	<style>
+		{% css %}
+	</style>
+</head>
+<body>
+	<div class="header">
+		<p>{% dev_link %} server</p>
+		<p class="info">{% dev_info %}</p>
+	</div>
+	<div id="temperature" class="datetime"></div>
+
+	<div>
+	<canvas id="myLineChart"></canvas>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+	
+	<script>
+		{% js %}
+	</script>
+
+	</div>
+	
+	<div class="para">
+		
+		<div id="reg_table" class="control_panel reg_table log_panel">
+			{% table %}
+		</div>
+		
+		<div id="reg_table" class="control_panel reg_table info_panel">
+			{% info_tab %}<br/>
+			<input type="button" onclick="csvFileOut( time, temp );" value="Save" class="tmp_button">
+		</div>
+		
+		<div id="reg_table" class="control_panel reg_table info_panel">
+			<table class="table_TEMP_slider">
+				<tr class="slider_table_row">
+					<td class="td_TEMP_slider" text_align="center">
+						Tos
+					</td>
+					<td class="td_TEMP_slider" text_align="center">
+						<input type="range" oninput="updateSlider( this, 1, 0 )" onchange="updateSlider( this, 0, 0 )" id="Slider0" min="-55" max="125" step="0.5" value="{% tos_init %}" class="slider">
+					</td>
+					<td class="td_TEMP_slider" text_align="center">
+						<input type="text" onchange="updateValField( this, 0 )" id="valField0" minlength=4 size=5 value="{% tos_init %}""><br/>
+						
+					</td>
+				</tr>
+				<tr class="slider_table_row">
+					<td class="td_TEMP_slider" text_align="center">
+						Thyst
+					</td>
+					<td class="td_TEMP_slider">
+						<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="{% thyst_init %}" class="slider">
+					</td>
+					<td class="td_TEMP_slider">
+						<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
+					</td>
+				</tr>
+			</table>
+			<input type="button" onclick="setTosThyst();" value="Update Tos&Thys" class="tmp_button"><br/>
+
+			<hr/>
+
+			<form id="config_panel" class="control_panel reg_table log_panel"">
+				<table class="table_TEMP"><tr>
+					<td class="td_TEMP_la">OS polarity</td>
+					<td class="td_TEMP_la">
+						<input type="radio" name="os_polarity" id="active_low"  value="0" checked="checked"><label for="active_low">Active LOW<label><br>
+						<input type="radio" name="os_polarity" id="active_high" value="1"><label for="active_high">Active HIGH<label><br/>
+				</td></tr>
+				<tr>
+					<td class="td_TEMP_la">OS operation mode</td>
+					<td class="td_TEMP_la">
+						<input type="radio" name="os_mode" id="comparator" value="0" checked="checked"><label for="comparator">Comparator<label><br>
+						<input type="radio" name="os_mode" id="interrupt"  value="1"><label for="interrupt" >Interrupt <label>
+					</td>
+				</tr></table>
+			</form>
+			<input type="button" onclick="setConfig();" value="Set" class="tmp_button"><br/>
+
+			<hr/>
+
+			<input type="checkbox" onchange="updateHeaterSwitch( this );" id="heaterSwitch">
+			<label for="heaterSwitch">heater</label>
+		</div>
+
+	</div>
+	<div class="foot_note">
+		<b>HTTP server on<br/>
+		{% mcu %}</b><br/>
+		0100111101101011011000010110111001101111
+	</div>
+
+</body>
+</html>

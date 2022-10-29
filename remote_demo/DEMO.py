@@ -26,7 +26,7 @@ from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	i2c_fullscan
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
-from	demo_lib	import	DUT_GENERAL, General_call
+from	demo_lib	import	DUT_GENERALCALL, General_call
 
 import	demo_lib.utils	as utils
 
@@ -62,7 +62,7 @@ def main( micropython_optimize = False ):
 	demo_harnesses	= [	DUT_LEDC,
 						DUT_TEMP,
 						DUT_RTC,
-						DUT_GENERAL,
+						DUT_GENERALCALL,
 						]
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
@@ -123,11 +123,13 @@ def get_dut_list( devices, demo_harnesses ):
 	list	= []
 
 	for dev in devices:
+		print( dev.__class__ )
 		if dev.__class__ == General_call:
-			last_dut	= DUT_GENERAL( dev )
+			last_dut	= DUT_GENERALCALL( dev )
 			continue
 	
 		for dh in demo_harnesses:
+			print( dh.__class__ )
 			if issubclass( dev.__class__, dh.APPLIED_TO ):
 				list	+= [ dh( dev ) ]
 
@@ -146,46 +148,8 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	return lan.ifconfig()
 
 def page_setup( dut_list ):
-	html = """\
-	HTTP/1.0 200 OK
+	html	= "HTTP/1.0 200 OK\n\n{% html %}"
 
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<meta charset="utf-8" />
-			<title>device list</title>
-			<style>
-				{% css %}
-			</style>
-		</head>
-		<body>
-			<script>
-				{% js %}
-			</script>
-		
-			<div class="header">
-				<p>device demo server</p>
-			</div>
-
-			<div>
-				Device list
-				{% front_page_table %}
-				<p class="table_note">* page reloading will refresh device live status</p>
-
-				<input type="button" onclick="busReset( 0 );" value="I²C Software reset" class="tmp_button"><!-- : send address=0x00 data=0x06 (S 0x00 0x06 P) --><br/>
-				<input type="button" onclick="busReset( 1 );" value="I²C Device reprogram" class="tmp_button"><!-- : send address=0x00 data=0x04 (S 0x00 0x04 P) -->
-			</div>
-
-			
-			<div class="foot_note">
-				<b>HTTP server on<br/>
-				{% mcu %}</b><br/>
-				0100111101101011011000010110111001101111
-			</div>
-		</body>
-	</html>
-	"""
-	
 	page_data	= {}
 	page_data[ "dev_name"          ]	= "GENERAL"
 	page_data[ "front_page_table"  ]	= page_table( dut_list )
@@ -193,12 +157,12 @@ def page_setup( dut_list ):
 
 	print( os.getcwd() )
 
-	files	= {	"css": 	[	"demo_lib/DEMO"	],
-				"js":	[	"demo_lib/general",
-							"demo_lib/DEMO"
-						]
-				}
-	
+	files	= [	[	"html",		"demo_lib/DEMO"		],
+				[	"css", 		"demo_lib/DEMO"		],
+				[	"js",		"demo_lib/general",
+								"demo_lib/DEMO" 	]
+			  ]
+
 	html	= utils.file_loading( html, files )
 
 	for key, value in page_data.items():

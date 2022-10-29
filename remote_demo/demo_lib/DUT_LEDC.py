@@ -101,55 +101,7 @@ class DUT_LEDC():
 
 	def page_setup( self ):
 		#HTML to send to browsers
-		html = """\
-		HTTP/1.0 200 OK
-
-		<!DOCTYPE html>
-		<html>
-			<head>
-				<meta charset="utf-8" />
-				<title>{% dev_name %} server</title>
-				<style>
-					{% css %}
-				</style>
-			</head>
-			<body>
-				<script>
-					{% js %}
-				</script>
-
-				<div class="header">
-					<p>{% dev_link %} server</p>
-					<p class="info">{% dev_info %}</p>
-				</div>
-				
-				<div class="control_panel slider_panel">
-					PWM registers
-					{% sliders_PWM %}
-				</div>
-				
-				<div class="control_panel slider_panel">
-					IREF registers
-					{% sliders_IREF %}
-				</div>
-
-				<div id="reg_table" class="control_panel reg_table">
-					register table<br/>
-					{% reg_table %}
-					<div class="button_and_note">
-					<input type="button" onclick="allRegLoad();" value="reload" class="all_reg_load">
-					{% allreg_note %}
-					</div>
-				</div>
-				
-				<div class="foot_note">
-					<b>HTTP server on<br/>
-					{% mcu %}</b><br/>
-					0100111101101011011000010110111001101111
-				</div>
-		</body>
-		</html>
-		"""
+		html	= "HTTP/1.0 200 OK\n\n{% html %}"
 		
 		info	= self.dev.info()
 
@@ -211,11 +163,12 @@ class DUT_LEDC():
 		else:
 			page_data[ "sliders_IREF" ]	= ""
 
-		files	= {	"css": 	[	"demo_lib/general"	],
-					"js":	[	"demo_lib/general",
-								"demo_lib/" + self.__class__.__name__
-							]
-					}
+		#	using list instead of dict because current MicroPython's dict cannot keep key order
+		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
+					[	"css", 		"demo_lib/general"						],
+					[	"js",		"demo_lib/general",
+									"demo_lib/" + self.__class__.__name__ 	]
+				  ]
 		
 		html	= utils.file_loading( html, files )
 		

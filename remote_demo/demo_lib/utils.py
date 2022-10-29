@@ -8,19 +8,40 @@
 import	os
 
 def file_loading( str, files_list ):
-	print( os.getcwd() )
-	print( os.listdir() )
+	#	using list instead of dict because current MicroPython's dict cannot keep key order
+	#print( os.getcwd() )
+	#print( os.listdir() )
 
-	for k, file_names in files_list.items():
+	for category in files_list:
+		k			= category[ 0 ]
+		file_names	= category[ 1: ]
+
 		s	= ""
-		print( k )
+		
+		#print( "file category : {}".format( k ) )
 		for fn in file_names:
-			print( fn )
+			#print( "  loading file : {}".format( k ) )
 			jsf	 = open( fn + "." + k )
 			s	+= jsf.read() + "\n"
 			jsf.close
 
-		print( k )
+		str = str.replace( "{% " + k + " %}", s )
+
+	return str
+	
+def file_loading_using_dict_version( str, files_list ):
+	#print( os.getcwd() )
+	#print( os.listdir() )
+
+	for k, file_names in files_list.items():
+		s	= ""
+		#print( "file category : {}".format( k ) )
+		for fn in file_names:
+			#print( "  loading file : {}".format( k ) )
+			jsf	 = open( fn + "." + k )
+			s	+= jsf.read() + "\n"
+			jsf.close
+
 		str = str.replace( "{% " + k + " %}", s )
 
 	return str

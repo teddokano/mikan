@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>{% dev_name %} server</title>
+		<style>
+			{% css %}
+		</style>
+	</head>
+	<body>
+		<script>
+			{% js %}
+		</script>
+
+		<div class="header">
+			<p>{% dev_link %} server</p>
+			<p class="info">{% dev_info %}</p>
+		</div>
+
+		<div id="datetime" class="datetime"></div>
+
+		<div>
+			<input type="button" onclick="setCurrentTime();" value="Set current time" class="tmp_button"><br/>
+		</div>
+
+		<dialog class="alarm_dialog" id="dialog">
+			DING! DING!  -- ALARM TRIGGERED --<br/><br/>
+			<input type="button" onclick="clarAlarm();" value="Clear alarm" class="tmp_button"><br/>
+		</dialog>
+			
+		<div>
+
+			<!-- alarm setting<br/> -->
+
+			<table class="table_RTC_alarm">
+				<tr class="reg_table_row">
+					<td class="td_RTC_alarm reg_table_val">
+						<table class="table_RTC_alarm">
+							<tr class="reg_table_row">
+								<td class="td_RTC_alarm reg_table_val"> weekday<input type="text" id="alarmField4" minlength=2 size=2 value="--" class="regfield">
+								<td class="td_RTC_alarm reg_table_val"> day    <input type="text" id="alarmField3" minlength=2 size=2 value="--" class="regfield">
+								<td class="td_RTC_alarm reg_table_val"> hour   <input type="text" id="alarmField2" minlength=2 size=2 value="--" class="regfield">
+								<td class="td_RTC_alarm reg_table_val"> minute <input type="text" id="alarmField1" minlength=2 size=2 value="--" class="regfield">
+								<td class="td_RTC_alarm reg_table_val"> second <input type="text" id="alarmField0" minlength=2 size=2 value="--" class="regfield">
+							<t/d>
+							</tr>
+						</table>
+
+					<td class="td_RTC_alarm reg_table_val">
+						<input type="button" onclick="setAlarm();" value="Set alarm" class="tmp_button"><br/>
+						<input type="button" onclick="clearAlarmSetting();" value="Clear alarm seting" class="tmp_button"><br/>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+
+		{% timestamp %}
+
+		<div id="reg_table" class="control_panel reg_table">
+			register table<br/>
+			{% reg_table %}
+		</div>
+		
+		<div class="foot_note">
+			<b>HTTP server on<br/>
+			{% mcu %}</b><br/>
+			0100111101101011011000010110111001101111
+		</div>
+	</body>
+</html>
