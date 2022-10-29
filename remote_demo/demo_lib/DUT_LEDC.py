@@ -183,8 +183,8 @@ class DUT_LEDC():
 		c		= { "R": "#FF0000", "G": "#008000", "B": "#0000FF", "K": "#000000" }
 		cs		= { "R": "item_R",  "G": "item_G",  "B": "item_B",  "K": "item_K"  }
 		template	= [	'<font color={}>{}</font>',
-						'<input type="range" oninput="updateSlider( this, 1, {} )" onchange="updateSlider( this, 0, {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider">',
-						'<input type="text" onchange="updateValField( this, {} )" id="valField{}" minlength=2 size=2 value="00"">'
+						'<input type="range" oninput="updateSlider( this, 1, \'Slider\', {} )" onchange="updateSlider( this, 0, \'Slider\', {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider">',
+						'<input type="text" onchange="updateValField( this, \'valField\', {} )" id="valField{}" minlength=2 size=2 value="00"">'
 						]
 
 		s	 	= [ '<table class="table_LEDC">' ]
@@ -229,7 +229,7 @@ class DUT_LEDC():
 			s	 	+= [ '<tr class="reg_table_row">' ]
 			for i in range( y, total, rows ):
 				s	+= [ '<td class="reg_table_name td_LEDC">{}</td><td class="reg_table_val td_LEDC">0x{:02X}</td>'.format( dev.REG_NAME[ i ], i ) ]
-				s	+= [ '<td class="reg_table_val td_LEDC"><input type="text" onchange="updateRegField( this, {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
+				s	+= [ '<td class="reg_table_val td_LEDC"><input type="text" onchange="updateValField( this, \'regField\', {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 			s	+= [ '</tr>' ]
 

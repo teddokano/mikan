@@ -12,182 +12,141 @@ const	N_CHANNELS	=  {% n_ch %};
 const	IREF_OFST	=  {% iref_ofst %};
 const	IREF_INIT	=  {% iref_init %};
 
-/****************************
- ****	slider controls
- ****************************/
- 
 let timeoutId	= null;
 
-/******** updateSlider ********/
-
-function updateSlider( element, moving, idx ) {
-	let value = document.getElementById( "Slider" + idx ).value;
+function updateSlider( element, moving, id, i ) {
+	let value = document.getElementById( id + i ).value;
 	
-	setSliderValues( idx, value );
+	setSliderAndRegisterlistValues( value, "slider", i );
 
 	if ( moving ) {
 		//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
 		if ( timeoutId ) return ;
 		timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
 	}
-	
-	//console.log( 'pwm' + idx + ': ' + value + ', moving?: ' + moving );
 
-	let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx
-	ajaxUpdate( url )
+	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
+	ajaxUpdate( url, updateDone )
 }
 
-function updateSliderDone() {
-	let obj = JSON.parse( this.responseText );
-	setSliderValues( obj.idx, obj.value );
-}
-
-/******** updateValField ********/
-
-function updateValField( element, idx ) {
-	let valueFieldElement = document.getElementById( "valField" + idx );
-	let value	= parseInt( valueFieldElement.value, 16 )
-	let no_submit	= 0
+function updateValField( element, id, i ) {
+	let valueFieldElement = document.getElementById( id + i );
+	let value	= parseInt( valueFieldElement.value, 16 );
+	let no_submit	= 0;
+	let	selector;
 	
-	if ( isNaN( value ) ) {
-		no_submit	= 1
-		value = document.getElementById( "Slider" + idx ).value;
-	}
-	value	= (value < 0  ) ?   0 : value
-	value	= (255 < value) ? 255 : value
-	valueFieldElement.value = hex( value )
-
-	if ( no_submit )
-		return;
-
-	setSliderValues( idx, value );
-	console.log( 'pwm' + idx + ': ' + value );
-	
-	let url	= REQ_HEADER + 'value=' + value + '&idx=' + idx
-	ajaxUpdate( url )
-}
-
-/******** setSliderValues ********/
-
-function setSliderValues( i, value ) {
-	setSlider( i, value );
-
-	if ( 0 == IREF_OFST )
-		return;
-		
-	if ( i == (IREF_OFST - 1) )
-		setAllSliderValues( 0, N_CHANNELS, value );
-	else if ( i == (IREF_OFST* 2 - 1) )
-		setAllSliderValues( IREF_OFST, N_CHANNELS, value );
-}
-
-/******** setAllSliderValues ********/
-
-function setAllSliderValues( start, length, value ) {
-	for ( let i = start; i < start + length; i++ ) {
-		setSlider( i, value );
-	}
-}
-
-function setSlider( idx, value ) {
-	document.getElementById( "Slider" + idx ).value = value;
-	document.getElementById( "valField" + idx ).value = hex( value );
-	
-	let reg_idx;
-	
-	if ( idx <= N_CHANNELS )
-		reg_idx	= PWM0_IDX + idx;
-	else if ( idx == (IREF_OFST - 1) )
-		reg_idx = PWMALL_IDX;
-	else if ( idx == (IREF_OFST * 2 - 1) )
-		reg_idx	= IREFALL_IDX;
+	if ( ("Slider" == id) || ("valField" == id) )
+		selector	= "slider";
 	else
-		reg_idx	= IREF0_IDX + (idx - IREF_OFST);
-	
-	writeRegisterField( reg_idx, value );
-}
-
-/****************************
- ****	register controls
- ****************************/
- 
-/******** updateRegField ********/
-
-function updateRegField( element, idx ) {
-	let valueFieldElement = document.getElementById( "regField" + idx );
-	let value	= parseInt( valueFieldElement.value, 16 )
-	let no_submit	= 0
+		selector	= "register";
 	
 	if ( isNaN( value ) ) {
-		no_submit	= 1
-		value = document.getElementById( "Slider" + idx ).value;
+		no_submit	= 1;
+		
+		if ( selector == "slider" )
+			value = document.getElementById( id + i ).value;
 	}
-	value	= (value < 0  ) ?   0 : value
-	value	= (255 < value) ? 255 : value
-	valueFieldElement.value = hex( value )
+	value	= (value < 0  ) ?   0 : value;
+	value	= (255 < value) ? 255 : value;
+	valueFieldElement.value = hex( value );
 
 	if ( no_submit )
 		return;
 
-	let url	= REQ_HEADER + 'reg=' + idx + '&val=' + value
-	ajaxUpdate( url, updateRegFieldDone )
+	setSliderAndRegisterlistValues( value, selector, i );
+	
+	if ( selector == "slider" ) {
+		let url	= REQ_HEADER + 'value=' + value + '&idx=' + i;
+		ajaxUpdate( url );
+	}
+	else {
+		let url	= REQ_HEADER + 'reg=' + i + '&val=' + value;
+		ajaxUpdate( url, updateDone );
+	}
 }
 
-function updateRegFieldDone() {
+function updateDone() {
 	let obj = JSON.parse( this.responseText );
 	
-	setRegField( obj.reg, obj.val )
+//	setSliderValues( obj.idx, obj.value );
 }
 
-/******** allRegLoad ********/
+function setSliderAndRegisterlistValues( value, selector, i ) {
+	let	reg_i;
+	
+	if ( selector == "slider" ) {
+		reg_i	= index_slider2register( i )
+	}
+	else {
+		reg_i	= i;
+		i		= index_register2slider( reg_i );
+	}
+	
+	if ( 0 <= i ) {
+		document.getElementById( "Slider"   + i ).value	= value;		//	in slider table
+		document.getElementById( "valField" + i ).value	= hex( value );	//	in slider table
+	}
+	document.getElementById( 'regField' + reg_i ).value	= hex( value );	//	in register table
+	
+	if ( (IREF_OFST - 1) == i ) {
+		start	= 0;
+		end		= N_CHANNELS;
+	}
+	else if ( (IREF_OFST * 2 - 1) == i ) {
+		start	= IREF_OFST + 0;
+		end		= IREF_OFST + N_CHANNELS;
+	}
+	else {
+		return;
+	}
+	
+	for ( let i = start; i < end; i++ )
+		setSliderAndRegisterlistValues( value, "slider", i )
+}
+
+function index_slider2register( i ) {
+	if ( (0 <= i) && (i < N_CHANNELS) )
+		r	= i + PWM0_IDX;
+	else if ( (IREF_OFST <= i) && (i < IREF_OFST + N_CHANNELS) )
+		r	= (i - IREF_OFST) + IREF0_IDX;
+	else if ( (IREF_OFST - 1) == i )
+		r	= PWMALL_IDX;
+	else if ( (IREF_OFST * 2 - 1) == i)
+		r	= IREFALL_IDX;
+		
+	return r;
+}
+
+function index_register2slider( i ) {
+	if ( (PWM0_IDX <= i) && (i < PWM0_IDX + N_CHANNELS) )
+		r	= i - PWM0_IDX;
+	else if  ( (IREF0_IDX <= i) && (i < IREF0_IDX + N_CHANNELS) )
+		r	= i - IREF0_IDX + IREF_OFST;
+	else if ( PWMALL_IDX == i )
+		r	= IREF_OFST - 1;
+	else if ( IREFALL_IDX == i )
+		r	= (IREF_OFST * 2) - 1;
+	else
+		r	= -1;
+	
+	return r;
+}
 
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
 	ajaxUpdate( url, allRegLoadDone );
 }
 
-/******** allRegLoadDone ********/
-
 function allRegLoadDone() {
 	let obj = JSON.parse( this.responseText );
 
 	for ( let i = 0; i < obj.reg.length; i++ ) {
-		setRegField( i, obj.reg[ i ], manual_input = false )
+		setSliderAndRegisterlistValues( obj.reg[ i ], "register", i )
 	}
 }
-
-function setRegField( idx, value, manual_input = true ) {
-
-	if ( (PWM0_IDX <= idx) && (idx < (PWM0_IDX + N_CHANNELS)) )
-		setSliderValues( idx - PWM0_IDX, value );
-	else if ( IREF0_IDX && (IREF0_IDX <= idx) && (idx < (IREF0_IDX + N_CHANNELS)) )
-		setSliderValues( (idx - IREF0_IDX) + IREF_OFST, value );
-	else if ( manual_input && PWMALL_IDX && (idx == PWMALL_IDX) )
-		setSliderValues( IREF_OFST - 1, value );
-	else if ( manual_input && IREFALL_IDX && (idx == IREFALL_IDX) )
-		setSliderValues( IREF_OFST * 2 - 1, value );
-	else
-		writeRegisterField( idx, value );
-}
-
-function writeRegisterField( idx, value ) {
-	document.getElementById( 'regField' + idx ).value	= hex( value );
-}
-
-					
-/****************************
- ****	page load controls
- ****************************/
  
 function loadFinished(){
 	allRegLoad();
-
-	if ( 0 == IREF_OFST )
-		return;
-
-	//setAllSliderValues( IREF_OFST, N_CHANNELS, IREF_INIT );
-	//setAllSliderValues( IREF_OFST * 2 - 1, 1, IREF_INIT );
-	
 }
 
 window.addEventListener( 'load', loadFinished );
