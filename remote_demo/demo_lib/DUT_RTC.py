@@ -18,7 +18,7 @@ import	ujson
 
 from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	RTC_base
-import	demo_lib.util
+import	demo_lib.utils	as utils
 
 try:
 	import	demo_lib.sound_data as sound_data
@@ -132,11 +132,13 @@ class DUT_RTC():
 			<head>
 				<meta charset="utf-8" />
 				<title>{% dev_name %} server</title>
-				{% style %}
+				<style>
+					{% css %}
+				</style>
 			</head>
 			<body>
 				<script>
-					{% script %}
+					{% js %}
 				</script>
 
 				<div class="header">
@@ -205,7 +207,6 @@ class DUT_RTC():
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
 		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
-		page_data[ "style"     ]	= demo_lib.util.get_css()
 		page_data[ "sound"     ]	= sound_data.get_sound()
 
 		if len( page_data[ "sound" ] ) is 0:
@@ -213,9 +214,13 @@ class DUT_RTC():
 		else:
 			print( "####### DUT_RTC: Sound data loaded" )
 
-		jsf	= open( "demo_lib/" + self.__class__.__name__ + ".js" )
-		html = html.replace('{% script %}', jsf.read() )
-		jsf.close
+		files	= {	"css": 	[	"demo_lib/general"	],
+					"js":	[	"demo_lib/general",
+								"demo_lib/" + self.__class__.__name__
+							]
+					}
+		
+		html	= utils.file_loading( html, files )
 		
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )

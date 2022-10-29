@@ -18,7 +18,7 @@ import	ujson
 
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	temp_sensor_base
-import	demo_lib.util
+import	demo_lib.utils	as utils
 
 class DUT_TEMP():
 	APPLIED_TO		= temp_sensor_base
@@ -137,9 +137,11 @@ class DUT_TEMP():
 		<html>
 
 		<head>
-				<meta charset="utf-8" />
-				<title>{% dev_name %} server</title>
-				{% style %}
+			<meta charset="utf-8" />
+			<title>{% dev_name %} server</title>
+			<style>
+				{% css %}
+			</style>
 		</head>
 		<body>
 			<div class="header">
@@ -153,7 +155,7 @@ class DUT_TEMP():
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 			
 			<script>
-				{% script %}
+				{% js %}
 			</script>
 
 			</div>
@@ -241,16 +243,19 @@ class DUT_TEMP():
 		page_data[ "mcu"       ]	= os.uname().machine
 		page_data[ "table"     ]	= self.get_table()
 		page_data[ "info_tab"  ]	= self.get_info_table()
-		page_data[ "style"     ]	= demo_lib.util.get_css()
 
 		page_data[ "graph_high"]	= str( self.GRAPH_HIGH )
 		page_data[ "graph_low" ]	= str( self.GRAPH_LOW  )
 		page_data[ "tos_init"  ]	= str( self.tos   )
 		page_data[ "thyst_init"]	= str( self.thyst )
 
-		jsf	= open( "demo_lib/" + self.__class__.__name__ + ".js" )
-		html = html.replace('{% script %}', jsf.read() )
-		jsf.close
+		files	= {	"css": 	[	"demo_lib/general"	],
+					"js":	[	"demo_lib/general",
+								"demo_lib/" + self.__class__.__name__
+							]
+					}
+		
+		html	= utils.file_loading( html, files )
 		
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )

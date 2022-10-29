@@ -17,7 +17,8 @@ import	ujson
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	LED_controller_base
-import	demo_lib.util
+import	demo_lib.utils	as utils
+
 
 class DUT_LEDC():
 	APPLIED_TO	= LED_controller_base
@@ -108,11 +109,13 @@ class DUT_LEDC():
 			<head>
 				<meta charset="utf-8" />
 				<title>{% dev_name %} server</title>
-				{% style %}
+				<style>
+					{% css %}
+				</style>
 			</head>
 			<body>
 				<script>
-					{% script %}
+					{% js %}
 				</script>
 
 				<div class="header">
@@ -197,7 +200,6 @@ class DUT_LEDC():
 		page_data[ "iref_ofst"   ]	= str( self.IREF_ID_OFFSET )
 		page_data[ "iref_init"   ]	= str( self.IREF_INIT )
 		page_data[ "reg_table"   ]	= self.get_reg_table( self.dev, 4 )
-		page_data[ "style"       ]	= demo_lib.util.get_css()
 		page_data[ "allreg_note" ]	= allreg_note
 
 		cols		= 4	if all_reg else 1
@@ -209,9 +211,13 @@ class DUT_LEDC():
 		else:
 			page_data[ "sliders_IREF" ]	= ""
 
-		jsf	= open( "demo_lib/" + self.__class__.__name__ + ".js" )
-		html = html.replace('{% script %}', jsf.read() )
-		jsf.close
+		files	= {	"css": 	[	"demo_lib/general"	],
+					"js":	[	"demo_lib/general",
+								"demo_lib/" + self.__class__.__name__
+							]
+					}
+		
+		html	= utils.file_loading( html, files )
 		
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )

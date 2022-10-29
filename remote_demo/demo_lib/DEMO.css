@@ -1,0 +1,56 @@
+html {
+	font-size: 80%;
+	font-family: Arial;
+	display: inline-block;
+	text-align: center;
+}
+body {
+	font-size: 1.0rem;
+	font-color: #000000;
+	vertical-align: middle;
+}
+div {
+	border: solid 1px #EEEEEE;
+	box-sizing: border-box;
+	text-align: left;
+	font-size: 1.0rem;
+	padding: 5px;
+}
+.header {
+	border: solid 1px #EEEEEE;
+	text-align: center;
+	font-size: 1.5rem;
+	padding: 1.0rem;
+}
+table {
+	background-color: #FFFFFF;
+	border-collapse: collapse;
+	width: 100%;
+}
+td {
+	border: solid 1px #EEEEEE;
+	text-align: left;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.table_header {
+	border: solid 1px #FFFFFF;
+	background-color: #EEEEEE;
+	text-align: center;
+}
+.Green_cell {
+	background-color: #00FF00;
+}
+.Red_cell {
+	background-color: #FF0000;
+	color: #FFFFFF;
+}
+.table_note {
+	text-align: right;
+	font-size: 0.8rem;
+}
+.foot_note {
+	text-align: center;
+	font-size: 0.8rem;
+	padding: 0.5rem;
+}

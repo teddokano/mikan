@@ -28,6 +28,9 @@ from	nxp_periph	import	i2c_fullscan
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
 from	demo_lib	import	DUT_GENERAL, General_call
 
+import	demo_lib.utils	as utils
+
+
 def main( micropython_optimize = False ):
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -152,89 +155,13 @@ def page_setup( dut_list ):
 			<meta charset="utf-8" />
 			<title>device list</title>
 			<style>
-			html {
-				font-size: 80%;
-				font-family: Arial;
-				display: inline-block;
-				text-align: center;
-			}
-			body {
-				font-size: 1.0rem;
-				font-color: #000000;
-				vertical-align: middle;
-			}
-			div {
-				border: solid 1px #EEEEEE;
-				box-sizing: border-box;
-				text-align: left;
-				font-size: 1.0rem;
-				padding: 5px;
-			}
-			.header {
-				border: solid 1px #EEEEEE;
-				text-align: center;
-				font-size: 1.5rem;
-				padding: 1.0rem;
-			}
-			table {
-				background-color: #FFFFFF;
-				border-collapse: collapse;
-				width: 100%;
-			}
-			td {
-				border: solid 1px #EEEEEE;
-				text-align: left;
-				padding-left: 10px;
-				padding-right: 10px;
-			}
-			.table_header {
-				border: solid 1px #FFFFFF;
-				background-color: #EEEEEE;
-				text-align: center;
-			}
-			.Green_cell {
-				background-color: #00FF00;
-			}
-			.Red_cell {
-				background-color: #FF0000;
-				color: #FFFFFF;
-			}
-			.table_note {
-				text-align: right;
-				font-size: 0.8rem;
-			}
-			.foot_note {
-				text-align: center;
-				font-size: 0.8rem;
-				padding: 0.5rem;
-			}
+				{% css %}
 			</style>
 		</head>
 		<body>
 			<script>
-				const	DEV_NAME	= '{% dev_name %}';
-				const	REQ_HEADER	= '/' + DEV_NAME + '?';
-
-				/****************************
-				 ****	service routine
-				 ****************************/
-				 
-				/******** ajaxUpdate ********/
-
-				function ajaxUpdate( url, func ) {
-					url			= url + '?ver=' + new Date().getTime();
-					let	ajax	= new XMLHttpRequest;
-					ajax.open( 'GET', url, true );
-					
-					ajax.onload = func;
-					ajax.send( null );
-				}
-
-				function hex( num ) {
-					return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 );
-				}
+				{% js %}
 			</script>
-
 		
 			<div class="header">
 				<p>device demo server</p>
@@ -247,15 +174,6 @@ def page_setup( dut_list ):
 
 				<input type="button" onclick="busReset( 0 );" value="I²C Software reset" class="tmp_button"><!-- : send address=0x00 data=0x06 (S 0x00 0x06 P) --><br/>
 				<input type="button" onclick="busReset( 1 );" value="I²C Device reprogram" class="tmp_button"><!-- : send address=0x00 data=0x04 (S 0x00 0x04 P) -->
-
-				<script>
-					function busReset( flag ) {
-						let url;
-
-						url	= REQ_HEADER + ((flag == 0) ? 'reset' : 'reprogram')
-						ajaxUpdate( url );
-					}
-				</script>
 			</div>
 
 			
@@ -272,6 +190,16 @@ def page_setup( dut_list ):
 	page_data[ "dev_name"          ]	= "GENERAL"
 	page_data[ "front_page_table"  ]	= page_table( dut_list )
 	page_data[ "mcu"               ]	= os.uname().machine
+
+	print( os.getcwd() )
+
+	files	= {	"css": 	[	"demo_lib/DEMO"	],
+				"js":	[	"demo_lib/general",
+							"demo_lib/DEMO"
+						]
+				}
+	
+	html	= utils.file_loading( html, files )
 
 	for key, value in page_data.items():
 		html = html.replace('{% ' + key + ' %}', value )

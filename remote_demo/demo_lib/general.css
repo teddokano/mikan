@@ -1,6 +1,3 @@
-def get_css():
-	s	= """\
-<style>
 html {
 	font-size: 80%;
 	font-family: Arial;
@@ -171,6 +168,3 @@ input[type="text"] {
 	font-size: 1rem;
 	padding: 0.5rem;
 }
-</style>
-"""
-	return s
