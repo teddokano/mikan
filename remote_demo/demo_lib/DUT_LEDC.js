@@ -88,9 +88,6 @@ function setSliderAndRegisterlistValues( value, selector, i ) {
 	}
 	document.getElementById( 'regField' + reg_i ).value	= hex( value );	//	in register table
 	
-	console.log( 'IREF_OFST = ' + IREF_OFST + ', i = ' + i + ', IREF0_IDX = ' + IREF0_IDX )
-
-
 	let	start;
 	let	end;
 	if ( (IREF_OFST - 1) == i ) {
@@ -104,9 +101,6 @@ function setSliderAndRegisterlistValues( value, selector, i ) {
 	else {
 		return;
 	}
-	
-	console.log( 'value = ' + value + ', start = ' + start + ', end = ' + end )
-
 
 	for ( let i = start; i < end; i++ )
 		setSliderAndRegisterlistValues( value, "slider", i )
