@@ -14,6 +14,32 @@ const	IREF_INIT	=  {% iref_init %};
 
 let timeoutId	= null;
 
+function updateSlider000( element, moving, id, i ) {
+	let value = document.getElementById( id + i ).value;
+	
+	setSliderAndRegisterlistValues( value, "slider", i );
+
+	if ( moving ) {
+		//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
+		if ( timeoutId ) return ;
+		timeoutId = setTimeout( updateSliderFollowup( id, i ), 50 );
+	}
+
+	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
+	ajaxUpdate( url, updateDone )
+}
+
+function updateSliderFollowup( id, i ) {
+	let value = document.getElementById( id + i ).value;
+	
+	setSliderAndRegisterlistValues( value, "slider", i );
+
+	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
+	ajaxUpdate( url, updateDone )
+	
+	timeoutId = 0;
+}
+
 function updateSlider( element, moving, id, i ) {
 	let value = document.getElementById( id + i ).value;
 	
@@ -26,7 +52,7 @@ function updateSlider( element, moving, id, i ) {
 	}
 
 	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
-	ajaxUpdate( url, updateDone )
+	ajaxUpdate( url )
 }
 
 function updateValField( element, id, i ) {
@@ -70,7 +96,7 @@ function updateDone() {
 	
 	if ( typeof obj.reg === 'undefined' ) {
 		console.log( "updateDone by idx" )
-		setSliderAndRegisterlistValues( obj.val, "register", obj.idx );
+		setSliderAndRegisterlistValues( obj.val, "slider", obj.idx );
 	}
 	else {
 		console.log( "updateDone by reg" )
@@ -96,6 +122,8 @@ function setSliderAndRegisterlistValues( value, selector, i, allreg_loading = fa
 		document.getElementById( "Slider"   + i ).value	= value;		//	in slider table
 		document.getElementById( "valField" + i ).value	= hex( value );	//	in slider table
 	}
+	
+	console.log( 'setSliderAndRegisterlistValues ' + reg_i + ' ' + value )
 	
 	if ( (reg_i == PWMALL_IDX) || (reg_i == IREFALL_IDX) )
 		document.getElementById( 'regField' + reg_i ).value	= "--";	//	in register table
