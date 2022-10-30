@@ -46,18 +46,18 @@ class DUT_LEDC():
 			self.address	= dev.__cs
 			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
 
+		if hasattr( self.dev, "__iref_base" ):
+			self.IREF_ID_OFFSET	= 100
+			#self.dev.write_registers( "IREFALL", self.IREF_INIT )
+		else:
+			self.IREF_ID_OFFSET	= 0
+
 	def parse( self, req ):
 		#print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )
 		if self.dev_name not in req:
 			return None
 	
 		if "?" not in req:
-			if hasattr( self.dev, "__iref_base" ):
-				self.IREF_ID_OFFSET	= 100
-				self.dev.write_registers( "IREFALL", self.IREF_INIT )
-			else:
-				self.IREF_ID_OFFSET	= 0
-
 #			for i in range( self.dev.CHANNELS ):
 #				self.led[ i ].v	= 0.0
 

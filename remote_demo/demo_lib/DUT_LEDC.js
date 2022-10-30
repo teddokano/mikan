@@ -52,7 +52,7 @@ function updateSlider( element, moving, id, i ) {
 	}
 
 	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
-	ajaxUpdate( url )
+	ajaxUpdate( url, updateDone )
 }
 
 function updateValField( element, id, i ) {
