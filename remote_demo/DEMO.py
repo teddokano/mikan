@@ -32,6 +32,10 @@ import	demo_lib.utils	as utils
 
 
 def main( micropython_optimize = False ):
+	print( "remote device demo" )
+	print( "  http server is started working on " + os.uname().machine )
+	print( "" )
+
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
 
@@ -79,7 +83,7 @@ def main( micropython_optimize = False ):
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
-	s.listen( 1 )
+	s.listen( 5 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
 	while True:

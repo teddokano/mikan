@@ -57,22 +57,32 @@ function updateValField( element, id, i ) {
 	
 	if ( selector == "slider" ) {
 		let url	= REQ_HEADER + 'value=' + value + '&idx=' + i;
-		ajaxUpdate( url );
+		ajaxUpdate( url, updateDone );
 	}
 	else {
 		let url	= REQ_HEADER + 'reg=' + i + '&val=' + value;
-		ajaxUpdate( url, updateDone );
+		ajaxUpdate( url );
 	}
 }
 
 function updateDone() {
 	let obj = JSON.parse( this.responseText );
 	
-	setSliderAndRegisterlistValues( value, "slider", i );
+	if ( typeof obj.reg === 'undefined' ) {
+		console.log( "updateDone by idx" )
+		setSliderAndRegisterlistValues( obj.val, "register", obj.idx );
+	}
+	else {
+		console.log( "updateDone by reg" )
+		setSliderAndRegisterlistValues( obj.val, "register", obj.reg );
+	}
+	
 }
 
-function setSliderAndRegisterlistValues( value, selector, i ) {
+function setSliderAndRegisterlistValues( value, selector, i, allreg_loading = false ) {
 	let	reg_i;
+	
+	console.log( 'value = ' + value + ', selector = ' + selector + ', i = ' + i  )
 	
 	if ( selector == "slider" ) {
 		reg_i	= index_slider2register( i )
@@ -86,7 +96,14 @@ function setSliderAndRegisterlistValues( value, selector, i ) {
 		document.getElementById( "Slider"   + i ).value	= value;		//	in slider table
 		document.getElementById( "valField" + i ).value	= hex( value );	//	in slider table
 	}
-	document.getElementById( 'regField' + reg_i ).value	= hex( value );	//	in register table
+	
+	if ( (reg_i == PWMALL_IDX) || (reg_i == IREFALL_IDX) )
+		document.getElementById( 'regField' + reg_i ).value	= "--";	//	in register table
+	else
+		document.getElementById( 'regField' + reg_i ).value	= hex( value );	//	in register table
+
+	if ( allreg_loading )
+		return;
 	
 	let	start;
 	let	end;
@@ -143,7 +160,7 @@ function allRegLoadDone() {
 	let obj = JSON.parse( this.responseText );
 
 	for ( let i = 0; i < obj.reg.length; i++ ) {
-		setSliderAndRegisterlistValues( obj.reg[ i ], "register", i )
+		setSliderAndRegisterlistValues( obj.reg[ i ], "register", i, allreg_loading = true )
 	}
 }
  
