@@ -426,8 +426,9 @@ class PCF2131_base( RTC_base ):
 
 		self.write_registers( "Second_alarm", data )
 
-		select	= "A" if "A" in int_pin else "B"
-		self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x04, 0x00 )
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x04, 0x00 )
 		self.bit_operation( "Control_2", 0x02, 0x02 )
 
 	def __clear_alarm( self ):
@@ -437,16 +438,20 @@ class PCF2131_base( RTC_base ):
 		self.bit_operation( "Control_2", 0x02, 0x00 )
 
 	def __set_periodic_interrupt( self, int_pin, period ):
-		select	= "A" if "A" in int_pin else "B"
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
 		
 		if period == 0:
 			self.bit_operation( "Control_1", 0x03, 0x00 )
-			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x30, 0x30 )
+			if int_pin:
+				self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x30, 0x30 )
 			return 0
 
 		v	= 0x02 if period == 60 else 0x01
 		self.bit_operation( "Control_1", 0x03, v )
-		self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x30, ~(v << 4) )
+		
+		if int_pin:
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x30, ~(v << 4) )
 
 		return 60 if period == 60 else 1
 
@@ -458,8 +463,9 @@ class PCF2131_base( RTC_base ):
 		
 		self.bit_operation( r, 0x80, v )
 		
-		select	= "A" if "A" in int_pin else "B"
-		self.bit_operation( self.INT_MASK[ select ][ 1 ], 0x0F, ~(0x01 << (3 - num)) )
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
+			self.bit_operation( self.INT_MASK[ select ][ 1 ], 0x0F, ~(0x01 << (3 - num)) )
 
 	def __get_timestamp_reg( self, num ):
 		dt		= {}

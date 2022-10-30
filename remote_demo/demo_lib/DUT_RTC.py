@@ -89,7 +89,7 @@ class DUT_RTC():
 							  }
 				
 				self.dev.clear_alarm()
-				self.dev.alarm_int( "A", **alarm_time )
+				self.dev.alarm_int( None, **alarm_time )	#	No INT pin assertion to avoid other device (PCA9957-ARD)
 				html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
 			else:
