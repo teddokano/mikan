@@ -45,3 +45,14 @@ def file_loading_using_dict_version( str, files_list ):
 		str = str.replace( "{% " + k + " %}", s )
 
 	return str
+
+def page_signature():
+	s	= """\
+		<b><a href="https://github.com/teddokano/mp_driver" target="_blank" rel="noopener noreferrer">I²C/SPI peripheral device drivers and demo</a><br>
+		HTTP server on<br/>
+		{% mcu %}</b><br/>
+		0100111101101011011000010110111001101111
+		"""
+	
+	return s.replace('{% mcu %}', os.uname().machine )
+	

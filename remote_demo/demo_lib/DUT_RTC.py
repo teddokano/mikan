@@ -12,7 +12,6 @@
 # https://rintama.net/%EF%BD%8A%EF%BD%81%EF%BD%96%EF%BD%81%EF%BD%93%EF%BD%83%EF%BD%92%EF%BD%89%EF%BD%90%EF%BD%94%E3%81%A7%E4%BD%9C%E6%88%90%E3%81%97%E3%81%9F%E9%85%8D%E5%88%97%E3%82%92%EF%BD%83%EF%BD%93%EF%BD%96%E3%81%A7/
 
 import	machine
-import	os
 import	ure
 import	ujson
 
@@ -126,7 +125,7 @@ class DUT_RTC():
 		page_data[ "dev_type"  ]	= self.type
 		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"  ]	= self.dev.info()
-		page_data[ "mcu"       ]	= os.uname().machine
+		page_data[ "signature" ]	= utils.page_signature()
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
 		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
 		page_data[ "sound"     ]	= sound_data.get_sound()

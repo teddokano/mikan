@@ -155,7 +155,7 @@ def page_setup( dut_list ):
 	page_data	= {}
 	page_data[ "dev_name"          ]	= "GENERAL"
 	page_data[ "front_page_table"  ]	= page_table( dut_list )
-	page_data[ "mcu"               ]	= os.uname().machine
+	page_data[ "signature"         ]	= utils.page_signature()
 
 	files	= [	[	"html",		"demo_lib/DEMO"		],
 				[	"css", 		"demo_lib/DEMO"		],

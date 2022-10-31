@@ -11,7 +11,6 @@
 #	version	0.1
 
 import	machine
-import	os
 import	ure
 import	ujson
 
@@ -143,7 +142,7 @@ class DUT_LEDC():
 		page_data[ "dev_type"    ]	= self.type
 		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"    ]	= info
-		page_data[ "mcu"         ]	= os.uname().machine
+		page_data[ "signature"   ]	= utils.page_signature()
 		page_data[ "n_ch"        ]	= str( count )
 		page_data[ "pwm0_idx"    ]	= str( pwm0_idx )
 		page_data[ "iref0_idx"   ]	= str( iref0_idx )
