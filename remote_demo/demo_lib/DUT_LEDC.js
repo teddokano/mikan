@@ -106,7 +106,7 @@ function setSliderAndRegisterlistValues( value, selector, i, allreg_loading = fa
 		document.getElementById( "valField" + i ).value	= hex( value );	//	in slider table
 	}
 	
-	if ( (reg_i == PWMALL_IDX) || (reg_i == IREFALL_IDX) )
+	if ( PWMALL_IDX & ((reg_i == PWMALL_IDX) || (reg_i == IREFALL_IDX)) )
 		document.getElementById( 'regField' + reg_i ).value	= "--";	//	in register table
 	else
 		document.getElementById( 'regField' + reg_i ).value	= hex( value );	//	in register table
