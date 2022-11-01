@@ -3,14 +3,14 @@ The name of this repository has been changed from "mp_driver" to "mikan" (2022 N
 Peripheral device driver for collection for MicroPython.
 
 ## What is this?
-NXP peripheral device drivers and sample/demo codes. 
+NXP peripheral device drivers and sample/demo code. 
 The drivers provided to operate I2C/SPI peripheral devices easy. 
 
 ### Drivers
-The driver codes are in 'nxp_periph/'. 
+The driver code files are in 'nxp_periph/'. 
 
 ### Examples
-The example codes are in 'example/'. It shows simple usage examples for the drivers and standalome demo for target devices. 
+The example code files are in 'example/'. It shows simple usage examples for the drivers and standalome demo for target devices. 
 
 ### Demo
 The demo code is avaiable in 'remote_demo/'. 'remote_demo/DEMO.py' has 'main()' function to start the demo. 
