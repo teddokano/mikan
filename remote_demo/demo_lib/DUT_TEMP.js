@@ -91,8 +91,6 @@ function drawChart() {
 	});
 }
 
-drawChart();
-
 /****************************
  ****	temp display
  ****************************/
@@ -144,15 +142,9 @@ function getTempAndShowDone() {
 	document.getElementById( "infoFieldValue2" ).value = time.length;
 }
 
-function doReload() {
-	window.location.reload();
-}
-
 /****************************
  ****	widget handling
  ****************************/
-
-let timeoutId	= null;
 
 /******** updateSlider ********/
 
@@ -261,5 +253,6 @@ function updateHeaterSwitch( element ) {
 }
 
 window.addEventListener( 'load', function () {
+	drawChart();
 	setInterval( getTempAndShow, 1000 );
 });
