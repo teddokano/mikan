@@ -119,7 +119,7 @@ class LED_controller_base:
 			
 		"""
 		reg	= self.__iref_base if alt else self.__pwm_base
-		
+
 		if 2 == len( args ):
 			r	= reg + args[ 0 ]
 			v	= args[ 1 ] if isinstance( args[ 1 ], int ) else int( args[ 1 ] * 255.0 )
@@ -211,10 +211,10 @@ class gradation_control():
 					off_i	= item[ 1 ]
 					break
 		
-		reg_v	= [	( up << 7 ) | ( down << 6 ) | (iref_inc - 1),	# for RAMP_RATE_GRPn
-					( cycle_time_i << 6 ) | (multi_fctr - 1), 		# for STEP_TIME_GRPn
-					( on_i << 3) | off_i,							# for HOLD_CNTL_GRPn
-					int( iref )										# for IREF_GRPn
+		reg_v	= [	( up << 7 ) | ( down << 6 ) | (iref_inc - 1),									# for RAMP_RATE_GRPn
+					( cycle_time_i << 6 ) | (multi_fctr - 1), 										# for STEP_TIME_GRPn
+					( 0x80 if on_i else 0x00) | ( 0x40 if off_i else 0x00) | ( on_i << 3) | off_i,	# for HOLD_CNTL_GRPn
+					int( iref )																		# for IREF_GRPn
 					]
 
 		self.write_registers( reg_i, reg_v )
@@ -256,6 +256,12 @@ class gradation_control():
 		self.__gradation_groups( gr_list )
 
 	def gradation_start( self, group, continuous = True ):
+		self.gradation_ctrl( group, True, continuous = continuous )
+		
+	def gradation_stop( self, group ):
+		self.gradation_ctrl( group, False )
+		
+	def gradation_ctrl( self, group, start, continuous = True ):
 		if type( group ) == int:
 			group	= [ group ]
 		
@@ -263,12 +269,10 @@ class gradation_control():
 		bit_mask	= 0
 		
 		for ch in group:
-			bit_pattern	|= (0x2 | continuous) << (ch << 1)
+			bit_pattern	|= ((0x2 if start else 0x0) | continuous) << (ch << 1)
 			bit_mask	|= 0x3 << (ch << 1)
 
-		print( bit_pattern, bit_mask )
-
-		self.__gradation_start( bit_pattern, bit_mask )
+		self.__gradation_ctrl( bit_pattern, bit_mask )
 
 class PCA995xB_base( LED_controller_base, I2C_target ):
 	"""
@@ -313,6 +317,9 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		for r, v in init.items():	#	don't care: register access order
 			self.write_registers( r, v )
 
+	def iref( self, *args ):
+		self.pwm( *args, alt = True )
+
 	def dump( self ):
 		data	= super().dump()
 		start	= self.REG_NAME.index( "PWMALL" )
@@ -356,7 +363,7 @@ class PCA9955B( PCA995xB_base, gradation_control ):
 		
 		print( v )
 	
-	def __gradation_start( self, pattern, mask ):
+	def __gradation_ctrl( self, pattern, mask ):
 		self.bit_operation( "GRAD_CNTL", mask, pattern )
 	
 class PCA9956B( PCA995xB_base ):
@@ -480,6 +487,9 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 		for r, v in init.items():	#	don't care: register access order
 			self.write_registers( r, v )
 	
+	def iref( self, *args ):
+		self.pwm( *args, alt = True )
+
 	def write_registers( self, reg, data ):
 		"""
 		writing register
@@ -552,7 +562,7 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 
 class PCA9957( PCA9957_base ):
 	CHANNELS		= 24
-	GRAD_GRPS		=  4
+	GRAD_GRPS		=  6
 
 	REG_NAME		=	(
 							"MODE1", "MODE2",
@@ -583,3 +593,17 @@ class PCA9957( PCA9957_base ):
 							"PWMALL", "IREFALL"
 						)
 
+	def __gradation_groups( self, list ):
+		bn	= 0
+		for i, ch in enumerate( list ):
+			bn	|= ch << (i << 2)
+		
+		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.GRAD_GRPS ) ]
+		self.write_registers( "GRAD_GRP_SEL0", v )
+		
+		print( v )
+	
+	def __gradation_ctrl( self, pattern, mask ):
+		self.bit_operation( "GRAD_CNTL0", mask & 0xFF, pattern & 0xFF )
+		self.bit_operation( "GRAD_CNTL1", (mask >> 8) & 0xFF, (pattern >> 8) & 0xFF )
+	
