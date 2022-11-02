@@ -219,6 +219,8 @@ class gradation_control():
 
 		self.write_registers( reg_i, reg_v )
 		
+		ramp_time	= ((multi_fctr * cycle_time ) * (iref / iref_inc)) / 1000
+		
 		print( "# = {}, max_iref = {}, time = {}, up = {}, down = {}, on = {}, off = {}".format( group_num, max_iref, time, up, down, on, off ) )
 		print( "iref          = {}".format( iref ) )
 		print( "step_duration = {}".format( step_duration ) )
@@ -230,7 +232,13 @@ class gradation_control():
 		print( "iref          = {}".format( iref ) )
 		print( "reg_i         = {}".format( reg_i ) )
 		print( "reg_v         = {}".format( reg_v ) )
-		print( "calc_time     = {}".format( (multi_fctr * cycle_time ) * (iref / iref_inc) ) )
+		print( "calc_time     = {}".format( ramp_time ) )
+
+		cycle_time	 = on + off
+		cycle_time	+= ramp_time if on_i  else 0
+		cycle_time	+= ramp_time if off_i else 0
+
+		return cycle_time
 
 	def gradation_channel_enable( self, list, exponential = False ):
 		if type( list ) == int:
