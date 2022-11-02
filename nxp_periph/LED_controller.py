@@ -232,7 +232,7 @@ class gradation_control():
 		print( "reg_v         = {}".format( reg_v ) )
 		print( "calc_time     = {}".format( (multi_fctr * cycle_time ) * (iref / iref_inc) ) )
 
-	def gradation_channel_enable( self, list ):
+	def gradation_channel_enable( self, list, exponential = False ):
 		if type( list ) == int:
 			list	= [ list ]
 		
@@ -242,6 +242,9 @@ class gradation_control():
 		
 		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.CHANNELS // 8 ) ]
 		self.write_registers( "GRAD_MODE_SEL0", v )
+		
+		print( "MODE2 exp {}".format( exponential ) )
+		self.bit_operation( "MODE2", 0x04, exponential << 2 )
 		
 		print( v )
 
