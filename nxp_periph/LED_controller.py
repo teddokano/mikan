@@ -213,7 +213,7 @@ class gradation_control():
 		
 		reg_v	= [	( up << 7 ) | ( down << 6 ) | (iref_inc - 1),									# for RAMP_RATE_GRPn
 					( cycle_time_i << 6 ) | (multi_fctr - 1), 										# for STEP_TIME_GRPn
-					( 0x80 if on_i else 0x00) | ( 0x40 if off_i else 0x00) | ( on_i << 3) | off_i,	# for HOLD_CNTL_GRPn
+					0xC0 | ( on_i << 3) | off_i,	# for HOLD_CNTL_GRPn
 					int( iref )																		# for IREF_GRPn
 					]
 
@@ -221,6 +221,7 @@ class gradation_control():
 		
 		ramp_time	= ((multi_fctr * cycle_time ) * (iref / iref_inc)) / 1000
 		
+		"""
 		print( "# = {}, max_iref = {}, time = {}, up = {}, down = {}, on = {}, off = {}".format( group_num, max_iref, time, up, down, on, off ) )
 		print( "iref          = {}".format( iref ) )
 		print( "step_duration = {}".format( step_duration ) )
@@ -233,10 +234,11 @@ class gradation_control():
 		print( "reg_i         = {}".format( reg_i ) )
 		print( "reg_v         = {}".format( reg_v ) )
 		print( "calc_time     = {}".format( ramp_time ) )
-
+		"""
+		
 		cycle_time	 = on + off
-		cycle_time	+= ramp_time if on_i  else 0
-		cycle_time	+= ramp_time if off_i else 0
+		cycle_time	+= ramp_time if up   else 0
+		cycle_time	+= ramp_time if down else 0
 
 		return cycle_time
 
@@ -249,20 +251,14 @@ class gradation_control():
 			bn	|= 0x1 << ch
 		
 		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.CHANNELS // 8 ) ]
-		self.write_registers( "GRAD_MODE_SEL0", v )
-		
-		print( "MODE2 exp {}".format( exponential ) )
+		self.write_registers( "GRAD_MODE_SEL0", v )		
 		self.bit_operation( "MODE2", 0x04, exponential << 2 )
-		
-		print( v )
 
 	def gradation_group_assign( self, lists ):
 		gr_list	= [ 0 ]	* self.CHANNELS
 		for gn, l in enumerate( lists ):
 			for ch in l:
 				gr_list[ ch ]	= gn
-		
-		print( gr_list )
 		
 		self.__gradation_groups( gr_list )
 
@@ -371,8 +367,6 @@ class PCA9955B( PCA995xB_base, gradation_control ):
 		
 		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.GRAD_GRPS ) ]
 		self.write_registers( "GRAD_GRP_SEL0", v )
-		
-		print( v )
 	
 	def __gradation_ctrl( self, pattern, mask ):
 		self.bit_operation( "GRAD_CNTL", mask, pattern )
@@ -616,5 +610,5 @@ class PCA9957( PCA9957_base ):
 	
 	def __gradation_ctrl( self, pattern, mask ):
 		self.bit_operation( "GRAD_CNTL0", mask & 0xFF, pattern & 0xFF )
-		self.bit_operation( "GRAD_CNTL1", (mask >> 8) & 0xFF, (pattern >> 8) & 0xFF )
+		self.bit_operation( "GRAD_CNTL1", (mask >> 4) & 0xFF, (pattern >> 4) & 0xFF )
 	
