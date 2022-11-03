@@ -606,8 +606,6 @@ class PCA9957( PCA9957_base ):
 		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.GRAD_GRPS ) ]
 		self.write_registers( "GRAD_GRP_SEL0", v )
 		
-		print( v )
-	
 	def __gradation_ctrl( self, pattern, mask ):
 		self.bit_operation( "GRAD_CNTL0", mask & 0xFF, pattern & 0xFF )
 		self.bit_operation( "GRAD_CNTL1", (mask >> 4) & 0xFF, (pattern >> 4) & 0xFF )
