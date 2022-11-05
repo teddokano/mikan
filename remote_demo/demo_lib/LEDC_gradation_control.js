@@ -66,7 +66,7 @@ const	TABLE_LEN	= 10
 const	GRAPH_HIGH	= 1
 const	GRAPH_LOW	= 0
 
-function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
+function drawChart( time, g ) {
 	var ctx = document.getElementById("myLineChart");
 	window.myLineChart = new Chart(ctx, {
 		type: 'line',
@@ -75,7 +75,7 @@ function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
 			datasets: [
 					   {
 						   label: 'group0',
-						   data: g0,
+						   data: g[ 0 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 0, 0, 0, 1 )",
@@ -83,7 +83,7 @@ function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
 					   },
 					   {
 						   label: 'group1',
-						   data: g1,
+						   data: g[ 1 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 115, 78, 48, 0.5 )",
@@ -91,7 +91,7 @@ function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
 					   },
 					   {
 						   label: 'group2',
-						   data: g2,
+					       data: g[ 2 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 255, 0, 0, 1 )",
@@ -99,7 +99,7 @@ function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
 					   },
 					   {
 						   label: 'group3',
-						   data: g3,
+					       data: g[ 3 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 237, 109, 53, 1 )",
@@ -107,7 +107,7 @@ function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
 					   },
 					   {
 						   label: 'group4',
-						   data: g4,
+					       data: g[ 4 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 255, 190, 0, 1 )",
@@ -115,7 +115,7 @@ function drawChart( time, g0, g1, g2, g3, g4, g5, g6 ) {
 					   },
 					   {
 						   label: 'group5',
-						   data: g5,
+					       data: g[ 5 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 0, 255, 0, 1 )",
@@ -176,13 +176,14 @@ function updatePlot() {
 		
 		gradation_groups[ i ]	= new GradationFunc( setting );
 	}
-				
+			
+	/*
 	gradation_groups.forEach( function( g, i ) {
 		g.reg.forEach( function( v, j ) {
 			console.log( i + ' ' + j + ' ' + hex( v ) );
 		});		
 	});		
-
+	*/
 
 	for ( let g of gradation_groups ){
 		t_max	= (t_max < g.t_cycle) ? g.t_cycle : t_max;
@@ -199,23 +200,32 @@ function updatePlot() {
 		}
 	}
 	
-	drawChart( time_base, gradation_groups[ 0 ].values, gradation_groups[ 1 ].values, gradation_groups[ 2 ].values, gradation_groups[ 3 ].values, gradation_groups[ 4 ].values, gradation_groups[ 5 ].values  );
+	drawChart( time_base, gradation_groups );
 
 	gradation_groups.forEach( function( g, i ) { 
 		document.getElementById( 'rampTimeField' + i ).value	= g.ramp_time;		
 	});
 }
-														 
-function updateGroupSelect( id, i ) {
-	let value = document.getElementById( id + i ).value;
-	
-	console.log( id + i + ' : ' + value );
+
+function updateGradationEnable() {
+   let	channels	= [];
+			   
+   for ( let i = 0; i < N_CHANNELS; i++ ) {
+	   if ( document.getElementById( 'gradationEnable' + i ).checked ) {
+		   channels.push( i )
+	   }
+   }
+		   
+   console.log( channels );
 }
 
-function updateGradationEnable( id, i ) {
-	let value = document.getElementById( id + i ).checked;
-	
-	console.log( id + i + ' : ' + value );
-}
+function updateGroupSelect() {
+	let	group	= [ [], [], [], [], [], [] ]
 
+	for ( let i = 0; i < N_CHANNELS; i++ ) {
+		group[ document.getElementById( 'groupSelect' + i ).value ].push( i );
+	}
+
+	console.log( group );
+}
 

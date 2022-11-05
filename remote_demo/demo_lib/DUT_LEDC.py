@@ -259,7 +259,7 @@ class DUT_LEDC():
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
 			for i in range( y, self.dev.CHANNELS, rows ):
-				s	+= [ '<td class="reg_table_name td_LEDC"><input type="checkbox" onchange="updateGradationEnable( \'gradationEnable\', {} );" id="gradationEnable{}">'. format( i, i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC"><input type="checkbox" onchange="updateGradationEnable();" id="gradationEnable{}">'. format( i ) ]
 				s	+= [ '<label for="gradationEnable{}">ch {}</label></td>'.format( i, i ) ]
 		
 		t	= """
@@ -273,7 +273,7 @@ class DUT_LEDC():
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
 			for i in range( y, self.dev.CHANNELS, rows ):
-				s	+= [ '<td class="reg_table_name td_LEDC"><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updateGroupSelect( \'groupSelect\', {} );">'.format( i, i, i, i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC"><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updateGroupSelect();">'.format( i, i, i ) ]
 				s	+= [ '<option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>' ]
 
 			s	 	+= [ '</tr>' ]
