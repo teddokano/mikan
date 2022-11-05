@@ -172,7 +172,6 @@ function updatePlot() {
 		setting.h_off	= parseFloat( document.getElementById( 'holdOFF'       + i ).value );
 		setting.up		= document.getElementById( 'rampSwUp'      + i ).checked;
 		setting.down	= document.getElementById( 'rampSwDown'    + i ).checked;
-		setting.phase	= document.getElementById( 'phase'         + i ).value;
 		
 		gradation_groups[ i ]	= new GradationFunc( setting );
 	}
@@ -208,15 +207,16 @@ function updatePlot() {
 }
 
 function updateGradationEnable() {
-   let	channels	= [];
+	let	channels	= [];
 			   
-   for ( let i = 0; i < N_CHANNELS; i++ ) {
-	   if ( document.getElementById( 'gradationEnable' + i ).checked ) {
-		   channels.push( i )
-	   }
-   }
+	for ( let i = 0; i < N_CHANNELS; i++ ) {
+		if ( document.getElementById( 'gradationEnable' + i ).checked ) {
+			channels.push( i )
+		}
+	}
 		   
-   console.log( channels );
+	console.log( channels );
+	console.log( JSON.stringify( channels ) );
 }
 
 function updateGroupSelect() {
@@ -227,5 +227,6 @@ function updateGroupSelect() {
 	}
 
 	console.log( group );
+	console.log( JSON.stringify( group ) );
 }
 

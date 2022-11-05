@@ -64,6 +64,8 @@ class DUT_LEDC():
 
 		elif "allreg" in req:
 			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+		elif "allreg" in req:
+			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
@@ -334,20 +336,6 @@ class DUT_LEDC():
 							<option value="2.00">2.00</option>
 							<option value="4.00">4.00</option>
 							<option value="6.00">6.00</option>
-						</select>
-					</td>
-					<td class="reg_table_name td_LEDC">
-						<label for="updatePhase{% grp %}">Phase*</label>
-						<select name="phase" id="phase{% grp %}" oninput="updatePlot();">
-							<option value="0">no delay</option>
-							<option disabled="disabled" >---</option>
-							<option value="1/2">1 / 2</option>
-							<option disabled="disabled" >---</option>
-							<option value="1/3">1 / 3</option>
-							<option value="2/3">2 / 3</option>
-							<option disabled="disabled" >---</option>
-							<option value="1/4">1 / 4</option>
-							<option value="3/4">3 / 4</option>
 						</select>
 					</td>
 				</tr>
