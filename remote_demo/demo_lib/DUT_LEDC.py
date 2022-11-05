@@ -249,7 +249,7 @@ class DUT_LEDC():
 
 				<div id="reg_table" class="control_panel reg_table log_panel">
 				Gradation enable<br/>
-				<table>
+				<table class="table_LEDC">
 				<tr>
 				"""
 		s	+= [ t ]
@@ -259,49 +259,54 @@ class DUT_LEDC():
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
 			for i in range( y, self.dev.CHANNELS, rows ):
-				s	+= [ '<td><input type="checkbox" onchange="updateGradationEnable( \'gradationEnable\', {} );" id="gradationEnable{}">'. format( i, i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC"><input type="checkbox" onchange="updateGradationEnable( \'gradationEnable\', {} );" id="gradationEnable{}">'. format( i, i ) ]
 				s	+= [ '<label for="gradationEnable{}">ch {}</label></td>'.format( i, i ) ]
 		
 		t	= """
 				</tr>
 				</table>
 				Group select<br/>
-				<table>
+				<table class="table_LEDC">
 				"""
 		s	+= [ t ]
 
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
 			for i in range( y, self.dev.CHANNELS, rows ):
-				s	+= [ '<td><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updateGroupSelect( \'groupSelect\', {} );">'.format( i, i, i, i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC"><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updateGroupSelect( \'groupSelect\', {} );">'.format( i, i, i, i ) ]
 				s	+= [ '<option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>' ]
 
 			s	 	+= [ '</tr>' ]
 					
 				
-		s	+= [ '</table>' ]
-		s	+= [ '<table>' ]
+		t	= """
+				</tr>
+				</table>
+				Ramp setting<br/>
+				<table class="table_LEDC">
+				"""
+		s	+= [ t ]
 
 
 		tmp	= """\
 				<tr>
-					<td>
+					<td class="reg_table_name td_LEDC">
 						<label for="maxCurrent{% grp %}">Max curent ratio</label>
-						<input type="text" onchange="updatePlot();" id="maxCurrent{% grp %}" value="1.0" size=6>
+						<input type="text" onchange="updatePlot();" id="maxCurrent{% grp %}" value="1.0" size=4>
 					</td>
-					<td>
+					<td class="reg_table_name td_LEDC">
 						<label for="rampTimeField{% grp %}">Ramp-time</label>
 						<input type="text" onchange="updatePlot();" id="rampTimeField{% grp %}" value="1.0" size=6>
 					</td>
-					<td>							
+					<td class="reg_table_name td_LEDC">							
 						<input type="checkbox" checked onchange="updatePlot();" id="rampSwUp{% grp %}">
 						<label for="updateRampSwUp{% grp %}">Ramp-up</label>
 					</td>
-					<td>
+					<td class="reg_table_name td_LEDC">
 						<input type="checkbox" checked onchange="updatePlot();" id="rampSwDown{% grp %}">
 						<label for="updateRampSwDown{% grp %}">Ramp-down</label>
 					</td>
-					<td>
+					<td class="reg_table_name td_LEDC">
 						<label for="updateHoldON{% grp %}">Hold-ON time</label>
 						<select name="hold_on_time" id="holdON{% grp %}" oninput="updatePlot();">
 							<option value="1.00" selected hidden>1.00</option>
@@ -316,7 +321,7 @@ class DUT_LEDC():
 							<option value="6.00">6.00</option>
 						</select>
 					</td>
-					<td>
+					<td class="reg_table_name td_LEDC">
 						<label for="updateHoldOFF{% grp %}">Hold-OFF time</label>
 						<select name="hold_on_time" id="holdOFF{% grp %}" oninput="updatePlot();" value="1.00">
 							<option value="1.00" selected hidden>1.00</option>
@@ -331,7 +336,7 @@ class DUT_LEDC():
 							<option value="6.00">6.00</option>
 						</select>
 					</td>
-					<td>
+					<td class="reg_table_name td_LEDC">
 						<label for="updatePhase{% grp %}">Phase*</label>
 						<select name="phase" id="phase{% grp %}" oninput="updatePlot();">
 							<option value="0">no delay</option>
