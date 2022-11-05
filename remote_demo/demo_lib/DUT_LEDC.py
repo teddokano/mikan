@@ -131,7 +131,7 @@ class DUT_LEDC():
 		
 		if all_reg:
 			if irefall_idx:
-				allreg_note	= "PWMAALL and OREFALL are write-only register. ignore loaded value"
+				allreg_note	= "PWMAALL and IREFALL are write-only register. ignore loaded value"
 			else:
 				allreg_note	= "PWMAALL is a write-only register. ignore loaded value"
 		else:
@@ -143,6 +143,7 @@ class DUT_LEDC():
 		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"    ]	= info
 		page_data[ "signature"   ]	= utils.page_signature()
+		page_data[ "grad_ctrl"   ]	= self.grad_ctrl()
 		page_data[ "n_ch"        ]	= str( count )
 		page_data[ "pwm0_idx"    ]	= str( pwm0_idx )
 		page_data[ "iref0_idx"   ]	= str( iref0_idx )
@@ -166,7 +167,8 @@ class DUT_LEDC():
 		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
 					[	"css", 		"demo_lib/general"						],
 					[	"js",		"demo_lib/general",
-									"demo_lib/" + self.__class__.__name__ 	]
+									"demo_lib/" + self.__class__.__name__,
+									"demo_lib/LEDC_gradation_control" 		]
 				  ]
 		
 		html	= utils.file_loading( html, files )
@@ -183,7 +185,7 @@ class DUT_LEDC():
 		cs		= { "R": "item_R",  "G": "item_G",  "B": "item_B",  "K": "item_K"  }
 		template	= [	'<font color={}>{}</font>',
 						'<input type="range" oninput="updateSlider( this, 1, \'Slider\', {} )" onchange="updateSlider( this, 0, \'Slider\', {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider">',
-						'<input type="text" onchange="updateValField( this, \'valField\', {} )" id="valField{}" minlength=2 size=2 value="00"">'
+						'<input type="text" onchange="updateValField( this, \'valField\', {} )" id="valField{}" minlength=2 size=2 value="00">'
 						]
 
 		s	 	= [ '<table class="table_LEDC">' ]
@@ -233,4 +235,124 @@ class DUT_LEDC():
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
+		return "\n".join( s )
+
+	def grad_ctrl( self ):
+		s	= []
+		n_gr	= self.dev.GRAD_GRPS 
+		
+		t	= """\
+				<div>
+					<canvas id="myLineChart" width="40" height="10"></canvas>
+					<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+				</div>
+
+				<div id="reg_table" class="control_panel reg_table log_panel">
+				Gradation enable<br/>
+				<table>
+				<tr>
+				"""
+		s	+= [ t ]
+
+		rows	= (self.dev.CHANNELS + 8 - 1) // 8
+		
+		for y in range( rows ):
+			s	 	+= [ '<tr class="slider_table_row">' ]
+			for i in range( y, self.dev.CHANNELS, rows ):
+				s	+= [ '<td><input type="checkbox" onchange="updateGradationEnable( \'gradationEnable\', {} );" id="gradationEnable{}">'. format( i, i ) ]
+				s	+= [ '<label for="gradationEnable{}">ch {}</label></td>'.format( i, i ) ]
+		
+		t	= """
+				</tr>
+				</table>
+				Group select<br/>
+				<table>
+				"""
+		s	+= [ t ]
+
+		for y in range( rows ):
+			s	 	+= [ '<tr class="slider_table_row">' ]
+			for i in range( y, self.dev.CHANNELS, rows ):
+				s	+= [ '<td><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updateGroupSelect( \'groupSelect\', {} );">'.format( i, i, i, i ) ]
+				s	+= [ '<option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>' ]
+
+			s	 	+= [ '</tr>' ]
+					
+				
+		s	+= [ '</table>' ]
+		s	+= [ '<table>' ]
+
+
+		tmp	= """\
+				<tr>
+					<td>
+						<label for="maxCurrent{% grp %}">Max curent ratio</label>
+						<input type="text" onchange="updatePlot();" id="maxCurrent{% grp %}" value="1.0" size=6>
+					</td>
+					<td>
+						<label for="rampTimeField{% grp %}">Ramp-time</label>
+						<input type="text" onchange="updatePlot();" id="rampTimeField{% grp %}" value="1.0" size=6>
+					</td>
+					<td>							
+						<input type="checkbox" checked onchange="updatePlot();" id="rampSwUp{% grp %}">
+						<label for="updateRampSwUp{% grp %}">Ramp-up</label>
+					</td>
+					<td>
+						<input type="checkbox" checked onchange="updatePlot();" id="rampSwDown{% grp %}">
+						<label for="updateRampSwDown{% grp %}">Ramp-down</label>
+					</td>
+					<td>
+						<label for="updateHoldON{% grp %}">Hold-ON time</label>
+						<select name="hold_on_time" id="holdON{% grp %}" oninput="updatePlot();">
+							<option value="1.00" selected hidden>1.00</option>
+							<option disabled="disabled" >---</option>
+							<option value="0.00">0.00</option>
+							<option value="0.25">0.25</option>
+							<option value="0.50">0.50</option>
+							<option value="0.75">0.75</option>
+							<option value="1.00">1.00</option>
+							<option value="2.00">2.00</option>
+							<option value="4.00">4.00</option>
+							<option value="6.00">6.00</option>
+						</select>
+					</td>
+					<td>
+						<label for="updateHoldOFF{% grp %}">Hold-OFF time</label>
+						<select name="hold_on_time" id="holdOFF{% grp %}" oninput="updatePlot();" value="1.00">
+							<option value="1.00" selected hidden>1.00</option>
+							<option disabled="disabled" >---</option>
+							<option value="0.00">0.00</option>
+							<option value="0.25">0.25</option>
+							<option value="0.50">0.50</option>
+							<option value="0.75">0.75</option>
+							<option value="1.00">1.00</option>
+							<option value="2.00">2.00</option>
+							<option value="4.00">4.00</option>
+							<option value="6.00">6.00</option>
+						</select>
+					</td>
+					<td>
+						<label for="updatePhase{% grp %}">Phase*</label>
+						<select name="phase" id="phase{% grp %}" oninput="updatePlot();">
+							<option value="0">no delay</option>
+							<option disabled="disabled" >---</option>
+							<option value="1/2">1 / 2</option>
+							<option disabled="disabled" >---</option>
+							<option value="1/3">1 / 3</option>
+							<option value="2/3">2 / 3</option>
+							<option disabled="disabled" >---</option>
+							<option value="1/4">1 / 4</option>
+							<option value="3/4">3 / 4</option>
+						</select>
+					</td>
+				</tr>
+				"""
+
+		for i in range( self.dev.GRAD_GRPS ):
+			s	+= [ tmp.replace( '{% grp %}', str( i ) ) ]
+		
+		s	+= [ '</table>' ]
+		
+
+
 		return "\n".join( s )
