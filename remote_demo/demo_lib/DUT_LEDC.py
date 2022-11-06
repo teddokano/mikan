@@ -101,8 +101,7 @@ class DUT_LEDC():
 			m	= self.regex_grch.match( req )
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ) ) )
-				print( obj )
-				
+
 				self.dev.gradation_channel_enable( obj[ "channels" ] )
 				self.dev.gradation_group_assign( obj[ "group" ] )
 				
@@ -114,19 +113,16 @@ class DUT_LEDC():
 			m	= self.regex_grss.match( req )
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ) ) )
-				print( obj )
 				
 				if ( obj[ "start" ] ):
-					print( obj[ "grps" ] )
 					timing_list	= sorted( obj[ "grps" ].keys() )
-					print( timing_list )
 					
 					prev_t	= 0.0
 					for t in timing_list:
 						timing	= float( t )
 						utime.sleep( timing - prev_t )
 						prev_t	= timing
-						print( "starting group: {}".format( obj[ "grps" ][ t ] ) )
+						print( "gradation control: starting group: {}".format( obj[ "grps" ][ t ] ) )
 						self.dev.gradation_start( obj[ "grps" ][ t ] )
 						
 				else:
