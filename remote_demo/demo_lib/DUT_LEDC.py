@@ -123,7 +123,7 @@ class DUT_LEDC():
 						utime.sleep( timing - prev_t )
 						prev_t	= timing
 						print( "gradation control: starting group: {}".format( obj[ "grps" ][ t ] ) )
-						self.dev.gradation_start( obj[ "grps" ][ t ] )
+						self.dev.gradation_start( obj[ "grps" ][ t ], continuous = True if (obj[ "start" ] == 1) else False )
 						
 				else:
 					print( obj[ "grps" ] )
@@ -380,7 +380,8 @@ class DUT_LEDC():
 		t	= """
 				</table>
 				Start / Stop control<br/>
-				<input type="button" onclick="gradationStart( 1 );"  value="Start" class="tmp_button">
+				<input type="button" onclick="gradationStart( 1 );"  value="Start (continue)" class="tmp_button">
+				<input type="button" onclick="gradationStart( 2 );"  value="Start (single shot)" class="tmp_button">
 				<input type="button" onclick="gradationStart( 0 );"  value="Stop"  class="tmp_button">
 				<input type="button" onclick="gradationStart( -1 );" value="All stop"  class="tmp_button">
 				<table class="table_LEDC">
@@ -393,10 +394,12 @@ class DUT_LEDC():
 							<input type="checkbox" id="startGrp{% grp %}">
 							Start/Stop enable
 						</td>
+						<!--
 						<td class="reg_table_name td_LEDC">
 							<input type="checkbox" checked id="continueGrp{% grp %}">
 							Continue
 						</td>
+						-->
 						<td class="reg_table_name td_LEDC">
 							<label for="startDelay{% grp %}">Start delay</label>
 							<select id="startDelay{% grp %}" oninput="updatePlot();">
