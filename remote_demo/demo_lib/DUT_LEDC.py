@@ -24,6 +24,7 @@ class DUT_LEDC():
 	IREF_INIT	= 0x10
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
+	regex_grch	= ure.compile( r".*gradation_settings=(.*)\?ver=.*" )
 	
 	DS_URL		= { "PCA9956B": "https://www.nxp.com/docs/en/data-sheet/PCA9956B.pdf",
 					"PCA9955B": "https://www.nxp.com/docs/en/data-sheet/PCA9955B.pdf",
@@ -64,8 +65,6 @@ class DUT_LEDC():
 
 		elif "allreg" in req:
 			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
-		elif "allreg" in req:
-			html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
@@ -97,6 +96,19 @@ class DUT_LEDC():
 				self.dev.write_registers( reg, val )
 
 				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
+
+			m	= self.regex_grch.match( req )
+			if m:
+				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ) ) )
+				print( obj )
+				
+				self.dev.gradation_channel_enable( obj[ "channels" ] )
+				self.dev.gradation_group_assign( obj[ "group" ] )
+				
+				for i, r in enumerate( obj[ "regs" ] ):
+					self.dev.write_registers( "RAMP_RATE_GRP{}".format( i ), r )
+					
+				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 
 		return html
 
@@ -261,7 +273,7 @@ class DUT_LEDC():
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
 			for i in range( y, self.dev.CHANNELS, rows ):
-				s	+= [ '<td class="reg_table_name td_LEDC"><input type="checkbox" onchange="updateGradationEnable();" id="gradationEnable{}">'. format( i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC"><input type="checkbox" onchange="updatePlot();" id="gradationEnable{}">'. format( i ) ]
 				s	+= [ '<label for="gradationEnable{}">ch {}</label></td>'.format( i, i ) ]
 		
 		t	= """
@@ -275,7 +287,7 @@ class DUT_LEDC():
 		for y in range( rows ):
 			s	 	+= [ '<tr class="slider_table_row">' ]
 			for i in range( y, self.dev.CHANNELS, rows ):
-				s	+= [ '<td class="reg_table_name td_LEDC"><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updateGroupSelect();">'.format( i, i, i ) ]
+				s	+= [ '<td class="reg_table_name td_LEDC"><label for="groupSelect{}">ch {}</label><select name="group" id="groupSelect{}" oninput="updatePlot();">'.format( i, i, i ) ]
 				s	+= [ '<option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>' ]
 
 			s	 	+= [ '</tr>' ]

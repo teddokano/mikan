@@ -200,33 +200,31 @@ function updatePlot() {
 	}
 	
 	drawChart( time_base, gradation_groups );
-
-	gradation_groups.forEach( function( g, i ) { 
-		document.getElementById( 'rampTimeField' + i ).value	= g.ramp_time;		
-	});
-}
-
-function updateGradationEnable() {
+	
+	let	m_obj		= {};
+	let	regs		= [];
 	let	channels	= [];
-			   
+	let	group		= [ [], [], [], [], [], [] ];
+						   
+	gradation_groups.forEach( function( g, i ) { 
+		document.getElementById( 'rampTimeField' + i ).value	= g.ramp_time;
+		regs[ i ]	= g.reg;
+	});
+	
 	for ( let i = 0; i < N_CHANNELS; i++ ) {
 		if ( document.getElementById( 'gradationEnable' + i ).checked ) {
 			channels.push( i )
 		}
 	}
-		   
-	console.log( channels );
-	console.log( JSON.stringify( channels ) );
-}
-
-function updateGroupSelect() {
-	let	group	= [ [], [], [], [], [], [] ]
 
 	for ( let i = 0; i < N_CHANNELS; i++ ) {
 		group[ document.getElementById( 'groupSelect' + i ).value ].push( i );
 	}
 
-	console.log( group );
-	console.log( JSON.stringify( group ) );
-}
+	m_obj.regs		= regs;
+	m_obj.channels	= channels;
+	m_obj.group		= group;
 
+	let url	= REQ_HEADER + 'gradation_settings=' + JSON.stringify( m_obj );
+	ajaxUpdate( url, allRegLoadDone );
+}
