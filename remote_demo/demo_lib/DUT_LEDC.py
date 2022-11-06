@@ -16,7 +16,7 @@ import	ure
 import	ujson
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
-from	nxp_periph	import	LED_controller_base
+from	nxp_periph	import	LED_controller_base, gradation_control
 import	demo_lib.utils	as utils
 
 class DUT_LEDC():
@@ -183,7 +183,7 @@ class DUT_LEDC():
 		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "dev_info"    ]	= info
 		page_data[ "signature"   ]	= utils.page_signature()
-		page_data[ "grad_ctrl"   ]	= self.grad_ctrl()
+		page_data[ "grad_ctrl"   ]	= self.grad_ctrl() if issubclass( self.dev.__class__, gradation_control ) else ""
 		page_data[ "n_ch"        ]	= str( count )
 		page_data[ "pwm0_idx"    ]	= str( pwm0_idx )
 		page_data[ "iref0_idx"   ]	= str( iref0_idx )
@@ -278,8 +278,7 @@ class DUT_LEDC():
 		return "\n".join( s )
 
 	def grad_ctrl( self ):
-		s	= []
-		n_gr	= self.dev.GRAD_GRPS 
+		s	= [ '<script>const GRAD_GRPS = {};\n</script>'.format( self.dev.GRAD_GRPS ) ]
 		
 		t	= """\
 				<div id="reg_table" class="control_panel reg_table">

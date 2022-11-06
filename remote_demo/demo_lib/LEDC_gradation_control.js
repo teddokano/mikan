@@ -107,7 +107,7 @@ function drawChart( time, g ) {
 					   },
 					   {
 						   label: 'group4',
-					       data: g[ 4 ].values,
+					       data: (null == g[ 4 ]) ? [ 0 ] : g[ 4 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 255, 190, 0, 1 )",
@@ -115,7 +115,7 @@ function drawChart( time, g ) {
 					   },
 					   {
 						   label: 'group5',
-					       data: g[ 5 ].values,
+					       data: (null == g[ 4 ]) ? [ 0 ] : g[ 4 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
 						   borderColor: "rgba( 0, 255, 0, 1 )",
@@ -165,7 +165,7 @@ function updatePlot() {
 	let setting		= {};
 	let	gradation_groups	= [];
 				
-	for ( let i = 0; i < 6; i++ ) {					
+	for ( let i = 0; i < GRAD_GRPS; i++ ) {					
 		setting.iref	= parseFloat( document.getElementById( 'maxCurrent'    + i ).value );
 		setting.rtime	= parseFloat( document.getElementById( 'rampTimeField' + i ).value );
 		setting.h_on	= parseFloat( document.getElementById( 'holdON'        + i ).value );
@@ -239,12 +239,12 @@ function gradationStart( start ) {
 				
 	if ( start == -1 ) {
 		start	= 0;
-		for ( let i = 0; i < 6; i++ ) {
+		for ( let i = 0; i < GRAD_GRPS; i++ ) {
 			target_ch.push( i );
 		}
 	}
 	
-	for ( let i = 0; i < 6; i++ ) {
+	for ( let i = 0; i < GRAD_GRPS; i++ ) {
 		if ( document.getElementById( 'startGrp' + i ).checked ) {
 			if ( start == 0 )
 				delay	= 0
