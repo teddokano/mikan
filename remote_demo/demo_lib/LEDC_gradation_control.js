@@ -233,8 +233,9 @@ function gradationStart( start ) {
 	
 	if ( start == -1 ) {
 		start	= 0;
+		target_ch[ 0 ]	= [ 0 ];
 		for ( let i = 0; i < GRAD_GRPS; i++ ) {
-			target_ch.push( i );
+			target_ch[ 0 ].push( i );
 		}
 	}
 	
