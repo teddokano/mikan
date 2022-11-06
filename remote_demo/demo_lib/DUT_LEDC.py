@@ -312,7 +312,6 @@ class DUT_LEDC():
 
 			s	 	+= [ '</tr>' ]
 					
-				
 		t	= """
 				</tr>
 				</table>
@@ -320,7 +319,6 @@ class DUT_LEDC():
 				<table class="table_LEDC">
 				"""
 		s	+= [ t ]
-
 
 		tmp	= """\
 				<tr>
@@ -401,7 +399,7 @@ class DUT_LEDC():
 						</td>
 						<td class="reg_table_name td_LEDC">
 							<label for="startDelay{% grp %}">Start delay</label>
-							<select id="startDelay{% grp %}">
+							<select id="startDelay{% grp %}" oninput="updatePlot();">
 								<option value="0">0</option>
 								<option disabled="disabled" >---</option>
 								<option value="1/2">1/2 phase</option>

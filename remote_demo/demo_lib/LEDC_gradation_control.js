@@ -28,6 +28,7 @@ class GradationFunc	{
 		this.t_hold_on	= this.t_ramp_up + setting.h_on;
 		this.t_ramp_dn	= this.t_hold_on + (setting.down ? this.ramp_time : 0);
 		this.t_cycle	= this.t_ramp_dn + setting.h_off;
+		this.t_offset	= (1.0 - setting.ofst_f) * this.t_cycle;
 		this.values		= [];
 		this.reg		= [];
 																	   
@@ -41,8 +42,10 @@ class GradationFunc	{
 	getCurve( time ) {
 		let	t;
 		let	v;
+
+		time	+= this.t_offset;
 		time	%= this.t_cycle;
-		
+				
 		if ( time < this.t_ramp_up ) {
 			t	= time - 0;
 			v	= this.iref * (t / this.ramp_time);
@@ -159,6 +162,8 @@ window.addEventListener( 'load', function () {
 	updatePlot();
 });
 
+let	delay_flg	= { "0": 0, "1/2": 1/2, "1/3": 1/3, "2/3": 2/3, "1/4": 1/4, "3/4": 3/4 }
+
 function updatePlot() {
 	let time_base	= [];
 	let t_max		= 0;				
@@ -172,18 +177,11 @@ function updatePlot() {
 		setting.h_off	= parseFloat( document.getElementById( 'holdOFF'       + i ).value );
 		setting.up		= document.getElementById( 'rampSwUp'      + i ).checked;
 		setting.down	= document.getElementById( 'rampSwDown'    + i ).checked;
-		
+		setting.ofst_f	= delay_flg[ document.getElementById( 'startDelay' + i ).value ];
+
 		gradation_groups[ i ]	= new GradationFunc( setting );
 	}
 			
-	/*
-	gradation_groups.forEach( function( g, i ) {
-		g.reg.forEach( function( v, j ) {
-			console.log( i + ' ' + j + ' ' + hex( v ) );
-		});		
-	});		
-	*/
-
 	for ( let g of gradation_groups ){
 		t_max	= (t_max < g.t_cycle) ? g.t_cycle : t_max;
 	}
@@ -207,7 +205,6 @@ function updatePlot() {
 	let	group		= [ [], [], [], [], [], [] ];
 						   
 	gradation_groups.forEach( function( g, i ) { 
-		//		document.getElementById( 'rampTimeField' + i ).value	= g.ramp_time;
 		document.getElementById( 'rampTimeActual'  + i ).value = g.ramp_time;
 		document.getElementById( 'cycleTimeActual' + i ).value = g.t_cycle;
 		regs[ i ]	= g.reg;
@@ -234,9 +231,6 @@ function updatePlot() {
 function gradationStart( start ) {
 	let	target_ch	= {};
 	
-	delay_flg	= { "0": 0, "1/2": 1/2, "1/3": 1/3, "2/3": 2/3, "1/4": 1/4, "3/4": 3/4 }
-
-				
 	if ( start == -1 ) {
 		start	= 0;
 		for ( let i = 0; i < GRAD_GRPS; i++ ) {
