@@ -600,10 +600,10 @@ class PCA9957( PCA9957_base ):
 
 	def __gradation_groups( self, list ):
 		bn	= 0
-		for i, ch in enumerate( list ):
-			bn	|= ch << (i << 2)
+		for ch, gr in enumerate( list ):
+			bn	|= gr << (ch << 2)
 		
-		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.GRAD_GRPS ) ]
+		v	= [ (0xFF & (bn >> (8 * i))) for i in range( self.CHANNELS // 2 ) ]
 		self.write_registers( "GRAD_GRP_SEL0", v )
 		
 	def __gradation_ctrl( self, pattern, mask ):

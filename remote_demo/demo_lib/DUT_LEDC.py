@@ -11,6 +11,7 @@
 #	version	0.1
 
 import	machine
+import	utime
 import	ure
 import	ujson
 
@@ -18,13 +19,13 @@ from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	LED_controller_base
 import	demo_lib.utils	as utils
 
-
 class DUT_LEDC():
 	APPLIED_TO	= LED_controller_base
 	IREF_INIT	= 0x10
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 	regex_grch	= ure.compile( r".*gradation_settings=(.*)\?ver=.*" )
+	regex_grss	= ure.compile( r".*gradation_start_stop=(.*)\?ver=.*" )
 	
 	DS_URL		= { "PCA9956B": "https://www.nxp.com/docs/en/data-sheet/PCA9956B.pdf",
 					"PCA9955B": "https://www.nxp.com/docs/en/data-sheet/PCA9955B.pdf",
@@ -108,6 +109,31 @@ class DUT_LEDC():
 				for i, r in enumerate( obj[ "regs" ] ):
 					self.dev.write_registers( "RAMP_RATE_GRP{}".format( i ), r )
 					
+				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+
+			m	= self.regex_grss.match( req )
+			if m:
+				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ) ) )
+				print( obj )
+				
+				if ( obj[ "start" ] ):
+					print( obj[ "grps" ] )
+					timing_list	= sorted( obj[ "grps" ].keys() )
+					print( timing_list )
+					
+					prev_t	= 0.0
+					for t in timing_list:
+						timing	= float( t )
+						utime.sleep( timing - prev_t )
+						prev_t	= timing
+						print( "starting group: {}".format( obj[ "grps" ][ t ] ) )
+						self.dev.gradation_start( obj[ "grps" ][ t ] )
+						
+				else:
+					print( obj[ "grps" ] )
+					if any( obj[ "grps" ] ):
+						self.dev.gradation_stop( obj[ "grps" ][ "0" ] )
+				
 				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 
 		return html
@@ -256,13 +282,12 @@ class DUT_LEDC():
 		n_gr	= self.dev.GRAD_GRPS 
 		
 		t	= """\
-				<div>
+				<div id="reg_table" class="control_panel reg_table">
 					<canvas id="myLineChart" width="40" height="10"></canvas>
 					<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
-				</div>
 
-				<div id="reg_table" class="control_panel reg_table log_panel">
-				Gradation enable<br/>
+				<div id="reg_table" class="control_panel reg_table">
+				Gradation enable (IREF value is controlled by gradation)<br/>
 				<table class="table_LEDC">
 				<tr>
 				"""
@@ -304,6 +329,9 @@ class DUT_LEDC():
 
 		tmp	= """\
 				<tr>
+					<td class="reg_table_name td_LEDC">
+						{% grp %}
+					</td>
 					<td class="reg_table_name td_LEDC">
 						<label for="maxCurrent{% grp %}">Max curent ratio</label>
 						<input type="text" onchange="updatePlot();" id="maxCurrent{% grp %}" value="1.0" size=4>
@@ -356,8 +384,58 @@ class DUT_LEDC():
 		for i in range( self.dev.GRAD_GRPS ):
 			s	+= [ tmp.replace( '{% grp %}', str( i ) ) ]
 		
-		s	+= [ '</table>' ]
+		t	= """
+				</table>
+				Start / Stop control<br/>
+				<input type="button" onclick="gradationStart( 1 );"  value="Start" class="tmp_button">
+				<input type="button" onclick="gradationStart( 0 );"  value="Stop"  class="tmp_button">
+				<input type="button" onclick="gradationStart( -1 );" value="All stop"  class="tmp_button">
+				<table class="table_LEDC">
+				"""
+		s	+= [ t ]
 		
+		tmp	= """\
+					<tr>
+						<td class="reg_table_name td_LEDC">
+							<input type="checkbox" id="startGrp{% grp %}">
+							Start/Stop enable
+						</td>
+						<td class="reg_table_name td_LEDC">
+							<input type="checkbox" checked id="continueGrp{% grp %}">
+							Continue
+						</td>
+						<td class="reg_table_name td_LEDC">
+							<label for="startDelay{% grp %}">Start delay</label>
+							<select id="startDelay{% grp %}">
+								<option value="0">0</option>
+								<option disabled="disabled" >---</option>
+								<option value="1/2">1/2 phase</option>
+								<option disabled="disabled" >---</option>
+								<option value="1/3">1/3 phase</option>
+								<option value="2/3">2/3 phase</option>
+								<option disabled="disabled" >---</option>
+								<option value="1/4">1/4 phase</option>
+								<option value="3/4">3/4 phase</option>
+							</select>
+						</td>
+						<td class="reg_table_name td_LEDC">
+							<input type="text" id="rampTimeActual{% grp %}" size=7 disabled>
+							sec/ramp
+						</td>
+						<td class="reg_table_name td_LEDC">
+							<input type="text" id="cycleTimeActual{% grp %}" size=7 disabled>
+							sec/cycle
+						</td>
+						
+					</tr>
+				"""
+				
+		for i in range( self.dev.GRAD_GRPS ):
+			s	+= [ tmp.replace( '{% grp %}', str( i ) ) ]
 
+		t	= """\
+				</div></div>
+				"""
+		s	+= [ t ]
 
 		return "\n".join( s )

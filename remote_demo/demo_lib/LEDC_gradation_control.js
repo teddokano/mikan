@@ -207,7 +207,9 @@ function updatePlot() {
 	let	group		= [ [], [], [], [], [], [] ];
 						   
 	gradation_groups.forEach( function( g, i ) { 
-		document.getElementById( 'rampTimeField' + i ).value	= g.ramp_time;
+		//		document.getElementById( 'rampTimeField' + i ).value	= g.ramp_time;
+		document.getElementById( 'rampTimeActual'  + i ).value = g.ramp_time;
+		document.getElementById( 'cycleTimeActual' + i ).value = g.t_cycle;
 		regs[ i ]	= g.reg;
 	});
 	
@@ -226,5 +228,41 @@ function updatePlot() {
 	m_obj.group		= group;
 
 	let url	= REQ_HEADER + 'gradation_settings=' + JSON.stringify( m_obj );
+	ajaxUpdate( url, allRegLoadDone );
+}
+
+function gradationStart( start ) {
+	let	target_ch	= {};
+	
+	delay_flg	= { "0": 0, "1/2": 1/2, "1/3": 1/3, "2/3": 2/3, "1/4": 1/4, "3/4": 3/4 }
+
+				
+	if ( start == -1 ) {
+		start	= 0;
+		for ( let i = 0; i < 6; i++ ) {
+			target_ch.push( i );
+		}
+	}
+	
+	for ( let i = 0; i < 6; i++ ) {
+		if ( document.getElementById( 'startGrp' + i ).checked ) {
+			if ( start == 0 )
+				delay	= 0
+			else
+				delay	= delay_flg[ document.getElementById( 'startDelay' + i ).value ] * parseFloat( document.getElementById( 'cycleTimeActual' + i ).value );
+			
+			if ( null == target_ch[ delay ] )
+				target_ch[ delay ]	= [ i ];
+			else
+				target_ch[ delay ].push( i );
+		}
+	}
+
+	let	m_obj		= {};
+
+	m_obj.start	= start;
+	m_obj.grps	= target_ch;
+
+	let url	= REQ_HEADER + 'gradation_start_stop=' + JSON.stringify( m_obj );
 	ajaxUpdate( url, allRegLoadDone );
 }
