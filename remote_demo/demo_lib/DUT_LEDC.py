@@ -434,7 +434,7 @@ class DUT_LEDC():
 			s	+= [ tmp.replace( '{% grp %}', str( i ) ) ]
 
 		t	= """\
-				</div></div>
+				</table></div></div>
 				"""
 		s	+= [ t ]
 
