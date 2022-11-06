@@ -216,9 +216,9 @@ function csvFileOut(  time, temp  ) {
 	let str	= [];
 	let	len	= time.length;
 	
-	str	+= "time,temp,tos,thyst,os\\n";
+	str	+= "time,temp,tos,thyst,os\n";
 	for ( let i = 0; i < len; i++ ) {
-		str	+= time[ i ] + "," +  temp[ i ] + "," + tos[ i ] + "," + thyst[ i ] + "," + os[ i ] + "\\n";
+		str	+= time[ i ] + "," +  temp[ i ] + "," + tos[ i ] + "," + thyst[ i ] + "," + os[ i ] + "\n";
 	}
 	
 	let blob	= new Blob( [str], {type:"text/csv"} );
