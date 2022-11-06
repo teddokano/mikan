@@ -106,19 +106,19 @@ function drawChart( time, g ) {
 						   backgroundColor: "rgba( 0, 0, 0, 0 )"
 					   },
 					   {
-						   label: 'group4',
+						   label: (null == g[ 4 ]) ? '' : 'group4',
 					       data: (null == g[ 4 ]) ? [ 0 ] : g[ 4 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
-						   borderColor: "rgba( 255, 190, 0, 1 )",
+						   borderColor: (null == g[ 4 ]) ? "rgba( 255, 190, 0, 0 )" : "rgba( 255, 190, 0, 1 )",
 						   backgroundColor: "rgba( 0, 0, 0, 0 )"
 					   },
 					   {
-						   label: 'group5',
-					       data: (null == g[ 4 ]) ? [ 0 ] : g[ 4 ].values,
+						   label: (null == g[ 5 ]) ? '' : 'group5',
+					       data: (null == g[ 5 ]) ? [ 0 ] : g[ 5 ].values,
 						   lineTension: 0.0,
 						   pointRadius: 0,
-						   borderColor: "rgba( 0, 255, 0, 1 )",
+						   borderColor: (null == g[ 5 ]) ? "rgba( 0, 255, 0, 0 )" : "rgba( 0, 255, 0, 1 )",
 						   backgroundColor: "rgba( 0, 0, 0, 0 )"
 					   },
 					   ],
