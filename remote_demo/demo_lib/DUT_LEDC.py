@@ -283,6 +283,9 @@ class DUT_LEDC():
 
 				<div id="reg_table" class="control_panel reg_table">
 				Gradation enable (IREF value is controlled by gradation)<br/>
+				<input type="button" onclick="gradationEnable( 1 );"  value="Check all" class="tmp_button">
+				<input type="button" onclick="gradationEnable( 0 );"  value="Clear all" class="tmp_button">
+				<input type="button" onclick="gradationEnable( -1 );" value="Demo setting"  class="tmp_button">
 				<table class="table_LEDC">
 				<tr>
 				"""
@@ -298,7 +301,8 @@ class DUT_LEDC():
 		
 		t	= """
 				</tr>
-				</table>
+				</table></div>
+				<div id="reg_table" class="control_panel reg_table">
 				Group select<br/>
 				<table class="table_LEDC">
 				"""
@@ -314,7 +318,8 @@ class DUT_LEDC():
 					
 		t	= """
 				</tr>
-				</table>
+				</table></div>
+				<div id="reg_table" class="control_panel reg_table">
 				Ramp setting<br/>
 				<table class="table_LEDC">
 				"""
@@ -374,7 +379,8 @@ class DUT_LEDC():
 			s	+= [ tmp.replace( '{% grp %}', str( i ) ) ]
 		
 		t	= """
-				</table>
+				</table></div>
+				<div id="reg_table" class="control_panel reg_table">
 				Start / Stop control<br/>
 				<input type="button" onclick="gradationStart( 1 );"  value="Start (continue)" class="tmp_button">
 				<input type="button" onclick="gradationStart( 2 );"  value="Start (single shot)" class="tmp_button">

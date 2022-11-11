@@ -240,7 +240,53 @@ function setDefaultSelection() {
 		document.getElementById( 'groupSelect' + i ).options[ i % GRAD_GRPS ].selected = true;
 
 	for ( let i = 0; i < GRAD_GRPS; i++ ) {					
-		document.getElementById( 'holdON'  + i ).options[4].selected = true;
-		document.getElementById( 'holdOFF' + i ).options[4].selected = true;
+		document.getElementById( 'holdON'  + i ).options[ 4 ].selected = true;
+		document.getElementById( 'holdOFF' + i ).options[ 4 ].selected = true;
 	}
+}
+
+function gradationEnable( setting ) {
+	if ( 0 <= setting ) {
+		for ( let i = 0; i < N_CHANNELS; i++ )
+			document.getElementById( 'gradationEnable' + i ).checked = setting;		
+	}
+	else {
+		for ( let i = 0; i < N_CHANNELS; i++ )
+			document.getElementById( 'gradationEnable' + i ).checked = true;		
+
+		if ( 16 == N_CHANNELS ) {
+			//	assuming it's a PCA9955B demo
+
+			for ( let i = 0; i < N_CHANNELS; i++ ) {
+				document.getElementById( 'groupSelect' + i ).options[ i % GRAD_GRPS ].selected = true;
+			}
+			
+			for ( let i = 0; i < GRAD_GRPS; i++ ) {
+				document.getElementById( 'maxCurrent'    + i ).value	= '1.0';
+				document.getElementById( 'rampTimeField' + i ).value	= '1.0';
+				document.getElementById( 'rampSwUp'      + i ).checked	= true;
+				document.getElementById( 'rampSwDown'    + i ).checked	= true;
+				document.getElementById( 'holdON'        + i ).options[ 0 ].selected = true;
+				document.getElementById( 'holdOFF'       + i ).options[ 4 ].selected = true;
+				document.getElementById( 'startGrp'      + i ).checked	= true;
+			}
+
+			document.getElementById( 'rampTimeField' + 0 ).value	= '0.5';
+			document.getElementById( 'rampSwUp'      + 0 ).checked	= true;
+			document.getElementById( 'rampSwDown'    + 0 ).checked	= true;
+			document.getElementById( 'holdON'        + 0 ).options[ 0 ].selected = true;
+			document.getElementById( 'holdOFF'       + 0 ).options[ 0 ].selected = true;
+
+			document.getElementById( 'startDelay' + 0 ).options[ 0 ].selected = true;
+			document.getElementById( 'startDelay' + 1 ).options[ 0 ].selected = true;
+			document.getElementById( 'startDelay' + 2 ).options[ 4 ].selected = true;
+			document.getElementById( 'startDelay' + 3 ).options[ 5 ].selected = true;
+
+			updatePlot();
+			
+			document.getElementById( 'valField99').value	= 'FF';
+			updateValField( this, 'valField', 99 );
+		}
+	}
+	updatePlot();
 }
