@@ -69,62 +69,35 @@ const	TABLE_LEN	= 10
 const	GRAPH_HIGH	= 1
 const	GRAPH_LOW	= 0
 
-function drawChart( time, g ) {
-	var ctx = document.getElementById("myLineChart");
+function drawChart( time, groups ) {
+	let	ds	= [];
+	let col	= [	'rgba(   0,   0,   0, 1   )',
+				'rgba( 115,  78,  48, 0.5 )',
+				'rgba( 255,   0,   0, 1   )',
+				'rgba( 237, 109,  53, 1   )',
+				'rgba( 255, 190,   0, 1   )',
+				'rgba(   0, 255,   0, 1   )'
+				];
+		
+	groups.forEach( function( g, i ) {
+		let data			= {};
+		
+		data.label				= 'group' + i;
+		data.data				= g.values;
+		data.lineTension		= 0.0;
+		data.pointRadius		= 0.0;
+		data.borderColor		= col[ i ];
+		data.backgroundColor	= 'rgba( 0, 0, 0, 0 )'
+		
+		ds.push( data );
+	});
+
+	var ctx = document.getElementById('myLineChart');
 	window.myLineChart = new Chart(ctx, {
 		type: 'line',
 		data: {
 			labels: time,
-			datasets: [
-					   {
-						   label: 'group0',
-						   data: g[ 0 ].values,
-						   lineTension: 0.0,
-						   pointRadius: 0,
-						   borderColor: "rgba( 0, 0, 0, 1 )",
-						   backgroundColor: "rgba( 0, 0, 0, 0 )"
-					   },
-					   {
-						   label: 'group1',
-						   data: g[ 1 ].values,
-						   lineTension: 0.0,
-						   pointRadius: 0,
-						   borderColor: "rgba( 115, 78, 48, 0.5 )",
-						   backgroundColor: "rgba( 0, 0, 0, 0 )"
-					   },
-					   {
-						   label: 'group2',
-					       data: g[ 2 ].values,
-						   lineTension: 0.0,
-						   pointRadius: 0,
-						   borderColor: "rgba( 255, 0, 0, 1 )",
-						   backgroundColor: "rgba( 0, 0, 0, 0 )"
-					   },
-					   {
-						   label: 'group3',
-					       data: g[ 3 ].values,
-						   lineTension: 0.0,
-						   pointRadius: 0,
-						   borderColor: "rgba( 237, 109, 53, 1 )",
-						   backgroundColor: "rgba( 0, 0, 0, 0 )"
-					   },
-					   {
-						   label: (null == g[ 4 ]) ? '' : 'group4',
-					       data: (null == g[ 4 ]) ? [ 0 ] : g[ 4 ].values,
-						   lineTension: 0.0,
-						   pointRadius: 0,
-						   borderColor: (null == g[ 4 ]) ? "rgba( 255, 190, 0, 0 )" : "rgba( 255, 190, 0, 1 )",
-						   backgroundColor: "rgba( 0, 0, 0, 0 )"
-					   },
-					   {
-						   label: (null == g[ 5 ]) ? '' : 'group5',
-					       data: (null == g[ 5 ]) ? [ 0 ] : g[ 5 ].values,
-						   lineTension: 0.0,
-						   pointRadius: 0,
-						   borderColor: (null == g[ 5 ]) ? "rgba( 0, 255, 0, 0 )" : "rgba( 0, 255, 0, 1 )",
-						   backgroundColor: "rgba( 0, 0, 0, 0 )"
-					   },
-					   ],
+			datasets: ds
 		},
 		options: {
 			animation: false,
@@ -138,7 +111,7 @@ function drawChart( time, g ) {
 						suggestedMax: GRAPH_HIGH,
 						suggestedMin: GRAPH_LOW,
 						stepSize: 0.1,
-						callback: function(value, index, values){
+						callback: function( value, index, values ){
 							return  value +  ''
 						}
 					},
@@ -260,4 +233,14 @@ function gradationStart( start ) {
 
 	let url	= REQ_HEADER + 'gradation_start_stop=' + JSON.stringify( m_obj );
 	ajaxUpdate( url, allRegLoadDone );
+}
+
+function setDefaultSelection() {
+	for ( let i = 0; i < N_CHANNELS; i++ )
+		document.getElementById( 'groupSelect' + i ).options[ i % GRAD_GRPS ].selected = true;
+
+	for ( let i = 0; i < GRAD_GRPS; i++ ) {					
+		document.getElementById( 'holdON'  + i ).options[4].selected = true;
+		document.getElementById( 'holdOFF' + i ).options[4].selected = true;
+	}
 }

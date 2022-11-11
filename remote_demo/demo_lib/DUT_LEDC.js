@@ -175,6 +175,7 @@ function allRegLoadDone() {
  
 function loadFinished(){
 	allRegLoad();
+	setDefaultSelection();
 }
 
 window.addEventListener( 'load', loadFinished );

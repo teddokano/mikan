@@ -344,8 +344,6 @@ class DUT_LEDC():
 					<td class="reg_table_name td_LEDC">
 						<label for="updateHoldON{% grp %}">Hold-ON time</label>
 						<select name="hold_on_time" id="holdON{% grp %}" oninput="updatePlot();">
-							<option value="1.00" selected hidden>1.00</option>
-							<option disabled="disabled" >---</option>
 							<option value="0.00">0.00</option>
 							<option value="0.25">0.25</option>
 							<option value="0.50">0.50</option>
@@ -359,8 +357,6 @@ class DUT_LEDC():
 					<td class="reg_table_name td_LEDC">
 						<label for="updateHoldOFF{% grp %}">Hold-OFF time</label>
 						<select name="hold_on_time" id="holdOFF{% grp %}" oninput="updatePlot();" value="1.00">
-							<option value="1.00" selected hidden>1.00</option>
-							<option disabled="disabled" >---</option>
 							<option value="0.00">0.00</option>
 							<option value="0.25">0.25</option>
 							<option value="0.50">0.50</option>
@@ -391,7 +387,7 @@ class DUT_LEDC():
 		tmp	= """\
 					<tr>
 						<td class="reg_table_name td_LEDC">
-							<input type="checkbox" id="startGrp{% grp %}">
+							<input type="checkbox" checked id="startGrp{% grp %}">
 							Start/Stop enable
 						</td>
 						<!--
