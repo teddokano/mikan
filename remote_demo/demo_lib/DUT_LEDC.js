@@ -26,7 +26,7 @@ function updateSliderFollowup( id, i ) {
 	timeoutId = 0;
 }
 
-function updateSlider( element, moving, id, i ) {
+function updateSlider( moving, id, i ) {
 	let value = document.getElementById( id + i ).value;
 	
 	setSliderAndRegisterlistValues( value, "slider", i );
@@ -45,7 +45,7 @@ function updateSlider( element, moving, id, i ) {
 		ajaxUpdate( url, updateDone );
 }
 
-function updateValField( element, id, i ) {
+function updateValField( id, i ) {
 	let valueFieldElement = document.getElementById( id + i );
 	let value	= parseInt( valueFieldElement.value, 16 );
 	let no_submit	= 0;
