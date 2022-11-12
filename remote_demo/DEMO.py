@@ -120,14 +120,6 @@ def main( micropython_optimize = False ):
 			client_stream.write( html )
 		except OSError as e:
 			print( "!!! OSError:", e.args )
-			
-			with open( "error_mikan_20221113" + req.decode()[:-2], mode = "w" ) as file:
-				file.write( html )
-		else:
-			with open( "ok_mikan_20221113" , mode = "w" ) as file:
-				file.write( html )
-
-		
 		
 		client_stream.close()
 		if not micropython_optimize:
