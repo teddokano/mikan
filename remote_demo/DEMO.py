@@ -86,6 +86,8 @@ def main( micropython_optimize = False ):
 	s.listen( 1 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
+	count	= 0
+
 	while True:
 		res = s.accept()
 		client_sock = res[0]
@@ -113,14 +115,16 @@ def main( micropython_optimize = False ):
 			h = client_stream.readline()
 			if h == b"" or h == b"\r\n":
 				break
-			#print(h)
 		
-		#print( html )
-		client_stream.write( html )
-
+		try:
+			client_stream.write( html )
+		except Exception as e:
+			print( type( e ), e )
+		
 		client_stream.close()
 		if not micropython_optimize:
 			client_sock.close()
+
 		print()
 
 def get_dut_list( devices, demo_harnesses ):
