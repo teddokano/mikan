@@ -15,17 +15,6 @@ const	IREF_INIT	=  {% iref_init %};
 let timeoutId	= null;
 let	count	= 0;
 
-function updateSliderFollowup( id, i ) {
-	let value = document.getElementById( id + i ).value;
-	
-	setSliderAndRegisterlistValues( value, "slider", i );
-
-	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
-	ajaxUpdate( url, updateDone )
-	
-	timeoutId = 0;
-}
-
 function updateSlider( moving, id, i ) {
 	let value = document.getElementById( id + i ).value;
 	
