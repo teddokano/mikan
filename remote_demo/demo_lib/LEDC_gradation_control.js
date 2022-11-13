@@ -132,7 +132,7 @@ function drawChart( time, groups ) {
 }
 
 window.addEventListener( 'load', function () {				
-	updatePlot();
+//	updatePlot();
 });
 
 let	delay_flg	= { "0": 0, "1/2": 1/2, "1/3": 1/3, "2/3": 2/3, "1/4": 1/4, "3/4": 3/4 }
@@ -240,6 +240,9 @@ function gradationStart( start ) {
 }
 
 function setDefaultSelection() {
+	if ( typeof GRAD_GRPS === 'undefined' )
+		return;	//	this is no gradation supported device
+	
 	for ( let i = 0; i < N_CHANNELS; i++ )
 		document.getElementById( 'groupSelect' + i ).options[ i % GRAD_GRPS ].selected = true;
 
