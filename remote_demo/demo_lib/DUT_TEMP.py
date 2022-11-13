@@ -43,6 +43,7 @@ class DUT_TEMP():
 		self.data		= { "time": [], "temp": [], "tos": [], "thyst": [], "os": [], "heater": [] }
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
+		self.symbol		= '🌡️'
 
 		if self.dev.ping():
 			tp	= self.dev.temp
@@ -130,6 +131,7 @@ class DUT_TEMP():
 		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_type"  ]	= self.type
 		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
+		page_data[ "symbol"    ]	= self.symbol
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "table_len" ]	= str( self.TABLE_LENGTH )
 		page_data[ "signature" ]	= utils.page_signature()

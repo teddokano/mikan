@@ -178,6 +178,7 @@ def page_table( dut_list ):
 	s	 = [ '<table>' ]
 
 	s	+= [ '<tr>' ]
+	s	+= [ '<td class="table_header"></td>' ]
 	s	+= [ '<td class="table_header">device type</td>' ]
 	s	+= [ '<td class="table_header">address</td>' ]
 	s	+= [ '<td class="table_header">live?</td>' ]
@@ -198,10 +199,12 @@ def page_table( dut_list ):
 		else:
 			live	= None
 
+		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.symbol ) ]
+
 		if live is not False:
 			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
 		else:
-			s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.type ) ]
+			s	+= [ '<td class="reg_table_name"><font color="#C0C0C0">{}</font></td>'.format( dut.type ) ]
 		
 		if dut.address:
 			s	+= [ '<td class="reg_table_name">0x%02X (0x%02X)</td>' % ( dut.address, dut.address << 1 ) ]

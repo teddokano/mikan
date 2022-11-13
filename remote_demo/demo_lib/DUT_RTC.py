@@ -48,6 +48,7 @@ class DUT_RTC():
 		self.dev		= dev
 		self.type		= self.dev.__class__.__name__
 		self.info		= [ "Real Time Clock", "" ]
+		self.symbol		= '\u23F0'
 		
 		if isinstance( self.interface, machine.I2C ):
 			self.address	= dev.__adr
@@ -124,6 +125,7 @@ class DUT_RTC():
 		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_type"  ]	= self.type
 		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
+		page_data[ "symbol"    ]	= self.symbol
 		page_data[ "dev_info"  ]	= self.dev.info()
 		page_data[ "signature" ]	= utils.page_signature()
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )

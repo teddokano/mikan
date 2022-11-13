@@ -39,6 +39,7 @@ class DUT_LEDC():
 		self.led		= [ LED( self.dev, i ) for i in range( self.dev.CHANNELS ) ]
 		self.type		= self.dev.__class__.__name__
 		self.info		= [ "LED controller", "{}ch".format( self.dev.CHANNELS ) ]
+		self.symbol		= '💡'
 
 		if isinstance( self.interface, machine.I2C ):
 			self.address	= dev.__adr
@@ -177,6 +178,7 @@ class DUT_LEDC():
 		page_data[ "dev_name"    ]	= self.dev_name
 		page_data[ "dev_type"    ]	= self.type
 		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
+		page_data[ "symbol"      ]	= self.symbol
 		page_data[ "dev_info"    ]	= info
 		page_data[ "signature"   ]	= utils.page_signature()
 		page_data[ "grad_ctrl"   ]	= self.grad_ctrl() if issubclass( self.dev.__class__, gradation_control ) else ""
