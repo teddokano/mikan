@@ -281,9 +281,6 @@ function gradationEnable( setting ) {
 			document.getElementById( 'startDelay' + 3 ).options[ 5 ].selected = true;
 
 			updatePlot();
-			
-			document.getElementById( 'valField99').value	= 'FF';
-			updateValField( this, 'valField', 99 );
 		}
 
 		else if ( 24 == N_CHANNELS ) {
@@ -329,11 +326,11 @@ function gradationEnable( setting ) {
 			document.getElementById( 'startDelay' + 5 ).options[ 5 ].selected = true;
 
 			updatePlot();
-			
-			document.getElementById( 'valField99').value	= 'FF';
-			updateValField( this, 'valField', 99 );
 		}
-
 	}
+	
+	document.getElementById( 'valField99').value	= 'FF';
+	updateValField( 'valField', 99 );
+
 	updatePlot();
 }
