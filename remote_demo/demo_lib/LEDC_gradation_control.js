@@ -152,6 +152,10 @@ function updatePlot() {
 		setting.down	= document.getElementById( 'rampSwDown'    + i ).checked;
 		setting.ofst_f	= delay_flg[ document.getElementById( 'startDelay' + i ).value ];
 
+		setting.iref	= (setting.iref   < 0) ? 0.0 : setting.iref;
+		setting.iref	= (1.0 < setting.iref) ? 1.0 : setting.iref;
+		document.getElementById( 'maxCurrent'    + i ).value	= setting.iref.toPrecision( 2 );
+		
 		gradation_groups[ i ]	= new GradationFunc( setting );
 	}
 			
