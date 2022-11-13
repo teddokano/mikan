@@ -131,10 +131,6 @@ function drawChart( time, groups ) {
 	});
 }
 
-window.addEventListener( 'load', function () {				
-//	updatePlot();
-});
-
 let	delay_flg	= { "0": 0, "1/2": 1/2, "1/3": 1/3, "2/3": 2/3, "1/4": 1/4, "3/4": 3/4 }
 
 function updatePlot() {
@@ -250,6 +246,8 @@ function setDefaultSelection() {
 		document.getElementById( 'holdON'  + i ).options[ 4 ].selected = true;
 		document.getElementById( 'holdOFF' + i ).options[ 4 ].selected = true;
 	}
+	
+	updatePlot();
 }
 
 function gradationEnable( setting ) {

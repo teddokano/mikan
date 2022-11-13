@@ -162,9 +162,7 @@ function allRegLoadDone() {
 	}
 }
  
-function loadFinished(){
+window.addEventListener( 'load', function () {
 	allRegLoad();
-	setDefaultSelection();
-}
-
-window.addEventListener( 'load', loadFinished );
+	setDefaultSelection();	
+} );
