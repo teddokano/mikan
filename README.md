@@ -1,6 +1,6 @@
 # "mikan"
-The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02).
 Peripheral device driver for collection for MicroPython.
+The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02).
 
 ## What is this?
 NXP peripheral device drivers and sample/demo code. 
@@ -15,6 +15,7 @@ The example code files are in 'example/'. It shows simple usage examples for the
 ### Demo
 The demo code is avaiable in 'remote_demo/'. 'remote_demo/DEMO.py' has 'main()' function to start the demo. 
 This demonstration works with a network connection. The microcontroller works a HTTP server to provide user interface on web browsers. 
+Video is available --> https://youtu.be/usPzhs_2IsI
 
 ## Supported devices
 - Real Time Clock (RTC)
