@@ -1,16 +1,3 @@
-#	MicroPython HTTP server sample code based on "http_server_simplistic.py".
-#	https://github.com/micropython/micropython/blob/master/examples/network/http_server_simplistic.py
-#
-#	Tedd OKANO / Released under the MIT license
-#	22-Oct-2022
-#	version	0.1
-#
-# https://www.sejuku.net/blog/25316
-# https://micropython-docs-ja.readthedocs.io/ja/v1.10ja/library/ujson.html
-# https://qiita.com/otsukayuhi/items/31ee9a761ce3b978c87a
-# https://products.sint.co.jp/topsic/blog/json
-# https://rintama.net/%EF%BD%8A%EF%BD%81%EF%BD%96%EF%BD%81%EF%BD%93%EF%BD%83%EF%BD%92%EF%BD%89%EF%BD%90%EF%BD%94%E3%81%A7%E4%BD%9C%E6%88%90%E3%81%97%E3%81%9F%E9%85%8D%E5%88%97%E3%82%92%EF%BD%83%EF%BD%93%EF%BD%96%E3%81%A7/
-
 import	machine
 import	ure
 import	ujson

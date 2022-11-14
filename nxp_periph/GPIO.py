@@ -1,9 +1,3 @@
-"""
-GPIO expander operation library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.1 (09-Oct-2022)
-"""
 from nxp_periph.interface	import	I2C_target
 
 class GPIO_base():

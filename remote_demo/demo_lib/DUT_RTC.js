@@ -1,9 +1,3 @@
-/*
- *	Javascript code for DUT_RTC.py
- *
- *	This script will be processed in DUT_RTC.py to replace "{%  %}" valriables
- */
-
 const	SOUND_DATA	= '{% sound %}';
 let		sound;
 

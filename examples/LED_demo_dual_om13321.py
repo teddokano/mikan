@@ -1,9 +1,3 @@
-"""
-Serial interface management library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.1 (01-Oct-2022)
-"""
 import	os
 import	math
 from	machine		import	I2C, Timer

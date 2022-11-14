@@ -1,10 +1,3 @@
-"""
-Stepper motor operation library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.1 (10-Oct-2022)
-this code based on https://os.mbed.com/users/nxp_ip/code/PCA9629A/
-"""
 from	nxp_periph.interface	import	I2C_target
 from	utime					import	sleep
 

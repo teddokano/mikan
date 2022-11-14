@@ -1,14 +1,4 @@
-"""
-LED controller operation library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.4 (03-Oct-2022)
-version	0.3 (02-Oct-2022)
-version	0.2 (01-Oct-2022)
-version	0.1 (29-Sep-2022)
-"""
 from nxp_periph.interface	import	I2C_target, SPI_target
-
 
 class LED():
 	"""

@@ -1,9 +1,3 @@
-/*
- *	Javascript code for DUT_LEDC.py
- *
- *	This script will be processed in DUT_LEDC.py to replace "{%  %}" valriables
- */
-
 const	PWM0_IDX	=  {% pwm0_idx %};
 const	IREF0_IDX	=  {% iref0_idx %};
 const	PWMALL_IDX	=  {% pwmall_idx %};

@@ -1,10 +1,3 @@
-"""
-Serial interface management library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.2 (10-Oct-2022)
-version	0.1 (01-Oct-2022)
-"""
 class Interface:
 #	@classmethod
 	def bit_operation( self, reg, target_bits, value ):

@@ -1,9 +1,3 @@
-"""
-Temperature sensor operation library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.1 (25-Sep-2022)
-"""
 from nxp_periph.interface	import	I2C_target
 
 def main():

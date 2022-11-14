@@ -1,10 +1,3 @@
-"""
-GPIO expander operation library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.1 (10-Oct-2022)
-"""
-
 from	machine		import	I2C
 from	nxp_periph	import	PCA9555
 import	utime

@@ -1,10 +1,3 @@
-#	MicroPython HTTP server sample code based on "http_server_simplistic.py".
-#	https://github.com/micropython/micropython/blob/master/examples/network/http_server_simplistic.py
-#
-#	Tedd OKANO / Released under the MIT license
-#	25-Oct-2022
-#	version	0.1
-
 from	nxp_periph	import	I2C_target
 
 class GENERAL:

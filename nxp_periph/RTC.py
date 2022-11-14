@@ -1,10 +1,3 @@
-"""
-RTC operation library for MicroPython
-Akifumi (Tedd) OKANO / Released under the MIT license
-
-version	0.1 (25-Sep-2022)
-"""
-
 from	machine				import	I2C, SPI
 from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 

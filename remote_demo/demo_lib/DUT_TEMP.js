@@ -1,9 +1,3 @@
-/*
- *	Javascript code for DUT_TEMP.py
- *
- *	This script will be processed in DUT_LEDC.py to replace "{%  %}" valriables
- */
-
 const	TABLE_LEN	= {% table_len %}
 const	GRAPH_HIGH	= {% graph_high %}
 const	GRAPH_LOW	= {% graph_low %}
