@@ -21,6 +21,8 @@
 			{% front_page_table %}
 			<p class="table_note">* page reloading will refresh device live status</p>
 
+			<input type="button" onclick="allLinkOpen( [ {% all_links %} ] );" value="Open all links" class="tmp_button"><br/><br/>
+			
 			<input type="button" onclick="busReset( 0 );" value="I²C Software reset" class="tmp_button"><!-- : send address=0x00 data=0x06 (S 0x00 0x06 P) --><br/>
 			<input type="button" onclick="busReset( 1 );" value="I²C Device reprogram" class="tmp_button"><!-- : send address=0x00 data=0x04 (S 0x00 0x04 P) -->
 		</div>

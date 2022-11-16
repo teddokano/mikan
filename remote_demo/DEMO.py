@@ -71,7 +71,8 @@ def main( micropython_optimize = False ):
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
-	s.listen( 1 )
+#	s.listen( 1 )
+	s.listen( 5 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
 	count	= 0
@@ -146,7 +147,11 @@ def page_setup( dut_list ):
 
 	page_data	= {}
 	page_data[ "dev_name"          ]	= "GENERAL"
-	page_data[ "front_page_table"  ]	= page_table( dut_list )
+
+	table, links	= page_table( dut_list )
+	
+	page_data[ "all_links"         ]	= links
+	page_data[ "front_page_table"  ]	= table
 	page_data[ "signature"         ]	= utils.page_signature()
 
 	files	= [	[	"html",		"demo_lib/DEMO"		],
@@ -164,6 +169,7 @@ def page_setup( dut_list ):
 
 def page_table( dut_list ):
 	s	 = [ '<table>' ]
+	l	 = []
 
 	s	+= [ '<tr>' ]
 	s	+= [ '<td class="table_header"></td>' ]
@@ -191,6 +197,7 @@ def page_table( dut_list ):
 
 		if live is not False:
 			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
+			l	+= [ "'" + dut.dev_name + "'" ]
 		else:
 			s	+= [ '<td class="reg_table_name"><font color="#C0C0C0">{}</font></td>'.format( dut.type ) ]
 		
@@ -206,8 +213,9 @@ def page_table( dut_list ):
 		s	+= [ '</tr>' ]
 		
 	s	+= [ '</table>' ]
-	return "\n".join( s )
 
+	return "\n".join( s ), ", ".join( l )
+	
 main()
 
 
