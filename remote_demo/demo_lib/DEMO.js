@@ -21,12 +21,13 @@ function allLinkOpen( list ) {
 	height	= top_ofst;
 	
 	list.forEach( ( url, i ) => {
+		let index	= (i % n_row) * n_col + parseInt(i / n_row);
 		window.open(	url, 
 						url, 
 						'width=' + width 
 							+ ',height=' + height 
-							+ ',left=' + left_ofst * (i % parseInt((count + (n_row - 1)) / n_row)) 
-							+ ',top=' + top_ofst * parseInt(i / parseInt((count + (n_row - 1)) / n_row))
+							+ ',left=' + left_ofst * (index % parseInt((count + (n_row - 1)) / n_row)) 
+							+ ',top=' + top_ofst * parseInt(index / parseInt((count + (n_row - 1)) / n_row))
 					);
 	});
 }

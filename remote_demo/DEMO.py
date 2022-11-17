@@ -29,26 +29,28 @@ def main( micropython_optimize = False ):
 
 	pca9956b_0	= PCA9956B( i2c, 0x02 >>1 )
 	pca9956b_1	= PCA9956B( i2c, 0x04 >>1 )
-	pca9955b	= PCA9955B( i2c, 0x06 >>1 )
+	pca9955b_0	= PCA9955B( i2c, 0x06 >>1 )
+	pca9955b_1	= PCA9955B( i2c, 0x08 >>1 )
 	pca9632		= PCA9632( i2c )
 	pca9957		= PCA9957( spi, setup_EVB = True )
 	pct2075		= PCT2075( i2c, setup_EVB = True  )
 	pcf2131_i2c	= PCF2131( i2c )
-	pcf2131_spi	= PCF2131( spi )
-	pcf85063	= PCF85063( i2c )
+#	pcf2131_spi	= PCF2131( spi )
+#	pcf85063	= PCF85063( i2c )
 	
 	gene_call	= General_call( i2c )
 
 	devices			= [	pca9956b_0,
 						pca9956b_1,
-						pca9955b,
+						pca9955b_0,
+						pca9955b_1,
 						gene_call,
-						pca9632,
 						pca9957,
+						pca9632,
 						pct2075,
 						pcf2131_i2c,
-						pcf2131_spi,
-						pcf85063,
+#						pcf2131_spi,
+#						pcf85063,
 						]
 	
 	demo_harnesses	= [	DUT_LEDC,
@@ -58,6 +60,9 @@ def main( micropython_optimize = False ):
 						]
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
+
+	for d in dut_list:
+		print( d.info )
 	
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
