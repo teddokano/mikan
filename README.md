@@ -46,13 +46,13 @@ YouTube video available for guiding easy install and examples 🙂
 
 ### Steps
 1. Check sys.path on target board
-	1. Connect your MCU board and PC, get REPL environment
-	1. Chack path setting by typing.. 
+	1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mide). 
+	1. Check path setting by typing.. 
 	```
 	>>> import sys
 	>>> print(sys.path)
 	```
-	Then you will get list of path like (in case of [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK)
+	Then you will get list of path like (in case of the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK))
 	```
 	['', '.frozen', '/flash', '/flash/lib']
 	```
@@ -65,7 +65,7 @@ YouTube video available for guiding easy install and examples 🙂
 
 ## What is inside?
 ### Drivers
-The drivers are main code of this repo.  
+The drivers are main part of this repo.  
 The driver code files are in `nxp_periph/`.  
 The drivers are provided as class-libraries with device names (type-numbers). With this class-libraries, the device operations are highly abstracted and simplified. Methods of the class-drivers enables major features of devices and and provides register level access for user custom operation. 
 
@@ -107,7 +107,7 @@ while True:                    # Looping following part forever
     sleep( 1 )                 # Waiting for 1 second
 ```
 
-For more examples, please find next section of this document. 
+For more information of examples, please find next section of this document. 
 
 ### Examples
 The example code files are in `examples/` folder.  
