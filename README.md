@@ -46,7 +46,7 @@ YouTube video available for guiding easy install and examples 🙂
 
 ### Steps
 1. Check sys.path on target board
-	1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mide). 
+	1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mode). 
 	1. Check path setting by typing.. 
 	```
 	>>> import sys
