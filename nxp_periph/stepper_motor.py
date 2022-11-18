@@ -101,8 +101,21 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 	def __steps( self, step, reverse = False ):
 		self.w16( "CCWSCOUNTL" if reverse else "CWSCOUNTL", step )
 
-	def __home( self, pps = 96, reverse = False, extrasteps = 0 ):
+	def __home2( self, pps = 96, reverse = False, extrasteps = 0 ):
 		data	= [ 0x03, 0x13, 0x1C, 0x00, 0x00, 0x01, extrasteps, 0x00 ]  #  for registers IO_CFG - EXTRASTEPS1 (0x03 - 0x0A)
 		self.write_registers( "IO_CFG", data )
+		self.pps( pps, reverse = reverse )
+		self.start( reverse = reverse )
+
+	def __home( self, pps = 48, reverse = False, extrasteps = 0 ):
+		data	= [
+					0x21, 0x0A, 0x00, 0x03, 0x13, 0x1C,             #  for registers MODE - MSK (0x00 - 0x07
+					0x00, 0x00, 0x01, 0x00, 0x00,                   #  for registers INTSTAT - EXTRASTEPS1 (0x06, 0xA)
+					0x10, 0xE5,                                     #  for registers OP_CFG_PHS and OP_STAT_TO (0x0B - 0xC)
+					0x09, 0x09, 0x01, 0x00, 0x00,                   #  for registers RUCNTL - LOOPDLY_CCW (0xD- 0x10)
+					0x60, 0x00, 0x60, 0x00, 0x82, 0x06, 0x82, 0x06, #  for registers CWSCOUNTL - CCWPWH (0x12 - 0x19)
+					0x20,                                           #  for register MCNTL (0x1A)
+					]
+		self.write_registers( "MODE", data )
 		self.pps( pps, reverse = reverse )
 		self.start( reverse = reverse )
