@@ -21,8 +21,8 @@ class StepperMotor_base():
 	def drv_phase( self, v ):
 		self.__drv_phase( v )
 
-	def home( self ):
-		self.__home()
+	def home( self, pps = 96, reverse = False, extrasteps = 0 ):
+		self.__home( pps = pps, reverse = reverse, extrasteps = extrasteps )
 	
 	def init():
 		__init_reg()
@@ -95,25 +95,14 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 		return pulse_width
 
 	def __drv_phase( self, v ):
-		v	= int( 0x3 if v == 0.5 else (v - 1)  )
-		
-		print( "__drv_phase {}".format( v ) )
+		v	= int( 0x3 if v == 0.5 else (v - 1)  )		
 		self.bit_operation( "OP_CFG_PHS", 0xC0, v << 6 )
 
 	def __steps( self, step, reverse = False ):
 		self.w16( "CCWSCOUNTL" if reverse else "CWSCOUNTL", step )
 
-	def __home( self, pps = 48, reverse = False, extrasteps = 0 ):
-		data	= [
-					0x21, 0x0A, 0x00, 0x03, 0x13, 0x1C,             #  for registers MODE - MSK (0x00 - 0x07
-					0x00, 0x00, 0x01, 0x00, 0x00,                   #  for registers INTSTAT - EXTRASTEPS1 (0x06, 0xA)
-					0x10, 0xE5,                                     #  for registers OP_CFG_PHS and OP_STAT_TO (0x0B - 0xC)
-					0x09, 0x09, 0x01, 0x00, 0x00,                   #  for registers RUCNTL - LOOPDLY_CCW (0xD- 0x10)
-					0x60, 0x00, 0x60, 0x00, 0x82, 0x06, 0x82, 0x06, #  for registers CWSCOUNTL - CCWPWH (0x12 - 0x19)
-					0x20,                                           #  for register MCNTL (0x1A)
-					]
-		self.write_registers( "MODE", data )
+	def __home( self, pps = 96, reverse = False, extrasteps = 0 ):
+		data	= [ 0x03, 0x13, 0x1C, 0x00, 0x00, 0x01, extrasteps, 0x00 ]  #  for registers IO_CFG - EXTRASTEPS1 (0x03 - 0x0A)
+		self.write_registers( "IO_CFG", data )
 		self.pps( pps, reverse = reverse )
 		self.start( reverse = reverse )
-
-		sleep( (self.steps_per_rotation + 3 + extrasteps) / pps );
