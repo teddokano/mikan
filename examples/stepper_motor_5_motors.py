@@ -31,25 +31,42 @@ def main():
 	all_mtr.pps( 192 )
 	all_mtr.pps( 96, reverse = True )
 	
-	print( "start CW" )
 	for m in mtrs:
+		print( "start CW: " + m.info() )
 		m.start()
 		sleep( 0.5 )
 
-	print( "start CCW" )
-	for m in mtrs:
-		m.start( reverse = True )
-		sleep( 0.5 )
+	mtrs[ 0 ].steps( 48 )
+	mtrs[ 0 ].start()
+	sleep( 1 )
 
-	print( "start CW" )
-	for m in mtrs:
-		m.start()
-		sleep( 0.5 )
+	mtrs[ 0 ].steps( 96 )
+	mtrs[ 1 ].steps( 48, reverse = True )
+	mtrs[ 2 ].steps( 48 )
+	mtrs[ 3 ].steps( 48, reverse = True )
+	mtrs[ 4 ].steps( 96 )
 
-	print( "start CCW" )
-	for m in mtrs:
-		m.start( reverse = True )
+	all_mtr.pps( 192 )
+	all_mtr.pps( 192, reverse = True )
+	
+	while True:
+		mtrs[ 0 ].start()
 		sleep( 0.5 )
+		mtrs[ 1 ].start( reverse = True )
+		sleep( 0.25 )
+		mtrs[ 2 ].start()
+		sleep( 0.25 )
+		mtrs[ 3 ].start( reverse = True )
+		sleep( 0.25 )
+		mtrs[ 4 ].start()
+		sleep( 0.5 )
+		mtrs[ 3 ].start( reverse = True )
+		sleep( 0.25 )
+		mtrs[ 2 ].start()
+		sleep( 0.25 )
+		mtrs[ 1 ].start( reverse = True )
+		sleep( 0.25 )
+		
 
 if __name__ == "__main__":
 	main()
