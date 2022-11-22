@@ -61,8 +61,8 @@ def main( micropython_optimize = False ):
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
 
-	for d in dut_list:
-		print( d.info )
+#	for d in dut_list:
+#		print( d.info )
 	
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
@@ -201,7 +201,7 @@ def page_table( dut_list ):
 		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.symbol ) ]
 
 		if live is not False:
-			s	+= [ '<td class="reg_table_name"><a href="/{}" target="_blank" rel="noopener noreferrer">{}</a></td>'.format( dut.dev_name, dut.type ) ]
+			s	+= [ '<td class="reg_table_name"><a href="/{}" target="{}">{}</a></td>'.format( dut.dev_name, dut.dev_name, dut.type ) ]
 			l	+= [ "'" + dut.dev_name + "'" ]
 		else:
 			s	+= [ '<td class="reg_table_name"><font color="#C0C0C0">{}</font></td>'.format( dut.type ) ]
