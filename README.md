@@ -5,8 +5,8 @@ The name of this repository has been changed from "mp_driver" to "mikan" (2022 N
 
 ## What is this?
 NXP peripheral device drivers (SDK) for [MicroPython](https://micropython.org) and its usage examples and demo.  
-The drivers provided to operate I²C/SPI peripheral devices. It enables quick evaluation and rapid demo development by simple intuitive interface (API) and flexible MicroPython environment. 
-
+The drivers provided to operate I²C/SPI peripheral devices. It enables quick evaluation and rapid demo development by simple intuitive interface (API) and flexible MicroPython environment.  
+Refer to this [video](https://youtu.be/vFyovJFih5Y) to find what can be done.
 
 ![Boards](https://github.com/teddokano/additional_files/blob/main/mikan/img/boards.jpeg)  
 _[Arduino® Shields Solutions](https://www.nxp.com/design/development-boards/analog-toolbox/arduino-shields-solutions:ARDUINO-SOLUTIONS) boards and I²C peripheral evaluation boards with 
