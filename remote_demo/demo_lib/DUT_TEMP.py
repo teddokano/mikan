@@ -110,7 +110,7 @@ class DUT_TEMP():
 		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
 		s	+= [ ujson.dumps( self.data ) ]
 
-		print( "size = {}".format( len( "".join( s ) ) ) )
+		#	print( "size = {}".format( len( "".join( s ) ) ) )
 
 		return "".join( s )
 
