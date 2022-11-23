@@ -6,21 +6,10 @@ from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	temp_sensor_base
 import	demo_lib.utils	as utils
 
-class TempData():
-	def __init__( self, ts_obj ):
-		self.temp		= ts_obj.dev.temp
-		tm	= ts_obj.rtc.now()
-		
-		self.time	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
-		self.tos	= ts_obj.tos
-		self.thyst	= ts_obj.thyst
-		self.os		= ts_obj.GRAPH_HIGH if ts_obj.int_pin.value() else ts_obj.GRAPH_LOW
-		self.heater	= ts_obj.GRAPH_HIGH if ts_obj.dev.heater      else ts_obj.GRAPH_LOW
-	
 class DUT_TEMP():
 	APPLIED_TO		= temp_sensor_base
 	TABLE_LENGTH	= 10
-	SAMPLE_LENGTH	= 10
+	SAMPLE_LENGTH	= 60
 	GRAPH_HIGH		= 30
 	GRAPH_LOW		= 20
 
@@ -120,6 +109,8 @@ class DUT_TEMP():
 	def sending_data( self ):
 		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
 		s	+= [ ujson.dumps( self.data ) ]
+
+		print( "size = {}".format( len( "".join( s ) ) ) )
 
 		return "".join( s )
 

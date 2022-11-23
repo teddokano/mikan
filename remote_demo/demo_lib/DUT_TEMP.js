@@ -15,8 +15,6 @@ let	temp_data	= {
 }
 
 function drawChart() {
-	console.log( 'drawing' );
-
 	var ctx = document.getElementById("myLineChart");
 	window.myLineChart = new Chart(ctx, {
 		type: 'line',
