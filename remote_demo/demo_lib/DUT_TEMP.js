@@ -4,6 +4,7 @@ const	GRAPH_LOW	= {% graph_low %}
 const	TOS_INIT	= {% tos_init %}
 const	THYST_INIT	= {% thyst_init %}
 const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
+const	MAX_N_DATA	= {% max_n_data %}
 
 let	temp_data	= {
 	time:[],
@@ -89,15 +90,27 @@ function drawChart() {
  ****	temp display
  ****************************/
 
+let	lastTime;
+
+function pastSec() {
+	let	now	= Date.now();
+	let	past	= now - lastTime;
+	lastTime	= now;
+
+	return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
+}
+
 /******** getTempAndShow ********/
 
 function getTempAndShow() {
-	let url	= REQ_HEADER + "update";
+	let	past	= pastSec();
+	console.log( past );
+	let url	= REQ_HEADER + "update=" + (past + 1);
 	ajaxUpdate( url, getTempAndShowDone );
 }
 
 function getTempAndShowDone() {
-	console.time('getTempAndShowDone');	
+	console.time( 'getTempAndShowDone' );	
 	let obj = JSON.parse( this.responseText );
 
 	obj.forEach( data => {
@@ -135,7 +148,7 @@ function getTempAndShowDone() {
 	document.getElementById( "infoFieldValue0" ).value = temp_data.time[ 0 ];
 	document.getElementById( "infoFieldValue1" ).value = temp_data.time[ temp_data.time.length - 1 ];
 	document.getElementById( "infoFieldValue2" ).value = temp_data.time.length;
-	console.timeEnd('getTempAndShowDone');
+	console.timeEnd( 'getTempAndShowDone' );
 }
 
 /****************************

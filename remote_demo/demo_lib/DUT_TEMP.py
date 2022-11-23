@@ -20,6 +20,7 @@ class DUT_TEMP():
 	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )
 	regex_heater	= ure.compile( r".*heater=(\d+)" )
 	regex_mode		= ure.compile( r".*os_polarity=(\d+)&os_mode=(\d+)" )
+	regex_update	= ure.compile( r".*update=(\d+)" )
 
 	def __init__( self, dev, timer = 0, sampling_interbal = 1.0 ):
 		self.interface	= dev.__if
@@ -77,11 +78,15 @@ class DUT_TEMP():
 
 		if "?" not in req:
 			html	= self.page_setup()
-		elif "update" in req:
-				html	= self.sending_data()
+#		elif "update" in req:
+#				html	= self.sending_data()
 		else:
 			print( req )
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+
+			m	= self.regex_update.match( req )
+			if m:
+				html	= self.sending_data( int( m.group( 1 ) ) )
 
 			m	= self.regex_thresh.match( req )
 			if m:
@@ -106,11 +111,11 @@ class DUT_TEMP():
 
 		return html
 
-	def sending_data( self ):
+	def sending_data( self, length ):
 		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
-		s	+= [ ujson.dumps( self.data ) ]
+		s	+= [ ujson.dumps( self.data[ -length: ] ) ]
 
-		#	print( "size = {}".format( len( "".join( s ) ) ) )
+		print( "length = {}, size = {}".format( length, len( "".join( s ) ) ) )
 
 		return "".join( s )
 
@@ -132,6 +137,7 @@ class DUT_TEMP():
 		page_data[ "graph_low" ]	= str( self.GRAPH_LOW  )
 		page_data[ "tos_init"  ]	= str( self.tos   )
 		page_data[ "thyst_init"]	= str( self.thyst )
+		page_data[ "max_n_data"]	= str( self.SAMPLE_LENGTH )
 
 		#	using list instead of dict because current MicroPython's dict cannot keep key order
 		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
