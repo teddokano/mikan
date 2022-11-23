@@ -97,6 +97,7 @@ function getTempAndShow() {
 }
 
 function getTempAndShowDone() {
+	console.time('getTempAndShowDone');	
 	let obj = JSON.parse( this.responseText );
 
 	obj.forEach( data => {
@@ -134,6 +135,7 @@ function getTempAndShowDone() {
 	document.getElementById( "infoFieldValue0" ).value = temp_data.time[ 0 ];
 	document.getElementById( "infoFieldValue1" ).value = temp_data.time[ temp_data.time.length - 1 ];
 	document.getElementById( "infoFieldValue2" ).value = temp_data.time.length;
+	console.timeEnd('getTempAndShowDone');
 }
 
 /****************************
