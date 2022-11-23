@@ -5,12 +5,14 @@ const	TOS_INIT	= {% tos_init %}
 const	THYST_INIT	= {% thyst_init %}
 const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 
-let	time	= []
-let	temp	= []
-let	tos		= []
-let	thyst	= []
-let	os		= []
-let	heater	= []
+let	temp_data	= {
+	time:[],
+	temp:[],
+	tos:[],
+	thyst:[],
+	os:[],
+	heater:[]
+}
 
 function drawChart() {
 	console.log( 'drawing' );
@@ -19,35 +21,35 @@ function drawChart() {
 	window.myLineChart = new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: time,
+			labels: temp_data.time,
 			datasets: [
 				{
 					label: 'temperature',
-					data: temp,
+					data: temp_data.temp,
 					borderColor: "rgba( 255, 0, 0, 1 )",
 					backgroundColor: "rgba( 0, 0, 0, 0 )"
 				},
 				{
 					label: 'Tos',
-					data: tos,
+					data: temp_data.tos,
 					borderColor: "rgba( 255, 0, 0, 0.3 )",
 					backgroundColor: "rgba( 0, 0, 0, 0 )"
 				},
 				{
 					label: 'Thyst',
-					data: thyst,
+					data: temp_data.thyst,
 					borderColor: "rgba( 0, 0, 255, 0.3 )",
 					backgroundColor: "rgba( 0, 0, 0, 0 )"
 				},
 				{
 					label: OS_LABEL,
-					data: os,
+					data: temp_data.os,
 					borderColor: "rgba( 0, 255, 0, 0.5 )",
 					backgroundColor: "rgba( 0, 0, 0, 0 )"
 				},
 				{
 					label: 'Heater',
-					data: heater,
+					data: temp_data.heater,
 					borderColor: "rgba( 255, 0, 0, 0.0 )",
 					backgroundColor: "rgba( 255, 0, 0, 0.1 )"
 				},
@@ -96,34 +98,34 @@ function getTempAndShow() {
 	ajaxUpdate( url, getTempAndShowDone );
 }
 
-let prev_reg	= [];
-
 function getTempAndShowDone() {
 	let obj = JSON.parse( this.responseText );
 
-	//	server sends multiple data.
-	//	pick one sample from last and store local memory
-	idx	= obj.data.time.length - 1;
-	temperature	= obj.data.temp[ idx ];
+	obj.forEach( data => {
+		if ( temp_data.time.includes( data.time ) )
+			return;
+		
+		temp_data.time.push(   data.time   );
+		temp_data.temp.push(   data.temp   );
+		temp_data.tos.push(    data.tos    );
+		temp_data.thyst.push(  data.thyst  );
+		temp_data.os.push(     data.os     );
+		temp_data.heater.push( data.heater );
+	});
 	
-	time.push( obj.data.time[ idx ] );
-	temp.push( temperature );
-	tos.push( obj.data.tos[ idx ] );
-	thyst.push( obj.data.thyst[ idx ] );
-	os.push( obj.data.os[ idx ] );
-	heater.push( obj.data.heater[ idx ] );
-
 	drawChart();
 	
-	var elem = document.getElementById( "temperature" );
-	elem.innerText = temperature.toFixed( 3 ) + '˚C';
+	if ( temp_data ) {
+		let elem = document.getElementById( "temperature" );
+		elem.innerText = temp_data.temp[ temp_data.temp.length - 1 ].toFixed( 3 ) + '˚C';
+	}
 
 	
 	for ( let i = 0; i < TABLE_LEN; i++ )
 	{
-		document.getElementById( "timeField" + i ).value = time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+		document.getElementById( "timeField" + i ).value = temp_data.time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
 		
-		let	value	= temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+		let	value	= temp_data.temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
 		
 		if ( !isNaN( value ) )
 			value	= value.toFixed( 3 );
@@ -131,9 +133,9 @@ function getTempAndShowDone() {
 		document.getElementById( "tempField" + i ).value = value;
 	}
 	
-	document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
-	document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
-	document.getElementById( "infoFieldValue2" ).value = time.length;
+	document.getElementById( "infoFieldValue0" ).value = temp_data.time[ 0 ];
+	document.getElementById( "infoFieldValue1" ).value = temp_data.time[ temp_data.time.length - 1 ];
+	document.getElementById( "infoFieldValue2" ).value = temp_data.time.length;
 }
 
 /****************************

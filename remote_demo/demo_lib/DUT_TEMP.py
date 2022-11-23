@@ -6,6 +6,17 @@ from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	temp_sensor_base
 import	demo_lib.utils	as utils
 
+class TempData():
+	def __init__( self, ts_obj ):
+		self.temp		= ts_obj.dev.temp
+		tm	= ts_obj.rtc.now()
+		
+		self.time	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
+		self.tos	= ts_obj.tos
+		self.thyst	= ts_obj.thyst
+		self.os		= ts_obj.GRAPH_HIGH if ts_obj.int_pin.value() else ts_obj.GRAPH_LOW
+		self.heater	= ts_obj.GRAPH_HIGH if ts_obj.dev.heater      else ts_obj.GRAPH_LOW
+	
 class DUT_TEMP():
 	APPLIED_TO		= temp_sensor_base
 	TABLE_LENGTH	= 10
@@ -27,7 +38,7 @@ class DUT_TEMP():
 		self.type		= self.dev.__class__.__name__
 		self.address	= dev.__adr
 		self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
-		self.data		= { "time": [], "temp": [], "tos": [], "thyst": [], "os": [], "heater": [] }
+		self.data		= []
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
 		self.symbol		= '🌡️'
@@ -49,24 +60,25 @@ class DUT_TEMP():
 			tim0	= machine.Timer( timer )
 			tim0.init( period = int( sampling_interbal * 1000.0 ), callback = self.tim_cb )
 
-	def tim_cb( self, tim_obj ):
-		tp	= self.dev.temp
+	def tmp_data( self ):
+		d	= {}
+		d[ "temp" ] = self.dev.temp
 		tm	= self.rtc.now()
-		self.data[ "time"   ]	+= [ "%02d:%02d:%02d" % (tm[3], tm[4], tm[5]) ]
-		self.data[ "temp"   ]	+= [ tp ]
-		self.data[ "tos"    ]	+= [ self.tos ]
-		self.data[ "thyst"  ]	+= [ self.thyst ]
-		self.data[ "os"     ]	+= [ self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW ]
-		self.data[ "heater" ]	+= [ self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW ]
 
-		over	= len( self.data[ "time" ] ) - self.SAMPLE_LENGTH
+		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
+		d[ "tos"    ]	= self.tos
+		d[ "thyst"  ]	= self.thyst
+		d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
+		d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
+		
+		return d
+
+	def tim_cb( self, tim_obj ):
+		self.data	+= [ self.tmp_data() ]
+
+		over	= len( self.data ) - self.SAMPLE_LENGTH
 		if  0 < over:
-			self.data[ "time"   ]	= self.data[ "time"   ][ over : ]
-			self.data[ "temp"   ]	= self.data[ "temp"   ][ over : ]
-			self.data[ "tos"    ]	= self.data[ "tos"    ][ over : ]
-			self.data[ "thyst"  ]	= self.data[ "thyst"  ][ over : ]
-			self.data[ "os"     ]	= self.data[ "os"     ][ over : ]
-			self.data[ "heater" ]	= self.data[ "heater" ][ over : ]
+			self.data	= self.data[ over : ]
 
 		#print( "sampled: {} @ {}".format( tp, tm ) )
 
@@ -107,7 +119,7 @@ class DUT_TEMP():
 
 	def sending_data( self ):
 		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
-		s	+= [ ujson.dumps( { "data": self.data } ) ]
+		s	+= [ ujson.dumps( self.data ) ]
 
 		return "".join( s )
 
