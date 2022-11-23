@@ -77,16 +77,14 @@ class DUT_TEMP():
 			return None
 
 		if "?" not in req:
-			html	= self.page_setup()
-#		elif "update" in req:
-#				html	= self.sending_data()
+			return	self.page_setup()
 		else:
-			print( req )
+			#print( req )
 			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
 
 			m	= self.regex_update.match( req )
 			if m:
-				html	= self.sending_data( int( m.group( 1 ) ) )
+				return self.sending_data( int( m.group( 1 ) ) )
 
 			m	= self.regex_thresh.match( req )
 			if m:
@@ -94,28 +92,28 @@ class DUT_TEMP():
 				self.thyst	= float( m.group( 2 ) )
 				self.dev.temp_setting( [ self.tos, self.thyst ] )
 				print( "********** THRESHOLDS {} {} **********".format( self.tos, self.thyst ) )
+				return html
 
 			m	= self.regex_heater.match( req )
 			if m:
 				val	= int( m.group( 1 ) )
 				self.dev.heater	= val
 				print( "********** {} HEATER {} **********".format( self.type, "ON" if val else "OFF" ) )
+				return html
 
 			m	= self.regex_mode.match( req )
 			if m:
 				pol	= int( m.group( 1 ) )
 				mod	= int( m.group( 2 ) )
 				self.dev.bit_operation( "Conf", 0x06, (pol << 2) | (mod << 1) )
-
 				print( "********** CONFIGURATION {} {} **********".format( "Active_HIGH" if pol else "Active_Low", "Interrupt" if mod else "Comparator" ) )
-
-		return html
+				return html
 
 	def sending_data( self, length ):
 		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
 		s	+= [ ujson.dumps( self.data[ -length: ] ) ]
 
-		print( "length = {}, size = {}".format( length, len( "".join( s ) ) ) )
+		#	print( "length = {}, size = {}".format( length, len( "".join( s ) ) ) )
 
 		return "".join( s )
 
