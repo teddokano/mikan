@@ -3,6 +3,7 @@ import	ujson
 import	machine
 import	os
 import	ure
+import	gc
 try:
     import usocket as socket
 except:
@@ -18,6 +19,7 @@ from	demo_lib	import	DUT_GENERALCALL, General_call
 
 import	demo_lib.utils	as utils
 
+MEM_MONITORING	= False
 
 def main( micropython_optimize = False ):
 	print( "remote device demo" )
@@ -118,6 +120,10 @@ def main( micropython_optimize = False ):
 		client_stream.close()
 		if not micropython_optimize:
 			client_sock.close()
+
+		if MEM_MONITORING:
+			gc.collect()
+			print( gc.mem_alloc() / 1024 )
 
 		print()
 
@@ -221,6 +227,4 @@ def page_table( dut_list ):
 
 	return "\n".join( s ), ", ".join( l )
 	
-main()
-
-
+main( micropython_optimize = True )
