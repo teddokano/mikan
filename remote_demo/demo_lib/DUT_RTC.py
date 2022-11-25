@@ -49,13 +49,13 @@ class DUT_RTC():
 			return None
 	
 		if "?" not in req:
-			html	= self.page_setup()
+			return self.page_setup()
 		elif "set_current_time" in req:
 			self.dev.datetime( machine.RTC().datetime() )
-			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+			return 'HTTP/1.0 200 OK\n\n'	# dummy
 		elif "clear_alarm" in req:
 			self.dev.clear_alarm()
-			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+			return 'HTTP/1.0 200 OK\n\n'	# dummy
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
@@ -63,7 +63,7 @@ class DUT_RTC():
 				val	= int( m.group( 2 ) )
 
 				self.dev.write_registers( reg, val )
-				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
+				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
 
 			m	= self.regex_alarm.match( req )
 			if m:
@@ -77,12 +77,9 @@ class DUT_RTC():
 				
 				self.dev.clear_alarm()
 				self.dev.alarm_int( None, **alarm_time )	#	No INT pin assertion to avoid other device (PCA9957-ARD)
-				html	= 'HTTP/1.0 200 OK\n\n'	# dummy
-
+				return 'HTTP/1.0 200 OK\n\n'	# dummy
 			else:
-				html	= self.sending_data()
-
-		return html
+				return self.sending_data()
 
 	def sending_data( self ):
 		if ( "PCF2131" in self.type ):
