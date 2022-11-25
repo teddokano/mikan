@@ -1,6 +1,6 @@
 # "mikan" 💡⏰🌡️↕🔄
 Peripheral device driver for collection for MicroPython.  
-The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02).
+_The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
 
 ## What is this?
@@ -60,7 +60,7 @@ YouTube video available for guiding easy install and examples 🙂
 	```
 	['', '.frozen', '/lib']
 	```
-1. Copy "nxp_periph" into target's' "lib" (it could be '/flash/lib' or '/lib') nameed folder. 
+1. Copy "nxp_periph" folder into target's' "lib" (it could be '/flash/lib' or '/lib') named folder.  For file/folder copying, some tools can be used like [Thonny](https://thonny.org), [rshell](https://github.com/dhylands/rshell), etc.
 1. Now it's ready to play! Choose an example code in "example" folder and run.
 
 ## What is inside?
