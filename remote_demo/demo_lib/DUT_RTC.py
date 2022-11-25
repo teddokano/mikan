@@ -6,13 +6,6 @@ from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	RTC_base
 import	demo_lib.utils	as utils
 
-try:
-	import	demo_lib.sound_data as sound_data
-except:
-	import	demo_lib.no_sound_data as sound_data
-
-
-
 class DUT_RTC():
 	APPLIED_TO	= RTC_base
 	
@@ -114,7 +107,7 @@ class DUT_RTC():
 		page_data[ "signature" ]	= utils.page_signature()
 		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
 		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
-		page_data[ "sound"     ]	= sound_data.get_sound()
+		page_data[ "sound"     ]	= utils.get_sound( "demo_lib/sound.data" )
 
 		if len( page_data[ "sound" ] ) is 0:
 			print( "####### DUT_RTC: No sound data loaded" )

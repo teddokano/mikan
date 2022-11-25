@@ -49,3 +49,11 @@ def page_signature():
 	
 	return s.replace('{% mcu %}', os.uname().machine )
 	
+def get_sound( file_name ):
+	try:
+		with open( file_name ) as f:
+			s	= f.read()
+	except:
+		s	= ""	
+	
+	return s
