@@ -178,7 +178,7 @@ class P3T1085( LM75B ):
 	"""
 	DEFAULT_ADDR		= 0x90 >> 1
 
-	REG_NAME	= ( "Temp", "Conf", "T_LOW", "T_HOGH" )
+	REG_NAME	= ( "Temp", "Conf", "T_LOW", "T_HIGH" )
 	REG_LEN		= (      2,      2,       2,        2 )
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
 
@@ -199,7 +199,7 @@ class P3T1085( LM75B ):
 		lst.sort()
 	
 		sv	= []
-		for r, v in zip( ( "T_LOW", "T_HOGH" ), lst ):
+		for r, v in zip( ( "T_LOW", "T_HIGH" ), lst ):
 			v	= int(v * 256.0) & 0xFFF0
 			self.reg_access( r, v )
 			sv	+= [ v ]
