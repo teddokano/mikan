@@ -13,7 +13,7 @@ _[Arduino® Shields Solutions](https://www.nxp.com/design/development-boards/ana
 [i.MX RT1050 Evaluation Kit](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK)_  
   
 ![example_operation](https://github.com/teddokano/additional_files/blob/main/mikan/img/example_operation.png)  
-_Screen shot of [`examples/temp_sensor_interrupt.py`](https://github.com/teddokano/mikan/blob/main/examples/temp_sensor_interrupt.py) operation_
+_Screen shot of ~~`examples/temp_sensor_interrupt.py`~~ [`examples/temp_sensor_demo_PCT2075DP_ARB.py`](https://github.com/teddokano/mikan/blob/main/examples/temp_sensor_demo_PCT2075DP_ARB.py) operation_
   
 ![remote_demo](https://github.com/teddokano/additional_files/blob/main/mikan/img/remote_demo.png)
 _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" running. Device operation can be done from web browser_
