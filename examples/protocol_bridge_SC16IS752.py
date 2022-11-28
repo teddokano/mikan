@@ -34,17 +34,31 @@ class SC16IS752( SPI_target ):
 	def __init__( self, interface, cs = 0 ):
 		SPI_target.__init__( self, interface, cs )
 
-		self.reg_access( SC16IS752.LCR, 0, 0x80 );
-		self.reg_access( SC16IS752.DLL, 0, 0x60 );
-		self.reg_access( SC16IS752.DLH, 0, 0x00 );
+		self.reg_access( self.LCR, 0, 0x80 );	# 0x80 to program baud rate
+		self.reg_access( self.DLL, 0, 0x60 );
+		self.reg_access( self.DLH, 0, 0x00 );
+		print( self.reg_access( self.LCR, 0 ) )
+		print( self.reg_access( self.DLL, 0 ) )
+		print( self.reg_access( self.DLH, 0 ) )
 
-		self.reg_access( SC16IS752.LCR, 0, 0xBF );
-		self.reg_access( SC16IS752.EFR, 0, 0x10 );	# enable enhanced functions
 
-		self.reg_access( SC16IS752.LCR, 0, 0x03 );	# word length R/W bit 1 and 0
-		self.reg_access( SC16IS752.MCR, 0, 0x04 );	# TCR and TLR enable
+		self.reg_access( self.LCR, 0, 0xBF );
+		self.reg_access( self.EFR, 0, 0x10 );	# enable enhanced functions
 
-	def reg_access( self, reg, ch, val ):
+		self.reg_access( self.LCR, 0, 0x03 );	# 8 data bit, 1 stop bit, no parity
+		self.reg_access( self.FCR, 0, 0x06 );	# reset TXFIFO, reset RXFIFO, non FIFO mode
+		self.reg_access( self.FCR, 0, 0x01 );	# enable FIFO mode
+		
+	def reg_access( self, *args ):
+		n_args	= len( args )
+		if n_args is 2:
+			return self.receive( [ 0x80 | (args[ 0 ] << 3 | args[ 1 ] << 1), 0xFF ] )[ 1 ]
+		elif n_args is 3:
+			self.send( [ (args[ 0 ] << 3 | args[ 1 ] << 1), args[ 2 ] ] )
+		else:
+			print( "reg_access error" )
+
+	def reg_access_old( self, reg, ch, val ):
 		self.send( [ (reg << 3 | ch << 1), val ] )
 
 def main():
@@ -52,10 +66,10 @@ def main():
 	br	= SC16IS752( spi )
 
 	while True:
-		print( "#" )
-		br.write_registers( SC16IS752.THR << 3, 0xAA )
+		#print( "#" )
+		br.write_registers( br.THR << 3, 0xAA )
 		sleep( .01 )
-		br.write_registers( SC16IS752.THR << 3, 0x55 )
+		br.write_registers( br.THR << 3, 0x55 )
 		sleep( .01 )
 
 if __name__ == "__main__":
