@@ -59,8 +59,8 @@ class SC16IS752( SPI_target ):
 		self.reg_access( "LCR", parity | stop | bits )
 
 		self.reg_access( "FCR", 0x06 )	# reset TXFIFO, reset RXFIFO, non FIFO mode
-#		self.reg_access( "FCR", 0x01 )	# enable FIFO mode
-		self.reg_access( "FCR", 0xF1 )	# enable FIFO mode
+		self.reg_access( "FCR", 0x01 )	# enable FIFO mode
+#		self.reg_access( "FCR", 0xF1 )	# enable FIFO mode
 
 		print( "LCR:0x{:02X}".format( self.reg_access( "LCR" ) ) )
 		print( "MCR:0x{:02X}".format( self.reg_access( "MCR" ) ) )
@@ -114,17 +114,15 @@ class SC16IS752( SPI_target ):
 			self.wait_tx_ready()		
 			self.reg_access( "THR", d )
 
-	def receive_check( self ):
-		pass
+	def any( self ):
+		return self.reg_access( "LSR" ) & 0x01
+
+	def read( self, len ):
+		data	= []
+		while self.any():
+			data	+= [ self.reg_access( "RHR" ) ]
 		
-	def receive_check2( self ):
-		if ( self.reg_access( "LSR" ) & 0x01 ):
-			print( "got data" )
-		else:
-			print( "no data" )
-		
-		print( self.reg_access( "RHR" ) )
-	
+		return data
 
 def main():
 	spi	= SPI( 0, 1000 * 1000, cs = 0 )
@@ -133,14 +131,12 @@ def main():
 	while True:
 		#print( "#" )
 		br.write( 0xAA )
-		br.receive_check()
-		br.receive_check()
 		br.write( 0x55 )
 		br.write( [ x for x in range( 8 ) ] )
 		br.write( "abcdefg" )
 		br.sendbreak()
-		br.receive_check()
-		br.receive_check()
-
+		if br.any():
+			print( br.read( 0 ) )
+			
 if __name__ == "__main__":
 	main()
