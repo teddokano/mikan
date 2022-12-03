@@ -117,10 +117,13 @@ class SC16IS7xx_base():
 		while not self.reg_access( "LSR" ) & 0x40:
 			pass
 
-	def read( self, *len ):
+	def read( self, *args ):
 		data	= []
-		while self.any():
+		n		= -1 if len( args ) is 0 else args[ 0 ]
+		
+		while self.any() and n:
 			data	+= [ self.reg_access( "RHR" ) ]
+			n		-= 1
 		
 		return data
 
@@ -169,8 +172,8 @@ def SC16IS7xx( interface, address = DEFAULT_ADDR, cs = DEFAULT_CS ):
 		return SC16IS7xx_SPI( interface, cs )
 
 def main():
-	intf	= I2C( 0, freq = (400 * 1000) )
-#	intf	= SPI( 0, 1000 * 1000, cs = 0 )
+#	intf	= I2C( 0, freq = (400 * 1000) )
+	intf	= SPI( 0, 1000 * 1000, cs = 0 )
 	br		= SC16IS7xx( intf )
 	
 	while True:
@@ -182,7 +185,7 @@ def main():
 		br.flush()
 		br.sendbreak()
 		if br.any():
-			print( br.read() )
+			print( br.read( 10 ) )
 			
 if __name__ == "__main__":
 	main()
