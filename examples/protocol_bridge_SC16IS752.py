@@ -74,14 +74,14 @@ class SC16IS752( SPI_target ):
 		else:
 			print( "reg_access error" )
 
-	def tx_buffer_empty( self ):
+	def txdone( self ):
 		return self.reg_access( "LSR" ) & 0x20
 
 	def wait_tx_ready( self ):
-		while not self.tx_buffer_empty():
+		while not self.txdone():
 			pass
 
-	def send( self, data ):
+	def write( self, data ):
 		if isinstance( data, int ):
 			data	= [ data ]
 		elif isinstance( data, str ):
@@ -110,12 +110,12 @@ def main():
 	
 	while True:
 		#print( "#" )
-		br.send( 0xAA )
+		br.write( 0xAA )
 		br.receive_check()
 		br.receive_check()
-		br.send( 0x55 )
-		br.send( [ x for x in range( 8 ) ] )
-		br.send( "abcdefg" )
+		br.write( 0x55 )
+		br.write( [ x for x in range( 8 ) ] )
+		br.write( "abcdefg" )
 		br.receive_check()
 		br.receive_check()
 
