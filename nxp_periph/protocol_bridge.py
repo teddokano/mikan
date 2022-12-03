@@ -58,21 +58,14 @@ class SC16IS7xx_base():
 		self.reg_access( "FCR", 0x01 )	# enable FIFO mode
 #		self.reg_access( "FCR", 0xF1 )	# enable FIFO mode
 
-		print( "LCR:0x{:02X}".format( self.reg_access( "LCR" ) ) )
-		print( "MCR:0x{:02X}".format( self.reg_access( "MCR" ) ) )
-		print( "LSR:0x{:02X}".format( self.reg_access( "LSR" ) ) )
-
 	def baud( self, baud ):
 		lcr	= self.reg_access( "LCR" )
 		divisor	= int( self.osc / (baud * 16) )
-		print( divisor )
 
 		self.reg_access( "LCR", 0x80 )	# 0x80 to program baud rate
 		self.reg_access( "DLL", divisor & 0xFF )
 		self.reg_access( "DLH", divisor >> 8 )
 		
-		print( divisor )
-
 		self.reg_access( "LCR", lcr )
 		
 	def sendbreak( self, duration = 0.1 ):
@@ -89,17 +82,6 @@ class SC16IS7xx_base():
 			return self.read_registers( (reg << 3 | self.ch), 1 )
 		elif n_args is 2:
 			self.write_registers( (reg << 3 | self.ch), args[ 1 ] )
-		else:
-			print( "reg_access error" )
-
-	def reg_access_SPI( self, *args ):
-		n_args	= len( args )
-		reg		= args[ 0 ] if type( args[ 0 ] ) is int else self.REG_DICT[ args[ 0 ] ]
-		
-		if n_args is 1:
-			return self.receive( [ 0x80 | (reg << 3 | self.ch), 0xFF ] )[ 1 ]
-		elif n_args is 2:
-			self.send( [ (reg << 3 | self.ch), args[ 1 ] ] )
 		else:
 			print( "reg_access error" )
 
@@ -154,6 +136,12 @@ class SC16IS7xx_SPI( SC16IS7xx_base, SPI_target ):
 		SPI_target.__init__( self, interface, cs )
 		SC16IS7xx_base.__init__( self, channel = channel, osc = osc, baud = baud, bits = bits, parity = parity, stop = stop )
 
+	def read_registers( self, reg, n ):
+		return self.receive( [ 0x80 | reg, 0xFF ] )[ 1 ]
+		
+	def write_registers( self, reg, v ):
+		self.send( [ reg, v ] )
+
 DEFAULT_ADDR	= (0x90 >> 1)
 DEFAULT_CS		= None
 
@@ -183,13 +171,11 @@ def SC16IS7xx( interface, address = DEFAULT_ADDR, cs = DEFAULT_CS ):
 		return SC16IS7xx_SPI( interface, cs )
 
 def main():
-	intf	= I2C( 0, freq = (400 * 1000) )
-	print( intf.scan() )
-#	intf	= SPI( 0, 1000 * 1000, cs = 0 )
+#	intf	= I2C( 0, freq = (400 * 1000) )
+	intf	= SPI( 0, 1000 * 1000, cs = 0 )
 	br		= SC16IS7xx( intf )
 	
 	while True:
-		#print( "#" )
 		br.write( 0xAA )
 		br.write( 0x55 )
 		br.write( [ x for x in range( 8 ) ] )
