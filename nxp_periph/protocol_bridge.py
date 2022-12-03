@@ -86,6 +86,17 @@ class SC16IS7xx_base():
 		reg		= args[ 0 ] if type( args[ 0 ] ) is int else self.REG_DICT[ args[ 0 ] ]
 		
 		if n_args is 1:
+			return self.read_registers( (reg << 3 | self.ch), 1 )
+		elif n_args is 2:
+			self.write_registers( (reg << 3 | self.ch), args[ 1 ] )
+		else:
+			print( "reg_access error" )
+
+	def reg_access_SPI( self, *args ):
+		n_args	= len( args )
+		reg		= args[ 0 ] if type( args[ 0 ] ) is int else self.REG_DICT[ args[ 0 ] ]
+		
+		if n_args is 1:
 			return self.receive( [ 0x80 | (reg << 3 | self.ch), 0xFF ] )[ 1 ]
 		elif n_args is 2:
 			self.send( [ (reg << 3 | self.ch), args[ 1 ] ] )
@@ -172,8 +183,9 @@ def SC16IS7xx( interface, address = DEFAULT_ADDR, cs = DEFAULT_CS ):
 		return SC16IS7xx_SPI( interface, cs )
 
 def main():
-#	intf	= I2C( 0, freq = (400 * 1000) )
-	intf	= SPI( 0, 1000 * 1000, cs = 0 )
+	intf	= I2C( 0, freq = (400 * 1000) )
+	print( intf.scan() )
+#	intf	= SPI( 0, 1000 * 1000, cs = 0 )
 	br		= SC16IS7xx( intf )
 	
 	while True:
@@ -185,7 +197,7 @@ def main():
 		br.flush()
 		br.sendbreak()
 		if br.any():
-			print( br.read( 10 ) )
-			
+			print( br.read() )
+
 if __name__ == "__main__":
 	main()
