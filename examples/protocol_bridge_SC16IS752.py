@@ -40,8 +40,6 @@ class SC16IS752( SPI_target ):
 		self.ch		= channel
 		self.baud( baud )
 
-#		self.reg_access( "LCR", 0xBF )
-
 		if parity is None:
 			parity	= 0
 		elif parity is 0:
@@ -117,7 +115,11 @@ class SC16IS752( SPI_target ):
 	def any( self ):
 		return self.reg_access( "LSR" ) & 0x01
 
-	def read( self, len ):
+	def flush( self ):
+		while not self.reg_access( "LSR" ) & 0x40:
+			pass
+
+	def read( self, *len ):
 		data	= []
 		while self.any():
 			data	+= [ self.reg_access( "RHR" ) ]
@@ -134,9 +136,10 @@ def main():
 		br.write( 0x55 )
 		br.write( [ x for x in range( 8 ) ] )
 		br.write( "abcdefg" )
+		br.flush()
 		br.sendbreak()
 		if br.any():
-			print( br.read( 0 ) )
+			print( br.read() )
 			
 if __name__ == "__main__":
 	main()
