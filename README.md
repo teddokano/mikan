@@ -33,6 +33,11 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 - GPIO expander
 	- [PCA9555](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/16-bit-ic-bus-and-smbus-i-o-port-with-interrupt:PCA9555) (PCA9555A, PCA9539 compatible)
 	- [PCA9554](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/8-bit-ic-bus-and-smbus-i-o-port-with-interrupt:PCA9554_PCA9554A) (PCA9554A, PCA9554B, PCA9554C, PCA9538 compatible)
+- Protocol brige
+	- SC16IS7xx (
+		[Single UART](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/single-uart-with-ic-bus-spi-interface-64-bs-of-transmit-and-receive-fifos-irda-sir-built-in-support:SC16IS740_750_760),
+		[Dual UART](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/dual-uart-with-ic-bus-spi-interface-64-bs-of-transmit-and-receive-fifos-irda-sir-built-in-support:SC16IS752_SC16IS762)
+		)
 - Stepper motor controller
 	- [PCA9629A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/fm-plus-ic-bus-advanced-stepper-motor-controller:PCA9629APW)
 
