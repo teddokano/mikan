@@ -5,32 +5,14 @@ from	nxp_periph	import	I2C_target, SPI_target
 
 class SC16IS7xx_base():
 	REG_DICT	= {
-					"RHR"	: 0x00,
-					"THR"	: 0x00,
-					"IER"	: 0x01,
-					"FCR"	: 0x02,
-					"IIR"	: 0x02,
-					"LCR"	: 0x03,
-					"MCR"	: 0x04,
-					"LSR"	: 0x05,
-					"MSR"	: 0x06,
-					"SPR"	: 0x07,
-					"TCR"	: 0x06,
-					"TLR"	: 0x07,
-					"TXLVL"	: 0x08,
-					"RXLVL"	: 0x09,
-					"IODir"	: 0x0A,
-					"IOState"	: 0x0B,
-					"IOIntEna"	: 0x0C,
-					"IOControl"	: 0x0E,
-					"EFCR"	: 0x0F,
-					"DLL" 	: 0x00,
-					"DLH"	: 0x01,
-					"EFR"	: 0x02,
-					"XON1"	: 0x04,
-					"XON2"	: 0x05,
-					"XOFF1"	: 0x06,
-					"XOFF2"	: 0x07
+					"RHR" : 0x00, "THR" : 0x00, "IER" : 0x01, "FCR" : 0x02, 
+					"IIR" : 0x02, "LCR" : 0x03, "MCR" : 0x04, "LSR" : 0x05,
+					"MSR" : 0x06, "SPR" : 0x07, "TCR" : 0x06, "TLR" : 0x07,
+					"TXLVL" : 0x08, "RXLVL" : 0x09, "IODir" : 0x0A,
+					"IOState" : 0x0B, "IOIntEna" : 0x0C, "IOControl" : 0x0E,
+					"EFCR" : 0x0F, "DLL" : 0x00, "DLH" : 0x01,
+					"EFR" : 0x02, "XON1" : 0x04, "XON2" : 0x05,
+					"XOFF1" : 0x06, "XOFF2" : 0x07
 					}
 
 	def __init__( self, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1 ):
@@ -49,6 +31,9 @@ class SC16IS7xx_base():
 		stop	= ((stop - 1) << 2) & 0x04
 		bits	=  (bits - 5) & 0x03
 		
+		#	For basic operationa, see AN10462
+		#	https://www.nxp.com/docs/en/application-note/AN10462.pdf
+		
 		self.reg_access( "LCR", 0xBF )	# access EFR register
 		self.reg_access( "EFR", 0x10 )	# enable enhanced functions
 
@@ -56,8 +41,22 @@ class SC16IS7xx_base():
 
 		self.reg_access( "FCR", 0x06 )	# reset TXFIFO, reset RXFIFO, non FIFO mode
 		self.reg_access( "FCR", 0x01 )	# enable FIFO mode
-#		self.reg_access( "FCR", 0xF1 )	# enable FIFO mode
+		
+	def info( self ):
+		parity_setting	= [ "None", "odd", "", "even" ]
+		
+		s	 = ", osc = {} Hz".format( self.osc )
+		
+		lcr	= self.reg_access( "LCR" )
+		self.reg_access( "LCR", 0x80 )	# 0x80 to program baud rate
+		s	+= ", baud = {}".format( self.osc / (((self.reg_access( "DLH" ) << 8) |  self.reg_access( "DLL" )) * 16) )						
+		self.reg_access( "LCR", lcr )
 
+		s	+= ", bits = {}".format( (lcr & 0x03) + 5 )
+		s	+= ", parity = {}".format( parity_setting[ (lcr & 0x38) >> 3 ]  )
+		s	+= ", stop = {}".format( ((lcr & 0x04) >> 2) + 1 )
+		return s
+		
 	def baud( self, baud ):
 		lcr	= self.reg_access( "LCR" )
 		divisor	= int( self.osc / (baud * 16) )
@@ -85,11 +84,11 @@ class SC16IS7xx_base():
 		else:
 			print( "reg_access error" )
 
-	def txdone( self ):
+	def thr_ready( self ):
 		return self.reg_access( "LSR" ) & 0x20
 
 	def wait_tx_ready( self ):
-		while not self.txdone():
+		while not self.thr_ready():
 			pass
 
 	def write( self, data ):
@@ -122,19 +121,31 @@ class SC16IS7xx_base():
 
 class SC16IS7xx_I2C( SC16IS7xx_base, I2C_target ):
 	"""
-	PCF2131 class with I2C interface
+	SC16IS7xx class with I2C interface
 	"""
 	def __init__( self, interface, address, cs = 0, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1  ):
 		I2C_target.__init__( self, interface, address )
 		SC16IS7xx_base.__init__( self, channel = channel, osc = osc, baud = baud, bits = bits, parity = parity, stop = stop )
 
+	def info( self ):
+		s	 = I2C_target.info( self )
+		s	+= SC16IS7xx_base.info( self )
+
+		return s
+		
 class SC16IS7xx_SPI( SC16IS7xx_base, SPI_target ):
 	"""
-	PCF2131 class with SPI interface
+	SC16IS7xx class with SPI interface
 	"""
 	def __init__( self, interface, cs = 0, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1 ):
 		SPI_target.__init__( self, interface, cs )
 		SC16IS7xx_base.__init__( self, channel = channel, osc = osc, baud = baud, bits = bits, parity = parity, stop = stop )
+
+	def info( self ):
+		s	 = SPI_target.info( self )
+		s	+= SC16IS7xx_base.info( self )
+		
+		return s
 
 	def read_registers( self, reg, n ):
 		return self.receive( [ 0x80 | reg, 0xFF ] )[ 1 ]
@@ -147,7 +158,7 @@ DEFAULT_CS		= None
 
 def SC16IS7xx( interface, address = DEFAULT_ADDR, cs = DEFAULT_CS ):
 	"""
-	A constructor interface for PCF2131
+	A constructor interface for SC16IS7xx
 
 	Parameters
 	----------
@@ -175,6 +186,8 @@ def main():
 	intf	= SPI( 0, 1000 * 1000, cs = 0 )
 	br		= SC16IS7xx( intf )
 	
+	print( br.info() )
+		
 	while True:
 		br.write( 0xAA )
 		br.write( 0x55 )
