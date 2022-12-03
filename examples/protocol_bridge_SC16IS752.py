@@ -33,20 +33,36 @@ class SC16IS752( SPI_target ):
 					"XOFF2"	: 0x07
 					}
 
-	def __init__( self, interface, cs = 0, channel = 0, osc = 14746500, baud = 9600 ):
+	def __init__( self, interface, cs = 0, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1 ):
 		SPI_target.__init__( self, interface, cs )
 
 		self.osc	= osc
 		self.ch		= channel
 		self.baud( baud )
 
-		self.reg_access( "LCR", 0xBF )
+#		self.reg_access( "LCR", 0xBF )
+
+		if parity is None:
+			parity	= 0
+		elif parity is 0:
+			parity	= 1
+		else:
+			parity	= 3
+
+		parity	<<= 3
+		stop	= ((stop - 1) << 2) & 0x04
+		bits	=  (bits - 5) & 0x03
+		
+		self.reg_access( "LCR", 0xBF )	# access EFR register
 		self.reg_access( "EFR", 0x10 )	# enable enhanced functions
 
-		self.reg_access( "LCR", 0x03 )	# 8 data bit, 1 stop bit, no parity
-		self.reg_access( "FCR", 0x06 )	# reset TXFIFO, reset RXFIFO, non FIFO mode
-		self.reg_access( "FCR", 0x01 )	# enable FIFO mode
+		self.reg_access( "LCR", parity | stop | bits )
 
+		self.reg_access( "FCR", 0x06 )	# reset TXFIFO, reset RXFIFO, non FIFO mode
+#		self.reg_access( "FCR", 0x01 )	# enable FIFO mode
+		self.reg_access( "FCR", 0xF1 )	# enable FIFO mode
+
+		print( "LCR:0x{:02X}".format( self.reg_access( "LCR" ) ) )
 		print( "MCR:0x{:02X}".format( self.reg_access( "MCR" ) ) )
 		print( "LSR:0x{:02X}".format( self.reg_access( "LSR" ) ) )
 
@@ -63,6 +79,12 @@ class SC16IS752( SPI_target ):
 
 		self.reg_access( "LCR", lcr )
 		
+	def sendbreak( self, duration = 0.1 ):
+		lcr	= self.reg_access( "LCR" )
+		self.reg_access( "LCR", 0x40 | lcr )
+		sleep( duration )		
+		self.reg_access( "LCR", ~0x40 & lcr )
+	
 	def reg_access( self, *args ):
 		n_args	= len( args )
 		reg		= args[ 0 ] if type( args[ 0 ] ) is int else self.REG_DICT[ args[ 0 ] ]
@@ -116,6 +138,7 @@ def main():
 		br.write( 0x55 )
 		br.write( [ x for x in range( 8 ) ] )
 		br.write( "abcdefg" )
+		br.sendbreak()
 		br.receive_check()
 		br.receive_check()
 
