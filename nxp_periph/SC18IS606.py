@@ -5,15 +5,11 @@ from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 
 def	main():
 
-	bridge_demo	= True
-#	bridge_demo	= False
+	i2c		= I2C( 0, 400 * 1000 )
+	eeprom	= AT25010_Br( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
 
-	if bridge_demo:
-		i2c		= I2C( 0, 400 * 1000 )
-		eeprom	= AT25010_Br( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-	else:
-		spi		= SPI( 1, SPI_target.FREQ, sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ) )
-		eeprom	= AT25010( spi, Pin( 13, Pin.OUT ) )
+#	spi		= SPI( 1, SPI_target.FREQ, sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ) )
+#	eeprom	= AT25010( spi, Pin( 13, Pin.OUT ) )
 
 	print( "instance of '{}' class had been made".format( eeprom.__class__.__name__ ) )
 
@@ -44,6 +40,9 @@ class SC18IS606( I2C_target ):
 	FuncID_GPIO_Enable				= 0xF5
 	FuncID_GPIO_Configuration		= 0xF6
 	FuncID_Read_Version				= 0xFE
+	
+	MSB	= SPI.MSB
+	LSB	= SPI.LSB
 
 	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None ):
 		super().__init__( i2c, address )
@@ -82,7 +81,21 @@ class SC18IS606( I2C_target ):
 		self.__wait_tsfr_done( read_wait = True )
 		return super().receive( len( data ) )
 
+#	def init( self, baudrate = 1000000, *, polarity = 0, phase = 0, bits = 8, firstbit = SPI.MSB, sck = None, mosi = None, miso = None, pins = (SCK, MOSI, MISO) ):
+#		pass
 
+	def read( self, nbytes, write = 0x00 ):
+		return self.receive( [ write ] * nbytes )
+
+	def readinto( self, buf, write = 0x00 ):
+		buf	= self.read( len( buf ), write = write )
+
+	def write( self, buf ):
+		self.send( buf )
+
+	def write_readinto( self, write_buf, read_buf ):
+		read_buf	= self.receive( write_buf )
+		
 class AT25010_operation():
 
 	instruction_WRITE	= 0x02
