@@ -6,8 +6,12 @@ from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 def	main():
 
 	i2c		= I2C( 0, 400 * 1000 )
+	"""	
 	eeprom	= AT25010_Br( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-
+	"""
+	
+	bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
+	eeprom	= AT25010( bridge, None )
 #	spi		= SPI( 1, SPI_target.FREQ, sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ) )
 #	eeprom	= AT25010( spi, Pin( 13, Pin.OUT ) )
 
@@ -91,10 +95,10 @@ class SC18IS606( I2C_target ):
 		buf	= self.read( len( buf ), write = write )
 
 	def write( self, buf ):
-		self.send( buf )
+		self.send( list( buf ) )
 
 	def write_readinto( self, write_buf, read_buf ):
-		read_buf	= self.receive( write_buf )
+		read_buf	= self.receive( list( write_buf ) )
 		
 class AT25010_operation():
 
