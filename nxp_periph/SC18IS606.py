@@ -59,22 +59,27 @@ class SC18IS606( I2C_target ):
 		self.__wait_tsfr_done( read_wait = True )
 		return super().receive( len( data ) )
 
-	def init( self, baudrate = 1000000, *, polarity = 0, phase = 0, firstbit = SPI.MSB ):
+	def init( self, baudrate = 1875000, polarity = 0, phase = 0, firstbit = SPI.MSB ):
 		FREQ	= [ 58000, 115000, 455000, 1875000 ]
 		
 		order	= 0 if firstbit is SPI.MSB else 1
 		
 		for f_idx, freq in enumerate( FREQ ):
-			print( f_idx, baudrate, freq )
 			if baudrate <= freq:
 				break
 		
-		f_idx	= 3 - f_idx
+		self.config	= { "oeder"		: "{} first".format( "LSB" if order else "MSB" ), 
+						"polarity"	: "SPICLK {} when idle".format( "HIGH" if polarity else "LOW" ), 
+						"phase"		: "{} edge for data latched".format( "2nd" if phase else "1st" ),
+						"freq"		: FREQ[ f_idx ]
+						}
+
+		f_idx	= 3 - f_idx		
+		self.command( [ SC18IS606.FuncID_Configure_SPI_Interface ] 
+							+ [ (order << 5) | (polarity << 3) | (phase << 2) | f_idx ] )
 		
-		data	= (order << 5) | (polarity << 3) | (phase << 2) | f_idx
-		print( "FuncID_Configure_SPI_Interface = 0x{:02X}".format( data ) )
-		self.command( [ SC18IS606.FuncID_Configure_SPI_Interface ] + [ data ] )
-		
+	def info( self ):
+		return super().info() + "\n" + "{}Hz, {}, {}, {}".format( self.config[ "freq" ], self.config[ "oeder" ], self.config[ "polarity" ], self.config[ "phase" ] )
 
 	def read( self, nbytes, write = 0x00 ):
 		return self.receive( [ write ] * nbytes )
