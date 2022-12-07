@@ -1,7 +1,8 @@
-from	machine	import	Pin, I2C, SoftSPI, SPI
+from	machine	import	Pin, I2C, SPI
 from	utime	import	sleep
 
 from	nxp_periph	import	I2C_target, SPI_target
+
 
 class SC16IS7xx_base():
 	REG_DICT	= {
@@ -181,22 +182,100 @@ def SC16IS7xx( interface, address = DEFAULT_ADDR, cs = DEFAULT_CS ):
 	if isinstance( interface, SPI ):
 		return SC16IS7xx_SPI( interface, cs )
 
-def main():
-#	intf	= I2C( 0, freq = (400 * 1000) )
-	intf	= SPI( 0, 1000 * 1000, cs = 0 )
-	br		= SC16IS7xx( intf )
-	
-	print( br.info() )
-		
-	while True:
-		br.write( 0xAA )
-		br.write( 0x55 )
-		br.write( [ x for x in range( 8 ) ] )
-		br.write( "abcdefg" )
-		br.flush()
-		br.sendbreak()
-		if br.any():
-			print( br.read() )
+class SC18IS606( I2C_target ):
+	DEFAULT_ADDRESS	= 0x28
 
-if __name__ == "__main__":
-	main()
+	FuncID_SPI_read_and_write		= 0x00
+	FuncID_Configure_SPI_Interface	= 0xF0
+	FuncID_Clear_Interrupt			= 0xF1
+	FuncID_Idle_mode				= 0xF2
+	FuncID_GPIO_Write				= 0xF3
+	FuncID_GPIO_Read				= 0xF4
+	FuncID_GPIO_Enable				= 0xF5
+	FuncID_GPIO_Configuration		= 0xF6
+	FuncID_Read_Version				= 0xFE
+	
+	MSB	= SPI.MSB
+	LSB	= SPI.LSB
+
+	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None, baudrate = 1875000, polarity = 0, phase = 0, firstbit = SPI.MSB ):
+		if int is None:
+			raise SC18IS606_Error( "SC18IS606 instance must have interrupt pin" )
+			
+		super().__init__( i2c, address )
+		self.__int	= int
+		self.__csn	= csn
+		self.__flag	= False
+
+		self.init( baudrate = baudrate, polarity = polarity, phase = phase, firstbit = firstbit )
+		
+		self.__clear_int()
+		self.__int.irq( trigger = Pin.IRQ_FALLING, handler = self.__callback )
+
+		
+	def __callback( self, pin ):	#	interrupt handler
+		self.__flag	= True
+
+	def __wait_tsfr_done( self, read_wait = False ):
+		while self.__flag	== False:
+			pass
+	
+		self.__flag	= False
+		
+		if read_wait == False:
+			self.__clear_int()
+		
+	def __clear_int( self ):
+		self.command( [ SC18IS606.FuncID_Clear_Interrupt ] )
+	
+	def command( self, data ):
+		super().send( data )
+
+	def send( self, data ):
+		self.command( [ SC18IS606.FuncID_SPI_read_and_write | 0x01 << self.__csn ] + data )
+		self.__wait_tsfr_done()
+		
+	def receive( self, data ):
+		self.command( [ SC18IS606.FuncID_SPI_read_and_write | 0x01 << self.__csn ] + data )
+		self.__wait_tsfr_done( read_wait = True )
+		return super().receive( len( data ) )
+
+	def init( self, baudrate = 1875000, polarity = 0, phase = 0, firstbit = SPI.MSB ):
+		FREQ	= [ 58000, 115000, 455000, 1875000 ]
+		
+		order	= 0 if firstbit is SPI.MSB else 1
+		
+		for f_idx, freq in enumerate( FREQ ):
+			if baudrate <= freq:
+				break
+		
+		self.config	= { "oeder"		: "{} first".format( "LSB" if order else "MSB" ), 
+						"polarity"	: "SPICLK {} when idle".format( "HIGH" if polarity else "LOW" ), 
+						"phase"		: "{} edge for data latched".format( "2nd" if phase else "1st" ),
+						"freq"		: FREQ[ f_idx ]
+						}
+
+		f_idx	= 3 - f_idx		
+		self.command( [ SC18IS606.FuncID_Configure_SPI_Interface ] 
+							+ [ (order << 5) | (polarity << 3) | (phase << 2) | f_idx ] )
+		
+	def info( self ):
+		return super().info() + "\n" + "{}Hz, {}, {}, {}".format( self.config[ "freq" ], self.config[ "oeder" ], self.config[ "polarity" ], self.config[ "phase" ] )
+
+	def read( self, nbytes, write = 0x00 ):
+		return self.receive( [ write ] * nbytes )
+
+	def readinto( self, buf, write = 0x00 ):
+		buf	= self.read( len( buf ), write = write )
+		for i, m in enumerate( self.receive( list( write_buf ) ) ):
+			buf[ i ]	= m
+
+	def write( self, buf ):
+		self.send( list( buf ) )
+
+	def write_readinto( self, write_buf, read_buf ):
+		for i, m in enumerate( self.receive( list( write_buf ) ) ):
+			read_buf[ i ]	= m
+
+class SC18IS606_Error( Exception ):
+	pass
