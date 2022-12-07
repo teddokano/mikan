@@ -1,4 +1,4 @@
-# "mikan" 💡⏰🌡️↕🔄
+# "mikan" 💡⏰🌡️↕🔄💁
 Peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
@@ -38,6 +38,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 		[Single UART](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/single-uart-with-ic-bus-spi-interface-64-bs-of-transmit-and-receive-fifos-irda-sir-built-in-support:SC16IS740_750_760),
 		[Dual UART](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/dual-uart-with-ic-bus-spi-interface-64-bs-of-transmit-and-receive-fifos-irda-sir-built-in-support:SC16IS752_SC16IS762)
 		)
+	- [SC18IS606](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/ic-bus-to-spi-bridge:SC18IS606)
 - Stepper motor controller
 	- [PCA9629A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/fm-plus-ic-bus-advanced-stepper-motor-controller:PCA9629APW)
 
@@ -131,6 +132,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🌡️|temp_sensor_interrupt.py		| Demo for PCT2075DP-ARD operation | PCT2075 (PCT2075DP-ARD board)
 ↕|GPIO_demo.py               	| Simple operation for PCA9555	| PCA9555 (PCA9555 compatible devices)
 🔄|stepper_motor_simple.py		| Simple operation for PCA9629A	| PCA9629A
+💁|protocol_bridge_SC16IS7xx.py | Simple operation for SC16IS7xx | SC16IS7xx
+💁|protocol_bridge_SC18IS606_with_AT25010.py | Accessing EEPROM through SC18IS606 | SC18IS606
 
 ### Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
@@ -145,4 +148,4 @@ How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)
 
 
 
-💡⏰🌡️↕🔄
+💡⏰🌡️↕🔄💁
