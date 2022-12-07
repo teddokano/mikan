@@ -1,39 +1,8 @@
 from machine	import	Pin, I2C, SPI
-from utime 		import	sleep
-
 from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 
-def	main():
-
-	i2c		= I2C( 0, 400 * 1000 )
-	"""	
-	eeprom	= AT25010_Br( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-	"""
-	
-	bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-	eeprom	= AT25010( bridge, None )
-#	spi		= SPI( 1, SPI_target.FREQ, sck = Pin( 10 ), mosi = Pin( 11 ), miso = Pin( 12 ) )
-#	eeprom	= AT25010( spi, Pin( 13, Pin.OUT ) )
-
-	print( "instance of '{}' class had been made".format( eeprom.__class__.__name__ ) )
-
-	###
-	###	Operation (EEPROM write and read)
-	###
-
-	EEPROM_ADDRESS	= 0
-	DATA_LENGTH		= 8
-
-	while True:
-		data	= [ x for x in range( DATA_LENGTH ) ]
-		eeprom.write_data( EEPROM_ADDRESS, data )
-		eeprom.wait_write_complete()
-		print( eeprom.read_data( EEPROM_ADDRESS, DATA_LENGTH ) )
-		sleep( 5 )
-
-DEFAULT_ADDRESS	= 0x28
-
 class SC18IS606( I2C_target ):
+	DEFAULT_ADDRESS	= 0x28
 
 	FuncID_SPI_read_and_write		= 0x00
 	FuncID_Configure_SPI_Interface	= 0xF0
@@ -109,8 +78,39 @@ class SC18IS606( I2C_target ):
 class SC18IS606_Error( Exception ):
 	pass
 
-class AT25010_operation():
 
+from utime 		import	sleep
+
+BRIDGE_DEMO	= True
+
+def	main():
+	if BRIDGE_DEMO:
+		#	AT25010 access through SC18IS606 protocol bridge
+		i2c		= I2C( 0, 400 * 1000 )
+		bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
+		eeprom	= AT25010( bridge, None )
+	else:
+		#	AT25010 access with direct SPI connection
+		spi		= SPI( 0, 1000 * 1000, cs = 0 )
+		eeprom	= AT25010( spi, None )
+
+	print( "instance of '{}' class had been made".format( eeprom.__class__.__name__ ) )
+
+	###
+	###	Operation (EEPROM write and read)
+	###
+
+	EEPROM_ADDRESS	= 0
+	DATA_LENGTH		= 8
+
+	while True:
+		data	= [ x for x in range( DATA_LENGTH ) ]
+		eeprom.write_data( EEPROM_ADDRESS, data )
+		eeprom.wait_write_complete()
+		print( eeprom.read_data( EEPROM_ADDRESS, DATA_LENGTH ) )
+		sleep( 1 )
+
+class AT25010_operation():
 	instruction_WRITE	= 0x02
 	instruction_READ	= 0x03
 	instruction_RDSR	= 0x05	#	read status register
@@ -139,15 +139,8 @@ class AT25010_operation():
 		
 
 class AT25010( AT25010_operation, SPI_target ):
-	
-	def __init__( self, spi, cs ):
+	def __init__( self, spi, cs = None ):
 		super().__init__( spi, cs )
-
-
-class AT25010_Br( AT25010_operation, SC18IS606 ):
-	
-	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None ):
-		super().__init__( i2c, csn, address = address, int = int )
 
 if __name__ == "__main__":
 	main()
