@@ -49,15 +49,18 @@ class SC18IS606( I2C_target ):
 	LSB	= SPI.LSB
 
 	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None ):
+		if int is None:
+			raise SC18IS606_Error( "SC18IS606 instance must have interrupt pin" )
+			
 		super().__init__( i2c, address )
 		self.__int	= int
 		self.__csn	= csn
 		self.__flag	= False
 		
 		self.__clear_int()
-
 		self.__int.irq( trigger = Pin.IRQ_FALLING, handler = self.__callback )
 
+		
 	def __callback( self, pin ):	#	interrupt handler
 		self.__flag	= True
 
@@ -69,7 +72,7 @@ class SC18IS606( I2C_target ):
 		
 		if read_wait == False:
 			self.__clear_int()
-
+		
 	def __clear_int( self ):
 		self.command( [ SC18IS606.FuncID_Clear_Interrupt ] )
 	
@@ -93,13 +96,19 @@ class SC18IS606( I2C_target ):
 
 	def readinto( self, buf, write = 0x00 ):
 		buf	= self.read( len( buf ), write = write )
+		for i, m in enumerate( self.receive( list( write_buf ) ) ):
+			buf[ i ]	= m
 
 	def write( self, buf ):
 		self.send( list( buf ) )
 
 	def write_readinto( self, write_buf, read_buf ):
-		read_buf	= self.receive( list( write_buf ) )
-		
+		for i, m in enumerate( self.receive( list( write_buf ) ) ):
+			read_buf[ i ]	= m
+
+class SC18IS606_Error( Exception ):
+	pass
+
 class AT25010_operation():
 
 	instruction_WRITE	= 0x02
