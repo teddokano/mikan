@@ -17,7 +17,7 @@ class SC18IS606( I2C_target ):
 	MSB	= SPI.MSB
 	LSB	= SPI.LSB
 
-	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None ):
+	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None, baudrate = 1875000, polarity = 0, phase = 0, firstbit = SPI.MSB ):
 		if int is None:
 			raise SC18IS606_Error( "SC18IS606 instance must have interrupt pin" )
 			
@@ -25,6 +25,8 @@ class SC18IS606( I2C_target ):
 		self.__int	= int
 		self.__csn	= csn
 		self.__flag	= False
+
+		self.init( baudrate = baudrate, polarity = polarity, phase = phase, firstbit = firstbit )
 		
 		self.__clear_int()
 		self.__int.irq( trigger = Pin.IRQ_FALLING, handler = self.__callback )
@@ -57,8 +59,22 @@ class SC18IS606( I2C_target ):
 		self.__wait_tsfr_done( read_wait = True )
 		return super().receive( len( data ) )
 
-#	def init( self, baudrate = 1000000, *, polarity = 0, phase = 0, bits = 8, firstbit = SPI.MSB, sck = None, mosi = None, miso = None, pins = (SCK, MOSI, MISO) ):
-#		pass
+	def init( self, baudrate = 1000000, *, polarity = 0, phase = 0, firstbit = SPI.MSB ):
+		FREQ	= [ 58000, 115000, 455000, 1875000 ]
+		
+		order	= 0 if firstbit is SPI.MSB else 1
+		
+		for f_idx, freq in enumerate( FREQ ):
+			print( f_idx, baudrate, freq )
+			if baudrate <= freq:
+				break
+		
+		f_idx	= 3 - f_idx
+		
+		data	= (order << 5) | (polarity << 3) | (phase << 2) | f_idx
+		print( "FuncID_Configure_SPI_Interface = 0x{:02X}".format( data ) )
+		self.command( [ SC18IS606.FuncID_Configure_SPI_Interface ] + [ data ] )
+		
 
 	def read( self, nbytes, write = 0x00 ):
 		return self.receive( [ write ] * nbytes )
@@ -88,12 +104,17 @@ def	main():
 		#	AT25010 access through SC18IS606 protocol bridge
 		i2c		= I2C( 0, 400 * 1000 )
 		bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-		eeprom	= AT25010( bridge, None )
+		eeprom	= AT25010( bridge )		# Give SC18IS606 instance as an SPI
 	else:
 		#	AT25010 access with direct SPI connection
 		spi		= SPI( 0, 1000 * 1000, cs = 0 )
-		eeprom	= AT25010( spi, None )
+		eeprom	= AT25010( spi )
 
+	try:
+		print( bridge.info() )
+	except:
+		print( "SPI direct connect" )
+		
 	print( "instance of '{}' class had been made".format( eeprom.__class__.__name__ ) )
 
 	###
