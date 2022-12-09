@@ -1,4 +1,7 @@
 class Interface:
+	"""
+	An abstraction class to provide common methods for devices
+	"""
 #	@classmethod
 	def bit_operation( self, reg, target_bits, value ):
 		"""
@@ -82,15 +85,32 @@ class Interface:
 			print( "" )
 
 	def info( self ):
+		"""
+		device information
+
+		Returns
+		-------
+		string : device information
+		"""
 		return "an instance of {}, {}".format( self.__class__.__name__, self.dev_access() )
 	
 	def dev_access( self ):
+		"""
+		device access information
+
+		Returns
+		-------
+		string : device access information
+		"""
 		if hasattr( self, "__adr" ):
 			return "target address 0x{:02X} (0x{:02X})".format( self.__adr, self.__adr << 1 )
 		elif hasattr( self, "__cs" ):
 			return "cs_pin@{}".format( self.__cs )
 
 class I2C_target_Error( Exception ):
+	"""
+	Just a class for I2C exception handling
+	"""
 	pass
 
 class I2C_target( Interface ):
@@ -99,8 +119,9 @@ class I2C_target( Interface ):
 	It helps to keep target address and communication.
 	
 	For register access methods, the register can be specified
-	by its name. The name of registers may needed to be defined
-	as REG_NAME in inherited class (device class).
+	by its name or register address/pointer. 
+	The name of registers may needed to be defined as REG_NAME 
+	in inherited class (device class).
 	
 	"""
 
@@ -110,9 +131,17 @@ class I2C_target( Interface ):
 	
 		Parameters
 		----------
-		i2c : machine.I2C instance
-		address : I2C target (device) address
-		
+		i2c : obj
+			machine.I2C instance
+		address : int
+			I2C target (device) address
+		auto_increment_flag : int
+			On some devices, auto increment flag is needed for consecutive 
+			regiter access. This value is set in register address when 
+			multiple data sending. 
+		ignore_fail : bool
+			Supress raising exception when transfer error (NACK) happned
+			
 		"""
 		self.__adr	= address
 		self.__if	= i2c
@@ -122,6 +151,18 @@ class I2C_target( Interface ):
 		self.live			= True
 
 	def ping( self ):
+		"""
+		ping for a device
+		
+		Access to the device with just its target address without data. 
+		If the device returned ACK, it keeps self.live=True. If device 
+		rturned NACK, the self.live is changed to False. 
+	
+		Returns
+		-------
+		bool : Returns self.live
+
+		"""
 		self.live	= True
 		self.send( [] )
 		
@@ -130,6 +171,13 @@ class I2C_target( Interface ):
 	def send( self, tsfr, stop = True, retry = 3 ):
 		"""
 		send data (generate write transaction)
+
+		Sending list-data to the device. 
+		It trys sending 3 times if the device respond NACK. 
+		If the device is kept not responding, the self.live is set to 
+		False to prevent further access to the failed device. 
+
+		Forcing self.live=True can re-live the device. 
 	
 		Parameters
 		----------
@@ -169,6 +217,13 @@ class I2C_target( Interface ):
 		"""
 		receive data (generate read transaction)
 	
+		Receiving list-data from the device. 
+		It trys receiving 3 times if the device respond NACK. 
+		If the device is kept not responding, the self.live is set to 
+		False to prevent further access to the failed device. 
+
+		Forcing self.live=True can re-live the device. 
+	
 		Parameters
 		----------
 		length : int
@@ -207,7 +262,7 @@ class I2C_target( Interface ):
 
 	def write_registers( self, reg, data ):
 		"""
-		writing register
+		writing registers
 	
 		Parameters
 		----------
@@ -234,7 +289,7 @@ class I2C_target( Interface ):
 		
 	def read_registers( self, reg, length, repeated_start = True ):
 		"""
-		reading register
+		reading registers
 	
 		Parameters
 		----------
@@ -262,14 +317,29 @@ class I2C_target( Interface ):
 		return	r[ 0 ] if length is 1 else r
 
 class SPI_target( Interface ):
+	"""
+	An abstraction class to provide SPI device access.
+	It helps to keep target access method and communication.
+	
+	For register access methods, the register can be specified
+	by its name or register address/pointer. 
+	The name of registers may needed to be defined as REG_NAME 
+	in inherited class (device class).
+	
+	"""
+
 	def __init__( self, spi, cs = None ):
 		"""
 		SPI_target initializer
-	
+		
 		Parameters
 		----------
-		spi : machine.SPI instance
-		cs : machine.Pin instance (Chip select output)
+		spi : obj
+			machine.SPI instance
+		cs : obj
+			machine.Pin instance (Chip select output)
+			This 'cs' can be None in case of using hardware 
+			controlledChipSelect signal
 		
 		"""
 		self.__cs	= cs
@@ -321,12 +391,15 @@ class SPI_target( Interface ):
 
 	@chip_select.setter
 	def chip_select( self, v ):
+		"""
+		A setter method to perform CS signal HIGH/LOW by assignment
+		"""
 		if self.__cs:
 			self.__cs.value( v )
 
 	def write_registers( self, reg, data ):
 		"""
-		writing register
+		writing registers
 	
 		Parameters
 		----------
@@ -348,7 +421,7 @@ class SPI_target( Interface ):
 		
 	def read_registers( self, reg, length ):
 		"""
-		reading register
+		reading registers
 	
 		Parameters
 		----------
@@ -374,6 +447,7 @@ class SPI_target( Interface ):
 class abstract_target( Interface ):
 	"""
 	An abstraction class for off-line test.
+	No physical access will be performed with this class. 
 	"""
 
 	def send( self, tsfr ):
@@ -396,6 +470,22 @@ class abstract_target( Interface ):
 		return	r[ 0 ] if length is 1 else r
 
 def i2c_fullscan( i2c ):
+	"""
+	I2C scan for full range of target addresses. 
+	Because the machine.I2C.scan() does scan is limited in range of 0x08(0x10) 
+	to 0x77(0xEE). 
+	
+	Parameters
+	----------
+	i2c : obj
+		machine.I2C instance
+		
+	Returns
+	-------
+	list : Responding target ddress list
+
+	"""
+
 	list	= []
 	data	= []
 	
