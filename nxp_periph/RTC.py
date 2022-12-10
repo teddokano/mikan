@@ -4,6 +4,7 @@ from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 class RTC_base():
 	"""
 	An abstraction class to make RTC user interface.
+	
 	"machine.RTC" like interface available but this class
 	doesn't inherit machine.RTC to separate its behavior
 	"""
@@ -136,6 +137,21 @@ class RTC_base():
 		return s
 		
 	def timer_alarm( self, hours = 0, minutes = 0, seconds = 0, pin_select = "B" ):
+		"""
+		set timer
+	
+		Parameters
+		----------
+		hours   : int
+		minutes : int
+		seconds : int
+		pin_select : string which contains "A" or "B", default "B"
+			This parameter will be ignored if the RTC has only one
+			interrupt output.
+			A character "A" or "B" should be in the string.
+			If both characters are there, it will set "A" interrupt.
+
+		"""
 		t	= self.datetime()
 		
 		seconds, m_carry	= (t[6] + seconds          ) % 60, (t[6] + seconds           ) // 60,
@@ -151,6 +167,9 @@ class RTC_base():
 		return	alm
 	
 	def clear_alarm( self ):
+		"""
+		disabling alarm interrupt
+		"""
 		self.__clear_alarm()
 	
 	def cancel( self ):
@@ -170,9 +189,8 @@ class RTC_base():
 			interrupt output.
 			A character "A" or "B" should be in the string.
 			If both characters are there, it will set "A" interrupt.
-		min : bool, option
-			Set every minute interrupt by True.
-			If min is not given or False, every second intrerupt is set.
+		period : int, option
+			Periodic interrupt interval
 
 		"""
 		self.__set_periodic_interrupt( pin_select, period )
@@ -183,7 +201,7 @@ class RTC_base():
 	
 		Parameters
 		----------
-		pin_select : string which contains "A" or "B"
+		pin_select : string which contains "A" or "B", default "B"
 			This parameter will be ignored if the RTC has only one
 			interrupt output.
 			A character "A" or "B" should be in the string.
@@ -230,6 +248,9 @@ class RTC_base():
 		return ts_list
 
 	def timestamp2str( self, ts_list ):
+		"""
+		timestamp converted to a str
+		"""
 		s	= []
 		for ts, i in zip( ts_list, range( 1, self.NUMBER_OF_TIMESTAMP + 1 ) ):
 			s	+= [ "timestamp{} ({}, {}): {}".format( i, ts[ "active" ], ts[ "last" ], RTC_base.tuple2str( ts[ "tuple" ], RTC_base.NOW_TUPPLE_FORM ) ) ]
@@ -238,7 +259,7 @@ class RTC_base():
 
 	def oscillator_stopped( self ):
 		"""
-		is oscillator stopped?
+		detects the RTC was beeing reset
 	
 		Returns
 		-------
@@ -289,6 +310,22 @@ class RTC_base():
 
 	@classmethod
 	def tuple2dt( cls, datetime, form, weekday = 0 ):
+		"""
+		converts a tuple format data into a dict
+
+		Parameters
+		----------
+		datetime	: tuple
+		form		: string
+			tuple or list of key labels
+		weekday		: int, default = 0
+			
+		Returns
+		-------
+		dict
+			dict with keys of NOW_TUPPLE_FORM
+		
+		"""
 		dt	= cls.DEINIT_TUPLE.copy()	# to prepare initialized dict to overwrite neccessary items
 		for key, item in zip( form, datetime ):
 			dt[ key ]	= item
@@ -300,6 +337,20 @@ class RTC_base():
 
 	@classmethod
 	def tuple2str( cls, tpl, form ):
+		"""
+		converts a tuple format data into a string
+
+		Parameters
+		----------
+		datetime	: tuple
+		form		: sstringtr
+			tuple or list of key labels
+			
+		Returns
+		-------
+		string
+
+		"""
 		dt	= dict( zip( form, tpl ) )
 
 		if "weekday" in dt:

@@ -273,6 +273,12 @@ class I2C_target( Interface ):
 			List for multibyte sending. List is converted to
 			bytearray before sending.
 			If the data is integer, single byte will be sent.
+
+		Examples
+		--------
+		self.write_registers( "PWM0", 0xFF ):		# single byte writing
+		self.write_registers( "PWM0", [0xFF] * 4 ):	# 4 bytes writing
+		self.write_registers( 10, [0xFF] * 4 ):		# register specified by address
 			
 		"""
 		#print( "I2C write_registers: {}, {}".format( reg, data ) )
@@ -302,6 +308,12 @@ class I2C_target( Interface ):
 			write and read transactions.
 			If False, a STOP-condition and START-condition are
 			generated between write and read transactions.
+
+		Examples
+		--------
+		data = self.read_registers( "PWM0", 1 ):	# single byte reading, returns an int
+		data = self.read_registers( "PWM0", 4 ):	# 4 bytes reading, returns a list
+		data = self.read_registers( 10, 4 ):		# register specified by address
 
 		"""
 		#print( "I2C read_registers: {}, {}".format( reg, data ) )

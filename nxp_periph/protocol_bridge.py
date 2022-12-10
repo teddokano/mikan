@@ -125,7 +125,13 @@ class SC16IS7xx_base():
 			
 		Returns
 		-------
-			int : register value
+		int, if 2nd argument is not exist
+			register value
+		
+		Examples
+		--------
+		self.reg_access( "LCR", 0x80 )	# writing
+		lcr	= self.reg_access( "LCR" )	# reading
 		
 		"""
 
@@ -198,8 +204,9 @@ class SC16IS7xx_base():
 			
 		Returns
 		-------
-			list : received data
-		
+		list
+			received data
+			
 		"""
 		data	= []
 		n		= -1 if len( args ) is 0 else args[ 0 ]
@@ -413,7 +420,8 @@ class SC18IS606( I2C_target ):
 
 		Returns
 		-------
-			list : received data
+		list
+			received data
 		
 		"""
 		self.command( [ SC18IS606.FuncID_SPI_read_and_write | 0x01 << self.__csn ] + data )

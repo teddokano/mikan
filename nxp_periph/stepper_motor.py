@@ -7,30 +7,97 @@ class StepperMotor_base():
 	"""
 
 	def start( self, reverse = False ):
+		"""
+		Start motor
+			
+		Parameters
+		----------
+		reverse	: bool, default False
+			True for reverse direction setting
+					
+		"""
 		self.__start( start = True, reverse = reverse )
 
 	def stop( self ):
+		"""
+		Stop motor
+		"""
 		self.__start( start = False )
 
 	def steps( self, step, reverse = False ):
+		"""
+		Set steps
+			
+		Parameters
+		----------
+		step	: int
+			Setting motor move angre/rotation by number of steps
+		reverse	: bool, default False
+			True for reverse direction setting
+					
+		"""
 		self.__steps( step, reverse = reverse )
 
 	def pps( self, pps, reverse = False ):
+		"""
+		Set pulse per second (pps)
+			
+		Parameters
+		----------
+		pps	: float
+			Setting motor move speed by pps
+		reverse	: bool, default False
+			True for reverse direction setting
+					
+		"""
 		self.__pps( pps, reverse = reverse )
 
 	def drv_phase( self, v ):
+		"""
+		Setting drive phase mode
+			
+		Parameters
+		----------
+		v	: float
+			PCA9629 series can set 1 phase, 2 phase and half step drive. 
+			1 and 2 are for 1-pahse and 2-phase drive. 0.5 for half-step drive. 
+					
+		"""
 		self.__drv_phase( v )
 
 	def home( self, pps = 96, reverse = False, extrasteps = 0 ):
+		"""
+		Go to home position
+			
+		Parameters
+		----------
+		pps			: float
+			Motor move speed setting by pps
+		reverse		: bool, default False
+			Motor move direction to go back home position
+		extrasteps	: int
+			Extra-steps after crossing sensor
+					
+		"""
+	
 		self.__home( pps = pps, reverse = reverse, extrasteps = extrasteps )
 	
 	def init():
+		"""
+		Initialize registers
+		"""
 		__init_reg()
 
 	def w16( self, reg, val ):
+		"""
+		Register write with 16 bit width
+		"""
 		self.write_registers( reg, [ val & 0xFF, val >> 8 ] )
 
 	def r16( self, reg ):
+		"""
+		Register read with 16 bit width
+		"""
 		r	= self.read_registers( reg, 2 )
 		return r[ 0 ] | ( r[ 1 ] << 8 )
 
@@ -58,6 +125,25 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 					)
 
 	def __init__( self, i2c, address = DEFAULT_ADDR, steps_per_rotation = 48 ):
+		"""
+		Constructor for PCA9629A
+		
+		SC16IS7xx is not having register structure like LED controllers (PCA995x).
+		Use this method to access the registers. 
+	
+		This method can take two arguments. 
+		1st argument is a register address or name.
+		2nd argument can be a value for register writing.
+		If no 2nd argument given, the method returns register read value. 
+	
+		Parameters
+		----------
+		i2c		: machine.I2C instance
+		address	: int, option
+		steps_per_rotation : int
+			Motor parameter, steps/rotation
+			
+		"""
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
 		self.steps_per_rotation	= steps_per_rotation
 

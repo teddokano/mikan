@@ -41,7 +41,11 @@ class temp_sensor_base():
 		"""
 		Write or read register
 		
-		Takes 1 or 2 arguments.
+		Recommended to use this method instead of write_registers()/read_registers()
+		because register accessing style is different from LED_controllers and RTCs. 
+		This reg_access() method does 8 bit and 16 bit access automatically
+		
+		The reg_access() takes 1 or 2 arguments.
 		If 2 arguments are geven, it performs write.
 		If only 1 argument is geven, read is performed.
 
@@ -56,6 +60,11 @@ class temp_sensor_base():
 		-------
 		int : register data
 			Nothing will be returned when write is done.
+
+		Examples
+		--------
+		self.reg_access( "Conf", 0 )		# writes 8 bit data (writes 16 bit data for P3T1085)
+		value	= self.reg_access( "Temp" )	# reads 16 bit data
 
 		"""
 		length	= self.REG_ACC[ args[ 0 ] ]
@@ -121,6 +130,9 @@ class temp_sensor_base():
 		return self.__read()
 
 class LM75B( temp_sensor_base, I2C_target ):
+	"""
+	LM75B class
+	"""
 	DEFAULT_ADDR		= 0x90 >> 1
 
 	REG_NAME	= ( "Temp", "Conf", "Thyst", "Tos", "Tidle" )
@@ -146,6 +158,9 @@ class LM75B( temp_sensor_base, I2C_target ):
 		return [ v / 256.0 for v in sv ]
 		
 class PCT2075( LM75B ):
+	"""
+	PCT2075 class
+	"""
 	DEFAULT_ADDR		= 0x90 >> 1
 
 	REG_NAME	= ( "Temp", "Conf", "Thyst", "Tos", "Tidle" )
@@ -174,6 +189,8 @@ class PCT2075( LM75B ):
 
 class P3T1085( LM75B ):
 	"""
+	P3T1085 class
+
 	CAUTION: THIS DEVICE HAS NOT BEEN SUPPORTED YET
 	"""
 	DEFAULT_ADDR		= 0x90 >> 1
@@ -212,6 +229,3 @@ class P3T1085( LM75B ):
 
 if __name__ == "__main__":
 	main()
-
-
-

@@ -2,7 +2,11 @@ from nxp_periph.interface	import	I2C_target, SPI_target
 
 class LED():
 	"""
-	Make a LED instance
+	A class for abstructing LEDs in the system
+	
+	Using this class, every LED output channels in all LED controllers 
+	can be managed as single list. 
+	See examples in "examples/LED_demo.py" and "LED_demo_dual_om13321.py".
 	"""
 	
 	def __init__( self, controller, channel ):
@@ -43,7 +47,7 @@ class LED():
 	@i.setter
 	def i( self, v ):
 		"""
-		Change PWM setting
+		Change output current setting
 		
 		Parameters
 		----------
@@ -91,6 +95,13 @@ class LED_controller_base:
 		If only 1 argument is geven, it takes the agrgument as list.
 		The list may need to contain the number of LED controller
 		channels (self.CHANNELS) elements.
+		
+		I2C transfer will be done each time of this method call. 
+		So pwm() method call will change brightness of LED immediately. 
+		How ever, the I2C bandwidth will be wasted if there are too many calls 
+		for single output channel operations. 
+		To improve bandwidth efficiency, buffer&flash operation can be done. 
+		See buf() method description. 
 
 		Parameters (if 2 arguments given)
 		----------
@@ -107,6 +118,17 @@ class LED_controller_base:
 			Values are PWM ratio should be in range of
 			0~255 or 0.0~1.0
 			
+		Examples
+		--------
+		self.pwm( 2, 0x80 )	# set PWM output channel 2 to 0x80
+		self.pwm( 2, 0.5 )	# set PWM output channel 2 to 50%
+		self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)
+
+		See Also
+		--------
+		buff	: Writing PWM setting value into buffer
+		flash	: Flash buffer contents into the LED controller
+		
 		"""
 		reg	= self.__iref_base if alt else self.__pwm_base
 
@@ -122,6 +144,18 @@ class LED_controller_base:
 		"""
 		Writing PWM setting value into buffer
 		
+		To improve I2C bandwidth efficiency, buffer&flash operation provided. 
+		The buf() method has same interface as pwm() but it doesn't initiate
+		I2C transfer. It just keeps the setting value in a buffer.
+		The flash() method can be called to initiate I2C transfer 
+		when the LED controller need to be updated. 
+		
+		Examples
+		--------
+		for i in range( 24 ):
+			self.buf( i, i / 24 )	# LED brightness doesn't change
+		self.flash()				# LED controller updated in this timing
+		
 		Parameters
 		----------
 		ch : int
@@ -130,17 +164,35 @@ class LED_controller_base:
 			PWM value stored in buffer
 			Need to flush to refrect device behavior.
 			
+		See Also
+		--------
+		pwm		: PWM setting
+		flash	: Flash buffer contents into the LED controller
+		
 		"""
 		self.buffer[ ch ]	= val
 		
 	def flush( self ):
 		"""
-		Flash buffer contents into device
+		Flash buffer contents into the LED controller
+
+		See Also
+		--------
+		buff	: Writing PWM setting value into buffer
+		
 		"""
 		l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in self.buffer ]
 		self.write_registers( self.__pwm_base, l )
 
 class gradation_control():
+	"""
+	Gradation control class for PCA9955B and PCA9957
+	
+	The PCA9955B and the PCA9957 has "gradation control" hardware. 
+	This class provides interface to control this feature.
+	
+	A sample code is available: "example/LED_gradation_ctrl.py"
+	"""
 	HOLDTIME	= [	[ "6",    7 ],
 					[ "4",    6 ],
 					[ "2",    5 ],
@@ -152,6 +204,36 @@ class gradation_control():
 					]	#	using list instead of dict to keep order of items
 	
 	def set_gradation( self, group_num, max_iref, time, up = True, down = True, on = 0, off = 0 ):
+		"""
+		Calculate and set gradation
+		
+		Register settings are calculated from given parameters.
+		The calculation done to make finest ramp-up/down steps and closest 
+		hold-on/off time
+		
+		Parameters
+		----------
+		group_num : int
+			Group number
+		max_iref : float
+			Peak output current setting in range of 0.0 - 1.0
+		time : float
+			ramp-up/down time [second]
+		up : bool, default True
+			ramp-up enable
+		down : bool
+			ramp-down enable
+		on : float, default 0.0
+			Hold-ON time
+		off : float, default 0.0
+			Hold-OFF time
+			
+		Returns
+		-------
+		float
+			total cycle time
+		
+		"""
 		reg_i	= "RAMP_RATE_GRP%01d" % group_num
 
 		iref	 = max_iref * 255.0
@@ -233,6 +315,17 @@ class gradation_control():
 		return cycle_time
 
 	def gradation_channel_enable( self, list, exponential = False ):
+		"""
+		Specifying channels for gradation control
+		
+		Parameters
+		----------
+		list : int or list
+			A channel number or a list of channel numbers
+		exponential : bool, default False
+			Enables exponential adjustment for gradation control
+					
+		"""
 		if type( list ) == int:
 			list	= [ list ]
 		
@@ -245,6 +338,17 @@ class gradation_control():
 		self.bit_operation( "MODE2", 0x04, exponential << 2 )
 
 	def gradation_group_assign( self, lists ):
+		"""
+		Assigns channels into groups
+		
+		Parameters
+		----------
+		lists : list of list
+			Lists of channel list. 
+			First list is for group 0, second list is for group 1 ...
+					
+		"""
+
 		gr_list	= [ 0 ]	* self.CHANNELS
 		for gn, l in enumerate( lists ):
 			for ch in l:
@@ -253,12 +357,45 @@ class gradation_control():
 		self.__gradation_groups( gr_list )
 
 	def gradation_start( self, group, continuous = True ):
+		"""
+		gradation start for a group
+		
+		Parameters
+		----------
+		group : int or list
+			A group number or a list of group numbers
+		continuous : bool, default True
+			False for single-shot
+					
+		"""
 		self.gradation_ctrl( group, True, continuous = continuous )
 		
 	def gradation_stop( self, group ):
+		"""
+		gradation start for a group
+		
+		Parameters
+		----------
+		group : int or list
+			A group number or a list of group numbers
+			
+		"""
 		self.gradation_ctrl( group, False )
 		
 	def gradation_ctrl( self, group, start, continuous = True ):
+		"""
+		gradation start/stop
+		
+		Parameters
+		----------
+		group : int or list
+			A group number or a list of group numbers
+		start : bool
+			True for start, False for stop
+		continuous : bool, default True
+			False for single-shot			
+			
+		"""
 		if type( group ) == int:
 			group	= [ group ]
 		
@@ -273,7 +410,7 @@ class gradation_control():
 
 class PCA995xB_base( LED_controller_base, I2C_target ):
 	"""
-	An abstraction class for PCA995x family
+	An abstraction class for PCA995xB (I2C interface) family
 	"""
 	DEFAULT_ADDR		= 0xE0 >> 1
 
@@ -294,9 +431,8 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 			Initial PWM value
 		iref	: int, option
 			Initial IREF (current setting) value
-		current_control : bool, option
+		current_control : bool, default False
 			Brightness control switch PWM or current.
-			Default:PWM (False)
 
 		"""
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
@@ -315,6 +451,11 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 			self.write_registers( r, v )
 
 	def iref( self, *args ):
+		"""
+		output current setting
+	
+		Arguments are same as pwm()
+		"""
 		self.pwm( *args, alt = True )
 
 	def dump( self ):
@@ -327,6 +468,9 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		return data
 
 class PCA9955B( PCA995xB_base, gradation_control ):
+	"""
+	PCA9955B class
+	"""
 	CHANNELS		= 16
 	GRAD_GRPS		=  4
 	REG_NAME		=	(
@@ -362,6 +506,9 @@ class PCA9955B( PCA995xB_base, gradation_control ):
 		self.bit_operation( "GRAD_CNTL", mask, pattern )
 	
 class PCA9956B( PCA995xB_base ):
+	"""
+	PCA9956B class
+	"""
 	CHANNELS		= 24
 	REG_NAME		=	(
 							"MODE1", "MODE2",
@@ -411,6 +558,9 @@ class PCA96xx_base( LED_controller_base, I2C_target ):
 
 
 class PCA9632( PCA96xx_base ):
+	"""
+	PCA9632 class
+	"""
 	CHANNELS		= 4
 	REG_NAME		=	(
 							"MODE1", "MODE2",
@@ -437,7 +587,7 @@ class PCA9632( PCA96xx_base ):
 
 class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 	"""
-	An abstraction class for PCA9957 family
+	An abstraction class for PCA9957 family (SPI interface with gradation control)
 	"""
 	PWM_INIT			= 0x00
 	IREF_INIT			= 0x10
@@ -454,9 +604,8 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 			Initial PWM value
 		iref	: int, option
 			Initial IREF (current setting) value
-		current_control : bool, option
+		current_control : bool, default False
 			Brightness control switch PWM or current.
-			Default:PWM (False)
 
 		"""
 		SPI_target.__init__( self, spi, cs )
@@ -483,6 +632,11 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 			self.write_registers( r, v )
 	
 	def iref( self, *args ):
+		"""
+		output current setting
+	
+		Arguments are same as pwm()
+		"""
 		self.pwm( *args, alt = True )
 
 	def write_registers( self, reg, data ):
@@ -544,7 +698,6 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 	def __setup_EVB( self ):
 		"""
 		setting up RESET and OE pins on PCA9957HN_ARD evaluation board
-		
 		"""
 		from machine import Pin
 		print( "PCA9957HN_ARD setting done." )
@@ -556,6 +709,9 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 
 
 class PCA9957( PCA9957_base ):
+	"""
+	PCA9957 class
+	"""
 	CHANNELS		= 24
 	GRAD_GRPS		=  6
 
@@ -599,4 +755,3 @@ class PCA9957( PCA9957_base ):
 	def __gradation_ctrl( self, pattern, mask ):
 		self.bit_operation( "GRAD_CNTL0", mask & 0xFF, pattern & 0xFF )
 		self.bit_operation( "GRAD_CNTL1", (mask >> 4) & 0xFF, (pattern >> 4) & 0xFF )
-	
