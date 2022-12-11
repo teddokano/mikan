@@ -15,11 +15,11 @@ class SC16IS7xx_base():
 					"RHR" : 0x00, "THR" : 0x00, "IER" : 0x01, "FCR" : 0x02, 
 					"IIR" : 0x02, "LCR" : 0x03, "MCR" : 0x04, "LSR" : 0x05,
 					"MSR" : 0x06, "SPR" : 0x07, "TCR" : 0x06, "TLR" : 0x07,
-					"TXLVL" : 0x08, "RXLVL" : 0x09, "IODir" : 0x0A,
+					"TXLVL"   : 0x08, "RXLVL"    : 0x09, "IODir"     : 0x0A,
 					"IOState" : 0x0B, "IOIntEna" : 0x0C, "IOControl" : 0x0E,
-					"EFCR" : 0x0F, "DLL" : 0x00, "DLH" : 0x01,
-					"EFR" : 0x02, "XON1" : 0x04, "XON2" : 0x05,
-					"XOFF1" : 0x06, "XOFF2" : 0x07
+					"EFCR"    : 0x0F, "DLL"      : 0x00, "DLH"       : 0x01,
+					"EFR"     : 0x02, "XON1"     : 0x04, "XON2"      : 0x05,
+					"XOFF1"   : 0x06, "XOFF2"    : 0x07
 					}
 
 	def __init__( self, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1 ):
@@ -71,11 +71,12 @@ class SC16IS7xx_base():
 		
 	def info( self ):
 		"""
-		Overrides interface.info() for additional information
+		Not overriding interface.info() since inheritance structure can not allow
+		This methos is called by SC16IS7xx_I2C and SC16IS7xx_SPI classes
 		"""
 		parity_setting	= [ "None", "odd", "", "even" ]
 		
-		s	 = ", osc = {} Hz".format( self.osc )
+		s	 = "\nosc = {} Hz".format( self.osc )
 		
 		lcr	= self.reg_access( "LCR" )
 		self.reg_access( "LCR", 0x80 )	# 0x80 to program baud rate
