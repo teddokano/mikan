@@ -140,6 +140,15 @@ class LM75B( temp_sensor_base, I2C_target ):
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		LM75B initializer
+	
+		Parameters
+		----------
+		i2c     : machine.I2C instance
+		address : int, option
+
+		"""
 		super().__init__( i2c, address )
 
 	def __read( self ):
@@ -168,6 +177,17 @@ class PCT2075( LM75B ):
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
 	
 	def __init__( self, i2c, address = DEFAULT_ADDR, setup_EVB = False ):
+		"""
+		PCT2075 initializer
+	
+		Parameters
+		----------
+		i2c     : machine.I2C instance
+		address : int, option
+		setup_EVB : bool, default False
+			Board (PCT2075DP-ARD) specific setting
+
+		"""
 		super().__init__( i2c, address )
 
 		if setup_EVB:
@@ -200,6 +220,15 @@ class P3T1085( LM75B ):
 	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
 
 	def __init__( self, i2c, address = DEFAULT_ADDR, setup_EVB = False ):
+		"""
+		P3T1085 initializer
+	
+		Parameters
+		----------
+		i2c     : machine.I2C instance
+		address : int, option
+
+		"""
 		super().__init__( i2c, address )
 
 		if setup_EVB:

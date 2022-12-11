@@ -8,6 +8,8 @@ def main():
 	intf	= SPI( 0, 1000 * 1000, cs = 0 )
 	br		= SC16IS7xx( intf )
 	
+	br.info()
+	
 	while True:
 		br.write( 0xAA )
 		br.write( 0x55 )

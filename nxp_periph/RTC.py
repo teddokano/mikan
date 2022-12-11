@@ -628,6 +628,15 @@ def PCF2131( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 		returns PCF2131_I2C when interface == I2C
 		returns PCF2131_SPI when interface == SPI
 
+	Examples
+	--------
+	For using I2C
+		>>> intf = I2C( 0, freq = (400 * 1000) )
+		>>> rtc  = PCF2131( intf )
+	For using SPI
+		>>> intf = SPI( 0, 500 * 1000, cs = 0 )
+		>>> rtc  = PCF2131( intf )
+	
 	"""
 	if isinstance( interface, I2C ):
 		return PCF2131_I2C( interface, address )

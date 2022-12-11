@@ -126,7 +126,7 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR, steps_per_rotation = 48 ):
 		"""
-		Constructor for PCA9629A
+		Initializer for PCA9629A
 		
 		SC16IS7xx is not having register structure like LED controllers (PCA995x).
 		Use this method to access the registers. 

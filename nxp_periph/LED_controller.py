@@ -470,6 +470,27 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 class PCA9955B( PCA995xB_base, gradation_control ):
 	"""
 	PCA9955B class
+
+	For constructing an instance, following parameters can be used. 
+	
+	Parameters
+	----------
+	i2c		: machine.I2C instance
+	address	: int
+		I2C target (device) address
+	pwm		: int, option
+		Initial PWM value
+	iref	: int, option
+		Initial IREF (current setting) value
+	current_control : bool, default False
+		Brightness control switch PWM or current.
+
+	Examples
+	--------
+	>>> i2c   = I2C( 0, freq = (400 * 1000) ) # I2C with 400kHz setting
+	>>> led_c = PCA9955B( i2c )	              # PCA9955B is connected the I2C
+	>>> led_c.pwm( 0, 0.5 )	                  # set PWM = 50% for output channel 0
+
 	"""
 	CHANNELS		= 16
 	GRAD_GRPS		=  4
@@ -508,7 +529,29 @@ class PCA9955B( PCA995xB_base, gradation_control ):
 class PCA9956B( PCA995xB_base ):
 	"""
 	PCA9956B class
+
+	For constructing an instance, following parameters can be used. 
+	
+	Parameters
+	----------
+	i2c		: machine.I2C instance
+	address	: int
+		I2C target (device) address
+	pwm		: int, option
+		Initial PWM value
+	iref	: int, option
+		Initial IREF (current setting) value
+	current_control : bool, default False
+		Brightness control switch PWM or current.
+
+	Examples
+	--------
+	>>> i2c   = I2C( 0, freq = (400 * 1000) ) # I2C with 400kHz setting
+	>>> led_c = PCA9956B( i2c )	              # PCA9956B is connected the I2C
+	>>> led_c.pwm( 0, 0.5 )	                  # set PWM = 50% for output channel 0
+
 	"""
+	CHANNELS		= 16
 	CHANNELS		= 24
 	REG_NAME		=	(
 							"MODE1", "MODE2",
@@ -560,6 +603,27 @@ class PCA96xx_base( LED_controller_base, I2C_target ):
 class PCA9632( PCA96xx_base ):
 	"""
 	PCA9632 class
+
+	For constructing an instance, following parameters can be used. 
+	
+	Parameters
+	----------
+	i2c		: machine.I2C instance
+	address	: int
+		I2C target (device) address
+	pwm		: int, option
+		Initial PWM value
+	iref	: int, option
+		Initial IREF (current setting) value
+	current_control : bool, default False
+		Brightness control switch PWM or current.
+
+	Examples
+	--------
+	>>> i2c   = I2C( 0, freq = (400 * 1000) ) # I2C with 400kHz setting
+	>>> led_c = PCA9632( i2c )	              # PCA9632 is connected the I2C
+	>>> led_c.pwm( 0, 0.5 )	                  # set PWM = 50% for output channel 0
+
 	"""
 	CHANNELS		= 4
 	REG_NAME		=	(
@@ -594,7 +658,7 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 
 	def __init__( self, spi, cs = None, pwm = PWM_INIT, iref = IREF_INIT, current_control = False, setup_EVB = False ):
 		"""
-		PCA995xB_base initializer
+		PCA9957_base initializer
 	
 		Parameters
 		----------
@@ -606,6 +670,8 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 			Initial IREF (current setting) value
 		current_control : bool, default False
 			Brightness control switch PWM or current.
+		setup_EVB : bool, default False
+			Board (PCA9957HN-ARD) specific setting
 
 		"""
 		SPI_target.__init__( self, spi, cs )
@@ -711,6 +777,27 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 class PCA9957( PCA9957_base ):
 	"""
 	PCA9957 class
+
+	For constructing an instance, following parameters can be used. 
+	
+	Parameters
+	----------
+	i2c		: machine.I2C instance
+	address	: int
+		I2C target (device) address
+	pwm		: int, option
+		Initial PWM value
+	iref	: int, option
+		Initial IREF (current setting) value
+	current_control : bool, default False
+		Brightness control switch PWM or current.
+
+	Examples
+	--------
+	>>> spi		= SPI( 0, 1000 * 1000, cs = 0 )    # I2C with 1MHz setting
+	>>> led_c	= PCA9957( spi, setup_EVB = True ) # PCA9957 is connected the SPI, PCA9957HN-ARD option used
+	>>> led_c.pwm( 0, 0.5 )	                       # set PWM = 50% for output channel 0
+
 	"""
 	CHANNELS		= 24
 	GRAD_GRPS		=  6

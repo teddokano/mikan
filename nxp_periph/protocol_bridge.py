@@ -24,7 +24,24 @@ class SC16IS7xx_base():
 
 	def __init__( self, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1 ):
 		"""
-		A base class to abstract behavior of SC16IS7xx. 
+		A base class to abstract behavior of SC16IS7xx
+		
+		Parameters
+		----------
+		channel : int, default 0
+			UART channel mumber. 1 can be used for SC16IS752 and SC16IS762
+		osc     : int, default 14746500
+			X-tal frequency
+		baud    : int, default 9600
+			Baudrate setting
+		bits    : int, default 8
+			UART word length setting. 5, 6, 7 or 8 can be used
+		parity  : int or None, default None
+			None for no parity
+			0 for odd, 1 for even parity
+		stop    : int, default 1
+			Stop bit setting. 1 or 2
+
 		"""
 		self.osc	= osc
 		self.ch		= channel
@@ -130,8 +147,8 @@ class SC16IS7xx_base():
 		
 		Examples
 		--------
-		self.reg_access( "LCR", 0x80 )	# writing
-		lcr	= self.reg_access( "LCR" )	# reading
+		>>> self.reg_access( "LCR", 0x80 )	# writing
+		>>> lcr	= self.reg_access( "LCR" )	# reading
 		
 		"""
 
@@ -223,7 +240,7 @@ class SC16IS7xx_I2C( SC16IS7xx_base, I2C_target ):
 	"""
 	def __init__( self, interface, address, cs = 0, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1  ):
 		"""
-		Constructor to be called from "SC16IS7xx()" function
+		Initializer to be called from "SC16IS7xx()" function
 		"""
 		I2C_target.__init__( self, interface, address )
 		SC16IS7xx_base.__init__( self, channel = channel, osc = osc, baud = baud, bits = bits, parity = parity, stop = stop )
@@ -240,7 +257,7 @@ class SC16IS7xx_SPI( SC16IS7xx_base, SPI_target ):
 	"""
 	def __init__( self, interface, cs = 0, channel = 0, osc = 14746500, baud = 9600, bits = 8, parity = None, stop = 1 ):
 		"""
-		Constructor to be called from "SC16IS7xx()" function
+		Initializer to be called from "SC16IS7xx()" function
 		"""
 		SPI_target.__init__( self, interface, cs )
 		SC16IS7xx_base.__init__( self, channel = channel, osc = osc, baud = baud, bits = bits, parity = parity, stop = stop )
@@ -277,6 +294,19 @@ def SC16IS7xx( interface, address = DEFAULT_ADDR, cs = DEFAULT_CS, channel = 0, 
 		If need to specify (for I2C interface)
 	cs			: machine.Pin object
 		If need to specify (for SPI interface)
+	channel : int, default 0
+		UART channel mumber. 1 can be used for SC16IS752 and SC16IS762
+	osc     : int, default 14746500
+		X-tal frequency
+	baud    : int, default 9600
+		Baudrate setting
+	bits    : int, default 8
+		UART word length setting. 5, 6, 7 or 8 can be used
+	parity  : int or None, default None
+		None for no parity
+		0 for odd, 1 for even parity
+	stop    : int, default 1
+		Stop bit setting. 1 or 2
 
 	Returns
 	-------
@@ -300,12 +330,12 @@ class SC18IS606( I2C_target ):
 	Examples
     --------
 	When an AT25010 is connected to an SPI...
-		spi		= SPI( 0, 1000 * 1000, cs = 0 )
-		eeprom	= AT25010( spi )
+		>>> spi		= SPI( 0, 1000 * 1000, cs = 0 )
+		>>> eeprom	= AT25010( spi )
 	When an AT25010 is connected through SC18IS606...
-		i2c		= I2C( 0, 400 * 1000 )
-		bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-		eeprom	= AT25010( bridge )		# Give SC18IS606 instance as an SPI
+		>>> i2c		= I2C( 0, 400 * 1000 )
+		>>> bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
+		>>> eeprom	= AT25010( bridge )		# Give SC18IS606 instance as an SPI
 
 	"""
 	DEFAULT_ADDRESS	= 0x28
@@ -325,7 +355,7 @@ class SC18IS606( I2C_target ):
 
 	def __init__( self, i2c, csn, address = DEFAULT_ADDRESS, int = None, baudrate = 1875000, polarity = 0, phase = 0, firstbit = SPI.MSB ):
 		"""
-		Constructor for SC18IS606
+		Initializer for SC18IS606
 
 		Parameters
 		----------
