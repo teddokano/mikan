@@ -45,8 +45,8 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 # Getting started
 ## Step 1: Install MicroPython on the MCU board
 Follow this vieo to install MicroPython on the MCU board. This is an example of i.MXRT1050-EVK. 
-[https://youtu.be/8kladZaf0nw](https://youtu.be/8kladZaf0nw)  
-[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/8kladZaf0nw)
+[https://youtu.be/L2AVKoXI4vI](https://youtu.be/L2AVKoXI4vI)  
+[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/L2AVKoXI4vI)
 
 ## Step 2: Copy 'mikan' driver into the MCU board
 YouTube video available for guiding easy install and examples 🙂  
