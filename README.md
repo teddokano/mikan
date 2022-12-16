@@ -43,34 +43,39 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCA9629A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/fm-plus-ic-bus-advanced-stepper-motor-controller:PCA9629APW)
 
 # Getting started
-## Step 1: Install MicroPython on the MCU board
-Follow this vieo to install MicroPython on the MCU board. This is an example of i.MXRT1050-EVK. 
+## Guide video
+### Step 1: Install MicroPython on the MCU board
+Follow this video to install MicroPython into the MCU board. This is an example of i.MXRT1050-EVK. 
 [https://youtu.be/L2AVKoXI4vI](https://youtu.be/L2AVKoXI4vI)  
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/L2AVKoXI4vI)
 
-## Step 2: Copy 'mikan' driver into the MCU board
-YouTube video available for guiding easy install and examples 🙂  
-NOTE: This video is having old repo name. REplace "mp-driver" with "mikan".  
-[https://youtu.be/miob6jZ-87g](https://youtu.be/miob6jZ-87g)  
-[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/demodriver.png)](https://youtu.be/miob6jZ-87g)
+### Step 2: Install 'mikan' into the MCU board
+Need to copy 'mikan' class driver into the MCU board storage. The guide video shows how to copy using Thonny. 
+[https://youtu.be/rG8MwNkk9xs](https://youtu.be/rG8MwNkk9xs)  
+[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step2.png)](https://youtu.be/rG8MwNkk9xs)
 
-1. Check sys.path on target board
-	1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mode). 
-	1. Check path setting by typing.. 
-	```
-	>>> import sys
-	>>> print(sys.path)
-	```
-	Then you will get list of path like (in case of the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK))
-	```
-	['', '.frozen', '/flash', '/flash/lib']
-	```
-	or  (in case of Raspberry Pi Pico)
-	```
-	['', '.frozen', '/lib']
-	```
-1. Copy "nxp_periph" folder into target's' "lib" (it could be '/flash/lib' or '/lib') named folder.  For file/folder copying, some tools can be used like [Thonny](https://thonny.org), [rshell](https://github.com/dhylands/rshell), etc.
-1. Now it's ready to play! Choose an example code in "example" folder and run.
+## The steps
+1. Step 1
+	1. Install MicroPython into the MCU board
+	1. Follow instraction to MocroPython [download page](https://micropython.org/download/) for each MCU boards. 
+1. Step 2
+	1. Check sys.path on target board
+		1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mode). 
+		1. Check path setting by typing.. 
+		```
+		>>> import sys
+		>>> print(sys.path)
+		```
+		Then you will get list of path like (in case of the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK))
+		```
+		['', '.frozen', '/flash', '/flash/lib']
+		```
+		or  (in case of Raspberry Pi Pico)
+		```
+		['', '.frozen', '/lib']
+		```
+	1. Copy "nxp_periph" folder into target's' "lib" (it could be '/flash/lib' or '/lib') directory.  For file/folder copying, some tools can be used like [Thonny](https://thonny.org), [rshell](https://github.com/dhylands/rshell), etc.
+	1. Now it's ready to play! Choose an example code in "example" folder and run.
 
 # What is inside?
 ## Drivers
