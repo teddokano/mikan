@@ -99,6 +99,17 @@ function setCurrentTime( element ) {
 	ajaxUpdate( url );
 }
 
+function setPCTime( element ) {
+	WKDY	= [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
+
+	let	now		= new Date( Date.now() - (new Date()).getTimezoneOffset() * 60 * 1000 );
+	let url	= REQ_HEADER + 'set_pc_time=' + now.toJSON() + '&weekday=' + WKDY[ now.getDay() ];
+	ajaxUpdate( url );
+	
+	// server will get string of "...?set_pc_time=2022-12-19T06:11:31.031Z&weekday=Monday?..."
+}
+
+
 function clarAlarm( element ) {
 	document.getElementById( 'dialog' ).close();
 	prev_alarm_flg	= false

@@ -13,7 +13,7 @@ class DUT_RTC():
 				"Thursday", "Friday", "Saturday", "Sunday" )
 	MNTH	= ( "None", "January", "February", "March",
 				"April", "May", "June", "July", "August",
-				"September", "October", "Nobemver", "Decemver" )
+				"September", "October", "November", "December" )
 
 	DS_URL		= { "PCF2131_I2C": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
 					"PCF2131_SPI": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
@@ -22,6 +22,7 @@ class DUT_RTC():
 
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
 	regex_alarm	= ure.compile( r".*alarm&weekday=(\d+)&day=(\d+)&hour=(\d+)&minute=(\d+)&second=(\d+)" )
+	regex_pc_t	= ure.compile( r".*set_pc_time=(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+).(\d+)Z&weekday=(\S+)\?" )
 
 	def __init__( self, dev ):
 		self.interface	= dev.__if
@@ -70,6 +71,19 @@ class DUT_RTC():
 				
 				self.dev.clear_alarm()
 				self.dev.alarm_int( None, **alarm_time )	#	No INT pin assertion to avoid other device (PCA9957-ARD)
+				return 'HTTP/1.0 200 OK\n\n'	# dummy
+
+			m	= self.regex_pc_t.match( req )
+			if m:
+				t	= ( int( m.group( 1 ) ), 
+						int( m.group( 2 ) ), 
+						int( m.group( 3 ) ), 
+						self.WKDY.index( m.group( 8 ).decode() ), 
+						int( m.group( 4 ) ), 
+						int( m.group( 5 ) ), 
+						int( m.group( 6 ) ) 
+						)
+				self.dev.datetime( t )
 				return 'HTTP/1.0 200 OK\n\n'	# dummy
 			else:
 				return self.sending_data()
