@@ -37,7 +37,10 @@ class DUT_TEMP():
 			tp	= self.dev.temp
 		else:
 			tp	= 25	#	default value when device is not responding
-			
+
+		self.GRAPH_HIGH		= int( tp + 6 )
+		self.GRAPH_LOW		= self.GRAPH_HIGH - 10
+
 		self.tos		= int( (tp + 2) * 2 ) / 2
 		self.thyst		= int( (tp + 1) * 2 ) / 2
 
