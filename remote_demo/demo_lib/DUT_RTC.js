@@ -12,55 +12,56 @@ else
  
 /******** getTimeAndShow ********/
 
-function getTimeAndShow() {
-	let url	= REQ_HEADER
-	ajaxUpdate( url, getTimeAndShowDone )
+function makeGetTimeAndShow() {
+	let prev_reg	= [];	//	to prevent refresh on user writing field
+	let prev_alarm	= [];	//	to prevent refresh on user writing field
+	let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
+
+	return function() {
+		function done() {
+			let obj = JSON.parse( this.responseText )
+
+			let elem = document.getElementById( "datetime" );
+			elem.innerText = obj.datetime.str;
+			//console.log( obj.ts )
+			if ( obj.ts ) {
+				let elem = document.getElementById( "timestamp" );
+				elem.innerText = obj.ts;
+			}
+
+			for ( let i = 0; i < 5; i++ ) {
+				let value	= obj.alarm[ i ];
+				if ( value != prev_alarm[ i ] ) {
+					document.getElementById( "alarmField" + i ).value	= ( value == 0x80 ) ? '--' : hex( value );
+				}
+			}
+			prev_alarm	= obj.alarm;
+									
+			for ( let i = 0; i < obj.reg.length; i++ ) {
+				let value	= obj.reg[ i ];
+				if ( value != prev_reg[ i ] ) {
+					document.getElementById('regField' + i ).value	= hex( value );
+				}
+			}
+			prev_reg	= obj.reg;
+			
+			if ( obj.alarm_flg ) {
+				document.getElementById( 'dialog' ).showModal();
+				prev_alarm_flg	= true;
+				
+				if ( sound )
+					sound.play();
+				else
+					console.log( 'Sound is not played' )
+			}
+		}
+
+		let url	= REQ_HEADER
+		ajaxUpdate( url, done )
+	}
 }
 
-/******** getTimeAndShowDone ********/
-
-let prev_reg	= [];	//	to prevent refresh on user writing field
-let prev_alarm	= [];	//	to prevent refresh on user writing field
-let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
-
-function getTimeAndShowDone() {
-	let obj = JSON.parse( this.responseText )
-
-	let elem = document.getElementById( "datetime" );
-	elem.innerText = obj.datetime.str;
-	//console.log( obj.ts )
-	if ( obj.ts ) {
-		let elem = document.getElementById( "timestamp" );
-		elem.innerText = obj.ts;
-	}
-
-	for ( let i = 0; i < 5; i++ ) {
-		let value	= obj.alarm[ i ];
-		if ( value != prev_alarm[ i ] ) {
-			document.getElementById( "alarmField" + i ).value	= ( value == 0x80 ) ? '--' : hex( value );
-		}
-	}
-	prev_alarm	= obj.alarm;
-							
-	for ( let i = 0; i < obj.reg.length; i++ ) {
-		let value	= obj.reg[ i ];
-		if ( value != prev_reg[ i ] ) {
-			document.getElementById('regField' + i ).value	= hex( value );
-		}
-	}
-	prev_reg	= obj.reg;
-	
-	if ( obj.alarm_flg ) {
-		document.getElementById( 'dialog' ).showModal();
-		prev_alarm_flg	= true;
-		
-		if ( sound )
-			sound.play();
-		else
-			console.log( 'Sound is not played' )
-	}
-}
-
+let getTimeAndShow	= makeGetTimeAndShow();
 
 /****************************
  ****	register controls
