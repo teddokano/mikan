@@ -85,13 +85,11 @@ function updateRegField( element, idx ) {
 		return;
 
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value
-	ajaxUpdate( url, updateRegFieldDone )
-}
-
-function updateRegFieldDone() {
-	obj = JSON.parse( this.responseText );
-	
-	document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
+	ajaxUpdate( url, () => {
+		obj = JSON.parse( this.responseText );		
+		document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
+		
+	} )
 }
 
 function setCurrentTime( element ) {
