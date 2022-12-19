@@ -100,15 +100,24 @@ function setCurrentTime( element ) {
 }
 
 function setPCTime( element ) {
+	//	"setPCTime()" doesn't have precise timing synchronization mechanism
+	//	but it may not be a big problem becase in noemal demo environment in local netwotk
+	//	may have very small delay
+
 	WKDY	= [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
 
 	let	now		= new Date( Date.now() - (new Date()).getTimezoneOffset() * 60 * 1000 );
 	let url	= REQ_HEADER + 'set_pc_time=' + now.toJSON() + '&weekday=' + WKDY[ now.getDay() ];
-	ajaxUpdate( url );
+	
+	ajaxUpdate( url, () => {
+		let	complete	= new Date( Date.now() - (new Date()).getTimezoneOffset() * 60 * 1000 );
+		let	delay		= complete - now;
+
+		console.log( "setPCTime(): turn around time = " + delay + "ms" );
+	});
 	
 	// server will get string of "...?set_pc_time=2022-12-19T06:11:31.031Z&weekday=Monday?..."
 }
-
 
 function clarAlarm( element ) {
 	document.getElementById( 'dialog' ).close();
