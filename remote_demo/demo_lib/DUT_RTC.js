@@ -19,11 +19,11 @@ function makeGetTimeAndShow() {
 
 	return function() {
 		function done() {
-			let obj = JSON.parse( this.responseText )
+			let obj = JSON.parse( this.responseText );
 
 			let elem = document.getElementById( "datetime" );
 			elem.innerText = obj.datetime.str;
-			//console.log( obj.ts )
+			//console.log( obj.ts );
 			if ( obj.ts ) {
 				let elem = document.getElementById( "timestamp" );
 				elem.innerText = obj.ts;
@@ -52,12 +52,12 @@ function makeGetTimeAndShow() {
 				if ( sound )
 					sound.play();
 				else
-					console.log( 'Sound is not played' )
+					console.log( 'Sound is not played' );
 			}
 		}
 
-		let url	= REQ_HEADER
-		ajaxUpdate( url, done )
+		let url	= REQ_HEADER;
+		ajaxUpdate( url, done );
 	}
 }
 
@@ -71,25 +71,24 @@ let getTimeAndShow	= makeGetTimeAndShow();
 
 function updateRegField( idx ) {
 	let valueFieldElement = document.getElementById( "regField" + idx );
-	let value	= parseInt( valueFieldElement.value, 16 )
-	let no_submit	= 0
+	let value	= parseInt( valueFieldElement.value, 16 );
+	let no_submit	= 0;
 	
 	if ( isNaN( value ) ) {
-		no_submit	= 1
+		no_submit	= 1;
 		value = document.getElementById( "Slider" + idx ).value;
 	}
-	value	= (value < 0  ) ?   0 : value
-	value	= (255 < value) ? 255 : value
-	valueFieldElement.value = hex( value )
+	value	= (value < 0  ) ?   0 : value;
+	value	= (255 < value) ? 255 : value;
+	valueFieldElement.value = hex( value );
 
 	if ( no_submit )
 		return;
 
-	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value
+	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
 	ajaxUpdate( url, () => {
 		obj = JSON.parse( this.responseText );		
-		document.getElementById('regField' + obj.reg ).value	= hex( obj.val )
-		
+		document.getElementById('regField' + obj.reg ).value	= hex( obj.val );
 	} )
 }
 
@@ -103,7 +102,7 @@ function setPCTime( element ) {
 	//	but it may not be a big problem becase in noemal demo environment in local netwotk
 	//	may have very small delay
 
-	WKDY	= [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
+	WKDY	= [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
 
 	let	now		= new Date( Date.now() - (new Date()).getTimezoneOffset() * 60 * 1000 );
 	let url	= REQ_HEADER + 'set_pc_time=' + now.toJSON() + '&weekday=' + WKDY[ now.getDay() ];
@@ -120,9 +119,9 @@ function setPCTime( element ) {
 
 function clarAlarm() {
 	document.getElementById( 'dialog' ).close();
-	prev_alarm_flg	= false
+	prev_alarm_flg	= false;
 	
-	let url	= REQ_HEADER + 'clear_alarm'
+	let url	= REQ_HEADER + 'clear_alarm';
 	ajaxUpdate( url );
 }
 
