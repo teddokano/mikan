@@ -9,7 +9,7 @@ const	MAX_N_DATA	= {% max_n_data %}
  ****	periodic display handling
  ********************************/
 
-function makePastSec() {
+const	pastSec	= (function () {
 	let	last;
 
 	return function () {
@@ -19,9 +19,9 @@ function makePastSec() {
 
 		return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
 	}
-}
+})();
 
-function makeGetTempAndShow() {
+const	getTempAndShow	= (function () {
 	return function() {
 		let	temp_data	= {
 			time:[],
@@ -150,10 +150,8 @@ function makeGetTempAndShow() {
 
 		ajaxUpdate( url, done );
 	}
-}
+})();
 
-let	pastSec			= makePastSec();
-let	getTempAndShow	= makeGetTempAndShow();
 
 /****************************
  ****	widget handling
@@ -161,7 +159,7 @@ let	getTempAndShow	= makeGetTempAndShow();
 
 /******** updateSlider ********/
 
-function updateSlider( element, moving, idx ) {
+function updateSlider( moving, idx ) {
 	let tos		= document.getElementById( "Slider0" ).value;
 	let thyst	= document.getElementById( "Slider1" ).value;
 
@@ -183,7 +181,7 @@ function updateSlider( element, moving, idx ) {
 
 /******** updateValField ********/
 
-function updateValField( element, idx ) {
+function updateValField( idx ) {
 	let valueFieldElement = document.getElementById( "valField" + idx );
 	let value	= parseFloat( valueFieldElement.value );
 	let no_submit	= 0;
@@ -218,7 +216,7 @@ function setTosThyst() {
 	ajaxUpdate( url );
 }
 
-function csvFileOut(  time, temp  ) {
+function csvFileOut( time, temp ) {
 	console.log( 'csvFileOut' );
 	let str	= [];
 	let	len	= time.length;
@@ -246,7 +244,7 @@ function setConfig() {
 	ajaxUpdate( url );
 }
 
-function updateHeaterSwitch( element ) {
+function updateHeaterSwitch(s) {
 	let heaterSwitchElement	= document.getElementById( "heaterSwitch" );
 	let	val;
 	

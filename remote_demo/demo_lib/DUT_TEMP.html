@@ -47,10 +47,10 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 						Tos
 					</td>
 					<td class="td_TEMP_slider" text_align="center">
-						<input type="range" oninput="updateSlider( this, 1, 0 )" onchange="updateSlider( this, 0, 0 )" id="Slider0" min="-55" max="125" step="0.5" value="{% tos_init %}" class="slider">
+						<input type="range" oninput="updateSlider( 1, 0 )" onchange="updateSlider( 0, 0 )" id="Slider0" min="-55" max="125" step="0.5" value="{% tos_init %}" class="slider">
 					</td>
 					<td class="td_TEMP_slider" text_align="center">
-						<input type="text" onchange="updateValField( this, 0 )" id="valField0" minlength=4 size=5 value="{% tos_init %}""><br/>
+						<input type="text" onchange="updateValField( 0 )" id="valField0" minlength=4 size=5 value="{% tos_init %}""><br/>
 						
 					</td>
 				</tr>
@@ -59,10 +59,10 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 						Thyst
 					</td>
 					<td class="td_TEMP_slider">
-						<input type="range" oninput="updateSlider( this, 1, 1 )" onchange="updateSlider( this, 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="{% thyst_init %}" class="slider">
+						<input type="range" oninput="updateSlider( 1, 1 )" onchange="updateSlider( 0, 1 )" id="Slider1" min="-55" max="125" step="0.5" value="{% thyst_init %}" class="slider">
 					</td>
 					<td class="td_TEMP_slider">
-						<input type="text" onchange="updateValField( this, 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
+						<input type="text" onchange="updateValField( 1 )" id="valField1" minlength=4 size=5 value="{% thyst_init %}">
 					</td>
 				</tr>
 			</table>
@@ -89,7 +89,7 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 
 			<hr/>
 
-			<input type="checkbox" onchange="updateHeaterSwitch( this );" id="heaterSwitch">
+			<input type="checkbox" onchange="updateHeaterSwitch();" id="heaterSwitch">
 			<label for="heaterSwitch">🔥heater</label>
 		</div>
 

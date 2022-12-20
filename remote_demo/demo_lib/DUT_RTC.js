@@ -12,7 +12,7 @@ else
  
 /******** getTimeAndShow ********/
 
-function makeGetTimeAndShow() {
+const	getTimeAndShow	= (function () {
 	let prev_reg	= [];	//	to prevent refresh on user writing field
 	let prev_alarm	= [];	//	to prevent refresh on user writing field
 	let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
@@ -59,9 +59,8 @@ function makeGetTimeAndShow() {
 		let url	= REQ_HEADER;
 		ajaxUpdate( url, done );
 	}
-}
+})();
 
-const getTimeAndShow	= makeGetTimeAndShow();
 
 /****************************
  ****	register controls
