@@ -105,31 +105,29 @@ class PCA9555( GPIO_base, I2C_target ):
 	This class can operate its family devices of
 	  PCA9555A and PCA9539
 	
-	Parameters
-	----------
-	i2c		: I2C instance
-	address	: int, option
-	
-	Returns
-	-------
-	PCA9555 object
-	
 	"""
 	DEFAULT_ADDR	= 0x40 >> 1
 	N_PORTS			= 2
 	
-	REG_NAME	= ( "Input_port_0", "Input_port_1",
-					"Output_port_0", "Output_port_1",
-					"Polarity_Inversion_port_0", "Polarity_Inversion_port_1",
-					"Configuration_port_0", "Configuration_port_1"
+	REG_NAME	= ( "Input port 0", "Input port 1",
+					"Output port 0", "Output port 1",
+					"Polarity Inversion port 0", "Polarity Inversion port 1",
+					"Configuration port 0", "Configuration port 1"
 					)
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Parameters
+		----------
+		i2c		: I2C instance
+		address	: int, option
+		
+		"""
 		super().__init__( i2c, address )
-		self.__in	= "Input_port_0"
-		self.__out	= "Output_port_0"
-		self.__pol	= "Polarity_Inversion_port_0"
-		self.__cfg	= "Configuration_port_0"
+		self.__in	= "Input port 0"
+		self.__out	= "Output port 0"
+		self.__pol	= "Polarity Inversion port 0"
+		self.__cfg	= "Configuration port 0"
 		self.__np	= self.N_PORTS
 
 class PCA9554( GPIO_base, I2C_target ):
@@ -140,29 +138,27 @@ class PCA9554( GPIO_base, I2C_target ):
 	This class can operate its family devices of
 	  PCA9554A, PCA9554B, PCA954C and PCA9538
 	
-	Parameters
-	----------
-	i2c		: I2C instance
-	address	: int, option
-	
-	Returns
-	-------
-	PCA9554 object
-	
 	"""
 	DEFAULT_ADDR	= 0x40 >> 1
 	N_PORTS			= 1
 	
-	REG_NAME	= ( "Input_Port",
-					"Output_Port"
-					"Polarity_Inversion",
+	REG_NAME	= ( "Input Port",
+					"Output Port"
+					"Polarity Inversion",
 					"Configuration"
 					)
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""			
+		Parameters
+		----------
+		i2c		: I2C instance
+		address	: int, option
+
+		"""
 		super().__init__( i2c, address )
-		self.__in	= "Input_Port"
-		self.__out	= "Output_Port"
-		self.__pol	= "Polarity_Inversion"
+		self.__in	= "Input Port"
+		self.__out	= "Output Port"
+		self.__pol	= "Polarity Inversion"
 		self.__cfg	= "Configuration"
 		self.__np	= self.N_PORTS

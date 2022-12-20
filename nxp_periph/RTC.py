@@ -412,7 +412,7 @@ class PCF2131_base( RTC_base ):
 	"""
 	REG_NAME		= (		"Control_1", "Control_2", "Control_3", "Control_4", "Control_5",
 							"SR_Reset",
-							"_100th_Seconds", "Seconds", "Minutes","Hours", "Days", "Weekdays", "Months", "Years",
+							"100th_Seconds", "Seconds", "Minutes","Hours", "Days", "Weekdays", "Months", "Years",
 							"Second_alarm", "Minute_alarm", "Hour_alarm", "Day_alarm", "Weekday_alarm",
 							"CLKOUT_ctl",
 							"Timestp_ctl1", "Sec_timestp1", "Min_timestp1", "Hour_timestp1", "Day_timestp1", "Mon_timestp1", "Year_timestp1",
@@ -437,7 +437,7 @@ class PCF2131_base( RTC_base ):
 		dt		= {}
 		length	= len( self.REG_ORDER_DT )
 		
-		data	= self.read_registers( "_100th_Seconds", length )
+		data	= self.read_registers( "100th_Seconds", length )
 		data[ 1 ]	&= ~0x80	#	mask OSF flag
 
 		for i, k in zip( range( length ), self.REG_ORDER_DT ):
@@ -459,7 +459,7 @@ class PCF2131_base( RTC_base ):
 		self.bit_operation( "Control_1", 0x28, 0x20 )	#	set STOP and clear POR_OVRD
 		self.bit_operation( "SR_Reset",  0x80, 0x80 )	#	set CPR
 		
-		self.write_registers( "_100th_Seconds", data )
+		self.write_registers( "100th_Seconds", data )
 		
 		self.bit_operation( "Control_1", 0x20, 0x00 )	#	clear STOP
 		# utime.sleep( 0.122 )	# not neccessary but be sure the RTC count starts after 0ms~122ms from STOP is released
