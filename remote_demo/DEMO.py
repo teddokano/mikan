@@ -105,7 +105,7 @@ def main( micropython_optimize = False ):
 				break
 
 		if not html:
-			html	= page_setup( dut_list )
+			html	= page_setup( dut_list, live_only = True if "?live_only=True" in req else False )
 
 		while True:
 			h = client_stream.readline()
@@ -153,17 +153,18 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
 
-def page_setup( dut_list ):
+def page_setup( dut_list, live_only = False ):
 	html	= "HTTP/1.0 200 OK\n\n{% html %}"
 
 	page_data	= {}
 	page_data[ "dev_name"          ]	= "GENERAL"
 
-	table, links	= page_table( dut_list )
+	table, links	= page_table( dut_list, live_only = live_only )
 	
 	page_data[ "all_links"         ]	= links
 	page_data[ "front_page_table"  ]	= table
 	page_data[ "signature"         ]	= utils.page_signature()
+	page_data[ "filtering_list"    ]	= filter_setting( live_only )
 
 	files	= [	[	"html",		"demo_lib/DEMO"		],
 				[	"css", 		"demo_lib/DEMO"		],
@@ -178,7 +179,14 @@ def page_setup( dut_list ):
 	
 	return html
 
-def page_table( dut_list ):
+def filter_setting( filtering ):
+	if filtering:
+		return '<a href="/">show all device(s)</a>'
+	else:
+		return '<a href="/?live_only=True">live device(s) only</a>'
+	
+
+def page_table( dut_list, live_only = False ):
 	s	 = [ '<table>' ]
 	l	 = []
 
@@ -194,17 +202,15 @@ def page_table( dut_list ):
 
 
 	for dut in dut_list[ :-1 ]:	#	ignore last DUT. It's a general call (virtual) device
-		s	+= [ '<tr>' ]
-		
 		if "I2C" in str( dut.interface ):
-#			dut.dev.ping()
-#			live	= dut.dev.live
 			live	= dut.dev.ping()
-
 		else:
 			live	= None
 
-		s	+= [ '<td class="reg_table_name">{}</td>'.format( dut.symbol ) ]
+		if live_only and (live is False):
+			continue
+
+		s	+= [ '<tr><td class="reg_table_name">{}</td>'.format( dut.symbol ) ]
 
 		if live is not False:
 			s	+= [ '<td class="reg_table_name"><a href="/{}" target="{}">{}</a></td>'.format( dut.dev_name, dut.dev_name, dut.type ) ]
