@@ -1,157 +1,155 @@
 const	TABLE_LEN	= {% table_len %}
 const	GRAPH_HIGH	= {% graph_high %}
 const	GRAPH_LOW	= {% graph_low %}
+const	TOS_INIT	= {% tos_init %}
+const	THYST_INIT	= {% thyst_init %}
 const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 const	MAX_N_DATA	= {% max_n_data %}
 
+let	temp_data	= {
+	time:[],
+	temp:[],
+	tos:[],
+	thyst:[],
+	os:[],
+	heater:[]
+}
 
-/********************************
- ****	periodic display handling
- ********************************/
-
-const	pastSec	= (function () {
-	let	last;
-
-	return function () {
-		let	now	= Date.now();
-		let	past	= now - last;
-		lastTime	= now;
-
-		return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
-	}
-})();
-
-const	getTempAndShow	= (function () {
-	return function() {
-		let	temp_data	= {
-			time:[],
-			temp:[],
-			tos:[],
-			thyst:[],
-			os:[],
-			heater:[]
-		}
-
-		let	past	= pastSec();
-		//console.log( past );
-		let url	= REQ_HEADER + "update=" + (past + 1);
-		
-		function drawChart() {
-			var ctx = document.getElementById("myLineChart");
-			window.myLineChart = new Chart(ctx, {
-				type: 'line',
-				data: {
-					labels: temp_data.time,
-					datasets: [
-						{
-							label: 'temperature',
-							data: temp_data.temp,
-							borderColor: "rgba( 255, 0, 0, 1 )",
-							backgroundColor: "rgba( 0, 0, 0, 0 )"
-						},
-						{
-							label: 'Tos',
-							data: temp_data.tos,
-							borderColor: "rgba( 255, 0, 0, 0.3 )",
-							backgroundColor: "rgba( 0, 0, 0, 0 )"
-						},
-						{
-							label: 'Thyst',
-							data: temp_data.thyst,
-							borderColor: "rgba( 0, 0, 255, 0.3 )",
-							backgroundColor: "rgba( 0, 0, 0, 0 )"
-						},
-						{
-							label: OS_LABEL,
-							data: temp_data.os,
-							borderColor: "rgba( 0, 255, 0, 0.5 )",
-							backgroundColor: "rgba( 0, 0, 0, 0 )"
-						},
-						{
-							label: 'Heater',
-							data: temp_data.heater,
-							borderColor: "rgba( 255, 0, 0, 0.0 )",
-							backgroundColor: "rgba( 255, 0, 0, 0.1 )"
-						},
-					],
+function drawChart() {
+	var ctx = document.getElementById("myLineChart");
+	window.myLineChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: temp_data.time,
+			datasets: [
+				{
+					label: 'temperature',
+					data: temp_data.temp,
+					borderColor: "rgba( 255, 0, 0, 1 )",
+					backgroundColor: "rgba( 0, 0, 0, 0 )"
 				},
-				options: {
-					animation: false,
-					title: {
+				{
+					label: 'Tos',
+					data: temp_data.tos,
+					borderColor: "rgba( 255, 0, 0, 0.3 )",
+					backgroundColor: "rgba( 0, 0, 0, 0 )"
+				},
+				{
+					label: 'Thyst',
+					data: temp_data.thyst,
+					borderColor: "rgba( 0, 0, 255, 0.3 )",
+					backgroundColor: "rgba( 0, 0, 0, 0 )"
+				},
+				{
+					label: OS_LABEL,
+					data: temp_data.os,
+					borderColor: "rgba( 0, 255, 0, 0.5 )",
+					backgroundColor: "rgba( 0, 0, 0, 0 )"
+				},
+				{
+					label: 'Heater',
+					data: temp_data.heater,
+					borderColor: "rgba( 255, 0, 0, 0.0 )",
+					backgroundColor: "rgba( 255, 0, 0, 0.1 )"
+				},
+			],
+		},
+		options: {
+			animation: false,
+			title: {
+				display: true,
+				text: 'temperature now'
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						suggestedMax: GRAPH_HIGH,
+						suggestedMin: GRAPH_LOW,
+						stepSize: 1,
+						callback: function(value, index, values){
+						return  value +  ' ˚C'
+						}
+					},
+					scaleLabel: {
 						display: true,
-						text: 'temperature now'
-					},
-					scales: {
-						yAxes: [{
-							ticks: {
-								suggestedMax: GRAPH_HIGH,
-								suggestedMin: GRAPH_LOW,
-								stepSize: 1,
-								callback: function(value, index, values){
-								return  value +  ' ˚C'
-								}
-							},
-							scaleLabel: {
-								display: true,
-								labelString: 'temperature [˚C]'
-							}
-						}],
-						xAxes: [{
-							scaleLabel: {
-								display: true,
-								labelString: 'time'
-							}
-						}]
-					},
-				}
-			});
+						labelString: 'temperature [˚C]'
+					}
+				}],
+				xAxes: [{
+					scaleLabel: {
+						display: true,
+						labelString: 'time'
+					}
+				}]
+			},
 		}
+	});
+}
 
-		function done() {
-			//console.time( 'getTempAndShowDone' );	
-			let obj = JSON.parse( this.responseText );
+/****************************
+ ****	temp display
+ ****************************/
 
-			obj.forEach( data => {
-				if ( temp_data.time.includes( data.time ) )
-					return;
-				
-				temp_data.time.push(   data.time   );
-				temp_data.temp.push(   data.temp   );
-				temp_data.tos.push(    data.tos    );
-				temp_data.thyst.push(  data.thyst  );
-				temp_data.os.push(     data.os     );
-				temp_data.heater.push( data.heater );
-			});
-			
-			drawChart();
-			
-			if ( temp_data ) {
-				let elem = document.getElementById( "temperature" );
-				elem.innerText = temp_data.temp[ temp_data.temp.length - 1 ].toFixed( 3 ) + '˚C';
-			}
+let	lastTime;
 
-			for ( let i = 0; i < TABLE_LEN; i++ )
-			{
-				document.getElementById( "timeField" + i ).value = temp_data.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				
-				let	value	= temp_data.temp.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				
-				if ( !isNaN( value ) )
-					value	= value.toFixed( 3 );
-					
-				document.getElementById( "tempField" + i ).value = value;
-			}
-			
-			document.getElementById( "infoFieldValue0" ).value = temp_data.time[ 0 ];
-			document.getElementById( "infoFieldValue1" ).value = temp_data.time[ temp_data.time.length - 1 ];
-			document.getElementById( "infoFieldValue2" ).value = temp_data.time.length;
-			//console.timeEnd( 'getTempAndShowDone' );
-		}
+function pastSec() {
+	let	now	= Date.now();
+	let	past	= now - lastTime;
+	lastTime	= now;
 
-		ajaxUpdate( url, done );
+	return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
+}
+
+/******** getTempAndShow ********/
+
+function getTempAndShow() {
+	let	past	= pastSec();
+	//console.log( past );
+	let url	= REQ_HEADER + "update=" + (past + 1);
+	ajaxUpdate( url, getTempAndShowDone );
+}
+
+function getTempAndShowDone() {
+	//console.time( 'getTempAndShowDone' );	
+	let obj = JSON.parse( this.responseText );
+
+	obj.forEach( data => {
+		if ( temp_data.time.includes( data.time ) )
+			return;
+		
+		temp_data.time.push(   data.time   );
+		temp_data.temp.push(   data.temp   );
+		temp_data.tos.push(    data.tos    );
+		temp_data.thyst.push(  data.thyst  );
+		temp_data.os.push(     data.os     );
+		temp_data.heater.push( data.heater );
+	});
+	
+	drawChart();
+	
+	if ( temp_data ) {
+		let elem = document.getElementById( "temperature" );
+		elem.innerText = temp_data.temp[ temp_data.temp.length - 1 ].toFixed( 3 ) + '˚C';
 	}
-})();
 
+	
+	for ( let i = 0; i < TABLE_LEN; i++ )
+	{
+		document.getElementById( "timeField" + i ).value = temp_data.time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+		
+		let	value	= temp_data.temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+		
+		if ( !isNaN( value ) )
+			value	= value.toFixed( 3 );
+			
+		document.getElementById( "tempField" + i ).value = value;
+	}
+	
+	document.getElementById( "infoFieldValue0" ).value = temp_data.time[ 0 ];
+	document.getElementById( "infoFieldValue1" ).value = temp_data.time[ temp_data.time.length - 1 ];
+	document.getElementById( "infoFieldValue2" ).value = temp_data.time.length;
+	//console.timeEnd( 'getTempAndShowDone' );
+}
 
 /****************************
  ****	widget handling
@@ -213,7 +211,13 @@ function setTosThyst() {
 	let thyst	= parseFloat( valueFieldElementThyst.value );
 
 	let url	= REQ_HEADER + 'tos=' + tos.toFixed( 1 ) + '&thyst=' + thyst.toFixed( 1 );
-	ajaxUpdate( url );
+	ajaxUpdate( url, setTosThystDone );
+}
+
+/******** setTosThystDone ********/
+
+function setTosThystDone() {
+	let obj = JSON.parse( this.responseText );
 }
 
 function csvFileOut( time, temp ) {
@@ -244,7 +248,7 @@ function setConfig() {
 	ajaxUpdate( url );
 }
 
-function updateHeaterSwitch(s) {
+function updateHeaterSwitch() {
 	let heaterSwitchElement	= document.getElementById( "heaterSwitch" );
 	let	val;
 	
@@ -258,5 +262,6 @@ function updateHeaterSwitch(s) {
 }
 
 window.addEventListener( 'load', function () {
+	drawChart();
 	setInterval( getTempAndShow, 1000 );
 });
