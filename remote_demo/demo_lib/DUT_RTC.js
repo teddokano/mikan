@@ -61,7 +61,7 @@ function makeGetTimeAndShow() {
 	}
 }
 
-let getTimeAndShow	= makeGetTimeAndShow();
+const getTimeAndShow	= makeGetTimeAndShow();
 
 /****************************
  ****	register controls
