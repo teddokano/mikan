@@ -69,7 +69,7 @@ let getTimeAndShow	= makeGetTimeAndShow();
  
 /******** updateRegField ********/
 
-function updateRegField( element, idx ) {
+function updateRegField( idx ) {
 	let valueFieldElement = document.getElementById( "regField" + idx );
 	let value	= parseInt( valueFieldElement.value, 16 )
 	let no_submit	= 0
@@ -93,7 +93,7 @@ function updateRegField( element, idx ) {
 	} )
 }
 
-function setCurrentTime( element ) {
+function setCurrentTime() {
 	let url	= REQ_HEADER + 'set_current_time';
 	ajaxUpdate( url );
 }
@@ -118,7 +118,7 @@ function setPCTime( element ) {
 	// server will get string of "...?set_pc_time=2022-12-19T06:11:31.031Z&weekday=Monday?..."
 }
 
-function clarAlarm( element ) {
+function clarAlarm() {
 	document.getElementById( 'dialog' ).close();
 	prev_alarm_flg	= false
 	
@@ -126,7 +126,7 @@ function clarAlarm( element ) {
 	ajaxUpdate( url );
 }
 
-function setAlarm( element ) {
+function setAlarm() {
 
 	let weekday = document.getElementById( "alarmField4" ).value;
 	let day		= document.getElementById( "alarmField3" ).value;
@@ -150,7 +150,7 @@ function setAlarm( element ) {
 	ajaxUpdate( url );
 }
 
-function clearAlarmSetting( element ) {
+function clearAlarmSetting() {
 	document.getElementById( "alarmField4" ).value	= '--';
 	document.getElementById( "alarmField3" ).value	= '--';
 	document.getElementById( "alarmField2" ).value	= '--';
