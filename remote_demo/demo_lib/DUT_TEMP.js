@@ -229,10 +229,11 @@ function csvFileOut() {
 		str	+= temp_data.time[ i ] + "," +  temp_data.temp[ i ] + "," + temp_data.tos[ i ] + "," + temp_data.thyst[ i ] + "," + temp_data.os[ i ] + "," + temp_data.heater[ i ] + "\n";
 	}
 
+	let now		= new Date()
 	let blob	= new Blob( [str], {type:"text/csv"} );
 	let link	= document.createElement( 'a' );
 	link.href	= URL.createObjectURL( blob );
-	link.download	= DEV_NAME + "_measurement_result.csv";
+	link.download	= DEV_NAME + "_measurement_result" + now.toString() + ".csv";
 	link.click();
 }
 
