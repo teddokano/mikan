@@ -220,16 +220,16 @@ function setTosThystDone() {
 	let obj = JSON.parse( this.responseText );
 }
 
-function csvFileOut( time, temp ) {
+function csvFileOut() {
 	console.log( 'csvFileOut' );
 	let str	= [];
-	let	len	= time.length;
+	let	len	= temp_data.time.length;
 	
 	str	+= "time,temp,tos,thyst,os\n";
 	for ( let i = 0; i < len; i++ ) {
-		str	+= time[ i ] + "," +  temp[ i ] + "," + tos[ i ] + "," + thyst[ i ] + "," + os[ i ] + "\n";
+		str	+= temp_data.time[ i ] + "," +  temp_data.temp[ i ] + "," + temp_data.tos[ i ] + "," + temp_data.thyst[ i ] + "," + temp_data.os[ i ] + "," + temp_data.heater[ i ] + "\n";
 	}
-	
+
 	let blob	= new Blob( [str], {type:"text/csv"} );
 	let link	= document.createElement( 'a' );
 	link.href	= URL.createObjectURL( blob );
