@@ -4,66 +4,47 @@ const	GRAPH_LOW	= {% graph_low %}
 const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 const	MAX_N_DATA	= {% max_n_data %}
 
+function done( t ) {
+	return JSON.parse( this.responseText );
+}
+
 let	temp_data	= {
 	time:[],
 	temp:[],
 	tos:[],
 	thyst:[],
 	os:[],
-	heater:[]
-}
+	heater:[],
 
-
-/****************************
- ****	temp display
- ****************************/
-
-const	pastSec	= (function () {
-	let	last;
-
-	return function () {
-		let	now	= Date.now();
-		let	past	= now - last;
-		lastTime	= now;
-
-		return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
-	}
-})();
-
-function getTempAndShow() {
-	let	past	= pastSec();
-	//console.log( past );
-	
-	let url	= REQ_HEADER + "update=" + (past + 1);
-	ajaxUpdate( url, done );
-
-	function done() {
-		let obj = JSON.parse( this.responseText );
+	getAndShow: function () {
+		obj	= getServerData();
+		
+		console.log( obj );
 
 		obj.forEach( data => {
-			if ( temp_data.time.includes( data.time ) )
+			if ( this.time.includes( data.time ) )
 				return;
 			
-			temp_data.time.push(   data.time   );
-			temp_data.temp.push(   data.temp   );
-			temp_data.tos.push(    data.tos    );
-			temp_data.thyst.push(  data.thyst  );
-			temp_data.os.push(     data.os     );
-			temp_data.heater.push( data.heater );
+			this.time.push(   data.time   );
+			this.temp.push(   data.temp   );
+			this.tos.push(    data.tos    );
+			this.thyst.push(  data.thyst  );
+			this.os.push(     data.os     );
+			this.heater.push( data.heater );
 		});
+			
+		this.draw();
 		
-		drawChart();
-		
-		if ( temp_data ) {
+		if ( this ) {
 			let elem = document.getElementById( "temperature" );
-			elem.innerText = temp_data.temp[ temp_data.temp.length - 1 ].toFixed( 3 ) + '˚C';
+			elem.innerText = this.temp[ this.temp.length - 1 ].toFixed( 3 ) + '˚C';
 		}
 		
 		for ( let i = 0; i < TABLE_LEN; i++ )
 		{
-			document.getElementById( "timeField" + i ).value = temp_data.time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+			document.getElementById( "timeField" + i ).value = this.time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
 			
-			let	value	= temp_data.temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+			let	value	= this.temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
 			
 			if ( !isNaN( value ) )
 				value	= value.toFixed( 3 );
@@ -71,45 +52,45 @@ function getTempAndShow() {
 			document.getElementById( "tempField" + i ).value = value;
 		}
 		
-		document.getElementById( "infoFieldValue0" ).value = temp_data.time[ 0 ];
-		document.getElementById( "infoFieldValue1" ).value = temp_data.time[ temp_data.time.length - 1 ];
-		document.getElementById( "infoFieldValue2" ).value = temp_data.time.length;
-	}
+		document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
+		document.getElementById( "infoFieldValue1" ).value = this.time[ this.time.length - 1 ];
+		document.getElementById( "infoFieldValue2" ).value = this.time.length;
+	},
 
-	function drawChart() {
+	draw: function () {
 		var ctx = document.getElementById("myLineChart");
 		window.myLineChart = new Chart(ctx, {
 			type: 'line',
 			data: {
-				labels: temp_data.time,
+				labels: this.time,
 				datasets: [
 					{
 						label: 'temperature',
-						data: temp_data.temp,
+						data: this.temp,
 						borderColor: "rgba( 255, 0, 0, 1 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: 'Tos',
-						data: temp_data.tos,
+						data: this.tos,
 						borderColor: "rgba( 255, 0, 0, 0.3 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: 'Thyst',
-						data: temp_data.thyst,
+						data: this.thyst,
 						borderColor: "rgba( 0, 0, 255, 0.3 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: OS_LABEL,
-						data: temp_data.os,
+						data: this.os,
 						borderColor: "rgba( 0, 255, 0, 0.5 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: 'Heater',
-						data: temp_data.heater,
+						data: this.heater,
 						borderColor: "rgba( 255, 0, 0, 0.0 )",
 						backgroundColor: "rgba( 255, 0, 0, 0.1 )"
 					},
@@ -145,8 +126,58 @@ function getTempAndShow() {
 				},
 			}
 		});
+	},
+	
+	save: function () {
+		console.log( 'csvFileOut' );
+		let str	= [];
+		let	len	= this.time.length;
+		
+		str	+= "time,temp,tos,thyst,os\n";
+		for ( let i = 0; i < len; i++ ) {
+			str	+= this.time[ i ] + "," +  this.temp[ i ] + "," + this.tos[ i ] + "," + this.thyst[ i ] + "," + this.os[ i ] + "," + this.heater[ i ] + "\n";
+		}
+
+		let now		= new Date()
+		let blob	= new Blob( [str], {type:"text/csv"} );
+		let link	= document.createElement( 'a' );
+		link.href	= URL.createObjectURL( blob );
+		link.download	= DEV_NAME + "_measurement_result" + now.toString() + ".csv";
+		link.click();
 	}
 }
+
+function getServerData() {
+	let obj;
+	let	past	= pastSec();
+	//console.log( past );
+	
+	let url	= REQ_HEADER + "update=" + (past + 1);
+	ajaxUpdate( url, done );
+
+	function done() {
+		obj = JSON.parse( this.responseText );
+	}
+	
+	return obj;
+}
+
+/****************************
+ ****	temp display
+ ****************************/
+
+const	pastSec	= (function () {
+	let	last;
+
+	return function () {
+		let	now	= Date.now();
+		let	past	= now - last;
+		lastTime	= now;
+
+		return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
+	}
+})();
+
 
 
 
@@ -219,24 +250,6 @@ function setTosThystDone() {
 	let obj = JSON.parse( this.responseText );
 }
 
-function csvFileOut() {
-	console.log( 'csvFileOut' );
-	let str	= [];
-	let	len	= temp_data.time.length;
-	
-	str	+= "time,temp,tos,thyst,os\n";
-	for ( let i = 0; i < len; i++ ) {
-		str	+= temp_data.time[ i ] + "," +  temp_data.temp[ i ] + "," + temp_data.tos[ i ] + "," + temp_data.thyst[ i ] + "," + temp_data.os[ i ] + "," + temp_data.heater[ i ] + "\n";
-	}
-
-	let now		= new Date()
-	let blob	= new Blob( [str], {type:"text/csv"} );
-	let link	= document.createElement( 'a' );
-	link.href	= URL.createObjectURL( blob );
-	link.download	= DEV_NAME + "_measurement_result" + now.toString() + ".csv";
-	link.click();
-}
-
 function setConfig() {
 	let config_panel = document.getElementById( 'config_panel' );
 	radioNodeList = config_panel.elements[ 'os_polarity' ];
@@ -261,6 +274,15 @@ function updateHeaterSwitch() {
 	ajaxUpdate( url );
 }
 
+function csvFileOut() {
+	temp_data.save();
+}
+
+function getTempAndShow() {
+	temp_data.getAndShow();
+}
+
 window.addEventListener( 'load', function () {
+	temp_data.draw();
 	setInterval( getTempAndShow, 1000 );
 });
