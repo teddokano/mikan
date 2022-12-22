@@ -140,20 +140,6 @@ class LED_controller_base:
 			l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in args[ 0 ] ]
 			self.write_registers( reg, l )
 
-	def setup_EVB( self ):
-		"""
-		setting up RESET and OE pins on the ARD board
-		"""
-		print( "ARD setting (D8 and D9 pins) done for %s" % self.info() )
-		if hasattr( self, 'ARD' ):
-			pass
-		else:
-			from machine import Pin
-			rst	= Pin( "D8", Pin.OUT )
-			oe	= Pin( "D9", Pin.OUT )
-			rst.value( 1 )
-			oe.value( 0 )
-
 	def buf( self, ch, val ):
 		"""
 		Writing PWM setting value into buffer
@@ -197,6 +183,22 @@ class LED_controller_base:
 		"""
 		l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in self.buffer ]
 		self.write_registers( self.__pwm_base, l )
+
+	def setup_EVB( self ):
+		"""
+		setting up RESET and OE pins on the ARD board
+		"""
+		print( "ARD setting (D8 and D9 pins) done for %s" % self.info() )
+		if hasattr( self, 'ARD' ):
+			pass
+		else:
+			from machine import Pin
+			rst	= Pin( "D8", Pin.OUT )
+			oe	= Pin( "D9", Pin.OUT )
+			rst.value( 1 )
+			oe.value( 0 )
+			
+			self.ARD	= True
 
 class gradation_control():
 	"""
@@ -450,6 +452,10 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 
 		"""
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+		
+		if setup_EVB:
+			self.setup_EVB()
+
 		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
 		
 		self.__pwm_base		= self.REG_NAME.index( "IREF0" if current_control else "PWM0"  )
