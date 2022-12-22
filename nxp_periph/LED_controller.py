@@ -139,7 +139,21 @@ class LED_controller_base:
 		elif 1 == len( args ):
 			l	= [ v if isinstance( v, int ) else int(v * 255.0) for v in args[ 0 ] ]
 			self.write_registers( reg, l )
-	
+
+	def setup_EVB( self ):
+		"""
+		setting up RESET and OE pins on the ARD board
+		"""
+		print( "ARD setting (D8 and D9 pins) done for %s" % self.info() )
+		if hasattr( self, 'ARD' ):
+			pass
+		else:
+			from machine import Pin
+			rst	= Pin( "D8", Pin.OUT )
+			oe	= Pin( "D9", Pin.OUT )
+			rst.value( 1 )
+			oe.value( 0 )
+
 	def buf( self, ch, val ):
 		"""
 		Writing PWM setting value into buffer
@@ -677,7 +691,7 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 		SPI_target.__init__( self, spi, cs )
 		
 		if setup_EVB:
-			self.__setup_EVB()
+			self.setup_EVB()
 			
 		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
 
@@ -760,18 +774,6 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 			rtn	+= [ p[ 1 ] ]
 
 		return rtn[ 0 ] if 1 == length else rtn
-
-	def __setup_EVB( self ):
-		"""
-		setting up RESET and OE pins on PCA9957HN_ARD evaluation board
-		"""
-		from machine import Pin
-		print( "PCA9957HN_ARD setting done." )
-		rst	= Pin( "D8", Pin.OUT )
-		oe	= Pin( "D9", Pin.OUT )
-		rst.value( 1 )
-		oe.value( 0 )
-
 
 
 class PCA9957( PCA9957_base ):
