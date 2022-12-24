@@ -1,4 +1,5 @@
 from nxp_periph.interface	import	I2C_target, SPI_target
+from machine import Pin
 
 class LED():
 	"""
@@ -192,13 +193,13 @@ class LED_controller_base:
 		if hasattr( self, 'ARD' ):
 			pass
 		else:
-			from machine import Pin
-			rst	= Pin( "D8", Pin.OUT )
-			oe	= Pin( "D9", Pin.OUT )
-			rst.value( 1 )
-			oe.value( 0 )
+			pass
+			#rst	= Pin( "D8", Pin.OUT )
+			#oe	= Pin( "D9", Pin.OUT )
+			#rst.value( 1 )
+			#oe.value( 0 )
 			
-			self.ARD	= True
+			#self.ARD	= True
 
 class gradation_control():
 	"""
@@ -434,7 +435,7 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 	PWM_INIT			= 0x00
 	IREF_INIT			= 0x10
 
-	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT, iref = IREF_INIT, current_control = False ):
+	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT, iref = IREF_INIT, current_control = False, setup_EVB = False ):
 		"""
 		PCA995xB_base initializer
 	
@@ -449,6 +450,8 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 			Initial IREF (current setting) value
 		current_control : bool, default False
 			Brightness control switch PWM or current.
+		setup_EVB : bool, default False
+			Board (PCA9955BTW-ARD) specific setting
 
 		"""
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
@@ -504,6 +507,8 @@ class PCA9955B( PCA995xB_base, gradation_control ):
 		Initial IREF (current setting) value
 	current_control : bool, default False
 		Brightness control switch PWM or current.
+	setup_EVB : bool, default False
+		Board (PCA9957HN-ARD) specific setting
 
 	Examples
 	--------
@@ -534,7 +539,7 @@ class PCA9955B( PCA995xB_base, gradation_control ):
 							"PWMALL", "IREFALL",
 							"EFLAG0", "EFLAG1", "EFLAG2", "EFLAG3"
 						)
-						
+	
 	def __gradation_groups( self, list ):
 		bn	= 0
 		for i, ch in enumerate( list ):
