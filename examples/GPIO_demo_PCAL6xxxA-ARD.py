@@ -1,5 +1,5 @@
 from	machine		import	Pin, I2C, Timer
-from	nxp_periph	import	PCAL6416, PCAL6408
+from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
 import	utime
 
 def main():
@@ -18,22 +18,25 @@ def main():
 	int_pin.irq( trigger = Pin.IRQ_FALLING, handler = callback )
 
 	i2c		= I2C( 0, freq = (400 * 1000) )
+
 #	gpio	= PCAL6408( i2c, setup_EVB = True )
-	gpio	= PCAL6416( i2c, setup_EVB = True )
+#	gpio	= PCAL6416( i2c, setup_EVB = True )
+#	gpio	= PCAL6524( i2c, setup_EVB = True )
+	gpio	= PCAL6534( i2c, setup_EVB = True )
 
 	if gpio.N_PORTS is 1:
-		io_config_and_pull_up	= 0xF0
-		int_mask_config			= 0x0F
-	else:
+		io_config_and_pull_up	= [ 0xF0 ]
+	elif gpio.N_PORTS is 2:
 		io_config_and_pull_up	= [ 0x00, 0xFF ]
-		int_mask_config			= [ 0xFF, 0x00 ]
-
+	elif gpio.N_PORTS is 3:
+		io_config_and_pull_up	= [ 0x00, 0x00, 0xF0 ]
+	elif gpio.N_PORTS is 5:
+		io_config_and_pull_up	= [ 0x00, 0x00, 0x00, 0xE0, 0x03 ]
 
 	gpio.config		= io_config_and_pull_up
 	gpio.pull_up	= io_config_and_pull_up
-	gpio.mask		= int_mask_config
+	gpio.mask		= [ ~v for v in io_config_and_pull_up ]
 	gpio.pull_en	= [ 0xFF ] * gpio.__np
-
 
 	tim0 = Timer(0)
 	tim0.init( period= 10, callback = tim_cb)
@@ -57,7 +60,15 @@ def main():
 		if tim_flag:
 			tim_flag	= False
 
-			gpio.value	= count
+			if gpio.N_PORTS is 5 or 3:
+				"""
+				gpio.write_registers( "Output Port 0", count )
+				gpio.write_registers( "Output Port 1", count | 0xF0 )
+				gpio.write_registers( "Output Port 2", count )
+				"""
+				gpio.value	= [ count ] * 3
+			else:
+				gpio.value	= count
 			count		= (count + 1) & 0xFF
 			
 			r	= gpio.value

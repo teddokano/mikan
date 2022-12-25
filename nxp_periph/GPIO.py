@@ -591,11 +591,8 @@ def main():
 	gpio.mask		= int_mask_config
 	gpio.pull_en	= [ 0xFF ] * gpio.__np
 
-	gpio.dump_reg()
-
-
 	tim0 = Timer(0)
-	tim0.init( period= 200, callback = tim_cb)
+	tim0.init( period= 10, callback = tim_cb)
 
 	count	= 0
 
