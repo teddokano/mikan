@@ -56,7 +56,7 @@ class GPIO_base():
 		else:
 			self.write_registers( self.__pol, args[ 0 ] )
 
-	def config( self, *args ):
+	def config_0( self, *args ):
 		"""
 		set/read configuration
 		
@@ -108,6 +108,14 @@ class GPIO_base():
 	@value.setter
 	def value( self, v ):
 		self.output( v )
+
+	@property
+	def config( self ):
+		return self.read_registers( self.__cfg, self.__np )
+
+	@config.setter
+	def config( self, v ):
+		self.write_registers( self.__cfg, v )
 
 
 class PCA9555( GPIO_base, I2C_target ):
@@ -178,7 +186,37 @@ class PCA9554( GPIO_base, I2C_target ):
 		self.__cfg	= "Configuration"
 		self.__np	= self.N_PORTS
 
-class PCAL6408( GPIO_base, I2C_target ):
+class PCAL6xxx_base( GPIO_base ):
+	@property
+	def mask( self ):
+		return self.read_registers( self.__im, self.__np )
+
+	@mask.setter
+	def mask( self, v ):
+		self.write_registers( self.__im, v )
+
+	@property
+	def pull_en( self ):
+		return self.read_registers( self.__pe, self.__np )
+
+	@pull_en.setter
+	def pull_en( self, v ):
+		self.write_registers( self.__pe, v )
+
+	@property
+	def pull_up( self ):
+		return self.read_registers( self.__ps, self.__np )
+
+	@pull_up.setter
+	def pull_up( self, v ):
+		self.write_registers( self.__ps, v )
+
+	@property
+	def status( self ):
+		return 	self.read_registers( self.__is, self.__np )
+
+
+class PCAL6408( PCAL6xxx_base, I2C_target ):
 	"""
 	PCAL6408: 8 bit GPIO expander
 	
@@ -221,6 +259,10 @@ class PCAL6408( GPIO_base, I2C_target ):
 		self.__out	= "Output Port"
 		self.__pol	= "Polarity Inversion"
 		self.__cfg	= "Configuration"
+		self.__im	= "Interrupt mask"
+		self.__is	= "Interrupt status"
+		self.__pe	= "Pull-up/pull-down enable"
+		self.__ps	= "Pull-up/pull-down selection"
 		self.__np	= self.N_PORTS
 
 	def __setup_EVB( self ):
@@ -238,10 +280,7 @@ class PCAL6408( GPIO_base, I2C_target ):
 		sleep( 0.01 )
 		rst.value( 1 )
 
-		self.write_registers( "Pull-up/pull-down enable", 0xF0 )
-		self.write_registers( "Pull-up/pull-down selection", 0xFF )
-
-class PCAL6416( GPIO_base, I2C_target ):
+class PCAL6416( PCAL6xxx_base, I2C_target ):
 	"""
 	PCAL6416: 16 bit GPIO expander
 	
@@ -290,6 +329,10 @@ class PCAL6416( GPIO_base, I2C_target ):
 		self.__out	= "Output Port 0"
 		self.__pol	= "Polarity Inversion port 0"
 		self.__cfg	= "Configuration port 0"
+		self.__im	= "Interrupt mask register 0"
+		self.__is	= "Interrupt status register 0"
+		self.__pe	= "Pull-up/pull-down enable register 0"
+		self.__ps	= "Pull-up/pull-down selection register 0"
 		self.__np	= self.N_PORTS
 
 	def __setup_EVB( self ):
@@ -307,43 +350,76 @@ class PCAL6416( GPIO_base, I2C_target ):
 		sleep( 0.01 )
 		rst.value( 1 )
 
-		self.write_registers( "Pull-up/pull-down enable register 1", 0xFF )
-		self.write_registers( "Pull-up/pull-down selection register 1", 0xFF )
 
-"""
-from	machine		import	I2C
-from	nxp_periph	import	PCA9555
+from	machine		import	Pin, I2C, Timer
+#from	nxp_periph	import	PCAL6416, PCAL6408
 import	utime
 
 def main():
+	int_flag	= False
+	tim_flag	= False
+
+	def callback( pin_obj ):
+		nonlocal	int_flag
+		int_flag	= True
+		
+	def tim_cb( tim_obj ):
+		nonlocal	tim_flag
+		tim_flag	= True
+		
+	int_pin	= Pin( "D10", Pin.IN )
+	int_pin.irq( trigger = Pin.IRQ_FALLING, handler = callback )
+
 	i2c		= I2C( 0, freq = (400 * 1000) )
 	gpio	= PCAL6408( i2c, setup_EVB = True )
+#	gpio	= PCAL6416( i2c, setup_EVB = True )
 
-	print( i2c.scan() )
+	if gpio.N_PORTS is 1:
+		io_config_and_pull_up	= 0xF0
+		int_mask_config			= 0x0F
+	else:
+		io_config_and_pull_up	= [ 0x00, 0xFF ]
+		int_mask_config			= [ 0xFF, 0x00 ]
 
-	gpio.dump_reg()
 
-	#	port0 is output, port1 is input
-	#	check operation by connecting port0 pin to port1 pin
-#	gpio.config( [ 0x00, 0xFF ] )
-	gpio.config( 0xF0 )
+	gpio.config		= io_config_and_pull_up
+	gpio.pull_up	= io_config_and_pull_up
+	gpio.mask		= int_mask_config
+	gpio.pull_en	= [ 0xFF ] * gpio.__np
+
+
+	tim0 = Timer(0)
+	tim0.init( period= 10, callback = tim_cb)
+
+	count	= 0
 
 	while True:
-		for i in range( 16 ):
-#			gpio.value	= [ i, i ]
-#			utime.sleep( 0.01 )
-
-			gpio.value	= i
-			utime.sleep( 0.1 )
-			r	= gpio.value
+		if int_flag:
+			int_flag	= False
+			status		= gpio.status
+			value		= gpio.value
+			print( "\n--- inetrupt:" )
 			
-			if type( r ) == int:
-				print( "port read = {:08b}".format( r ), end = "\r" )
+			if type( status ) == int:
+				print( "  Interrupt status = 0b{:08b}".format( status ) )
+				print( "  Input Port       = 0b{:08b}".format( value  ) )
 			else:
-				print( "port read = {}".format( [ "{:08b}".format( i ) for i in r ] ), end = "\r" )
+				print( "  Interrupt status = {}".format(  [ "0b{:08b}".format( i ) for i in status ]  ) )
+				print( "  Input Port       = {}".format(  [ "0b{:08b}".format( i ) for i in value ]   ) )
+				
+		if tim_flag:
+			tim_flag	= False
 
+			gpio.value	= count
+			count		= (count + 1) & 0xFF
+			
+			r	= gpio.value
+
+			if type( r ) == int:
+				print( "port read = 0b{:08b}".format( gpio.value ), end = "\r" )
+			else:
+				print( "port read = {}".format( [ "0b{:08b}".format( i ) for i in r ] ), end = "\r" )
+				
 
 if __name__ == "__main__":
 	main()
-"""
-
