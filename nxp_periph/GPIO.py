@@ -310,7 +310,7 @@ class PCAL6416( GPIO_base, I2C_target ):
 		self.write_registers( "Pull-up/pull-down enable register 1", 0xFF )
 		self.write_registers( "Pull-up/pull-down selection register 1", 0xFF )
 
-
+"""
 from	machine		import	I2C
 from	nxp_periph	import	PCA9555
 import	utime
@@ -345,5 +345,5 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
+"""
 
