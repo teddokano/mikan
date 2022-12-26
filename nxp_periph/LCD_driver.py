@@ -1,8 +1,11 @@
 from nxp_periph.interface	import	I2C_target
 
-CHAR_PATTERN	= {	"A": 0b_0000_0111_1101_0100,
+CHAR_PATTERN	= {
+					" ": 0b_0000_0000_0000_0000,
+					"A": 0b_0000_0111_1101_0100,
 					#	"B": 0b_0011_0001_1011_0100,
-					"B": 0b_0000_1001_1001_1000,
+					#	"B": 0b_0000_1001_1001_1000,
+					"B": 0b_0001_0111_1011_0100,
 					"C": 0b_0001_0001_0001_0100,
 					"D": 0b_1001_0100_0100_0110,
 					"E": 0b_0001_0011_1001_0100,
@@ -27,7 +30,6 @@ CHAR_PATTERN	= {	"A": 0b_0000_0111_1101_0100,
 					"X": 0b_0010_1000_0010_1000,
 					"Y": 0b_1000_0000_0010_1000,
 					"Z": 0b_0001_1000_0010_0100,
-					" ": 0b_0000_0000_0000_0000,
 					"0": 0b_0001_1101_0111_0100,
 					"1": 0b_0000_0100_0100_0000,
 					"2": 0b_0001_0011_1100_0100,
@@ -91,19 +93,6 @@ class PCA8561( I2C_target ):
 				[ "COM2_07_00", "COM2_15_08", "COM2_17_16" ],
 				[ "COM3_07_00", "COM3_15_08", "COM3_17_16" ]
 				]
-
-		com	= 3
-
-		if seg is 3:
-			for i in range( 10 ):
-				self.write_registers( reg[ com ][ seg // 8 ], 0x00 )
-				sleep( 0.1 )
-				self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
-				sleep( 0.1 )
-
-
-		self.write_registers( reg[ com ][ seg // 8 ], 0x00 )
-		sleep( 0.1 )
 		self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
 
 	def puts( self, s ):
@@ -118,8 +107,6 @@ class PCA8561( I2C_target ):
 			self.str_buffer	= self.str_buffer[1:] + [ c ]
 		else:
 			self.str_buffer += [ c ]
-		
-#		print( self.str_buffer )
 		
 		for i, v in enumerate( self.str_buffer ):
 			self.put_character( i, v )
@@ -180,13 +167,19 @@ def main():
 	test	= [ chr( i ) for i in range( ord( "A" ), ord( "Z" ) + 1 ) ]
 
 	while True:
+
+		for i in range( 10000 ):
+			lcd.puts( "{:4}".format( i ) )
+
+		sleep( 0.5 )
 		lcd.clear()
-		lcd.puts( "NXP" )
-		sleep( 2 )
 
 		for c in test:
 			lcd.putchar( c )
 			sleep( 0.2 )
+
+		sleep( 0.5 )
+		lcd.clear()
 		
 	
 if __name__ == "__main__":

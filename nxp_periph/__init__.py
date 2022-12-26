@@ -5,3 +5,4 @@ from	nxp_periph.GPIO				import	*
 from	nxp_periph.stepper_motor	import	*
 from	nxp_periph.interface		import	*
 from	nxp_periph.protocol_bridge	import	*
+from	nxp_periph.LCD_driver		import	*
