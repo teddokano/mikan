@@ -1,4 +1,4 @@
-# "mikan" 💡⏰🌡️↕🔄💁
+# "mikan" 💡⏰🌡️↕🔠🔄💁
 Peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
@@ -37,6 +37,8 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCAL6416](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/low-voltage-translating-16-bit-ic-bus-smbus-i-o-expander:PCAL6416A)
 	- [PCAL6524](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/ultra-low-voltage-translating-24-bit-fm-plus-ic-bus-smbus-i-o-expander:PCAL6524)
 	- [PCAL6534](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/ultra-low-voltage-level-translating-34-bit-ic-bus-smbus-i-o-expander:PCAL6534)
+- LCD driver
+	- [PCA8561](https://www.nxp.jp/products/peripherals-and-logic/lcd-drivers/lcd-segment-drivers/automotive-18-x-4-lcd-segment-driver:PCA8561)
 - Protocol brige
 	- SC16IS7xx (
 		[Single UART](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/single-uart-with-ic-bus-spi-interface-64-bs-of-transmit-and-receive-fifos-irda-sir-built-in-support:SC16IS740_750_760),
@@ -144,6 +146,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🌡️|temp_sensor_interrupt.py		| Demo for PCT2075DP-ARD operation | PCT2075 (PCT2075DP-ARD board)
 ↕|GPIO_demo.py               	| Simple operation for PCA9555	| PCA9555 (PCA9555 compatible devices)
 ↕|GPIO_demo_PCAL6xxx-ARD.py		| Demo for PCAL6xxx-ARD | PCAL6408, PCAL6416, PCAL6524, PCAL6534
+🔠|LCD_demo_PCA8561AHN-ARD.py	| PCA8561AHN-ARD.py | PCA8561
 🔄|stepper_motor_simple.py		| Simple operation for PCA9629A	| PCA9629A
 💁|protocol_bridge_SC16IS7xx.py | Simple operation for SC16IS7xx | SC16IS7xx
 💁|protocol_bridge_SC18IS606_with_AT25010.py | Accessing EEPROM through SC18IS606 | SC18IS606
@@ -161,4 +164,4 @@ How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)
 
 
 
-💡⏰🌡️↕🔄💁
+💡⏰🌡️↕🔠🔄💁
