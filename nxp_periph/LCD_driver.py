@@ -75,7 +75,7 @@ class PCA8561( I2C_target ):
 
 	def put_character( self, pos, c ):
 		try:
-			p	= self.CHAR_PATTERN[ c ]
+			p	= self.CHAR_PATTERN[ c.upper() ]
 		except Exception as e:
 			print( "undefined character is used : \"%c\"" % c )
 			p	= 0xFFFF
@@ -137,8 +137,9 @@ class PCA8561( I2C_target ):
 						"9": 0b_0001_0110_1101_0100,
 						".": 0b_0100_0000_0000_0000,
 						"'": 0b_0100_0000_0000_0001,
-						"-": 0b_0000_0010_1000_0000,
 						"+": 0b_1000_0010_1000_0010,
+						"-": 0b_0000_0010_1000_0000,
+						"*": 0b_0010_1010_1010_1000,
 						"|": 0b_1000_0000_0000_0010,
 						"/": 0b_0000_1000_0010_0000,
 						"\\": 0b_0010_0000_0000_1000,
@@ -175,8 +176,9 @@ def main():
 
 	while True:
 
-		lcd.puts( "TEtT" )
-		sleep( 10 )
+		lcd.puts( "+-*/" )
+		lcd.puts( "test" )	#	will be converted to uppercase
+		sleep( 1 )
 
 		for i in range( 10000 ):
 			lcd.puts( "{:4}".format( i ) )
