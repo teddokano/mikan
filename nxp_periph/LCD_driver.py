@@ -38,13 +38,13 @@ class PCA8561( I2C_target ):
 		self.reg_buffer	= [ 0x00 ] * 12
 		self.str_buffer	= []
 	
-	def com_seg( self, com, seg ):
+	def com_seg( self, com, seg, v ):
 		reg	= [	[ "COM0_07_00", "COM0_15_08", "COM0_17_16" ],
 				[ "COM1_07_00", "COM1_15_08", "COM1_17_16" ],
 				[ "COM2_07_00", "COM2_15_08", "COM2_17_16" ],
 				[ "COM3_07_00", "COM3_15_08", "COM3_17_16" ]
 				]
-		self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
+		self.bit_operation( reg[ com ][ seg // 8 ], 1 << (seg % 8), v << (seg % 8) )
 
 	def puts( self, s ):
 		for c in s:
@@ -163,13 +163,16 @@ def main():
 	lcd.write_registers( "COM0_07_00", [ 0x00, 0x00, 0xFF ] * 4 )
 	sleep( 0 )
 
-	"""
-	while True:
-		for c in range( 4 ):
-			for s in range( 18 ):
-				lcd.com_seg( c, s )
-	"""
-	
+	for c in range( 4 ):
+		for s in range( 18 ):
+			lcd.com_seg( c, s, 1 )
+			sleep( 0.1 )
+
+	for c in range( 4 ):
+		for s in range( 18 ):
+			lcd.com_seg( c, s, 0 )
+			sleep( 0.1 )
+
 	test	= [ chr( i ) for i in range( ord( "0" ), ord( "9" ) + 1 ) ]
 	test	= [ ".", "'", "+" ] + [ "-", "\\", "|", "/" ] * 5
 	test	= [ chr( i ) for i in range( ord( "A" ), ord( "Z" ) + 1 ) ]

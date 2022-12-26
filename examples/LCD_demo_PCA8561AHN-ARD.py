@@ -11,13 +11,16 @@ def main():
 	sleep( 0.5 )
 	lcd.write_registers( "COM0_07_00", [ 0x00 ] * 12 )
 
-	"""
-	while True:
-		for c in range( 4 ):
-			for s in range( 18 ):
-				lcd.com_seg( c, s )
-	"""
-	
+	for c in range( 4 ):
+		for s in range( 18 ):
+			lcd.com_seg( c, s, 1 )
+			sleep( 0.1 )
+
+	for c in range( 4 ):
+		for s in range( 18 ):
+			lcd.com_seg( c, s, 0 )
+			sleep( 0.1 )
+
 	test	= [ chr( i ) for i in range( ord( "0" ), ord( "9" ) + 1 ) ]
 	test	= [ ".", "'", "+" ] + [ "-", "\\", "|", "/" ] * 5
 	test	= [ chr( i ) for i in range( ord( "A" ), ord( "Z" ) + 1 ) ]
