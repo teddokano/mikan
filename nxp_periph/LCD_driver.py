@@ -1,65 +1,7 @@
 from nxp_periph.interface	import	I2C_target
 
-class PCA8561( I2C_target ):
-	"""
-	PCA8561: LCD driver
-	
-	"""
-	DEFAULT_ADDR	= 0x70 >> 1
-	
-	REG_NAME	= [ "Software_reset", 
-					"Device_ctrl",
-					"Display_ctrl_1",
-					"Display_ctrl_2",
-					"COM0_07_00",
-					"COM0_15_08",
-					"COM0_17_16",
-					"COM1_07_00",
-					"COM1_15_08",
-					"COM1_17_16",
-					"COM2_07_00",
-					"COM2_15_08",
-					"COM2_17_16",
-					"COM3_07_00",
-					"COM3_15_08",
-					"COM3_17_16"
-					]
-
-	def __init__( self, i2c, address = DEFAULT_ADDR ):
-		"""
-		Parameters
-		----------
-		i2c		: I2C instance
-		address	: int, option
-
-		"""
-		super().__init__( i2c, address )
-	
-	def com_seg( self, com, seg ):
-		reg	= [	[ "COM0_07_00", "COM0_15_08", "COM0_17_16" ],
-				[ "COM1_07_00", "COM1_15_08", "COM1_17_16" ],
-				[ "COM2_07_00", "COM2_15_08", "COM2_17_16" ],
-				[ "COM3_07_00", "COM3_15_08", "COM3_17_16" ]
-				]
-
-		com	= 3
-
-		if seg is 3:
-			for i in range( 10 ):
-				self.write_registers( reg[ com ][ seg // 8 ], 0x00 )
-				sleep( 0.1 )
-				self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
-				sleep( 0.1 )
-
-
-		self.write_registers( reg[ com ][ seg // 8 ], 0x00 )
-		sleep( 0.1 )
-		self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
-	
-	
-	def char_pattern( self, c ):
-		charset	= {	"A": 0b_0000_0111_1101_0100,
-#					"B": 0b_0011_0001_1011_0100,
+CHAR_PATTERN	= {	"A": 0b_0000_0111_1101_0100,
+					#	"B": 0b_0011_0001_1011_0100,
 					"B": 0b_0000_1001_1001_1000,
 					"C": 0b_0001_0001_0001_0100,
 					"D": 0b_1001_0100_0100_0110,
@@ -104,11 +46,110 @@ class PCA8561( I2C_target ):
 					"/": 0b_0000_1000_0010_0000,
 					"\\": 0b_0010_0000_0000_1000,
 					}
+	
+class PCA8561( I2C_target ):
+	"""
+	PCA8561: LCD driver
+	
+	"""
+	DEFAULT_ADDR	= 0x70 >> 1
+	
+	REG_NAME	= [ "Software_reset", 
+					"Device_ctrl",
+					"Display_ctrl_1",
+					"Display_ctrl_2",
+					"COM0_07_00",
+					"COM0_15_08",
+					"COM0_17_16",
+					"COM1_07_00",
+					"COM1_15_08",
+					"COM1_17_16",
+					"COM2_07_00",
+					"COM2_15_08",
+					"COM2_17_16",
+					"COM3_07_00",
+					"COM3_15_08",
+					"COM3_17_16"
+					]
 
-		self.write_registers( "COM0_07_00",  charset[ c ]        & 0x0F )
-		self.write_registers( "COM1_07_00", (charset[ c ] >>  4) & 0x0F )
-		self.write_registers( "COM2_07_00", (charset[ c ] >>  8) & 0x0F )
-		self.write_registers( "COM3_07_00", (charset[ c ] >> 12) & 0x0F )
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Parameters
+		----------
+		i2c		: I2C instance
+		address	: int, option
+
+		"""
+		super().__init__( i2c, address )
+		
+		self.reg_buffer	= [ 0x00 ] * 12
+		self.str_buffer	= []
+	
+	def com_seg( self, com, seg ):
+		reg	= [	[ "COM0_07_00", "COM0_15_08", "COM0_17_16" ],
+				[ "COM1_07_00", "COM1_15_08", "COM1_17_16" ],
+				[ "COM2_07_00", "COM2_15_08", "COM2_17_16" ],
+				[ "COM3_07_00", "COM3_15_08", "COM3_17_16" ]
+				]
+
+		com	= 3
+
+		if seg is 3:
+			for i in range( 10 ):
+				self.write_registers( reg[ com ][ seg // 8 ], 0x00 )
+				sleep( 0.1 )
+				self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
+				sleep( 0.1 )
+
+
+		self.write_registers( reg[ com ][ seg // 8 ], 0x00 )
+		sleep( 0.1 )
+		self.write_registers( reg[ com ][ seg // 8 ], 0x01 << (seg % 8) )
+
+	def puts( self, s ):
+		for c in s:
+			self.putchar( c, buffer_update_only = True )
+			
+		self.flush()
+
+	def putchar( self, c, buffer_update_only = False ):
+		length	= len( self.str_buffer )
+		if length == 4:
+			self.str_buffer	= self.str_buffer[1:] + [ c ]
+		else:
+			self.str_buffer += [ c ]
+		
+#		print( self.str_buffer )
+		
+		for i, v in enumerate( self.str_buffer ):
+			self.put_character( i, v )
+		
+		if not buffer_update_only:
+			self.flush()
+
+	def clear( self ):
+		self.reg_buffer	= [ 0x00 ] * 12
+		self.str_buffer	= []
+		self.flush()
+
+	def put_character( self, pos, c ):
+		c0	=  CHAR_PATTERN[ c ]        & 0x0F
+		c1	= (CHAR_PATTERN[ c ] >>  4) & 0x0F
+		c2	= (CHAR_PATTERN[ c ] >>  8) & 0x0F
+		c3	= (CHAR_PATTERN[ c ] >> 12) & 0x0F
+		
+		self.reg_buffer[ pos // 2 + 0 ]	&= ~(0x0F << (4 * (pos % 2)))
+		self.reg_buffer[ pos // 2 + 3 ]	&= ~(0x0F << (4 * (pos % 2)))
+		self.reg_buffer[ pos // 2 + 6 ]	&= ~(0x0F << (4 * (pos % 2)))
+		self.reg_buffer[ pos // 2 + 9 ]	&= ~(0x0F << (4 * (pos % 2)))
+
+		self.reg_buffer[ pos // 2 + 0 ]	|= c0 << (4 * (pos % 2))
+		self.reg_buffer[ pos // 2 + 3 ]	|= c1 << (4 * (pos % 2))
+		self.reg_buffer[ pos // 2 + 6 ]	|= c2 << (4 * (pos % 2))
+		self.reg_buffer[ pos // 2 + 9 ]	|= c3 << (4 * (pos % 2))
+		
+	def flush( self ):
+		self.write_registers( "COM0_07_00", self.reg_buffer )
 
 
 from	machine		import	Pin, I2C, Timer
@@ -139,8 +180,12 @@ def main():
 	test	= [ chr( i ) for i in range( ord( "A" ), ord( "Z" ) + 1 ) ]
 
 	while True:
+		lcd.clear()
+		lcd.puts( "NXP" )
+		sleep( 2 )
+
 		for c in test:
-			lcd.char_pattern( c )
+			lcd.putchar( c )
 			sleep( 0.2 )
 		
 	
