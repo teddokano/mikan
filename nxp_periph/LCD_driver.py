@@ -27,6 +27,8 @@ class PCA8561( I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		"""
+		Initializer for PCA8561 class instance
+
 		Parameters
 		----------
 		i2c		: I2C instance
@@ -46,13 +48,46 @@ class PCA8561( I2C_target ):
 				]
 		self.bit_operation( reg[ com ][ seg // 8 ], 1 << (seg % 8), v << (seg % 8) )
 
-	def puts( self, s ):
+	def puts( self, s, char_per_sec = 0 ):
+		"""
+		Print a string on LCD
+		
+		If the string contains more than 4 characters, 
+		the last 4 characters will be shown unless char_per_sec is given. 
+		
+		Parameters
+		----------
+		s				: string
+			A string to print
+		char_per_sec	: float, default = 0
+			Character scroll speed
+			
+		"""
 		for c in s:
 			self.putchar( c, buffer_update_only = True )
 			
-		self.flush()
+			if 0 < char_per_sec:
+				self.flush()
+				sleep( 1 / char_per_sec )
+				
+		if char_per_sec <= 0:
+			self.flush()
 
 	def putchar( self, c, buffer_update_only = False ):
+		"""
+		Print a character on LCD
+		
+		If the string contains more than 4 characters, 
+		the last 4 characters will be shown unless char_per_sec is given. 
+		
+		Parameters
+		----------
+		c					: str
+			A character to print
+		buffer_update_only	: bool, default = False
+			Character is not shoun in LCD. Just fills str_buffer
+			
+		"""
 		length	= len( self.str_buffer )
 		if length == 4:
 			self.str_buffer	= self.str_buffer[1:] + [ c ]
@@ -60,20 +95,40 @@ class PCA8561( I2C_target ):
 			self.str_buffer += [ c ]
 		
 		for i, v in enumerate( self.str_buffer ):
-			self.put_character( i, v )
+			self.char2seg( i, v )
 		
 		if not buffer_update_only:
 			self.flush()
 
 	def clear( self ):
+		"""
+		Clear LCD
+		"""
 		self.reg_buffer	= [ 0x00 ] * 12
 		self.str_buffer	= []
 		self.flush()
 
 	def flush( self ):
+		"""
+		Flash register buffer contents to LCD
+		"""
 		self.write_registers( "COM0_07_00", self.reg_buffer )
 
-	def put_character( self, pos, c ):
+	def char2seg( self, pos, c ):
+		"""
+		Character converted to segment pattern.
+		
+		Generated pattern is stored in reg_buffer. 
+		To show the result on the LCD, call PCA8561.flush()
+		
+		Parameters
+		----------
+		pos	: int
+			Character position (0 to 3 from left)
+		c	: str
+			A character
+		
+		"""
 		try:
 			p	= self.CHAR_PATTERN[ c.upper() ]
 		except Exception as e:
@@ -94,7 +149,10 @@ class PCA8561( I2C_target ):
 		self.reg_buffer[ pos // 2 + 3 ]	|= c1 << (4 * (pos % 2))
 		self.reg_buffer[ pos // 2 + 6 ]	|= c2 << (4 * (pos % 2))
 		self.reg_buffer[ pos // 2 + 9 ]	|= c3 << (4 * (pos % 2))
-		
+	
+	"""
+	Character pattern for PCA8561AHN-ARD
+	"""
 	CHAR_PATTERN	= {
 						" ": 0b_0000_0000_0000_0000,
 						"A": 0b_0000_0111_1101_0100,
@@ -180,7 +238,7 @@ def main():
 	while True:
 
 		lcd.puts( "+-*/" )
-		lcd.puts( "test" )	#	will be converted to uppercase
+		lcd.puts( "    test    ", char_per_sec = 4 )	#	will be converted to uppercase
 		sleep( 1 )
 
 		for i in range( 10000 ):

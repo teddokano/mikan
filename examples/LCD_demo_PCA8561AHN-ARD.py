@@ -27,6 +27,8 @@ def main():
 
 	while True:
 
+		lcd.puts( "    test    ", char_per_sec = 4 )	#	will be converted to uppercase
+
 		for i in range( 10000 ):
 			lcd.puts( "{:4}".format( i ) )
 
