@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8" />
 		<title>{% dev_name %} server</title>
-		<style>
-			{% css %}
-		</style>
+		<link href="general.css" rel="stylesheet">
 	</head>
 	<body>
 		<script>
-			{% js %}
+			const	SOUND_DATA	= '{% sound %}';
 		</script>
+		<script src="general.js"></script>
+		<script src="DUT_RTC.js"></script>
 
 		<div class="header">
 			<p>{% symbol %} {% dev_link %} server</p>

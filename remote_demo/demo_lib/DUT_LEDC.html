@@ -3,15 +3,14 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>{% dev_name %} server</title>
-		<style>
-			{% css %}
-		</style>
+		<link href="general.css" rel="stylesheet">
 	</head>
 	<body>
 		<script>
 			const	DEV_NAME	= '{% dev_name %}';
+			const	CLASS_NAME	= '{% class_name %}';
 			const	REQ_HEADER	= '/' + DEV_NAME + '?';
-			
+
 			const	PWM0_IDX	=  {% pwm0_idx %};
 			const	IREF0_IDX	=  {% iref0_idx %};
 			const	PWMALL_IDX	=  {% pwmall_idx %};

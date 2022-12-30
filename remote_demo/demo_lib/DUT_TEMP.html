@@ -8,9 +8,7 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 <head>
 	<meta charset="utf-8" />
 	<title>{% dev_name %} server</title>
-	<style>
-		{% css %}
-	</style>
+	<link href="general.css" rel="stylesheet">
 </head>
 <body>
 	<div class="header">
@@ -24,8 +22,18 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 	
 	<script>
-		{% js %}
+		const	DEV_NAME	= '{% dev_name %}';
+		const	REQ_HEADER	= '/' + DEV_NAME + '?';
+
+		const	TABLE_LEN	= {% table_len %}
+		const	GRAPH_HIGH	= {% graph_high %}
+		const	GRAPH_LOW	= {% graph_low %}
+		const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
+		const	MAX_N_DATA	= {% max_n_data %}
 	</script>
+
+	<script src="general.js"></script>
+	<script src="DUT_TEMP.js"></script>
 
 	</div>
 	

@@ -141,10 +141,7 @@ class DUT_TEMP():
 		page_data[ "max_n_data"]	= str( self.SAMPLE_LENGTH )
 
 		#	using list instead of dict because current MicroPython's dict cannot keep key order
-		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
-					[	"css", 		"demo_lib/general"						],
-					[	"js",		"demo_lib/general",
-									"demo_lib/" + self.__class__.__name__ 	]
+		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	]
 				  ]
 
 		html	= utils.file_loading( html, files )

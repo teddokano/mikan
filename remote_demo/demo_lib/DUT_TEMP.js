@@ -1,9 +1,3 @@
-const	TABLE_LEN	= {% table_len %}
-const	GRAPH_HIGH	= {% graph_high %}
-const	GRAPH_LOW	= {% graph_low %}
-const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
-const	MAX_N_DATA	= {% max_n_data %}
-
 function done( t ) {
 	return JSON.parse( this.responseText );
 }

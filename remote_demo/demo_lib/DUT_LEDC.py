@@ -190,7 +190,6 @@ class DUT_LEDC():
 
 		#	using list instead of dict because current MicroPython's dict cannot keep key order
 		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
-					[	"css", 		"demo_lib/general"						],
 				  ]
 		
 		html	= utils.file_loading( html, files )

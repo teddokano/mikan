@@ -113,7 +113,6 @@ def main( micropython_optimize = False ):
 		if not html:
 			m	= regex_file.match( req )
 			if m and (fn	:= m.group( 1 ).decode()) and (fn in src_files):
-				print( "'{}'".format( fn ) )
 				with open( src_dir + fn, "r" ) as f:
 					html	 = "HTTP/1.0 200 OK\n\n" 
 					html 	+= f.read()

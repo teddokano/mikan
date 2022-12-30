@@ -128,10 +128,7 @@ class DUT_RTC():
 		else:
 			print( "####### DUT_RTC: Sound data loaded" )
 
-		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
-					[	"css", 		"demo_lib/general"						],
-					[	"js",		"demo_lib/general",
-									"demo_lib/" + self.__class__.__name__ 	]
+		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	]
 				  ]
 
 		html	= utils.file_loading( html, files )
