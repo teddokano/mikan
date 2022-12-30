@@ -122,9 +122,6 @@ class DUT_LEDC():
 				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 
 	def page_setup( self ):
-		#HTML to send to browsers
-		html	= "HTTP/1.0 200 OK\n\n{% html %}"
-		
 		info	= self.dev.info()
 
 		if "PCA9956B" in info:
@@ -188,16 +185,13 @@ class DUT_LEDC():
 		else:
 			page_data[ "sliders_IREF" ]	= ""
 
-		#	using list instead of dict because current MicroPython's dict cannot keep key order
-		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
-				  ]
-		
-		html	= utils.file_loading( html, files )
+		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
+					html	= f.read()
 		
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
 		
-		return html
+		return	"HTTP/1.0 200 OK\n\n" + html
 
 	def get_slider_table( self, cols, pat, iref, all_reg = False ):
 		rows	= (self.dev.CHANNELS + cols - 1) // cols
