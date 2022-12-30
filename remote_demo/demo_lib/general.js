@@ -2,10 +2,6 @@
  ****	service routine
  ****************************/
  
-const	DEV_NAME	= '{% dev_name %}';
-const	REQ_HEADER	= '/' + DEV_NAME + '?';
-
-
 
 /******** ajaxUpdate ********/
 

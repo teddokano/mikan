@@ -162,6 +162,7 @@ class DUT_LEDC():
 
 		page_data	= {}
 		page_data[ "dev_name"    ]	= self.dev_name
+		page_data[ "class_name"  ]	= self.__class__.__name__
 		page_data[ "dev_type"    ]	= self.type
 		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		page_data[ "symbol"      ]	= self.symbol
@@ -190,9 +191,6 @@ class DUT_LEDC():
 		#	using list instead of dict because current MicroPython's dict cannot keep key order
 		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	],
 					[	"css", 		"demo_lib/general"						],
-					[	"js",		"demo_lib/general",
-									"demo_lib/" + self.__class__.__name__,
-									"demo_lib/LEDC_gradation_control" 		]
 				  ]
 		
 		html	= utils.file_loading( html, files )

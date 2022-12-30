@@ -1,11 +1,3 @@
-const	PWM0_IDX	=  {% pwm0_idx %};
-const	IREF0_IDX	=  {% iref0_idx %};
-const	PWMALL_IDX	=  {% pwmall_idx %};
-const	IREFALL_IDX	=  {% irefall_idx %};
-const	N_CHANNELS	=  {% n_ch %};
-const	IREF_OFST	=  {% iref_ofst %};
-const	IREF_INIT	=  {% iref_init %};
-
 let timeoutId	= null;
 let	count	= 0;
 

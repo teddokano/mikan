@@ -25,6 +25,12 @@ def main( micropython_optimize = False ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
+	
+	src_dir		= "demo_lib/"
+	src_files	= os.listdir( src_dir )
+	regex_file	= ure.compile( r"GET /(\S+)\sHTTP" )
+
+	print( src_files )
 
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -105,7 +111,15 @@ def main( micropython_optimize = False ):
 				break
 
 		if not html:
-			html	= page_setup( dut_list, live_only = True if "?live_only=True" in req else False )
+			m	= regex_file.match( req )
+			if m and (fn	:= m.group( 1 ).decode()) and (fn in src_files):
+				print( "'{}'".format( fn ) )
+				with open( src_dir + fn, "r" ) as f:
+					html	 = "HTTP/1.0 200 OK\n\n" 
+					html 	+= f.read()
+					html	+= "\n"		
+			else:
+				html	= page_setup( dut_list, live_only = True if "?live_only=True" in req else False )
 
 		while True:
 			h = client_stream.readline()

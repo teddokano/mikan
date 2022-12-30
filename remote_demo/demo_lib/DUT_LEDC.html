@@ -9,8 +9,21 @@
 	</head>
 	<body>
 		<script>
-			{% js %}
+			const	DEV_NAME	= '{% dev_name %}';
+			const	REQ_HEADER	= '/' + DEV_NAME + '?';
+			
+			const	PWM0_IDX	=  {% pwm0_idx %};
+			const	IREF0_IDX	=  {% iref0_idx %};
+			const	PWMALL_IDX	=  {% pwmall_idx %};
+			const	IREFALL_IDX	=  {% irefall_idx %};
+			const	N_CHANNELS	=  {% n_ch %};
+			const	IREF_OFST	=  {% iref_ofst %};
+			const	IREF_INIT	=  {% iref_init %};
 		</script>
+		<script src="general.js"></script>
+		<script src="DUT_LEDC.js"></script>
+		<script src="LEDC_gradation_control.js"></script>
+
 		<div class="header">
 			<p>{% symbol %} {% dev_link %} server</p>
 			<p class="info">{% dev_info %}</p>
