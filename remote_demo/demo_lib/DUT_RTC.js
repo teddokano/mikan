@@ -1,4 +1,3 @@
-const	SOUND_DATA	= '{% sound %}';
 let		sound;
 
 if ( '' != SOUND_DATA )

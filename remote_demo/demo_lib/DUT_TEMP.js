@@ -36,9 +36,9 @@ let	temp_data	= {
 		
 		for ( let i = 0; i < TABLE_LEN; i++ )
 		{
-			document.getElementById( "timeField" + i ).value = this.time.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+			document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
 			
-			let	value	= this.temp.slice( -{% table_len %} )[ {% table_len %} - i - 1 ];
+			let	value	= this.temp.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
 			
 			if ( !isNaN( value ) )
 				value	= value.toFixed( 3 );
