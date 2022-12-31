@@ -170,7 +170,6 @@ class DEMO( DUT_base ):
 def page_setup( dut_list, live_only = False ):
 	db	= DEMO()
 
-	db.page_data	= {}
 	db.page_data[ "dev_name"          ]	= "GENERAL"
 
 	table, links	= page_table( dut_list, live_only = live_only )
