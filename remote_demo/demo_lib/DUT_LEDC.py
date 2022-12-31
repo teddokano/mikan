@@ -1,11 +1,9 @@
-import	machine
 import	utime
 import	ure
 import	ujson
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	LED_controller_base, gradation_control
-import	demo_lib.utils	as utils
 from	demo_lib	import	DUT_base
 
 class DUT_LEDC( DUT_base.DUT_base ):

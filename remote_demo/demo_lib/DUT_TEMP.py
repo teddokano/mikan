@@ -5,8 +5,9 @@ import	ujson
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	temp_sensor_base
 import	demo_lib.utils	as utils
+from	demo_lib	import	DUT_base
 
-class DUT_TEMP():
+class DUT_TEMP( DUT_base.DUT_base):
 	APPLIED_TO		= temp_sensor_base
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 60
@@ -119,33 +120,18 @@ class DUT_TEMP():
 	def page_setup( self ):
 		html	= "HTTP/1.0 200 OK\n\n{% html %}"
 
-		page_data	= {}
-		page_data[ "dev_name"  ]	= self.dev_name
-		page_data[ "dev_type"  ]	= self.type
-		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
-		page_data[ "symbol"    ]	= self.symbol
-		page_data[ "dev_info"  ]	= self.dev.info()
-		page_data[ "table_len" ]	= str( self.TABLE_LENGTH )
-		page_data[ "signature" ]	= utils.page_signature()
-		page_data[ "table"     ]	= self.get_table()
-		page_data[ "info_tab"  ]	= self.get_info_table()
+		self.page_data[ "symbol"    ]	= self.symbol
+		self.page_data[ "table_len" ]	= str( self.TABLE_LENGTH )
+		self.page_data[ "table"     ]	= self.get_table()
+		self.page_data[ "info_tab"  ]	= self.get_info_table()
 
-		page_data[ "graph_high"]	= str( self.GRAPH_HIGH )
-		page_data[ "graph_low" ]	= str( self.GRAPH_LOW  )
-		page_data[ "tos_init"  ]	= str( self.tos   )
-		page_data[ "thyst_init"]	= str( self.thyst )
-		page_data[ "max_n_data"]	= str( self.SAMPLE_LENGTH )
+		self.page_data[ "graph_high"]	= str( self.GRAPH_HIGH )
+		self.page_data[ "graph_low" ]	= str( self.GRAPH_LOW  )
+		self.page_data[ "tos_init"  ]	= str( self.tos   )
+		self.page_data[ "thyst_init"]	= str( self.thyst )
+		self.page_data[ "max_n_data"]	= str( self.SAMPLE_LENGTH )
 
-		#	using list instead of dict because current MicroPython's dict cannot keep key order
-		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	]
-				  ]
-
-		html	= utils.file_loading( html, files )
-		
-		for key, value in page_data.items():
-			html = html.replace('{% ' + key + ' %}', value )
-		
-		return html
+		return self.load_html()
 
 	def get_table( self ):
 		s	= [ '<table class="table_TEMP"><tr><td class="td_TEMP">time</td><td class="td_TEMP">temp [˚C]</td></tr>' ]

@@ -5,8 +5,9 @@ import	ujson
 from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	RTC_base
 import	demo_lib.utils	as utils
+from	demo_lib	import	DUT_base
 
-class DUT_RTC():
+class DUT_RTC( DUT_base.DUT_base ):
 	APPLIED_TO	= RTC_base
 	
 	WKDY	= ( "Monday", "Tuesday", "Wednesday",
@@ -102,29 +103,17 @@ class DUT_RTC():
 		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm_flg": alarm_flg, "alarm": alarm } )
 
 	def page_setup( self ):
-		page_data	= {}
-		page_data[ "dev_name"  ]	= self.dev_name
-		page_data[ "dev_type"  ]	= self.type
-		page_data[ "dev_link"  ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
-		page_data[ "symbol"    ]	= self.symbol
-		page_data[ "dev_info"  ]	= self.dev.info()
-		page_data[ "signature" ]	= utils.page_signature()
-		page_data[ "reg_table" ]	= self.get_reg_table( 4 )
-		page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
-		page_data[ "sound"     ]	= utils.get_sound( "demo_lib/sound.data" )
+		self.page_data[ "symbol"    ]	= self.symbol
+		self.page_data[ "reg_table" ]	= self.get_reg_table( 4 )
+		self.page_data[ "timestamp" ]	= '<div id="timestamp" class="timestamp">timestamps<br/></div>' if "PCF2131" in self.type else ''
+		self.page_data[ "sound"     ]	= utils.get_sound( "demo_lib/sound.data" )
 
-		if len( page_data[ "sound" ] ) is 0:
+		if len( self.page_data[ "sound" ] ) is 0:
 			print( "####### DUT_RTC: No sound data loaded" )
 		else:
 			print( "####### DUT_RTC: Sound data loaded" )
 
-		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
-					html	= f.read()
-		
-		for key, value in page_data.items():
-			html = html.replace('{% ' + key + ' %}', value )
-		
-		return	"HTTP/1.0 200 OK\n\n" + html
+		return self.load_html()
 
 	def get_reg_table( self, cols ):
 		total	= len( self.dev.REG_NAME )
