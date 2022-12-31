@@ -4,7 +4,6 @@ import	ujson
 
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	temp_sensor_base
-import	demo_lib.utils	as utils
 from	demo_lib	import	DUT_base
 
 class DUT_TEMP( DUT_base.DUT_base):

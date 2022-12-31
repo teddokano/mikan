@@ -16,8 +16,7 @@ from	nxp_periph	import	i2c_fullscan
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC
 from	demo_lib	import	DUT_GENERALCALL, General_call
-
-import	demo_lib.utils	as utils
+from	demo_lib	import	DUT_base
 
 MEM_MONITORING	= False
 
@@ -29,8 +28,6 @@ def main( micropython_optimize = False ):
 	src_dir		= "demo_lib/"
 	src_files	= os.listdir( src_dir )
 	regex_file	= ure.compile( r"GET /(\S+)\sHTTP" )
-
-	print( src_files )
 
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -166,31 +163,23 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	lan.ifconfig( ifcnfg_param )
 	return lan.ifconfig()
 
-def page_setup( dut_list, live_only = False ):
-	html	= "HTTP/1.0 200 OK\n\n{% html %}"
+class DEMO( DUT_base ):
+	def __init__( self ):
+		super().__init__( None )
 
-	page_data	= {}
-	page_data[ "dev_name"          ]	= "GENERAL"
+def page_setup( dut_list, live_only = False ):
+	db	= DEMO()
+
+	db.page_data	= {}
+	db.page_data[ "dev_name"          ]	= "GENERAL"
 
 	table, links	= page_table( dut_list, live_only = live_only )
 	
-	page_data[ "all_links"         ]	= links
-	page_data[ "front_page_table"  ]	= table
-	page_data[ "signature"         ]	= utils.page_signature()
-	page_data[ "filtering_list"    ]	= filter_setting( live_only )
+	db.page_data[ "all_links"         ]	= links
+	db.page_data[ "front_page_table"  ]	= table
+	db.page_data[ "filtering_list"    ]	= filter_setting( live_only )
 
-	files	= [	[	"html",		"demo_lib/DEMO"		],
-				[	"css", 		"demo_lib/DEMO"		],
-				[	"js",		"demo_lib/general",
-								"demo_lib/DEMO" 	]
-			  ]
-
-	html	= utils.file_loading( html, files )
-
-	for key, value in page_data.items():
-		html = html.replace('{% ' + key + ' %}', value )
-	
-	return html
+	return db.load_html()
 
 def filter_setting( filtering ):
 	if filtering:
@@ -247,34 +236,3 @@ def page_table( dut_list, live_only = False ):
 	return "\n".join( s ), ", ".join( l )
 	
 main( micropython_optimize = True )
-
-class DUT_base():
-	def __init__( self, dev ):
-		self.interface	= dev.__if
-		self.dev		= dev
-		self.type		= self.dev.__class__.__name__
-
-		if isinstance( self.interface, machine.I2C ):
-			self.address	= dev.__adr
-			self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
-		else:
-			self.address	= dev.__cs
-			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
-
-		self.page_data	= {}
-		self.page_data[ "dev_name"    ]	= self.dev_name
-		self.page_data[ "class_name"  ]	= self.__class__.__name__
-		self.page_data[ "dev_type"    ]	= self.type
-		self.page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
-		self.page_data[ "dev_info"    ]	= self.dev.info()
-		self.page_data[ "signature"   ]	= utils.page_signature()
-
-	def load_html( self ):
-		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
-			html	= f.read()
-		
-		for key, value in self.page_data.items():
-			html = html.replace('{% ' + key + ' %}', value )
-		
-		return	"HTTP/1.0 200 OK\n\n" + html
-	

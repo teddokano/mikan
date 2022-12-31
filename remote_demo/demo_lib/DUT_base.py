@@ -3,6 +3,12 @@ import	os
 
 class DUT_base():
 	def __init__( self, dev ):
+		self.page_data	= {}
+		self.page_data[ "signature"   ]	= self.page_signature()
+
+		if dev is None:
+			return
+	
 		self.interface	= dev.__if
 		self.dev		= dev
 		self.type		= self.dev.__class__.__name__
@@ -14,15 +20,15 @@ class DUT_base():
 			self.address	= dev.__cs
 			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
 
-		self.page_data	= {}
 		self.page_data[ "dev_name"    ]	= self.dev_name
 		self.page_data[ "class_name"  ]	= self.__class__.__name__
 		self.page_data[ "dev_type"    ]	= self.type
 		self.page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
 		self.page_data[ "dev_info"    ]	= self.dev.info()
-		self.page_data[ "signature"   ]	= self.page_signature()
 
 	def load_html( self ):
+		print( "#" + "demo_lib/" + self.__class__.__name__ + ".html" + "#" )
+	
 		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
 			html	= f.read()
 		
@@ -41,3 +47,11 @@ class DUT_base():
 		
 		return s.replace('{% mcu %}', os.uname().machine )
 		
+	def load_file( file_name ):
+		try:
+			with open( file_name ) as f:
+				s	= f.read()
+		except:
+			s	= ""	
+		
+		return s
