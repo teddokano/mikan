@@ -23,11 +23,7 @@ class DUT_TEMP():
 	regex_update	= ure.compile( r".*update=(\d+)" )
 
 	def __init__( self, dev, timer = 0, sampling_interbal = 1.0 ):
-		self.interface	= dev.__if
-		self.dev		= dev
-		self.type		= self.dev.__class__.__name__
-		self.address	= dev.__adr
-		self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
+		super().__init__( dev )
 		self.data		= []
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]

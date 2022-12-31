@@ -25,18 +25,10 @@ class DUT_RTC():
 	regex_pc_t	= ure.compile( r".*set_pc_time=(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+).(\d+)Z&weekday=(\S+)\?" )
 
 	def __init__( self, dev ):
-		self.interface	= dev.__if
-		self.dev		= dev
-		self.type		= self.dev.__class__.__name__
+		super().__init__( dev )
 		self.info		= [ "Real Time Clock", "" ]
 		self.symbol		= '\u23F0'
 		
-		if isinstance( self.interface, machine.I2C ):
-			self.address	= dev.__adr
-			self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
-		else:
-			self.address	= dev.__cs
-			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
 
 	def parse( self, req ):
 		if self.dev_name not in req:
@@ -110,8 +102,6 @@ class DUT_RTC():
 		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm_flg": alarm_flg, "alarm": alarm } )
 
 	def page_setup( self ):
-		html	= "HTTP/1.0 200 OK\n\n{% html %}"
-		
 		page_data	= {}
 		page_data[ "dev_name"  ]	= self.dev_name
 		page_data[ "dev_type"  ]	= self.type
@@ -128,15 +118,13 @@ class DUT_RTC():
 		else:
 			print( "####### DUT_RTC: Sound data loaded" )
 
-		files	= [ [ 	"html", 	"demo_lib/" + self.__class__.__name__	]
-				  ]
-
-		html	= utils.file_loading( html, files )
+		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
+					html	= f.read()
 		
 		for key, value in page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
 		
-		return html
+		return	"HTTP/1.0 200 OK\n\n" + html
 
 	def get_reg_table( self, cols ):
 		total	= len( self.dev.REG_NAME )

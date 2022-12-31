@@ -6,8 +6,9 @@ import	ujson
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	LED_controller_base, gradation_control
 import	demo_lib.utils	as utils
+from	demo_lib	import	DUT_base
 
-class DUT_LEDC():
+class DUT_LEDC( DUT_base.DUT_base ):
 	APPLIED_TO	= LED_controller_base
 	IREF_INIT	= 0x10
 	regex_pwm	= ure.compile( r".*value=(\d+)&idx=(\d+)" )
@@ -22,20 +23,12 @@ class DUT_LEDC():
 					}
 
 	def __init__( self, dev ):
-		self.interface	= dev.__if
-		self.dev		= dev
+		super().__init__( dev )
 		self.led		= [ LED( self.dev, i ) for i in range( self.dev.CHANNELS ) ]
-		self.type		= self.dev.__class__.__name__
 		self.info		= [ "LED controller", "{}ch".format( self.dev.CHANNELS ) ]
 		self.symbol		= '💡'
 
-		if isinstance( self.interface, machine.I2C ):
-			self.address	= dev.__adr
-			self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
-		else:
-			self.address	= dev.__cs
-			self.dev_name	= self.type + "_on_SPI({})".format( dev.__cs )
-
+		self.page_data[ "symbol" ]	= self.symbol
 		if hasattr( self.dev, "__iref_base" ):
 			self.IREF_ID_OFFSET	= 100
 			#self.dev.write_registers( "IREFALL", self.IREF_INIT )
@@ -142,11 +135,6 @@ class DUT_LEDC():
 			all_reg = False
 
 		iref		= hasattr( self.dev, "__iref_base" )
-		
-		count		= self.dev.CHANNELS
-		pwm0_idx	= self.dev.REG_NAME.index( "PWM0"  )
-		iref0_idx	= self.dev.REG_NAME.index( "IREF0" ) if iref else 0
-		pwmall_idx	= self.dev.REG_NAME.index( "PWMALL"  ) if all_reg else 0
 		irefall_idx	= self.dev.REG_NAME.index( "IREFALL" ) if all_reg else 0
 		
 		if all_reg:
@@ -157,42 +145,28 @@ class DUT_LEDC():
 		else:
 				allreg_note	= ""
 
-		page_data	= {}
-		page_data[ "dev_name"    ]	= self.dev_name
-		page_data[ "class_name"  ]	= self.__class__.__name__
-		page_data[ "dev_type"    ]	= self.type
-		page_data[ "dev_link"    ]	= '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format( self.DS_URL[ self.type ], self.type )
-		page_data[ "symbol"      ]	= self.symbol
-		page_data[ "dev_info"    ]	= info
-		page_data[ "signature"   ]	= utils.page_signature()
-		page_data[ "grad_ctrl"   ]	= self.grad_ctrl() if issubclass( self.dev.__class__, gradation_control ) else ""
-		page_data[ "n_ch"        ]	= str( count )
-		page_data[ "pwm0_idx"    ]	= str( pwm0_idx )
-		page_data[ "iref0_idx"   ]	= str( iref0_idx )
-		page_data[ "pwmall_idx"  ]	= str( pwmall_idx )
-		page_data[ "irefall_idx" ]	= str( irefall_idx )
-		page_data[ "iref_ofst"   ]	= str( self.IREF_ID_OFFSET )
-		page_data[ "iref_init"   ]	= str( self.IREF_INIT )
-		page_data[ "reg_table"   ]	= self.get_reg_table( self.dev, 4 )
-		page_data[ "allreg_note" ]	= allreg_note
+		self.page_data[ "grad_ctrl"   ]	= self.grad_ctrl() if issubclass( self.dev.__class__, gradation_control ) else ""
+		self.page_data[ "n_ch"        ]	= str( self.dev.CHANNELS )
+		self.page_data[ "pwm0_idx"    ]	= str( self.dev.REG_NAME.index( "PWM0"  ) )
+		self.page_data[ "iref0_idx"   ]	= str( self.dev.REG_NAME.index( "IREF0" ) if iref else 0 )
+		self.page_data[ "pwmall_idx"  ]	= str( self.dev.REG_NAME.index( "PWMALL"  ) if all_reg else 0 )
+		self.page_data[ "irefall_idx" ]	= str( irefall_idx )
+		self.page_data[ "iref_ofst"   ]	= str( self.IREF_ID_OFFSET )
+		self.page_data[ "iref_init"   ]	= str( self.IREF_INIT )
+		self.page_data[ "reg_table"   ]	= self.get_reg_table( self.dev, 4 )
+		self.page_data[ "allreg_note" ]	= allreg_note
 
 		cols		= 4	if all_reg else 1
 
-		page_data[ "sliders_PWM"  ]	= self.get_slider_table( cols, col_pat, iref = False, all_reg = all_reg )
+		self.page_data[ "sliders_PWM"  ]	= self.get_slider_table( cols, col_pat, iref = False, all_reg = all_reg )
 		
 		if iref:
-			page_data[ "sliders_IREF" ]	= self.get_slider_table( cols, col_pat, iref = True, all_reg = all_reg )
+			self.page_data[ "sliders_IREF" ]	= self.get_slider_table( cols, col_pat, iref = True, all_reg = all_reg )
 		else:
-			page_data[ "sliders_IREF" ]	= ""
-
-		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
-					html	= f.read()
+			self.page_data[ "sliders_IREF" ]	= ""
 		
-		for key, value in page_data.items():
-			html = html.replace('{% ' + key + ' %}', value )
+		return self.load_html()
 		
-		return	"HTTP/1.0 200 OK\n\n" + html
-
 	def get_slider_table( self, cols, pat, iref, all_reg = False ):
 		rows	= (self.dev.CHANNELS + cols - 1) // cols
 		label	= "IREF" if iref else "PWM"
