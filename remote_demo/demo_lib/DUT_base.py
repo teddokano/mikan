@@ -47,7 +47,7 @@ class DUT_base():
 		
 		return s.replace('{% mcu %}', os.uname().machine )
 		
-	def load_file( file_name ):
+	def load_file( self, file_name ):
 		try:
 			with open( file_name ) as f:
 				s	= f.read()
