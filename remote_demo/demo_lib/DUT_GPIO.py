@@ -13,8 +13,6 @@ class DUT_GPIO( DUT_base.DUT_base ):
 					}
 
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
-	regex_alarm	= ure.compile( r".*alarm&weekday=(\d+)&day=(\d+)&hour=(\d+)&minute=(\d+)&second=(\d+)" )
-	regex_pc_t	= ure.compile( r".*set_pc_time=(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+).(\d+)Z&weekday=(\S+)\?" )
 
 	def __init__( self, dev ):
 		super().__init__( dev )
@@ -28,12 +26,8 @@ class DUT_GPIO( DUT_base.DUT_base ):
 	
 		if "?" not in req:
 			return self.page_setup()
-		elif "set_current_time" in req:
-			self.dev.datetime( machine.RTC().datetime() )
-			return 'HTTP/1.0 200 OK\n\n'	# dummy
-		elif "clear_alarm" in req:
-			self.dev.clear_alarm()
-			return 'HTTP/1.0 200 OK\n\n'	# dummy
+		elif "allreg" in req:
+			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
@@ -42,33 +36,6 @@ class DUT_GPIO( DUT_base.DUT_base ):
 
 				self.dev.write_registers( reg, val )
 				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
-
-			m	= self.regex_alarm.match( req )
-			if m:
-				alarm_time	= {
-									"weekday"	: int( m.group( 1 ) ),
-									"day"		: int( m.group( 2 ) ),
-									"hours"		: int( m.group( 3 ) ),
-									"minutes"	: int( m.group( 4 ) ),
-									"seconds"	: int( m.group( 5 ) ),
-							  }
-				
-				self.dev.clear_alarm()
-				self.dev.alarm_int( None, **alarm_time )	#	No INT pin assertion to avoid other device (PCA9957-ARD)
-				return 'HTTP/1.0 200 OK\n\n'	# dummy
-
-			m	= self.regex_pc_t.match( req )
-			if m:
-				t	= ( int( m.group( 1 ) ), 
-						int( m.group( 2 ) ), 
-						int( m.group( 3 ) ), 
-						self.WKDY.index( m.group( 8 ).decode() ), 
-						int( m.group( 4 ) ), 
-						int( m.group( 5 ) ), 
-						int( m.group( 6 ) ) 
-						)
-				self.dev.datetime( t )
-				return 'HTTP/1.0 200 OK\n\n'	# dummy
 			else:
 				return self.sending_data()
 
