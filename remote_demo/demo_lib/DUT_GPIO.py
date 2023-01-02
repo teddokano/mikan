@@ -49,7 +49,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		return self.load_html()
 
 	def get_reg_table( self, cols ):
-		total	= len( self.dev.REG_NAME )
+		total	= len( self.dev.REG_LIST )
 		rows	= (total + cols - 1) // cols
 
 		s	 	= [ '<table class="table_RTC">' ]
@@ -57,8 +57,11 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		for y in range( rows ):
 			s	 	+= [ '<tr class="reg_table_row">' ]
 			for i in range( y, total, rows ):
-				s	+= [ '<td class="td_RTC reg_table_name">{}</td><td class="td_RTC reg_table_val">0x{:02X}</td>'.format( self.dev.REG_NAME[ i ], i ) ]
-				s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
+				ri	= self.dev.REG_LIST[ i ][ "idx" ]
+				rn	= self.dev.REG_LIST[ i ][ "name" ]
+
+				s	+= [ '<td class="td_RTC reg_table_name">{}</td><td class="td_RTC reg_table_val">0x{:02X}</td>'.format( rn, ri ) ]
+				s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( ri, ri ) ]
 
 			s	+= [ '</tr>' ]
 

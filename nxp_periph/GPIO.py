@@ -186,7 +186,49 @@ class PCA9554( GPIO_base, I2C_target ):
 		self.__cfg	= "Configuration"
 		self.__np	= self.N_PORTS
 
-class PCAL6xxx_base( GPIO_base ):
+class PCAL6xxx_base( GPIO_base, I2C_target ):
+	AUTO_INCREMENT	= 0x80
+
+	def __init__( self, i2c, address ):
+		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+
+	def dump( self ):
+		"""
+		dump register values
+	
+		Returns
+		-------
+		list : register data
+			List of integers
+
+		"""
+		return self.read_registers( 0, len( self.REG_LIST ) )
+
+	def dump_reg( self ):
+		rv		= self.dump()
+		
+		for i, name in enumerate( self.REG_NAME ):
+			if name is "reserved":
+				rv.insert( i, 0 )
+		
+		length	= len( rv )
+
+		index	= [ (i // 2) if 0 == i % 2 else (i // 2) + ((length + 1) // 2) for i in range( length ) ]
+		reg		= [ self.REG_NAME[ i ] for i in index ]
+		rv		= [ rv[ i ]            for i in index ]
+		lf		= [ {"end":""} if 0 == i % 2 else {"end":"\n"} for i in range( length ) ]
+
+		ml		= len( max( self.REG_NAME, key = len ) )
+		fmt		= "    {{:{}}}".format( ml )
+		fmt	   += " (0x{:02X}) : 0x{:02X}"
+		
+		print( "register dump: \"{}\", {}".format( self.__class__.__name__, self.dev_access() ) )
+		for i, j, k, l in zip( reg, index, rv, lf ):
+			print( fmt.format( i, j, k ), **l )
+
+		if 1 == length % 2:
+			print( "" )
+
 	@property
 	def mask( self ):
 		return self.read_registers( self.__im, self.__np )
@@ -230,7 +272,7 @@ class PCAL6xxx_base( GPIO_base ):
 		sleep( 0.01 )
 		rst.value( 1 )
 
-class PCAL6408( PCAL6xxx_base, I2C_target ):
+class PCAL6408( PCAL6xxx_base ):
 	"""
 	PCAL6408: 8 bit GPIO expander
 	
@@ -264,8 +306,6 @@ class PCAL6408( PCAL6xxx_base, I2C_target ):
 		address	: int, option
 
 		"""
-		super().__init__( i2c, address )
-		
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -279,7 +319,7 @@ class PCAL6408( PCAL6xxx_base, I2C_target ):
 		self.__ps	= "Pull-up/pull-down selection"
 		self.__np	= self.N_PORTS
 
-class PCAL6416( PCAL6xxx_base, I2C_target ):
+class PCAL6416( PCAL6xxx_base ):
 	"""
 	PCAL6416: 16 bit GPIO expander
 	
@@ -318,8 +358,6 @@ class PCAL6416( PCAL6xxx_base, I2C_target ):
 		address	: int, option
 
 		"""
-		super().__init__( i2c, address )
-		
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -333,7 +371,7 @@ class PCAL6416( PCAL6xxx_base, I2C_target ):
 		self.__ps	= "Pull-up/pull-down selection register 0"
 		self.__np	= self.N_PORTS
 
-class PCAL6524( PCAL6xxx_base, I2C_target ):
+class PCAL6524( PCAL6xxx_base ):
 	"""
 	PCAL6524: 24 bit GPIO expander
 	
@@ -406,8 +444,6 @@ class PCAL6524( PCAL6xxx_base, I2C_target ):
 		address	: int, option
 
 		"""
-		super().__init__( i2c, address )
-		
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -435,7 +471,7 @@ class PCAL6524( PCAL6xxx_base, I2C_target ):
 		self.__ps	= "Pull-up/pull-down selection register port 0"
 		self.__np	= self.N_PORTS
 
-class PCAL6534( PCAL6xxx_base, I2C_target ):
+class PCAL6534( PCAL6xxx_base ):
 	"""
 	PCAL6534: 34 bit GPIO expander
 	
@@ -444,7 +480,7 @@ class PCAL6534( PCAL6xxx_base, I2C_target ):
 	DEFAULT_ADDR	= (0x44 >> 1) + ADDR_BIT
 	N_PORTS			= 5
 	N_BITS			= 34
-	
+
 	REG_NAME_0x00	= [ "Input Port 0", "Input Port 1", "Input Port 2", "Input Port 3", "Input Port 4",
 						"Output Port 0", "Output Port 1", "Output Port 2", "Output Port 3", "Output Port 4",
 						"Polarity Inversion port 0",  "Polarity Inversion port 1", "Polarity Inversion port 2", "Polarity Inversion port 3", "Polarity Inversion port 4",
@@ -521,7 +557,8 @@ class PCAL6534( PCAL6xxx_base, I2C_target ):
 
 		"""
 		super().__init__( i2c, address )
-		
+		self.REG_LIST	= [ { "idx": self.REG_NAME.index( rn ), "name": rn } for rn in self.REG_NAME if rn is not "reserved" ]
+
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -570,8 +607,16 @@ def main():
 
 #	gpio	= PCAL6408( i2c, setup_EVB = True )
 #	gpio	= PCAL6416( i2c, setup_EVB = True )
-	gpio	= PCAL6524( i2c, setup_EVB = True )
-#	gpio	= PCAL6534( i2c, setup_EVB = True )
+#	gpio	= PCAL6524( i2c, setup_EVB = True )
+	gpio	= PCAL6534( i2c, setup_EVB = True )
+
+	print( gpio.REG_NAME )
+	print( gpio.REG_LIST )		
+	print( len( gpio.REG_NAME ) )
+	print( len( gpio.REG_LIST ) )
+
+	gpio.dump_reg()
+
 
 	if gpio.N_PORTS is 1:
 		io_config_and_pull_up	= 0xF0
