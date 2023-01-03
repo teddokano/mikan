@@ -9,7 +9,13 @@ from	demo_lib	import	DUT_base
 class DUT_GPIO( DUT_base.DUT_base ):
 	APPLIED_TO	= GPIO_base
 	
-	DS_URL		= { "PCAL6534": "https://www.nxp.com/docs/en/data-sheet/PCAL6534.pdf",
+	DS_URL		= { 
+						"PCA9554": "https://www.nxp.jp/docs/en/data-sheet/PCA9554_9554A.pdf",
+						"PCA9555": "https://www.nxp.com/docs/en/data-sheet/PCA9555.pdf",
+						"PCAL6408": "https://www.nxp.com/docs/en/data-sheet/PCAL6408A.pdf",
+						"PCAL6416": "https://www.nxp.com/docs/en/data-sheet/PCAL6416A.pdf",
+						"PCAL6524": "https://www.nxp.com/docs/en/data-sheet/PCAL6524.pdf",
+						"PCAL6534": "https://www.nxp.com/docs/en/data-sheet/PCAL6534.pdf",
 					}
 
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )

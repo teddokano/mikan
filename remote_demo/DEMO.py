@@ -12,7 +12,7 @@ except:
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B
 from	nxp_periph	import	PCF2131, PCF85063
-from	nxp_periph	import	PCAL6534
+from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
 from	nxp_periph	import	i2c_fullscan
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC, DUT_GPIO
@@ -41,6 +41,8 @@ def main( micropython_optimize = False ):
 	pca9957		= PCA9957( spi, setup_EVB = True )
 	pct2075		= PCT2075( i2c, setup_EVB = True  )
 	pcf2131_i2c	= PCF2131( i2c )
+#	pcal6408	= PCAL6408( i2c, 0x20, setup_EVB = True )
+	pcal6524	= PCAL6524( i2c, 0x22, setup_EVB = True )
 	pcal6534	= PCAL6534( i2c, 0x22, setup_EVB = True )
 #	pcf2131_spi	= PCF2131( spi )
 #	pcf85063	= PCF85063( i2c )
@@ -56,6 +58,7 @@ def main( micropython_optimize = False ):
 						pca9632,
 						pct2075,
 						pcf2131_i2c,
+						pcal6524, 
 						pcal6534, 
 #						pcf2131_spi,
 #						pcf85063,
