@@ -24,17 +24,35 @@ function updateRegField( idx ) {
 	ajaxUpdate( url )
 }
 
+
+let prev_reg	= [];	//	to prevent refresh on user writing field
+
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
-	ajaxUpdate( url, allRegLoadDone );
+	ajaxUpdate( url, function (){
+		let obj = JSON.parse( this.responseText );
+
+		for ( let i = 0; i < obj.reg.length; i++ ) {
+			let value	= obj.reg[ i ];
+			if ( value != prev_reg[ i ] ) {
+				document.getElementById('regField' + i ).value	= hex( value );
+			}
+		}
+		prev_reg	= obj.reg;
+	} );
 }
 
-function allRegLoadDone() {
-	let obj = JSON.parse( this.responseText );
+function singleReload() {
+	allRegLoad();
+}
 
-	for ( let i = 0; i < obj.reg.length; i++ ) {
-		document.getElementById('regField' + i ).value	= hex( obj.reg[ i ] );
-	}
+let	intervalTimer;
+function autoReload() {
+	intervalTimer	= setInterval( allRegLoad, 200 );
+}
+
+function stopReload() {
+	clearInterval( intervalTimer );
 }
 
 window.addEventListener('load', function () {

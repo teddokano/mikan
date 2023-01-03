@@ -33,13 +33,9 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		if "?" not in req:
 			return self.page_setup()
 		elif "allreg" in req:
-			print( "****************** allreg" )
-			r	= self.dev.dump()
-			print( r )
-			print( "allreg ******************" )
-			
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": r } )
-#			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+#			r	= self.dev.dump()			
+#			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": r } )
+			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
