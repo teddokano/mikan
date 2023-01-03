@@ -8,7 +8,7 @@ from	demo_lib	import	DUT_base
 
 class DUT_GPIO( DUT_base.DUT_base ):
 	APPLIED_TO	= GPIO_base
-	
+	prev_r		= []
 	DS_URL		= { 
 						"PCA9554": "https://www.nxp.jp/docs/en/data-sheet/PCA9554_9554A.pdf",
 						"PCA9555": "https://www.nxp.com/docs/en/data-sheet/PCA9555.pdf",
@@ -36,6 +36,11 @@ class DUT_GPIO( DUT_base.DUT_base ):
 #			r	= self.dev.dump()			
 #			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": r } )
 			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+		elif "ping" in req:
+			reg			= self.dev.dump()
+			result		= 0 if (self.prev_r == reg) else 1
+			self.prev_r	= reg
+			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "result": result } )
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
