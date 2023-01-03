@@ -81,17 +81,7 @@ class GPIO_base():
 			self.write_registers( self.__cfg, args[ 0 ] )
 
 	def dump( self ):
-		"""
-		dump register values overriding Interface.dump()
-	
-		Returns
-		-------
-		list : register data
-			List of integers
-
-		"""
-		return [ self.read_registers( i, 1 ) for i in range( len( self.REG_NAME ) ) ]
-
+		return	[ self.read_registers( rn, 1 ) for rn in self.REG_NAME  if rn is not "reserved" ]
 
 	@property
 	def value( self ):
@@ -187,48 +177,24 @@ class PCA9554( GPIO_base, I2C_target ):
 		self.__np	= self.N_PORTS
 
 class PCAL6xxx_base( GPIO_base, I2C_target ):
-	AUTO_INCREMENT	= 0x80
-
-	def __init__( self, i2c, address ):
-		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+	def __init__( self, i2c, address, auto_increment_flag = 0x00 ):
+		I2C_target.__init__( self, i2c, address, auto_increment_flag = auto_increment_flag )
 		self.REG_LIST	= [ { "idx": self.REG_NAME.index( rn ), "name": rn } for rn in self.REG_NAME if rn is not "reserved" ]
 
-	def dump( self ):
+	def __setup_EVB( self ):
 		"""
-		dump register values
-	
-		Returns
-		-------
-		list : register data
-			List of integers
-
+		setting up RESET and OE pins on PCAL6408AEV-ARD evaluation board
 		"""
-		return self.read_registers( 0, len( self.REG_LIST ) )
-
-	def dump_reg( self ):
-		rv		= self.dump()
+		from machine import Pin
+		from utime import sleep
 		
-		for i, name in enumerate( self.REG_NAME ):
-			if name is "reserved":
-				rv.insert( i, 0 )
-		
-		length	= len( rv )
-
-		index	= [ (i // 2) if 0 == i % 2 else (i // 2) + ((length + 1) // 2) for i in range( length ) ]
-		reg		= [ self.REG_NAME[ i ] for i in index ]
-		rv		= [ rv[ i ]            for i in index ]
-		lf		= [ {"end":""} if 0 == i % 2 else {"end":"\n"} for i in range( length ) ]
-
-		ml		= len( max( self.REG_NAME, key = len ) )
-		fmt		= "    {{:{}}}".format( ml )
-		fmt	   += " (0x{:02X}) : 0x{:02X}"
-		
-		print( "register dump: \"{}\", {}".format( self.__class__.__name__, self.dev_access() ) )
-		for i, j, k, l in zip( reg, index, rv, lf ):
-			print( fmt.format( i, j, k ), **l )
-
-		if 1 == length % 2:
-			print( "" )
+		print( "PCAL6xxxAEV-ARD setting done." )
+		rst	= Pin( "D8", Pin.OUT )
+		adr	= Pin( "D9", Pin.OUT )
+		rst.value( 0 )
+		adr.value( self.ADDR_BIT )
+		sleep( 0.01 )
+		rst.value( 1 )
 
 	@property
 	def mask( self ):
@@ -258,20 +224,48 @@ class PCAL6xxx_base( GPIO_base, I2C_target ):
 	def status( self ):
 		return 	self.read_registers( self.__is, self.__np )
 
-	def __setup_EVB( self ):
-		"""
-		setting up RESET and OE pins on PCAL6408AEV-ARD evaluation board
-		"""
-		from machine import Pin
-		from utime import sleep
+	def dump_reg( self ):
+		rv		= self.dump()
 		
-		print( "PCAL6xxxAEV-ARD setting done." )
-		rst	= Pin( "D8", Pin.OUT )
-		adr	= Pin( "D9", Pin.OUT )
-		rst.value( 0 )
-		adr.value( self.ADDR_BIT )
-		sleep( 0.01 )
-		rst.value( 1 )
+		for i, name in enumerate( self.REG_NAME ):
+			if name is "reserved":
+				rv.insert( i, 0 )
+		
+		length	= len( rv )
+
+		index	= [ (i // 2) if 0 == i % 2 else (i // 2) + ((length + 1) // 2) for i in range( length ) ]
+		reg		= [ self.REG_NAME[ i ] for i in index ]
+		rv		= [ rv[ i ]            for i in index ]
+		lf		= [ {"end":""} if 0 == i % 2 else {"end":"\n"} for i in range( length ) ]
+
+		ml		= len( max( self.REG_NAME, key = len ) )
+		fmt		= "    {{:{}}}".format( ml )
+		fmt	   += " (0x{:02X}) : 0x{:02X}"
+		
+		print( "register dump: \"{}\", {}".format( self.__class__.__name__, self.dev_access() ) )
+		for i, j, k, l in zip( reg, index, rv, lf ):
+			print( fmt.format( i, j, k ), **l )
+
+		if 1 == length % 2:
+			print( "" )
+
+class PCAL65xx_base( PCAL6xxx_base ):
+	AUTO_INCREMENT	= 0x80
+
+	def __init__( self, i2c, address ):
+		super().__init__( i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+
+	def dump( self ):
+		"""
+		dump register values
+	
+		Returns
+		-------
+		list : register data
+			List of integers
+
+		"""
+		return self.read_registers( 0, len( self.REG_LIST ) )
 
 class PCAL6408( PCAL6xxx_base ):
 	"""
@@ -376,7 +370,7 @@ class PCAL6416( PCAL6xxx_base ):
 		self.__ps	= "Pull-up/pull-down selection register 0"
 		self.__np	= self.N_PORTS
 
-class PCAL6524( PCAL6xxx_base ):
+class PCAL6524( PCAL65xx_base ):
 	"""
 	PCAL6524: 24 bit GPIO expander
 	
@@ -478,7 +472,7 @@ class PCAL6524( PCAL6xxx_base ):
 		self.__ps	= "Pull-up/pull-down selection register port 0"
 		self.__np	= self.N_PORTS
 
-class PCAL6534( PCAL6xxx_base ):
+class PCAL6534( PCAL65xx_base ):
 	"""
 	PCAL6534: 34 bit GPIO expander
 	
@@ -614,7 +608,7 @@ def main():
 	print( [ hex( v ) for v in i2c.scan() ] )
 
 #	gpio	= PCAL6408( i2c, setup_EVB = True )
-#	gpio	= PCAL6416( i2c, setup_EVB = True )
+#	gpio	= PCAL6416( i2c, 0x20, setup_EVB = True )
 #	gpio	= PCAL6524( i2c, setup_EVB = True )
 	gpio	= PCAL6534( i2c, 0x22, setup_EVB = True )
 
@@ -624,7 +618,6 @@ def main():
 	print( len( gpio.REG_LIST ) )
 
 	gpio.dump_reg()
-
 
 	if gpio.N_PORTS is 1:
 		io_config_and_pull_up	= 0xF0
@@ -666,7 +659,7 @@ def main():
 		if tim_flag:
 			tim_flag	= False
 
-			if gpio.N_PORTS is 5 or 3:
+			if (gpio.N_PORTS is 5) or (gpio.N_PORTS is 3):
 				gpio.write_registers( "Output Port 0", count )
 				gpio.write_registers( "Output Port 1", count )
 				gpio.write_registers( "Output Port 2", count )

@@ -42,6 +42,7 @@ def main( micropython_optimize = False ):
 	pct2075		= PCT2075( i2c, setup_EVB = True  )
 	pcf2131_i2c	= PCF2131( i2c )
 #	pcal6408	= PCAL6408( i2c, 0x20, setup_EVB = True )
+	pcal6416	= PCAL6416( i2c, 0x20, setup_EVB = True )
 	pcal6524	= PCAL6524( i2c, 0x22, setup_EVB = True )
 	pcal6534	= PCAL6534( i2c, 0x22, setup_EVB = True )
 #	pcf2131_spi	= PCF2131( spi )
@@ -58,6 +59,7 @@ def main( micropython_optimize = False ):
 						pca9632,
 						pct2075,
 						pcf2131_i2c,
+						pcal6416, 
 						pcal6524, 
 						pcal6534, 
 #						pcf2131_spi,

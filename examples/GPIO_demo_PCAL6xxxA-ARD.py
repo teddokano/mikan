@@ -60,7 +60,7 @@ def main():
 		if tim_flag:
 			tim_flag	= False
 
-			if gpio.N_PORTS is 5 or 3:
+			if (gpio.N_PORTS is 5) or (gpio.N_PORTS is 3):
 				"""
 				gpio.write_registers( "Output Port 0", count )
 				gpio.write_registers( "Output Port 1", count | 0xF0 )
