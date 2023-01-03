@@ -2,6 +2,12 @@ import	machine
 import	os
 
 class DUT_base():
+	SIG	= """\
+		<b><a href="https://github.com/teddokano/mikan" target="_blank" rel="noopener noreferrer">mikan: I²C/SPI peripheral device drivers and demo</a><br>
+		HTTP server on<br/>
+		{% mcu %}</b><br/>
+		0100111101101011011000010110111001101111
+		"""
 	def __init__( self, dev ):
 		self.page_data	= {}
 		self.page_data[ "signature"   ]	= self.page_signature()
@@ -27,8 +33,6 @@ class DUT_base():
 		self.page_data[ "dev_info"    ]	= self.dev.info()
 
 	def load_html( self ):
-		print( "#" + "demo_lib/" + self.__class__.__name__ + ".html" + "#" )
-	
 		with open( "demo_lib/" + self.__class__.__name__ + ".html", "r" ) as f:
 			html	= f.read()
 		
@@ -38,14 +42,7 @@ class DUT_base():
 		return	"HTTP/1.0 200 OK\n\n" + html
 	
 	def page_signature( self ):
-		s	= """\
-			<b><a href="https://github.com/teddokano/mikan" target="_blank" rel="noopener noreferrer">mikan: I²C/SPI peripheral device drivers and demo</a><br>
-			HTTP server on<br/>
-			{% mcu %}</b><br/>
-			0100111101101011011000010110111001101111
-			"""
-		
-		return s.replace('{% mcu %}', os.uname().machine )
+		return self.SIG.replace('{% mcu %}', os.uname().machine )
 		
 	def load_file( self, file_name ):
 		try:

@@ -27,15 +27,21 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		if "?" not in req:
 			return self.page_setup()
 		elif "allreg" in req:
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+			print( "****************** allreg" )
+			r	= self.dev.dump()
+			print( r )
+			print( "allreg ******************" )
+			
+			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": r } )
+#			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
-				reg	= int( m.group( 1 ) )
+				idx	= int( m.group( 1 ) )
 				val	= int( m.group( 2 ) )
-
-				self.dev.write_registers( reg, val )
-				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
+				
+				self.dev.write_registers( self.dev.REG_LIST[ idx ][ "name" ], val )
+				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.REG_LIST[ idx ][ "idx" ], "val": val } )
 			else:
 				return self.sending_data()
 
@@ -61,7 +67,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 				rn	= self.dev.REG_LIST[ i ][ "name" ]
 
 				s	+= [ '<td class="td_RTC reg_table_name">{}</td><td class="td_RTC reg_table_val">0x{:02X}</td>'.format( rn, ri ) ]
-				s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( ri, ri ) ]
+				s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 			s	+= [ '</tr>' ]
 

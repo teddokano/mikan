@@ -191,6 +191,7 @@ class PCAL6xxx_base( GPIO_base, I2C_target ):
 
 	def __init__( self, i2c, address ):
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
+		self.REG_LIST	= [ { "idx": self.REG_NAME.index( rn ), "name": rn } for rn in self.REG_NAME if rn is not "reserved" ]
 
 	def dump( self ):
 		"""
@@ -306,6 +307,8 @@ class PCAL6408( PCAL6xxx_base ):
 		address	: int, option
 
 		"""
+		super().__init__( i2c, address )
+
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -358,6 +361,8 @@ class PCAL6416( PCAL6xxx_base ):
 		address	: int, option
 
 		"""
+		super().__init__( i2c, address )
+
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -444,6 +449,8 @@ class PCAL6524( PCAL6xxx_base ):
 		address	: int, option
 
 		"""
+		super().__init__( i2c, address )
+
 		if setup_EVB:
 			self.__setup_EVB()
 			
@@ -557,7 +564,6 @@ class PCAL6534( PCAL6xxx_base ):
 
 		"""
 		super().__init__( i2c, address )
-		self.REG_LIST	= [ { "idx": self.REG_NAME.index( rn ), "name": rn } for rn in self.REG_NAME if rn is not "reserved" ]
 
 		if setup_EVB:
 			self.__setup_EVB()
@@ -605,10 +611,12 @@ def main():
 
 	i2c		= I2C( 0, freq = (400 * 1000) )
 
+	print( [ hex( v ) for v in i2c.scan() ] )
+
 #	gpio	= PCAL6408( i2c, setup_EVB = True )
 #	gpio	= PCAL6416( i2c, setup_EVB = True )
 #	gpio	= PCAL6524( i2c, setup_EVB = True )
-	gpio	= PCAL6534( i2c, setup_EVB = True )
+	gpio	= PCAL6534( i2c, 0x22, setup_EVB = True )
 
 	print( gpio.REG_NAME )
 	print( gpio.REG_LIST )		
