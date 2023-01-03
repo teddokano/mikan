@@ -58,6 +58,6 @@ function stopReload() {
 	clearInterval( intervalTimer );
 }
 
-window.addEventListener('load', function () {
+window.addEventListener( 'load', function () {
 	allRegLoad();
 });
