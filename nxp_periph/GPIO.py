@@ -608,14 +608,10 @@ def main():
 	print( [ hex( v ) for v in i2c.scan() ] )
 
 #	gpio	= PCAL6408( i2c, setup_EVB = True )
-#	gpio	= PCAL6416( i2c, 0x20, setup_EVB = True )
+	gpio	= PCAL6416( i2c, 0x20, setup_EVB = True )
 #	gpio	= PCAL6524( i2c, setup_EVB = True )
-	gpio	= PCAL6534( i2c, 0x22, setup_EVB = True )
-
-	print( gpio.REG_NAME )
-	print( gpio.REG_LIST )		
-	print( len( gpio.REG_NAME ) )
-	print( len( gpio.REG_LIST ) )
+#	gpio	= PCAL6534( i2c, setup_EVB = True )
+#	gpio	= PCA9554( i2c, 0x20 )
 
 	gpio.dump_reg()
 
@@ -643,6 +639,7 @@ def main():
 	count	= 0
 
 	while True:
+		"""
 		if int_flag:
 			int_flag	= False
 			status		= gpio.status
@@ -655,7 +652,7 @@ def main():
 			else:
 				print( "  Interrupt status = {}".format(  [ "0b{:08b}".format( i ) for i in status ]  ) )
 				print( "  Input Port       = {}".format(  [ "0b{:08b}".format( i ) for i in value ]   ) )
-				
+		"""
 		if tim_flag:
 			tim_flag	= False
 
