@@ -25,12 +25,13 @@ function updateRegField( idx ) {
 }
 
 function ping() {
-	let url	= REQ_HEADER + 'ping'
+	let url	= REQ_HEADER + 'ping';
 	ajaxUpdate( url, function (){
 		let obj = JSON.parse( this.responseText );
 		
 		if ( obj.result ) {
 			allRegLoad();
+		}
 	} );
 }
 
