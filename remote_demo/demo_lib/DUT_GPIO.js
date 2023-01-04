@@ -24,24 +24,15 @@ function updateRegField( idx ) {
 	ajaxUpdate( url )
 }
 
-function ping() {
-	let url	= REQ_HEADER + 'ping';
-	ajaxUpdate( url, function (){
-		let obj = JSON.parse( this.responseText );
-		
-		if ( obj.result ) {
-			allRegLoad();
-		}
-	} );
-}
-
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
 	ajaxUpdate( url, function (){
 		let obj = JSON.parse( this.responseText );
 
-		for ( let i = 0; i < obj.reg.length; i++ ) {
+		if ( obj.result ) {
+			for ( let i = 0; i < obj.reg.length; i++ ) {
 				document.getElementById('regField' + i ).value	= hex( obj.reg[ i ] );
+			}
 		}
 	} );
 }
@@ -52,7 +43,7 @@ function singleReload() {
 
 let	intervalTimer;
 function autoReload() {
-	intervalTimer	= setInterval( ping, 200 );
+	intervalTimer	= setInterval( allRegLoad, 200 );
 }
 
 function stopReload() {

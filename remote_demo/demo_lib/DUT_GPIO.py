@@ -33,12 +33,16 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		if "?" not in req:
 			return self.page_setup()
 		elif "allreg" in req:
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
-		elif "ping" in req:
 			reg			= self.dev.dump()
-			result		= 0 if (self.prev_r == reg) else 1
-			self.prev_r	= reg
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "result": result } )
+			
+			if self.prev_r == reg:
+				rtn	= ujson.dumps( { "result": 0 } )
+			else:
+				rtn	= ujson.dumps( { "result": 1, "reg": reg } )
+				self.prev_r	= reg
+
+			print( rtn )
+			return 'HTTP/1.0 200 OK\n\n' + rtn
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
