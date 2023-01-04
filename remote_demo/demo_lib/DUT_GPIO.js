@@ -1,8 +1,3 @@
-/****************************
- ****	register controls
- ****************************/
- 
-/******** updateRegField ********/
 
 function updateRegField( idx ) {
 	let valueFieldElement = document.getElementById( "regField" + idx );
@@ -39,6 +34,14 @@ function allRegLoad() {
 				document.getElementById('regField' + i ).value	= hex( v );
 		}
 		prev_reg	= obj.reg;
+		
+		obj.bf_reg.forEach( n => {
+			v	= obj.reg[ n ];
+			for ( let i = 7; 0 <= i; i-- ) {
+				"bitField{}-{}"
+				document.getElementById('bitField' + n + '-' + i ).value	= (v >> i) & 0x1;
+			}
+		} )
 	} );
 }
 
@@ -55,6 +58,22 @@ function stopReload() {
 	clearInterval( intervalTimer );
 }
 
+let reg_list	= {};
+
+function getRegList() {
+	let url	= REQ_HEADER + 'reglist'
+	
+	ajaxUpdate( url, function (){
+		let obj = JSON.parse( this.responseText );
+
+		obj.reglist.forEach( ( element, i ) => {
+			reg_list[ element.name ]	= { "idx" : element.idx, "i" : i }
+		} )
+		console.log( reg_list );
+	} );
+}
+
 window.addEventListener( 'load', function () {
 	allRegLoad();
+	getRegList();
 });

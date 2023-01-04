@@ -32,7 +32,9 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		if "?" not in req:
 			return self.page_setup()
 		elif "allreg" in req:
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump(), "bf_reg": self.bf_reg } )
+		elif "reglist" in req:
+			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reglist": self.dev.REG_LIST } )
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
@@ -77,6 +79,9 @@ class DUT_GPIO( DUT_base.DUT_base ):
 	def get_bit_table( self ):
 		attr_list	= [ "__in", "__out", "__pol", "__cfg", "__im", "__is", "__pe", "__ps" ]
 		rn_list		= [ getattr( self.dev, a ) for a in attr_list if hasattr( self.dev, a ) ]
+		rlist		= [ n[ "name" ] for n in self.dev.REG_LIST ]
+		
+		self.bf_reg		= []
 
 		s	= [ '<table class="table_RTC">' ]
 
@@ -94,14 +99,18 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		s	+= [ '</tr>' ]
 
 		for r in rn_list:
+			ri_base	= rlist.index( r )
 			s	+= [ '<tr class="reg_table_row">' ]
 			s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( r ) ]
 
-			val	= 	[0] * self.dev.N_PORTS
-			
-			for v in val:
+			for p in range( self.dev.N_PORTS ):
+				ri	= ri_base + p
+				self.bf_reg	+= [ ri ]
+				
 				for i in range( 8 ):
-					s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( (v >> (7 - i)) & 0x01 ) ]
+					bi	= 7 - i
+					#s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( (v >> (7 - i)) & 0x01 ) ]
+					s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateBitField( {}, {} )" id="bitField{}-{}" minlength=1 size=1 value="-" class="regfield"></td>'.format( ri, bi, ri, bi ) ]
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
