@@ -50,13 +50,9 @@ function allRegLoad() {
 			
 			if ( prev_reg[ i ] != v )
 				document.getElementById('regField' + i ).value	= hex( v );
+				setRegisterBits( i, v )
 		}
 		prev_reg	= obj.reg;
-		
-		obj.bf_reg.forEach( n => {
-			v	= obj.reg[ n ];
-			setRegisterBits( n, v )
-		} )
 	} );
 }
 
