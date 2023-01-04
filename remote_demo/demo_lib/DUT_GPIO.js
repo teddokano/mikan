@@ -24,16 +24,21 @@ function updateRegField( idx ) {
 	ajaxUpdate( url )
 }
 
+let prev_reg	= [];	//	to prevent refresh on user writing field
+
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
+	
 	ajaxUpdate( url, function (){
 		let obj = JSON.parse( this.responseText );
 
-		if ( obj.result ) {
-			for ( let i = 0; i < obj.reg.length; i++ ) {
-				document.getElementById('regField' + i ).value	= hex( obj.reg[ i ] );
-			}
+		for ( let i = 0; i < obj.reg.length; i++ ) {
+			v	= obj.reg[ i ];
+			
+			if ( prev_reg[ i ] != v )
+				document.getElementById('regField' + i ).value	= hex( v );
 		}
+		prev_reg	= obj.reg;
 	} );
 }
 
