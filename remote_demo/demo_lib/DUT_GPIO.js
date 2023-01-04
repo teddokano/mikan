@@ -19,6 +19,19 @@ function updateRegField( idx ) {
 	ajaxUpdate( url )
 }
 
+function updateBitField( ri, bi ) {
+	let bv	= document.getElementById( "bitField" + ri + '-' + bi ).value;
+	let elm	= document.getElementById( "regField" + ri );
+	let rv	= parseInt( elm.value, 16 );
+	
+	rv	&= ~(0x1 << bi);
+	rv	|=    bv << bi;
+	
+	elm.value	= hex( rv );
+	
+	updateRegField( ri );
+}
+
 let prev_reg	= [];	//	to prevent refresh on user writing field
 
 function allRegLoad() {
