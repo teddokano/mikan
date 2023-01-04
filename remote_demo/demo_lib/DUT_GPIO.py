@@ -84,14 +84,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		attr_list	= [ "__in", "__out", "__pol", "__cfg", "__im", "__is", "__pe", "__ps" ]
 		rn_list		= [ getattr( self.dev, a ) for a in attr_list if hasattr( self.dev, a ) ]
 
-
-		print( "get_bit_table" )
-		print( rn_list )
-
-	
 		s	= [ '<table class="table_RTC">' ]
-
-
 
 		s	+= [ '<tr class="reg_table_row">' ]
 		s	+= [ '<td class="td_RTC reg_table_name">port</td>' ]
@@ -99,15 +92,12 @@ class DUT_GPIO( DUT_base.DUT_base ):
 			s	+= [ '<td class="td_RTC reg_table_name" colspan="8">{}</td>'.format( i ) ]
 		s	+= [ '</tr>' ]
 
-
-
 		s	 += [ '<tr class="reg_table_row">' ]
 		s	 += [ '<td class="td_RTC reg_table_name">bit</td>' ]
 		for i in range( self.dev.N_PORTS ):
 			for j in range( 8 ):
 				s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( 7 - j ) ]
 		s	+= [ '</tr>' ]
-
 
 		for r in rn_list:
 			s	+= [ '<tr class="reg_table_row">' ]
@@ -118,8 +108,6 @@ class DUT_GPIO( DUT_base.DUT_base ):
 			for v in val:
 				for i in range( 8 ):
 					s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( (v >> (7 - i)) & 0x01 ) ]
-					print( v, i )
-					pass
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
