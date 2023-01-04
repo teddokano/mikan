@@ -15,6 +15,8 @@ function updateRegField( idx ) {
 	if ( no_submit )
 		return;
 
+	setRegisterBits( idx, value )
+
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
 	ajaxUpdate( url )
 }
@@ -33,12 +35,15 @@ function updateBitField( ri, bi ) {
 }
 
 let prev_reg	= [];	//	to prevent refresh on user writing field
+let bf_reg		= [];
 
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
 	
 	ajaxUpdate( url, function (){
 		let obj = JSON.parse( this.responseText );
+
+		bf_reg	= obj.bf_reg
 
 		for ( let i = 0; i < obj.reg.length; i++ ) {
 			v	= obj.reg[ i ];
@@ -50,12 +55,15 @@ function allRegLoad() {
 		
 		obj.bf_reg.forEach( n => {
 			v	= obj.reg[ n ];
-			for ( let i = 7; 0 <= i; i-- ) {
-				"bitField{}-{}"
-				document.getElementById('bitField' + n + '-' + i ).value	= (v >> i) & 0x1;
-			}
+			setRegisterBits( n, v )
 		} )
 	} );
+}
+
+function setRegisterBits( ri, v ) {
+	if ( bf_reg.includes( ri ) )
+		for ( let i = 7; 0 <= i; i-- )
+			document.getElementById('bitField' + ri + '-' + i ).value	= (v >> i) & 0x1;
 }
 
 function singleReload() {
