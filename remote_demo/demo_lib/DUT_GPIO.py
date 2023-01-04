@@ -60,7 +60,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		total	= len( self.dev.REG_LIST )
 		rows	= (total + cols - 1) // cols
 
-		s	 	= [ '<table class="table_RTC">' ]
+		s	 	= [ '<table class="table_GPIO">' ]
 
 		for y in range( rows ):
 			s	 	+= [ '<tr class="reg_table_row">' ]
@@ -68,8 +68,8 @@ class DUT_GPIO( DUT_base.DUT_base ):
 				ri	= self.dev.REG_LIST[ i ][ "idx" ]
 				rn	= self.dev.REG_LIST[ i ][ "name" ]
 
-				s	+= [ '<td class="td_RTC reg_table_name">{}</td><td class="td_RTC reg_table_val">0x{:02X}</td>'.format( rn, ri ) ]
-				s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
+				s	+= [ '<td class="td_GPIO reg_table_name">{}</td><td class="td_GPIO reg_table_val">0x{:02X}</td>'.format( rn, ri ) ]
+				s	+= [ '<td class="td_GPIO reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 			s	+= [ '</tr>' ]
 
@@ -83,25 +83,25 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		
 		self.bf_reg		= []
 
-		s	= [ '<table class="table_RTC">' ]
+		s	= [ '<table class="table_GPIO">' ]
 
 		s	+= [ '<tr class="reg_table_row">' ]
-		s	+= [ '<td class="td_RTC reg_table_name">port</td>' ]
+		s	+= [ '<td class="td_GPIO_PORT_1 reg_table_name">port</td>' ]
 		for i in range( self.dev.N_PORTS ):
-			s	+= [ '<td class="td_RTC reg_table_name" colspan="8">{}</td>'.format( i ) ]
+			s	+= [ '<td class="td_GPIO_PORT_{} reg_table_name" colspan="8">{}</td>'.format( i % 2, i ) ]
 		s	+= [ '</tr>' ]
 
 		s	 += [ '<tr class="reg_table_row">' ]
-		s	 += [ '<td class="td_RTC reg_table_name">bit</td>' ]
+		s	 += [ '<td class="td_GPIO_BIT_1 reg_table_name">bit</td>' ]
 		for i in range( self.dev.N_PORTS ):
 			for j in range( 8 ):
-				s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( 7 - j ) ]
+				s	+= [ '<td class="td_GPIO_BIT_{} reg_table_name">{}</td>'.format( i % 2, 7 - j ) ]
 		s	+= [ '</tr>' ]
 
-		for r in rn_list:
+		for n, r in enumerate( rn_list ):
 			ri_base	= rlist.index( r )
 			s	+= [ '<tr class="reg_table_row">' ]
-			s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( r ) ]
+			s	+= [ '<td class="td_GPIO_BF_{}1 reg_table_name">{}</td>'.format( n % 2, r.replace( " 0", "" ) ) ]
 
 			for p in range( self.dev.N_PORTS ):
 				ri	= ri_base + p
@@ -109,8 +109,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 				
 				for i in range( 8 ):
 					bi	= 7 - i
-					#s	+= [ '<td class="td_RTC reg_table_name">{}</td>'.format( (v >> (7 - i)) & 0x01 ) ]
-					s	+= [ '<td class="td_RTC reg_table_val"><input type="text" onchange="updateBitField( {}, {} )" id="bitField{}-{}" minlength=1 size=1 value="-" class="regfield"></td>'.format( ri, bi, ri, bi ) ]
+					s	+= [ '<td class="td_GPIO_BF_{}{} reg_table_val"><input type="text" onchange="updateBitField( {}, {} )" id="bitField{}-{}" minlength=1 size=1 value="-" class="regfield"></td>'.format( n % 2, i // 4, ri, bi, ri, bi ) ]
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]

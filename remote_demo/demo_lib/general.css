@@ -168,3 +168,52 @@ input[type="text"] {
 	font-size: 1rem;
 	padding: 0.5rem;
 }
+.table_GPIO {
+	background-color: #EEEEEE;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO {
+	border: solid 1px #FFFFFF;
+	text-align: center;
+}
+.td_GPIO_PORT_0 {
+	background-color: #DDDDDD;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_PORT_1 {
+	background-color: #CCCCCC;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_BIT_0 {
+	background-color: #CCCCCC;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_BIT_1 {
+	background-color: #DDDDDD;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_BF_00 {
+	background-color: #FFFFFF;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_BF_01 {
+	background-color: #EEEEEE;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_BF_10 {
+	background-color: #DDDDDD;
+	border-collapse: collapse;
+	width: 100%;
+}
+.td_GPIO_BF_11 {
+	background-color: #CCCCCC;
+	border-collapse: collapse;
+	width: 100%;
+}
