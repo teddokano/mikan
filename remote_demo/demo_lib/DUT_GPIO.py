@@ -101,7 +101,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		for n, r in enumerate( rn_list ):
 			ri_base	= rlist.index( r )
 			s	+= [ '<tr class="reg_table_row">' ]
-			s	+= [ '<td class="td_GPIO_BF_{}1 reg_table_name">{}</td>'.format( n % 2, r.replace( " 0", "" ) ) ]
+			s	+= [ '<td class="td_GPIO_BF_name{} reg_table_name">{}</td>'.format( n % 2, r.replace( " 0", "" ) ) ]
 
 			for p in range( self.dev.N_PORTS ):
 				ri	= ri_base + p
