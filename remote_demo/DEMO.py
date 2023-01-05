@@ -125,7 +125,7 @@ def main( micropython_optimize = False ):
 					html 	+= f.read()
 					html	+= "\n"		
 			else:
-				html	= page_setup( dut_list, live_only = True if "?live_only=True" in req else False )
+				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )
 
 		while True:
 			h = client_stream.readline()
@@ -177,7 +177,7 @@ class DEMO( DUT_base ):
 	def __init__( self ):
 		super().__init__( None )
 
-def page_setup( dut_list, live_only = False ):
+def page_setup( dut_list, i2c, live_only = False ):
 	db	= DEMO()
 
 	db.page_data[ "dev_name"          ]	= "GENERAL"
@@ -187,6 +187,7 @@ def page_setup( dut_list, live_only = False ):
 	db.page_data[ "all_links"         ]	= links
 	db.page_data[ "front_page_table"  ]	= table
 	db.page_data[ "filtering_list"    ]	= filter_setting( live_only )
+	db.page_data[ "i2c_scan"          ]	= i2c_scan_table( i2c )
 
 	return db.load_html()
 
@@ -243,5 +244,28 @@ def page_table( dut_list, live_only = False ):
 	s	+= [ '</table>' ]
 
 	return "\n".join( s ), ", ".join( l )
+
+def i2c_scan_table( i2c ):
+	scan_result	= i2c_fullscan( i2c )
+	print( scan_result )
+	s	 = [ '<table>' ]
+	s	+= [ '<tr>' ]
+	s	+= [ '<td class="table_header">0x</td>' ]
+	for x in range( 16 ):
+		s	+= [ '<td class="table_header">x{:01X}</td>'.format( x ) ]
+	s	+= [ '</tr>' ]
 	
+	for y in range( 0, 128, 16 ):
+		s	+= [ '<tr>' ]
+		s	+= [ '<td class="table_header">{:01X}x</td>'.format( y >> 4 ) ]
+
+		for x in range( 16 ):
+			adr  = y + x
+			s	+= [ '<td class="table_i2c_val"><font color="{}">{:02X}({:02X})</font></td>'.format( '#000000' if adr in scan_result else '#EEEEEE', adr, adr << 1 ) ]
+		s	+= [ '</tr>' ]
+	
+	s	+= [ '</table>' ]
+
+	return "\n".join( s )
+
 main( micropython_optimize = True )

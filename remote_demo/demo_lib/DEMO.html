@@ -24,6 +24,10 @@
 			<input type="button" onclick="busReset( 1 );" value="I²C Device reprogram" class="tmp_button"><!-- : send address=0x00 data=0x04 (S 0x00 0x04 P) -->
 		</div>
 
+		<div>
+			I²C scan result
+			{% i2c_scan %}
+		</div>
 		
 		<div class="foot_note">
 			{% signature %}

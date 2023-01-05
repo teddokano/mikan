@@ -38,6 +38,11 @@ td {
 	background-color: #EEEEEE;
 	text-align: center;
 }
+.table_i2c_val {
+	border: solid 1px #FFFFFF;
+	background-color: #FFFFFF;
+	text-align: center;
+}
 .Green_cell {
 	background-color: #00FF00;
 }
