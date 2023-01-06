@@ -96,9 +96,10 @@ def main( micropython_optimize = False ):
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
 	count	= 0
-
 	while True:
+		print( "******" )
 		res = s.accept()
+		print( "######" )
 		client_sock = res[0]
 		client_addr = res[1]
 		print( "Client address: ", client_addr, end = "" )
@@ -111,6 +112,13 @@ def main( micropython_optimize = False ):
 
 		req = client_stream.readline()
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
+
+		print( req[:4] )
+		if b"POST" == req[:4]:
+			print( "got POST" )
+			br_count	= 0
+		else:
+			br_count	= 1
 
 		for dut in dut_list:
 			html	= dut.parse( req )
@@ -125,13 +133,23 @@ def main( micropython_optimize = False ):
 					html 	+= f.read()
 					html	+= "\n"		
 			else:
+				print( "preparing default page" )
 				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )
 
 		while True:
 			h = client_stream.readline()
+			print( h )
 			if h == b"" or h == b"\r\n":
-				break
-		
+				if br_count:
+					break
+				else:
+					print( "1 st line-break ignored" )
+					br_count	+= 1
+
+		print( "loop end" )
+		print( html )
+
+						
 		try:
 			client_stream.write( html )
 		except OSError as e:

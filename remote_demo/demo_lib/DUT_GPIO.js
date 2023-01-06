@@ -1,3 +1,13 @@
+function ajaxUpdate2( url, func ) {
+	url			= url + '?ver=' + new Date().getTime();
+	let	ajax	= new XMLHttpRequest;
+	ajax.open( 'GET', url, false );
+	ajax.onload = func;
+	ajax.send( null );
+}
+
+
+
 
 function updateRegField( idx ) {
 	let valueFieldElement = document.getElementById( "regField" + idx );
@@ -17,8 +27,15 @@ function updateRegField( idx ) {
 
 	setRegisterBits( idx, value )
 
-	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
+/*
+ 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
 	ajaxUpdate( url )
+*/
+	
+	let	ajax	= new XMLHttpRequest;
+	ajax.open( 'POST', DEV_NAME, false );
+	ajax.setRequestHeader( 'content-type', 'application/x-www-form-urlencoded;charset=UTF-8' );
+	ajax.send( "reg=" + idx + "&val=" + value );
 }
 
 function updateBitField( ri, bi ) {
