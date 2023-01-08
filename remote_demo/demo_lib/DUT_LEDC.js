@@ -56,8 +56,8 @@ function updateValField( id, i ) {
 	}
 }
 
-function updateDone() {
-	let obj = JSON.parse( this.responseText );
+function updateDone( data ) {
+	let obj = JSON.parse( data );
 	
 	if ( typeof obj.reg === 'undefined' )
 		setSliderAndRegisterlistValues( obj.val, "slider", obj.idx );
@@ -140,8 +140,8 @@ function allRegLoad() {
 	ajaxUpdate( url, allRegLoadDone );
 }
 
-function allRegLoadDone() {
-	let obj = JSON.parse( this.responseText );
+function allRegLoadDone( data ) {
+	let obj = JSON.parse( data );
 
 	for ( let i = 0; i < obj.reg.length; i++ ) {
 		setSliderAndRegisterlistValues( obj.reg[ i ], "register", i, allreg_loading = true )

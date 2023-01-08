@@ -17,8 +17,8 @@ const	getTimeAndShow	= (function () {
 	let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
 
 	return function() {
-		function done() {
-			let obj = JSON.parse( this.responseText );
+		function done( data ) {
+			let obj = JSON.parse( data );
 
 			let elem = document.getElementById( "datetime" );
 			elem.innerText = obj.datetime.str;
@@ -84,8 +84,8 @@ function updateRegField( idx ) {
 		return;
 
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
-	ajaxUpdate( url, () => {
-		obj = JSON.parse( this.responseText );		
+	ajaxUpdate( url, ( data ) => {
+		let obj = JSON.parse( data );
 		document.getElementById('regField' + obj.reg ).value	= hex( obj.val );
 	} )
 }

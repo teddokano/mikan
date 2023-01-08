@@ -1,7 +1,3 @@
-function done( t ) {
-	return JSON.parse( this.responseText );
-}
-
 let	temp_data	= {
 	time:[],
 	temp:[],
@@ -10,45 +6,50 @@ let	temp_data	= {
 	os:[],
 	heater:[],
 
-	getAndShow: function () {
-		obj	= getServerData();
+	getAndShow: function () {		
+		let	past	= pastSec();
+		let url		= REQ_HEADER + "update=" + (past + 1);
 		
-		console.log( obj );
+		ajaxUpdate( url, data => {
+			obj = JSON.parse( data );
 
-		obj.forEach( data => {
-			if ( this.time.includes( data.time ) )
-				return;
-			
-			this.time.push(   data.time   );
-			this.temp.push(   data.temp   );
-			this.tos.push(    data.tos    );
-			this.thyst.push(  data.thyst  );
-			this.os.push(     data.os     );
-			this.heater.push( data.heater );
-		});
-			
-		this.draw();
-		
-		if ( this ) {
-			let elem = document.getElementById( "temperature" );
-			elem.innerText = this.temp[ this.temp.length - 1 ].toFixed( 3 ) + '˚C';
-		}
-		
-		for ( let i = 0; i < TABLE_LEN; i++ )
-		{
-			document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-			
-			let	value	= this.temp.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-			
-			if ( !isNaN( value ) )
-				value	= value.toFixed( 3 );
+			console.log( obj );
+
+			obj.forEach( data => {
+				if ( this.time.includes( data.time ) )
+					return;
 				
-			document.getElementById( "tempField" + i ).value = value;
-		}
-		
-		document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
-		document.getElementById( "infoFieldValue1" ).value = this.time[ this.time.length - 1 ];
-		document.getElementById( "infoFieldValue2" ).value = this.time.length;
+				this.time.push(   data.time   );
+				this.temp.push(   data.temp   );
+				this.tos.push(    data.tos    );
+				this.thyst.push(  data.thyst  );
+				this.os.push(     data.os     );
+				this.heater.push( data.heater );
+			});
+				
+			this.draw();
+			
+			if ( this ) {
+				let elem = document.getElementById( "temperature" );
+				elem.innerText = this.temp[ this.temp.length - 1 ].toFixed( 3 ) + '˚C';
+			}
+			
+			for ( let i = 0; i < TABLE_LEN; i++ )
+			{
+				document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				
+				let	value	= this.temp.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				
+				if ( !isNaN( value ) )
+					value	= value.toFixed( 3 );
+					
+				document.getElementById( "tempField" + i ).value = value;
+			}
+			
+			document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
+			document.getElementById( "infoFieldValue1" ).value = this.time[ this.time.length - 1 ];
+			document.getElementById( "infoFieldValue2" ).value = this.time.length;
+		} );
 	},
 
 	draw: function () {
@@ -141,21 +142,6 @@ let	temp_data	= {
 	}
 }
 
-function getServerData() {
-	let obj;
-	let	past	= pastSec();
-	//console.log( past );
-	
-	let url	= REQ_HEADER + "update=" + (past + 1);
-	ajaxUpdate( url, done );
-
-	function done() {
-		obj = JSON.parse( this.responseText );
-	}
-	
-	return obj;
-}
-
 /****************************
  ****	temp display
  ****************************/
@@ -240,8 +226,8 @@ function setTosThyst() {
 
 /******** setTosThystDone ********/
 
-function setTosThystDone() {
-	let obj = JSON.parse( this.responseText );
+function setTosThystDone( data ) {
+	let obj = JSON.parse( data );
 }
 
 function setConfig() {
