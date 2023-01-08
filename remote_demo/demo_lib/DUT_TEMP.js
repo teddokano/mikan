@@ -13,8 +13,6 @@ let	temp_data	= {
 		ajaxUpdate( url, data => {
 			obj = JSON.parse( data );
 
-			console.log( obj );
-
 			obj.forEach( data => {
 				if ( this.time.includes( data.time ) )
 					return;

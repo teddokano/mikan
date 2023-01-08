@@ -5,7 +5,7 @@
 
 /******** ajaxUpdate ********/
 
-function ajaxUpdate_new( url, func ) {
+function ajaxUpdate( url, func ) {
 	url			= url + '?ver=' + new Date().getTime();
 	
 	fetch( url )
@@ -18,12 +18,7 @@ function ajaxUpdate_new( url, func ) {
 			return response.text();
 		} )
 		.then( ( data ) => {
-			if ( typeof func === "undefined" )
-				;	//	do nothing
-			else
-				console.log( "func = " + func )
-				console.log( "data = " + data )
-				func( data );
+			func && func( data );
 		} );
 }
 
