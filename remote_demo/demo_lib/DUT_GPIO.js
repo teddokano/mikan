@@ -18,7 +18,7 @@ function updateRegField( idx ) {
 	setRegisterBits( idx, value )
 
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
-	ajaxUpdate( url )
+	ajaxUpdate2( url )
 }
 
 function updateBitField( ri, bi ) {
@@ -40,8 +40,10 @@ let bf_reg		= [];
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
 	
-	ajaxUpdate( url, function (){
-		let obj = JSON.parse( this.responseText );
+	ajaxUpdate2( url, function ( data ){
+		
+		console.log( data );
+		let obj = JSON.parse( data );
 
 		bf_reg	= obj.bf_reg
 

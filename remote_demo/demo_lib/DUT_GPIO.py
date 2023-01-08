@@ -32,9 +32,9 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		if "?" not in req:
 			return self.page_setup()
 		elif "allreg" in req:
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump(), "bf_reg": self.bf_reg } )
+			return ujson.dumps( { "reg": self.dev.dump(), "bf_reg": self.bf_reg } )
 		elif "reglist" in req:
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reglist": self.dev.REG_LIST } )
+			return ujson.dumps( { "reglist": self.dev.REG_LIST } )
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
@@ -42,12 +42,9 @@ class DUT_GPIO( DUT_base.DUT_base ):
 				val	= int( m.group( 2 ) )
 				
 				self.dev.write_registers( self.dev.REG_LIST[ idx ][ "name" ], val )
-				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.REG_LIST[ idx ][ "idx" ], "val": val } )
+				return ujson.dumps( { "reg": self.dev.REG_LIST[ idx ][ "idx" ], "val": val } )
 			else:
-				return self.sending_data()
-
-	def sending_data( self ):
-		return 'HTTP/1.0 200 OK\n\n'
+				return ""
 
 	def page_setup( self ):
 		self.page_data[ "symbol"    ]	= self.symbol

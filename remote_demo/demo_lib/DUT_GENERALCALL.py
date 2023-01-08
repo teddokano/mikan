@@ -42,5 +42,5 @@ class DUT_GENERALCALL():
 			print( "********** General call: reprogram **********" )
 			self.dev.reprogram()
 
-		return 'HTTP/1.0 200 OK\n\n'	# dummy
+		return ''
 

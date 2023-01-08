@@ -79,7 +79,7 @@ class DUT_TEMP( DUT_base.DUT_base):
 			return	self.page_setup()
 		else:
 			#print( req )
-			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+			html	= ""	# dummy
 
 			m	= self.regex_update.match( req )
 			if m:
@@ -109,16 +109,9 @@ class DUT_TEMP( DUT_base.DUT_base):
 				return html
 
 	def sending_data( self, length ):
-		s	 = [ 'HTTP/1.0 200 OK\n\n' ]
-		s	+= [ ujson.dumps( self.data[ -length: ] ) ]
-
-		#	print( "length = {}, size = {}".format( length, len( "".join( s ) ) ) )
-
-		return "".join( s )
+		return ujson.dumps( self.data[ -length: ] )
 
 	def page_setup( self ):
-		html	= "HTTP/1.0 200 OK\n\n{% html %}"
-
 		self.page_data[ "symbol"    ]	= self.symbol
 		self.page_data[ "table_len" ]	= str( self.TABLE_LENGTH )
 		self.page_data[ "table"     ]	= self.get_table()

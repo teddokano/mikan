@@ -45,9 +45,9 @@ class DUT_LEDC( DUT_base.DUT_base ):
 			return	self.page_setup()
 
 		elif "allreg" in req:
-			return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+			return ujson.dumps( { "reg": self.dev.dump() } )
 		else:
-			html	= 'HTTP/1.0 200 OK\n\n'	# dummy
+			html	= ""	# dummy
 
 			m	= self.regex_pwm.match( req )
 			if m:
@@ -66,7 +66,7 @@ class DUT_LEDC( DUT_base.DUT_base ):
 				else:
 					pass
 
-				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "val": pwm, "idx": ch } )
+				return ujson.dumps( { "val": pwm, "idx": ch } )
 
 			m	= self.regex_reg.match( req )
 			if m:
@@ -76,7 +76,7 @@ class DUT_LEDC( DUT_base.DUT_base ):
 
 				self.dev.write_registers( reg, val )
 
-				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
+				return ujson.dumps( { "reg": reg, "val": val } )
 
 			m	= self.regex_grch.match( req )
 			if m:
@@ -88,7 +88,7 @@ class DUT_LEDC( DUT_base.DUT_base ):
 				for i, r in enumerate( obj[ "regs" ] ):
 					self.dev.write_registers( "RAMP_RATE_GRP{}".format( i ), r )
 					
-				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+				return ujson.dumps( { "reg": self.dev.dump() } )
 
 			m	= self.regex_grss.match( req )
 			if m:
@@ -110,7 +110,7 @@ class DUT_LEDC( DUT_base.DUT_base ):
 					if any( obj[ "grps" ] ):
 						self.dev.gradation_stop( obj[ "grps" ][ "0" ] )
 				
-				html	= 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": self.dev.dump() } )
+				html	= ujson.dumps( { "reg": self.dev.dump() } )
 
 	def page_setup( self ):
 		info	= self.dev.info()

@@ -121,7 +121,7 @@ def main( micropython_optimize = False ):
 			m	= regex_file.match( req )
 			if m and (fn	:= m.group( 1 ).decode()) and (fn in src_files):
 				with open( src_dir + fn, "r" ) as f:
-					html	 = "HTTP/1.0 200 OK\n\n" 
+					html	 = ""
 					html 	+= f.read()
 					html	+= "\n"		
 			else:
@@ -132,11 +132,8 @@ def main( micropython_optimize = False ):
 			if h == b"" or h == b"\r\n":
 				break
 		
-		try:
-			client_stream.write( html )
-		except OSError as e:
-			print( "!!! OSError:", e.args )
-		
+		send_response( client_stream, html )
+
 		client_stream.close()
 		if not micropython_optimize:
 			client_sock.close()
@@ -146,6 +143,12 @@ def main( micropython_optimize = False ):
 			print( gc.mem_alloc() / 1024 )
 
 		print()
+
+def send_response( stream, str ):
+	try:
+		stream.write( "HTTP/1.0 200 OK\n\n" + str )
+	except OSError as e:
+		print( "!!! OSError:", e.args )
 
 def get_dut_list( devices, demo_harnesses ):
 	list	= []

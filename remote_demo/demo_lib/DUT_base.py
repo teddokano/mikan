@@ -39,7 +39,7 @@ class DUT_base():
 		for key, value in self.page_data.items():
 			html = html.replace('{% ' + key + ' %}', value )
 		
-		return	"HTTP/1.0 200 OK\n\n" + html
+		return html
 	
 	def page_signature( self ):
 		return self.SIG.replace('{% mcu %}', os.uname().machine )

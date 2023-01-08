@@ -38,10 +38,10 @@ class DUT_RTC( DUT_base.DUT_base ):
 			return self.page_setup()
 		elif "set_current_time" in req:
 			self.dev.datetime( machine.RTC().datetime() )
-			return 'HTTP/1.0 200 OK\n\n'	# dummy
+			return ""	# dummy
 		elif "clear_alarm" in req:
 			self.dev.clear_alarm()
-			return 'HTTP/1.0 200 OK\n\n'	# dummy
+			return ""	# dummy
 		else:
 			m	= self.regex_reg.match( req )
 			if m:
@@ -49,7 +49,7 @@ class DUT_RTC( DUT_base.DUT_base ):
 				val	= int( m.group( 2 ) )
 
 				self.dev.write_registers( reg, val )
-				return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "reg": reg, "val": val } )
+				return ujson.dumps( { "reg": reg, "val": val } )
 
 			m	= self.regex_alarm.match( req )
 			if m:
@@ -63,7 +63,7 @@ class DUT_RTC( DUT_base.DUT_base ):
 				
 				self.dev.clear_alarm()
 				self.dev.alarm_int( None, **alarm_time )	#	No INT pin assertion to avoid other device (PCA9957-ARD)
-				return 'HTTP/1.0 200 OK\n\n'	# dummy
+				return ""	# dummy
 
 			m	= self.regex_pc_t.match( req )
 			if m:
@@ -76,7 +76,7 @@ class DUT_RTC( DUT_base.DUT_base ):
 						int( m.group( 6 ) ) 
 						)
 				self.dev.datetime( t )
-				return 'HTTP/1.0 200 OK\n\n'	# dummy
+				return ""	# dummy
 			else:
 				return self.sending_data()
 
@@ -99,7 +99,7 @@ class DUT_RTC( DUT_base.DUT_base ):
 							(td[ "year" ], td[ "month" ], td[ "day" ], td[ "weekday" ], \
 							td[ "hours" ], td[ "minutes" ], td[ "seconds" ] )
 		
-		return 'HTTP/1.0 200 OK\n\n' + ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm_flg": alarm_flg, "alarm": alarm } )
+		return ujson.dumps( { "datetime": td, "reg": reg, "ts": ts, "alarm_flg": alarm_flg, "alarm": alarm } )
 
 	def page_setup( self ):
 		self.page_data[ "symbol"    ]	= self.symbol

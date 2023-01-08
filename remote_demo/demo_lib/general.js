@@ -5,23 +5,27 @@
 
 /******** ajaxUpdate ********/
 
-function ajaxUpdateTrials( url, func, retry = 3 ) {
-	while ( retry-- ) {
-		let	errorFlag	= false;
-		try {
-			console.log( 'trying;' + retry );
-			ajaxHandling( url, func );		
-		} catch ( e ) {
-			console.log( e );
-			errorFlag	= true;
-		} finally {
-			if ( !errorFlag )
-				retry	= 0;
-		}
-	}
+function ajaxUpdate( url, func ) {
+	url			= url + '?ver=' + new Date().getTime();
+	
+	fetch( url )
+		.then( response => {
+		/*
+			console.log( "response.ok = " + response.ok )
+			console.log( "response.headers = " + response.ok )
+			console.log( "Content-Type = " + response.headers.get( "Content-Type" ) )
+		 */
+			return response.text();
+		} )
+		.then( function ( data ) {
+			if ( typeof func === "undefined" )
+				;	//	do nothing
+			else
+				func( data );
+		} );
 }
 
-function ajaxUpdate( url, func ) {
+function ajaxUpdate__OLD( url, func ) {
 	url			= url + '?ver=' + new Date().getTime();
 	let	ajax	= new XMLHttpRequest;
 	ajax.open( 'GET', url, false );
