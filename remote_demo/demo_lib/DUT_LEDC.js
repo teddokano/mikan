@@ -13,6 +13,7 @@ function updateSlider( moving, id, i ) {
 	}
 	
 	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
+	//console.log( 'moving = ' + moving + ', value = ' + value );
 	
 	if ( moving )
 		ajaxUpdate( url );

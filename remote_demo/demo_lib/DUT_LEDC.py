@@ -171,7 +171,7 @@ class DUT_LEDC( DUT_base.DUT_base ):
 		c		= { "R": "#FF0000", "G": "#008000", "B": "#0000FF", "K": "#000000" }
 		cs		= { "R": "item_R",  "G": "item_G",  "B": "item_B",  "K": "item_K"  }
 		template	= [	'<font color={}>{}</font>',
-						'<input type="range" oninput="updateSlider( 1, \'Slider\', {} )" onchange="updateSlider( 0, \'Slider\', {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider">',
+						'<input type="range" oninput="updateSlider( 1, \'Slider\', {} )" onmouseup="updateSlider( 0, \'Slider\', {} )" id="Slider{}" min="0" max="255" step="1" value="0" class="slider">',
 						'<input type="text" onchange="updateValField( \'valField\', {} )" id="valField{}" minlength=2 size=2 value="00">'
 						]
 
