@@ -123,9 +123,11 @@ def main( micropython_optimize = False ):
 				with open( src_dir + fn, "r" ) as f:
 					html	 = ""
 					html 	+= f.read()
-					html	+= "\n"		
+					html	+= "\n"
+			elif "GET / " in req:
+				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )			
 			else:
-				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )
+				html	= ""
 
 		while True:
 			h = client_stream.readline()

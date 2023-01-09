@@ -81,7 +81,7 @@ function updateRegField( idx ) {
 		return;
 
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
-	ajaxUpdate( url, ( data ) => {
+	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
 		document.getElementById('regField' + obj.reg ).value	= hex( obj.val );
 	} )

@@ -2,9 +2,6 @@
  ****	service routine
  ****************************/
  
-
-/******** ajaxUpdate ********/
-
 function ajaxUpdate( url, func ) {
 	url			= url + '?ver=' + new Date().getTime();
 	
@@ -20,14 +17,6 @@ function ajaxUpdate( url, func ) {
 		.then( ( data ) => {
 			func && func( data );
 		} );
-}
-
-function ajaxUpdate__OLD( url, func ) {
-	url			= url + '?ver=' + new Date().getTime();
-	let	ajax	= new XMLHttpRequest;
-	ajax.open( 'GET', url, false );
-	ajax.onload = func;
-	ajax.send( null );
 }
 
 function hex( num ) {

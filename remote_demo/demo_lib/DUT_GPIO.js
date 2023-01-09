@@ -40,7 +40,7 @@ let bf_reg		= [];
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
 	
-	ajaxUpdate( url, function ( data ){
+	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
 
 		bf_reg	= obj.bf_reg
@@ -80,7 +80,7 @@ let reg_list	= {};
 function getRegList() {
 	let url	= REQ_HEADER + 'reglist'
 	
-	ajaxUpdate( url, function (){
+	ajaxUpdate( url, () => {
 		let obj = JSON.parse( this.responseText );
 
 		obj.reglist.forEach( ( element, i ) => {

@@ -126,7 +126,7 @@ let	temp_data	= {
 		let str	= [];
 		let	len	= this.time.length;
 		
-		str	+= "time,temp,tos,thyst,os\n";
+		str	+= "time,temp,tos,thyst,os,heater\n";
 		for ( let i = 0; i < len; i++ ) {
 			str	+= this.time[ i ] + "," +  this.temp[ i ] + "," + this.tos[ i ] + "," + this.thyst[ i ] + "," + this.os[ i ] + "," + this.heater[ i ] + "\n";
 		}
@@ -219,13 +219,7 @@ function setTosThyst() {
 	let thyst	= parseFloat( valueFieldElementThyst.value );
 
 	let url	= REQ_HEADER + 'tos=' + tos.toFixed( 1 ) + '&thyst=' + thyst.toFixed( 1 );
-	ajaxUpdate( url, setTosThystDone );
-}
-
-/******** setTosThystDone ********/
-
-function setTosThystDone( data ) {
-	let obj = JSON.parse( data );
+	ajaxUpdate( url );
 }
 
 function setConfig() {
