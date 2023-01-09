@@ -145,7 +145,6 @@ function allRegLoad() {
 		 }
 	} );
 }
-
  
 window.addEventListener( 'load', function () {
 	allRegLoad();

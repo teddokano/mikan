@@ -17,7 +17,8 @@ const	getTimeAndShow	= (function () {
 	let prev_alarm_flg	= false;	//	to prevent error of retrying open the dialog
 
 	return function() {
-		function done( data ) {
+		let url	= REQ_HEADER;
+		ajaxUpdate( url, data => {
 			let obj = JSON.parse( data );
 
 			let elem = document.getElementById( "datetime" );
@@ -53,13 +54,9 @@ const	getTimeAndShow	= (function () {
 				else
 					console.log( 'Sound is not played' );
 			}
-		}
-
-		let url	= REQ_HEADER;
-		ajaxUpdate( url, done );
+		} );
 	}
 })();
-
 
 /****************************
  ****	register controls
