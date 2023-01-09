@@ -137,16 +137,15 @@ function index_register2slider( i ) {
 
 function allRegLoad() {
 	let url	= REQ_HEADER + 'allreg='
-	ajaxUpdate( url, allRegLoadDone );
+	ajaxUpdate( url, data => {
+		let obj = JSON.parse( data );
+
+		 for ( let i = 0; i < obj.reg.length; i++ ) {
+			 setSliderAndRegisterlistValues( obj.reg[ i ], "register", i, allreg_loading = true )
+		 }
+	} );
 }
 
-function allRegLoadDone( data ) {
-	let obj = JSON.parse( data );
-
-	for ( let i = 0; i < obj.reg.length; i++ ) {
-		setSliderAndRegisterlistValues( obj.reg[ i ], "register", i, allreg_loading = true )
-	}
-}
  
 window.addEventListener( 'load', function () {
 	allRegLoad();
