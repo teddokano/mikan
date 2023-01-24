@@ -25,6 +25,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 - Temperature sensor
 	- [LM75B](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/digital-temperature-sensor-and-thermal-watchdog:LM75B)
 	- [PCT2075](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/ic-bus-fm-plus-1-degree-c-accuracy-digital-temperature-sensor-and-thermal-watchdog:PCT2075)
+	- [P3T1085](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/i3c-ic-bus-0-5-c-accurate-digital-temperature-sensor:P3T1085UK) (I²C operation)
 - LED controller
 	- [PCA9632](https://www.nxp.com/products/power-management/lighting-driver-and-controller-ics/led-controllers/4-bit-fm-plus-ic-bus-low-power-led-driver:PCA9632) (PCA9633 compatible)
 	- [PCA9955B](https://www.nxp.com/products/power-management/lighting-driver-and-controller-ics/led-drivers/16-channel-fm-plus-ic-bus-57-ma-20-v-constant-current-led-driver:PCA9955BTW)
@@ -144,6 +145,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 ⏰|RTC_demo_PCF85063AT_ARD.py	| RTC PCF85063A operation | PCF85063A (PCF85063AT-ARD board)
 🌡️|temp_sensor_simple.py		| Simple temperature sensor operation | LM75B, PCT2075 (LM75B compatible devices)
 🌡️|temp_sensor_interrupt.py		| Demo for PCT2075DP-ARD operation | PCT2075 (PCT2075DP-ARD board)
+🌡️|temp_sensor_P3T1085.py		| Simple P3T1085UK-ARD operation | P3T1085 (P3T1085UK-ARD board)
+🌡️|temp_sensor_demo_P3T1085UK_ARB.py	| Demo for P3T1085UK-ARD operation | P3T1085 (P3T1085UK-ARD board)
 ↕|GPIO_demo.py               	| Simple operation for PCA9555	| PCA9555 (PCA9555 compatible devices)
 ↕|GPIO_demo_PCAL6xxx-ARD.py		| Demo for PCAL6xxx-ARD | PCAL6408, PCAL6416, PCAL6524, PCAL6534
 🔠|LCD_demo_PCA8561AHN-ARD.py	| PCA8561AHN-ARD.py | PCA8561
