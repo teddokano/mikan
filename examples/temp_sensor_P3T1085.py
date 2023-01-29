@@ -8,10 +8,12 @@ from	utime		import	sleep
 from	nxp_periph	import	P3T1085
 
 def main():
-	i2c			= SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
+	i2c			= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
 	temp_sensor	= P3T1085( i2c )
 
 	print( temp_sensor.info() )
+
+	thresholds		= temp_sensor.temp_setting( [ 33.5, 10 ] )
 
 	while True:
 		value	= temp_sensor.temp

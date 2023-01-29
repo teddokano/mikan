@@ -19,7 +19,7 @@ class DUT_base():
 		self.dev		= dev
 		self.type		= self.dev.__class__.__name__
 
-		if isinstance( self.interface, machine.I2C ):
+		if isinstance( self.interface, machine.I2C ) or isinstance( self.interface, machine.SoftI2C ):
 			self.address	= dev.__adr
 			self.dev_name	= self.type + "_on_I2C(0x%02X)" % (dev.__adr << 1)
 		else:

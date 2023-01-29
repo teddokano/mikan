@@ -17,14 +17,15 @@ def main():
 	int	= Pin( "D8", Pin.IN )
 	int.irq( trigger = Pin.IRQ_FALLING, handler = callback )
 
-	i2c	= SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
+	i2c	= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
 	temp_sensor	= P3T1085( i2c )
 
 	print( temp_sensor.info() )
 	temp_sensor.dump_reg()
 
 	current_temp	= temp_sensor.read()
-	thresholds		= temp_sensor.temp_setting( [ current_temp + 2.5, current_temp -2.5 ] )
+#	thresholds		= temp_sensor.temp_setting( [ current_temp + 2.5, current_temp -2.5 ] )
+	thresholds		= temp_sensor.temp_setting( [ 26, 24 ] )
 	t_hys	= thresholds[ 0 ]
 	t_ots	= thresholds[ 1 ]
 	conf	= temp_sensor.reg_access( "Conf" )

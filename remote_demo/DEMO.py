@@ -10,7 +10,7 @@ except:
     import socket
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
-from	nxp_periph	import	PCT2075, LM75B
+from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
 from	nxp_periph	import	i2c_fullscan
@@ -47,6 +47,10 @@ def main( micropython_optimize = False ):
 	pcal6534	= PCAL6534( i2c, 0x23, setup_EVB = True )
 #	pcf2131_spi	= PCF2131( spi )
 #	pcf85063	= PCF85063( i2c )
+
+	si2c		= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
+	p3t1085		= P3T1085( si2c )
+
 	
 	gene_call	= General_call( i2c )
 
@@ -65,6 +69,7 @@ def main( micropython_optimize = False ):
 						pcal6534, 
 #						pcf2131_spi,
 #						pcf85063,
+						p3t1085,
 						]
 	
 	demo_harnesses	= [	DUT_LEDC,
@@ -162,6 +167,11 @@ def get_dut_list( devices, demo_harnesses ):
 	
 		for dh in demo_harnesses:
 			if issubclass( dev.__class__, dh.APPLIED_TO ):
+				###
+				###
+				###
+				print( "dev={}, dh={}".format( dev.__class__, dh.APPLIED_TO ) )
+			
 				list	+= [ dh( dev ) ]
 
 	return list + [ last_dut ]

@@ -14,7 +14,8 @@ class DUT_TEMP( DUT_base.DUT_base):
 	GRAPH_LOW		= 20
 
 	DS_URL		= { "PCT2075": "https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf",
-					"LM75B": "https://www.nxp.com/docs/en/data-sheet/LM75B.pdf",
+					"LM75B"  : "https://www.nxp.com/docs/en/data-sheet/LM75B.pdf",
+					"P3T1085": "https://www.nxp.com.cn/docs/en/data-sheet/P3T1085UKDS.pdf",
 					}
 
 	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )
@@ -22,8 +23,9 @@ class DUT_TEMP( DUT_base.DUT_base):
 	regex_mode		= ure.compile( r".*os_polarity=(\d+)&os_mode=(\d+)" )
 	regex_update	= ure.compile( r".*update=(\d+)" )
 
-	def __init__( self, dev, timer = 0, sampling_interbal = 1.0 ):
+	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
+		
 		self.data		= []
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
@@ -33,6 +35,8 @@ class DUT_TEMP( DUT_base.DUT_base):
 			tp	= self.dev.temp
 		else:
 			tp	= 25	#	default value when device is not responding
+			print( "NOT responding" )
+			return
 
 		self.GRAPH_HIGH		= int( tp + 6 )
 		self.GRAPH_LOW		= self.GRAPH_HIGH - 10
@@ -40,14 +44,22 @@ class DUT_TEMP( DUT_base.DUT_base):
 		self.tos		= int( (tp + 2) * 2 ) / 2
 		self.thyst		= int( (tp + 1) * 2 ) / 2
 
+		print( "#####################################" )
+		print( self.dev.info() )
+		print( "#####################################" )
+
 		self.dev.temp_setting( [ self.tos, self.thyst ] )
 
-		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
-		self.dev.heater	= 0
+		conf	= self.dev.reg_access( "Conf" )
+		self.dev.reg_access( "Conf", conf & ~0x0400 )
+		self.dev.dump_reg()
+
+#		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
+#		self.dev.heater	= 0
 
 		if self.dev.live:
 			tim0	= machine.Timer( timer )
-			tim0.init( period = int( sampling_interbal * 1000.0 ), callback = self.tim_cb )
+			tim0.init( period = int( sampling_interval * 1000.0 ), callback = self.tim_cb )
 
 	def tmp_data( self ):
 		d	= {}
@@ -59,7 +71,15 @@ class DUT_TEMP( DUT_base.DUT_base):
 		d[ "thyst"  ]	= self.thyst
 		d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
 		d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
+	
+		###
+		###
+		###
 		
+		print( "conf = 0x{:04X}".format( self.dev.reg_access( "Conf" ) ) )
+		print( "temp = {}".format( d[ "temp" ] ) )
+		self.dev.dump_reg()
+
 		return d
 
 	def tim_cb( self, tim_obj ):
