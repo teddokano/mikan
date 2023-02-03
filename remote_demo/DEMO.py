@@ -167,11 +167,6 @@ def get_dut_list( devices, demo_harnesses ):
 	
 		for dh in demo_harnesses:
 			if issubclass( dev.__class__, dh.APPLIED_TO ):
-				###
-				###
-				###
-				print( "dev={}, dh={}".format( dev.__class__, dh.APPLIED_TO ) )
-			
 				list	+= [ dh( dev ) ]
 
 	return list + [ last_dut ]
@@ -262,7 +257,6 @@ def page_table( dut_list, live_only = False ):
 
 def i2c_scan_table( i2c ):
 	scan_result	= i2c_fullscan( i2c )
-	print( scan_result )
 	s	 = [ '<table>' ]
 	s	+= [ '<tr>' ]
 	s	+= [ '<td class="table_header">0x</td>' ]

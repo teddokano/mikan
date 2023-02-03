@@ -21,7 +21,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 
 	def __init__( self, dev ):
 		super().__init__( dev )
-		self.info		= [ "General Purpose IO expander", "" ]
+		self.info		= [ "General Purpose IO expander", "{}ch".format( self.dev.N_BITS ) ]
 		self.symbol		= '↕'
 		
 
