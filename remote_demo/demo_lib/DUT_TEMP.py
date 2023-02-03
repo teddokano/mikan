@@ -2,7 +2,7 @@ import	machine
 import	ure
 import	ujson
 
-from	nxp_periph	import	PCT2075, LM75B
+from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	temp_sensor_base
 from	demo_lib	import	DUT_base
 
@@ -44,19 +44,20 @@ class DUT_TEMP( DUT_base.DUT_base):
 		self.tos		= int( (tp + 2) * 2 ) / 2
 		self.thyst		= int( (tp + 1) * 2 ) / 2
 
-		print( "#####################################" )
-		print( self.dev.info() )
-		print( "#####################################" )
-
 		self.dev.temp_setting( [ self.tos, self.thyst ] )
 
-		conf	= self.dev.reg_access( "Conf" )
-		self.dev.reg_access( "Conf", conf & ~0x0400 )
-		self.dev.dump_reg()
-
-#		self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
-#		self.dev.heater	= 0
-
+		if isinstance( self.dev, P3T1085 ):
+			conf	= self.dev.reg_access( "Conf" )
+			self.dev.reg_access( "Conf", conf & ~0x0400 )
+			self.int_pin	= machine.Pin( "D8", machine.Pin.IN  )
+			self.dev.heater	= 0
+		elif isinstance( self.dev, PCT2075 ):
+			self.int_pin	= machine.Pin( "D2", machine.Pin.IN  )
+			self.dev.heater	= 0
+		else:
+			self.int_pin	= None
+			self.dev.heater	= 0
+		
 		if self.dev.live:
 			tim0	= machine.Timer( timer )
 			tim0.init( period = int( sampling_interval * 1000.0 ), callback = self.tim_cb )
@@ -72,14 +73,6 @@ class DUT_TEMP( DUT_base.DUT_base):
 		d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
 		d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
 	
-		###
-		###
-		###
-		
-		print( "conf = 0x{:04X}".format( self.dev.reg_access( "Conf" ) ) )
-		print( "temp = {}".format( d[ "temp" ] ) )
-		self.dev.dump_reg()
-
 		return d
 
 	def tim_cb( self, tim_obj ):
