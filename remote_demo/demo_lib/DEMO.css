@@ -20,7 +20,26 @@ div {
 	border: solid 1px #EEEEEE;
 	text-align: center;
 	font-size: 1.5rem;
+	padding: 0px;
+	height: 90px;
+}
+.header_txt {
+	border: none;
+	text-align: center;
+	float: center;
+	font-size: 1.5rem;
 	padding: 1.0rem;
+	margin: 0px auto;
+	width:400px;
+	height: 80px;
+}
+.header_img {
+	border: none;
+	float: left;
+	margin: auto auto;
+}
+img.logo {
+	height: 80px;
 }
 table {
 	background-color: #FFFFFF;
