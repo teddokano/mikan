@@ -27,7 +27,6 @@ def main( micropython_optimize = False ):
 	print( "" )
 	
 	src_dir		= "demo_lib/"
-	src_files	= os.listdir( src_dir )
 	regex_file	= ure.compile( r"GET /(\S+)\sHTTP" )
 
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
@@ -124,11 +123,15 @@ def main( micropython_optimize = False ):
 
 		if not html:
 			m	= regex_file.match( req )
-			if m and (fn	:= m.group( 1 ).decode()) and (fn in src_files):
-				with open( src_dir + fn, "r" ) as f:
-					html	 = ""
-					html 	+= f.read()
-					html	+= "\n"
+			if m and (fn	:= m.group( 1 ).decode()):
+				try:
+					with open( src_dir + fn, "r" ) as f:
+						html	 = ""
+						html 	+= f.read()
+						html	+= "\n"
+				except OSError as e:
+					html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
+			
 			elif "GET / " in req:
 				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )			
 			else:
