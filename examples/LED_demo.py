@@ -9,8 +9,9 @@ def main():
 	print( "Demo is running on {}".format( os.uname().machine ) )
 
 	i2c		= I2C( 0, freq = (400 * 1000) )
-	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
-#	led_c	= PCA9955B( i2c, 0x02 >>1, iref = IREF_INIT )
+#	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
+#	led_c	= PCA9955B( i2c, 0x06 >>1, iref = IREF_INIT )
+	led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT, setup_EVB = True )
 #	led_c	= PCA9632( i2c )
 
 	"""

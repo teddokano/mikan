@@ -418,7 +418,7 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 	PWM_INIT			= 0x00
 	IREF_INIT			= 0x10
 
-	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT, iref = IREF_INIT, current_control = False ):
+	def __init__( self, i2c, address = DEFAULT_ADDR, pwm = PWM_INIT, iref = IREF_INIT, current_control = False, setup_EVB = False ):
 		"""
 		PCA995xB_base initializer
 	
@@ -438,6 +438,9 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 		I2C_target.__init__( self, i2c, address, auto_increment_flag = self.AUTO_INCREMENT )
 		LED_controller_base.__init__( self, init_val = iref if current_control else pwm )
 		
+		if setup_EVB:
+			self.__setup_EVB()
+			
 		self.__pwm_base		= self.REG_NAME.index( "IREF0" if current_control else "PWM0"  )
 		self.__iref_base	= self.REG_NAME.index( "PWM0"  if current_control else "IREF0" )
 		
@@ -449,6 +452,20 @@ class PCA995xB_base( LED_controller_base, I2C_target ):
 					
 		for r, v in init.items():	#	don't care: register access order
 			self.write_registers( r, v )
+
+	def __setup_EVB( self ):
+		"""
+		setting up RESET and OE pins on PCA9957HN_ARD evaluation board
+		"""
+		from machine import Pin
+		print( "PCA995xBTW_ARD setting done." )
+		
+		#### Be careful. A bug in schematic. RESET and OE pin are swapped at U2 (PCA9955BTW)
+		#### The "oe" and "rst" are intentionally swapped in this code
+		oe	= Pin( "D8", Pin.OUT )
+		rst	= Pin( "D9", Pin.OUT )
+		rst.value( 1 )
+		oe.value( 0 )
 
 	def iref( self, *args ):
 		"""
