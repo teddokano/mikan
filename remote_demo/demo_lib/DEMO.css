@@ -8,6 +8,14 @@ body {
 	font-size: 1.0rem;
 	font-color: #000000;
 	vertical-align: middle;
+
+	background-image: url(img/mikan.jpg);
+	background-position: 110% -10%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 33%;
+	background-color: #FFFFFF;
+	opacity: 0.95;
 }
 div {
 	border: solid 1px #EEEEEE;
