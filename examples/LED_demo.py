@@ -9,9 +9,9 @@ def main():
 	print( "Demo is running on {}".format( os.uname().machine ) )
 
 	i2c		= I2C( 0, freq = (400 * 1000) )
-#	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
+	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
 #	led_c	= PCA9955B( i2c, 0x06 >>1, iref = IREF_INIT )
-	led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT, setup_EVB = True )
+#	led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT, setup_EVB = True )
 #	led_c	= PCA9632( i2c )
 
 	"""
@@ -34,6 +34,10 @@ def main():
 	elif "PCA9955B" in led_c.info():
 		color_led_idx	= ( ( 1, 2, 3 ), ( 5, 6, 7 ), ( 9, 10, 11 ), ( 13, 14, 15 ) )
 		white_led_idx	= ( 0, 4, 8, 12 )
+		
+		#### followings are LED configurations for PCA9955BTW-ARD
+		#	color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ) )
+		#	white_led_idx	= ( 9, 10, 11, 12, 13, 14 )
 	elif "PCA9632" in led_c.info():
 		color_led_idx	= ( ( 0, 1, 2 ), )
 		white_led_idx	= ( 3, )
