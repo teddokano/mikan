@@ -31,44 +31,25 @@ def main( micropython_optimize = False ):
 
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
-
-	pca9956b_0	= PCA9956B( i2c, 0x02 >>1 )
-	pca9956b_1	= PCA9956B( i2c, 0x04 >>1 )
-	pca9955b_0	= PCA9955B( i2c, 0x06 >>1 )
-	pca9955b_1	= PCA9955B( i2c, 0x08 >>1 )
-	pca9632		= PCA9632( i2c )
-	pca9957		= PCA9957( spi, setup_EVB = True )
-	pct2075		= PCT2075( i2c, setup_EVB = True  )
-	pcf2131_i2c	= PCF2131( i2c )
-#	pcal6408	= PCAL6408( i2c, 0x21, setup_EVB = True )
-#	pcal6416	= PCAL6416( i2c, 0x20, setup_EVB = True )
-#	pcal6524	= PCAL6524( i2c, 0x22, setup_EVB = True )
-#	pcal6534	= PCAL6534( i2c, 0x23, setup_EVB = True )
-#	pcf2131_spi	= PCF2131( spi )
-#	pcf85063	= PCF85063( i2c )
-
 	si2c		= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
-	p3t1085		= P3T1085( si2c )
-
 	
-	gene_call	= General_call( i2c )
-
-	devices			= [	pca9956b_0,
-						pca9956b_1,
-						pca9955b_0,
-						pca9955b_1,
-						gene_call,
-						pca9957,
-						pca9632,
-						pct2075,
-						pcf2131_i2c,
-#						pcal6408, 
-#						pcal6416, 
-#						pcal6524, 
-#						pcal6534, 
-#						pcf2131_spi,
-#						pcf85063,
-						p3t1085,
+	devices			= [
+						PCA9956B( i2c, 0x02 >>1 ),
+						PCA9956B( i2c, 0x04 >>1 ),
+						PCA9955B( i2c, 0x06 >>1 ),
+						PCA9955B( i2c, 0x08 >>1 ),
+						PCA9632( i2c ),
+						PCA9957( spi, setup_EVB = True ),
+						PCT2075( i2c, setup_EVB = True  ),
+						PCF2131( i2c ),
+#						PCAL6408( i2c, 0x21, setup_EVB = True ),
+#						PCAL6416( i2c, 0x20, setup_EVB = True ),
+#						PCAL6524( i2c, 0x22, setup_EVB = True ),
+#						PCAL6534( i2c, 0x23, setup_EVB = True ),
+#						PCF2131( spi ),
+#						PCF85063( i2c ),
+						P3T1085( si2c ),
+						General_call( i2c ),
 						]
 	
 	demo_harnesses	= [	DUT_LEDC,
