@@ -1,6 +1,7 @@
 import	machine
 import	ure
 import	ujson
+import	micropython
 
 from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	temp_sensor_base
@@ -26,6 +27,7 @@ class DUT_TEMP( DUT_base.DUT_base):
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
 		
+		self.read_ref	= self.__read
 		self.data		= []
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
@@ -75,14 +77,18 @@ class DUT_TEMP( DUT_base.DUT_base):
 	
 		return d
 
-	def tim_cb( self, tim_obj ):
+	def tim_cb( self, _ ):
+		micropython.schedule( self.read_ref, 0 )	
+		# https://docs.micropython.org/en/latest/reference/isr_rules.html#creation-of-python-objects
+
+	def __read( self, _ ):
 		self.data	+= [ self.tmp_data() ]
 
 		over	= len( self.data ) - self.SAMPLE_LENGTH
 		if  0 < over:
 			self.data	= self.data[ over : ]
 
-		#print( "sampled: {} @ {}".format( tp, tm ) )
+		# print( "sampled: {}".format( self.data[ -1 ] ) )
 
 	def parse( self, req ):
 		if self.dev_name not in req:
