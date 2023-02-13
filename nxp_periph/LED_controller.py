@@ -98,7 +98,7 @@ class LED_controller_base:
 		
 		I2C transfer will be done each time of this method call. 
 		So pwm() method call will change brightness of LED immediately. 
-		How ever, the I2C bandwidth will be wasted if there are too many calls 
+		However, the I2C bandwidth will be wasted if there are too many calls 
 		for single output channel operations. 
 		To improve bandwidth efficiency, buffer&flash operation can be done. 
 		See buf() method description. 
