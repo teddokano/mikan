@@ -7,8 +7,8 @@ from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	temp_sensor_base
 from	demo_lib	import	DUT_base
 
+TEMP_SENSOR_REACTIVE_MODE	= True	# Default: To operate multiple I2C devices on same bus
 #TEMP_SENSOR_REACTIVE_MODE	= False	# If only one device is connected on same I2C bus
-TEMP_SENSOR_REACTIVE_MODE	= True	# If only one device is connected on same I2C bus
 
 class DUT_TEMP( DUT_base.DUT_base ):
 	APPLIED_TO		= temp_sensor_base
