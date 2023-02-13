@@ -7,7 +7,10 @@ from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	temp_sensor_base
 from	demo_lib	import	DUT_base
 
-class DUT_TEMP( DUT_base.DUT_base):
+TEMP_SENSOR_REACTIVE_MODE	= True	# Default: To operate multiple I2C devices on same bus
+#TEMP_SENSOR_REACTIVE_MODE	= False	# If only one device is connected on same I2C bus
+
+class DUT_TEMP( DUT_base.DUT_base ):
 	APPLIED_TO		= temp_sensor_base
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 60
@@ -32,6 +35,8 @@ class DUT_TEMP( DUT_base.DUT_base):
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "temp sensor", "" ]
 		self.symbol		= '🌡️'
+
+		self.reactive_mode	= TEMP_SENSOR_REACTIVE_MODE
 
 		if self.dev.ping():
 			tp	= self.dev.temp
@@ -60,7 +65,7 @@ class DUT_TEMP( DUT_base.DUT_base):
 			self.int_pin	= None
 			self.dev.heater	= 0
 		
-		if self.dev.live:
+		if self.dev.live and not self.reactive_mode:
 			tim0	= machine.Timer( timer )
 			tim0.init( period = int( sampling_interval * 1000.0 ), callback = self.tim_cb )
 
@@ -102,6 +107,9 @@ class DUT_TEMP( DUT_base.DUT_base):
 
 			m	= self.regex_update.match( req )
 			if m:
+				if self.reactive_mode:
+					self.__read( 0 )	# argument is dummy
+				
 				return self.sending_data( int( m.group( 1 ) ) )
 
 			m	= self.regex_thresh.match( req )
