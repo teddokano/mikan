@@ -136,23 +136,24 @@ It shows simple usage examples for the drivers and standalome demo for target de
 
 ?|File name|Description|Device type
 ---|---|---|---
-💡|LED_controller.py			| Most simple LED controller operation	| PCA9632, PCA9955B, PCA9956B, PCA9957
-💡|LED_instance.py				| Sample for LED class library to abstract LEDs from LED controller devices | Any LED controllers
-💡|LED_demo.py  				| Demo code for LED class library to gether LED by colors | Any LED controllers
-💡|LED_demo_dual_om13321.py		| Demo code to operate multiple LED controllers | PCA9956B (for OM13321 evaluation boards)
-💡|LED_gradation_ctrl.py		| Sample to operate gradation control feature | PCA9955B, PCA9957
-⏰|RTC_demo_PCF2131_ARD.py		| RTC PCF2131 operation | PCF2131 (PCF2131-ARD board)
-⏰|RTC_demo_PCF85063AT_ARD.py	| RTC PCF85063A operation | PCF85063A (PCF85063AT-ARD board)
-🌡️|temp_sensor_simple.py		| Simple temperature sensor operation | LM75B, PCT2075 (LM75B compatible devices)
-🌡️|temp_sensor_interrupt.py		| Demo for PCT2075DP-ARD operation | PCT2075 (PCT2075DP-ARD board)
-🌡️|temp_sensor_P3T1085.py		| Simple P3T1085UK-ARD operation | P3T1085 (P3T1085UK-ARD board)
-🌡️|temp_sensor_demo_P3T1085UK_ARB.py	| Demo for P3T1085UK-ARD operation | P3T1085 (P3T1085UK-ARD board)
-↕|GPIO_demo.py               	| Simple operation for PCA9555	| PCA9555 (PCA9555 compatible devices)
-↕|GPIO_demo_PCAL6xxx-ARD.py		| Demo for PCAL6xxx-ARD | PCAL6408, PCAL6416, PCAL6524, PCAL6534
-🔠|LCD_demo_PCA8561AHN-ARD.py	| PCA8561AHN-ARD.py | PCA8561
-🔄|stepper_motor_simple.py		| Simple operation for PCA9629A	| PCA9629A
-💁|protocol_bridge_SC16IS7xx.py | Simple operation for SC16IS7xx | SC16IS7xx
-💁|protocol_bridge_SC18IS606_with_AT25010.py | Accessing EEPROM through SC18IS606 | SC18IS606
+💡|LED_controller.py						|Simple sample: making an LED_controller instance and how PWM can be controlled										|PCA9955B, PCA9956B, PCA9957, PCA9632
+💡|LED_gradation_ctrl.py					|Gradation control (hardware) feature demo																						|PCA9955B, PCA9957
+💡|LED_instance.py							|Using another class to abstract LED controllers																	|PCA9955B, PCA9956B, PCA9957
+💡|LED_demo.py								|Showing idea to use ‘LED class’ to manage LED and white LED individually											|PCA9955B, PCA9956B, PCA9957, PCA9632
+💡|LED_demo_dual_om13321.py					|Showing idea to use ‘LED class’ to manage multiple LED controller devices											|PCA9956B
+⏰|RTC_demo_PCF2131_ARD.py					|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines						|PCF2131
+⏰|RTC_demo_PCF85063AT_ARD.py				|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 												|PCF85063
+🌡️|temp_sensor_simple.py					|Very simple sample to operate a temp sensor																		|LM75B, PCT2075
+🌡️|temp_sensor_demo_PCT2075DP_ARB.py		|Operate with interrupt and heater-resister on ARD board															|PCT2075
+🌡️|temp_sensor_P3T1085.py					|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1085
+🌡️|temp_sensor_demo_P3T1085UK_ARB.py		|Similar to “temp_sensor_demo_PCT2075DP_ARB.py” but no heater operation												|P3T1085
+↕|GPIO_demo.py								|Operation sample of a PCA9555 API																					|PCA9555
+↕|GPIO_demo_PCAL6xxxA-ARD.py				|Operation sample of a PCAL6xxx ARD board. Using interrupt															|PCAL6408, PCAL6416, PCAL6524, PCAL6534
+🔠|LCD_demo_PCA8561AHN-ARD.py				|Shows direct ON/OFF of segments and using  putc(), puts() methods													|PCA8561
+💁|protocol_bridge_SC16IS7xx.py				|Operate an I²C/SPI to UART protocol bridge through MicroPython’s machine.UART equivalent APIs. 					|SC16IS7xx
+💁|protocol_bridge_SC18IS606_with_AT25010.py|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
+🔄|stepper_motor_simple.py					|Operating stepping motor with simple API																			|PCA9629A
+🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
 
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
