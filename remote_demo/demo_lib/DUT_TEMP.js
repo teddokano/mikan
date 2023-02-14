@@ -5,6 +5,7 @@ let	temp_data	= {
 	thyst:[],
 	os:[],
 	heater:[],
+	chart: undefined,
 
 	getAndShow: function () {		
 		let	past	= pastSec();
@@ -51,8 +52,14 @@ let	temp_data	= {
 	},
 
 	draw: function () {
-		var ctx = document.getElementById("myLineChart");
-		window.myLineChart = new Chart(ctx, {
+		let	ctx = document.getElementById("myLineChart");
+
+		if ( this.chart ) {
+			this.chart.destroy();
+		}
+
+		this.chart = new Chart( ctx, {
+		
 			type: 'line',
 			data: {
 				labels: this.time,
