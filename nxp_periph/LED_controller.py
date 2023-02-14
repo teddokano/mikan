@@ -15,7 +15,8 @@ class LED():
 	
 		Parameters
 		----------
-		controller	: machine.I2C instance
+		controller	: instance
+			based on LED_controller_base
 		channel		: int
 			Output channel
 
