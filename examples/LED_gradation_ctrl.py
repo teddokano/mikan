@@ -1,7 +1,7 @@
 from	machine	import	Pin, I2C, SoftSPI, SPI
 from	utime	import	sleep
 
-from	nxp_periph	import	PCA9956B, PCA9955B, PCA9957
+from	nxp_periph	import	PCA9955B, PCA9957
 
 #USE_PCA9955B	= True
 USE_PCA9955B	= False
