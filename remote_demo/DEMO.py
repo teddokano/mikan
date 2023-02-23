@@ -45,7 +45,7 @@ def main( micropython_optimize = False ):
 #						PCAL6408( i2c, 0x21, setup_EVB = True ),
 #						PCAL6416( i2c, 0x20, setup_EVB = True ),
 #						PCAL6524( i2c, 0x22, setup_EVB = True ),
-#						PCAL6534( i2c, 0x23, setup_EVB = True ),
+						PCAL6534( i2c, 0x23, setup_EVB = True ),
 #						PCF2131( spi ),
 #						PCF85063( i2c ),
 						P3T1085( si2c ),
@@ -68,6 +68,7 @@ def main( micropython_optimize = False ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
 	
 	ip_info	= start_network()
+#	print( ip_info )
 
 	s = socket.socket()
 
@@ -76,11 +77,8 @@ def main( micropython_optimize = False ):
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
-#	s.listen( 1 )
 	s.listen( 5 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
-
-	count	= 0
 
 	while True:
 		res = s.accept()
@@ -159,7 +157,11 @@ def get_dut_list( devices, demo_harnesses ):
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
 
-	lan = network.LAN( port )
+	try:
+		lan = network.LAN( port )
+	except OSError as e:
+		error_loop( 2, "Check LAN cable connection. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
+		
 	lan.active( True )
 
 	print( "ethernet port %d is activated" % port )
@@ -260,5 +262,21 @@ def i2c_scan_table( i2c ):
 	s	+= [ '</table>' ]
 
 	return "\n".join( s )
+
+from utime import sleep
+
+def error_loop( n, message ):
+	led		= machine.Pin( "D4", machine.Pin.OUT )
+	pattern	= [ 0, 1 ] * n + [ 1 ] * 4
+	
+	for i in range( 3 ):
+		print( "**** ERROR ****" )
+		
+	print( message )
+		
+	while True:
+		for p in pattern:
+			led.value( p )
+			sleep( 0.1 )
 
 main( micropython_optimize = True )
