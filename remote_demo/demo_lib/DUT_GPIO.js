@@ -55,10 +55,7 @@ function allRegLoad() {
 				elem.value	= hex( v );
 				setRegisterBits( i, v, pv )
 				
-				elem.style.border = "solid 1px #FF0000";
-				setTimeout( e => {
-					e.style.border = "solid 1px #FFFFFF";
-				}, 1000, elem )
+				highlight( elem );
 			}
 		}
 		prev_reg	= obj.reg;
@@ -66,7 +63,7 @@ function allRegLoad() {
 }
 
 function setRegisterBits( ri, v, pv ) {
-	if ( bf_reg.includes( ri ) )
+	if ( bf_reg.includes( ri ) ) {
 		for ( let i = 7; 0 <= i; i-- )
 		{
 			b_v		= ( v >> i) & 0x1;
@@ -74,14 +71,19 @@ function setRegisterBits( ri, v, pv ) {
 			
 			if ( b_v != b_pv ) {
 				elem		= document.getElementById('bitField' + ri + '-' + i );
-				elem.value	= b_v ? 1 : 0;
+				elem.value	= b_v;
 
-				elem.style.border = "solid 1px #FF0000";
-				setTimeout( e => {
-					e.style.border = "solid 1px #FFFFFF";
-				}, 1000, elem )
+				highlight( elem );
 			}
 		}
+	}
+}
+
+function highlight( elem ) {
+	elem.style.border = "solid 1px #FF0000";
+	setTimeout( e => {
+		e.style.border = "solid 1px #FFFFFF";
+	}, 1000, elem )	
 }
 
 let	intervalTimer;
@@ -89,14 +91,11 @@ function AutoReloadSwitch() {
 	let autoReloadSwitchElement	= document.getElementById( "AutoReloadSwitch" );
 	var elem = Array.from( document.getElementsByClassName( "reg_table_val" ) );
 	
-	console.log( elem );
-	elem.forEach( e => console.log( e ) );
-	
 	if ( autoReloadSwitchElement.checked ) {
-		elem.forEach( e => console.log( e.style.border = "solid 1px #8080FF" ) );
+		elem.forEach( e => e.style.border = "solid 1px #8080FF" );
 		intervalTimer	= setInterval( allRegLoad, 200 );
 	} else {
-		elem.forEach( e => console.log( e.style.border = "solid 1px #FFFFFF" ) );
+		elem.forEach( e => e.style.border = "solid 1px #FFFFFF" );
 		clearInterval( intervalTimer );
 	}
 }
