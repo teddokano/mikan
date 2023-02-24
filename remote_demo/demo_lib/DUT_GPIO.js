@@ -48,23 +48,39 @@ function allRegLoad() {
 		for ( let i = 0; i < obj.reg.length; i++ ) {
 			let v		= obj.reg[ i ];
 			let elem	= document.getElementById('regField' + i );
+			let pv		= prev_reg[ i ];
 			
-			if ( prev_reg[ i ] != v ) {
-				elem.style.border = "solid 1px #FF0000";
+			if ( pv != v ) {
 				elem.value	= hex( v );
-				setRegisterBits( i, v )
-			} else {
-				elem.style.border = "solid 1px #FFFFFF";
+				setRegisterBits( i, v, pv )
+				
+				elem.style.border = "solid 1px #FF0000";
+				setTimeout( e => {
+					e.style.border = "solid 1px #FFFFFF";
+				}, 1000, elem )
 			}
 		}
 		prev_reg	= obj.reg;
 	} );
 }
 
-function setRegisterBits( ri, v ) {
+function setRegisterBits( ri, v, pv ) {
 	if ( bf_reg.includes( ri ) )
 		for ( let i = 7; 0 <= i; i-- )
-			document.getElementById('bitField' + ri + '-' + i ).value	= (v >> i) & 0x1;
+		{
+			b_v		= ( v >> i) & 0x1;
+			b_pv	= (pv >> i) & 0x1;
+			
+			if ( b_v != b_pv ) {
+				elem		= document.getElementById('bitField' + ri + '-' + i );
+				elem.value	= b_v ? 1 : 0;
+
+				elem.style.border = "solid 1px #FF0000";
+				setTimeout( e => {
+					e.style.border = "solid 1px #FFFFFF";
+				}, 1000, elem )
+			}
+		}
 }
 
 let	intervalTimer;

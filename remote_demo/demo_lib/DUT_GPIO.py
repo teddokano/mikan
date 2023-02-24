@@ -106,7 +106,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 				
 				for i in range( 8 ):
 					bi	= 7 - i
-					s	+= [ '<td class="td_GPIO_BF_{}{} reg_table_val"><input type="text" onchange="updateBitField( {}, {} )" id="bitField{}-{}" minlength=1 size=1 value="-" class="regfield"></td>'.format( n % 2, i // 4, ri, bi, ri, bi ) ]
+					s	+= [ '<td class="td_GPIO_BF_{}{} reg_table_val"><input type="text" onchange="updateBitField( {}, {} )" id="bitField{}-{}" minlength=1 size=1 value="0" class="regfield"></td>'.format( n % 2, i // 4, ri, bi, ri, bi ) ]
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
