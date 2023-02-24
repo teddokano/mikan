@@ -42,7 +42,7 @@ class DUT_TEMP( DUT_base.DUT_base ):
 			tp	= self.dev.temp
 		else:
 			tp	= 25	#	default value when device is not responding
-			print( "NOT responding" )
+			#print( "NOT responding" )
 			return
 
 		self.GRAPH_HIGH		= int( tp + 6 )

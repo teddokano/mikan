@@ -163,10 +163,14 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 		error_loop( 2, "Check LAN cable connection. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
 		
 	lan.active( True )
-
 	print( "ethernet port %d is activated" % port )
 
-	lan.ifconfig( ifcnfg_param )
+	try:
+		lan.ifconfig( ifcnfg_param )
+	except OSError as e:
+		error_loop( 3, "Can't get/set IP address. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
+		
+
 	return lan.ifconfig()
 
 class DEMO( DUT_base ):
