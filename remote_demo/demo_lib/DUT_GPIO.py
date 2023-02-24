@@ -65,7 +65,7 @@ class DUT_GPIO( DUT_base.DUT_base ):
 				ri	= self.dev.REG_LIST[ i ][ "idx" ]
 				rn	= self.dev.REG_LIST[ i ][ "name" ]
 
-				s	+= [ '<td class="td_GPIO reg_table_name">{}</td><td class="td_GPIO reg_table_val">0x{:02X}</td>'.format( rn, ri ) ]
+				s	+= [ '<td class="td_GPIO reg_table_name">{}</td><td class="td_GPIO reg_table_name">0x{:02X}</td>'.format( rn, ri ) ]
 				s	+= [ '<td class="td_GPIO reg_table_val"><input type="text" onchange="updateRegField( {} )" id="regField{}" minlength=2 size=2 value="--" class="regfield"></td>'.format( i, i ) ]
 
 			s	+= [ '</tr>' ]
