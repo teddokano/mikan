@@ -32,7 +32,9 @@ const	getTimeAndShow	= (function () {
 			for ( let i = 0; i < 5; i++ ) {
 				let value	= obj.alarm[ i ];
 				if ( value != prev_alarm[ i ] ) {
-					document.getElementById( "alarmField" + i ).value	= ( value == 0x80 ) ? '--' : hex( value );
+					elem		= document.getElementById( "alarmField" + i )
+					elem.value	= ( value == 0x80 ) ? '--' : hex( value );
+					highlight( elem );
 				}
 			}
 			prev_alarm	= obj.alarm;
@@ -40,7 +42,9 @@ const	getTimeAndShow	= (function () {
 			for ( let i = 0; i < obj.reg.length; i++ ) {
 				let value	= obj.reg[ i ];
 				if ( value != prev_reg[ i ] ) {
-					document.getElementById('regField' + i ).value	= hex( value );
+					elem		= document.getElementById('regField' + i )
+					elem.value	= hex( value );
+					highlight( elem, duration = 500 );
 				}
 			}
 			prev_reg	= obj.reg;
@@ -83,7 +87,12 @@ function updateRegField( idx ) {
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
 	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
-		document.getElementById('regField' + obj.reg ).value	= hex( obj.val );
+		
+		elem	= document.getElementById('regField' + obj.reg )
+		if ( elem.value != obj.reg )
+			highlight( elem );
+		
+		elem.value	= hex( obj.val );
 	} )
 }
 
