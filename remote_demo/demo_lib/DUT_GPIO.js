@@ -93,7 +93,7 @@ function AutoReloadSwitch() {
 	
 	if ( autoReloadSwitchElement.checked ) {
 		elem.forEach( e => e.style.border = "solid 1px #8080FF" );
-		intervalTimer	= setInterval( allRegLoad, 200 );
+		intervalTimer	= setInterval( allRegLoad, 400 );
 	} else {
 		elem.forEach( e => e.style.border = "solid 1px #FFFFFF" );
 		clearInterval( intervalTimer );
