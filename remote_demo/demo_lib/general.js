@@ -23,4 +23,9 @@ function hex( num ) {
 	return ('00' + Number( num ).toString( 16 ).toUpperCase()).slice( -2 );
 }
 
-
+function highlight( elem ) {
+	elem.style.border = "solid 1px #FF0000";
+	setTimeout( e => {
+		e.style.border = "solid 1px #FFFFFF";
+	}, 1000, elem )	
+}

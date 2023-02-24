@@ -79,13 +79,6 @@ function setRegisterBits( ri, v, pv ) {
 	}
 }
 
-function highlight( elem ) {
-	elem.style.border = "solid 1px #FF0000";
-	setTimeout( e => {
-		e.style.border = "solid 1px #FFFFFF";
-	}, 1000, elem )	
-}
-
 let	intervalTimer;
 function AutoReloadSwitch() {
 	let autoReloadSwitchElement	= document.getElementById( "AutoReloadSwitch" );
