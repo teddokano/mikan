@@ -19,6 +19,7 @@ function updateRegField( idx ) {
 
 	let url	= REQ_HEADER + "reg=" + idx + "&val=" + value;
 	ajaxUpdate( url )
+	allRegLoad();
 }
 
 function updateBitField( ri, bi ) {
