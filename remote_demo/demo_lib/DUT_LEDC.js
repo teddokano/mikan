@@ -168,11 +168,16 @@ function resetMaxReqRate() {
 }
 
 async function measureResponse() {
-	let url	= REQ_HEADER + 'value=' + 16 + '&idx=' + 199
-
-	let start	= performance.now();
-	await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve( "done" ), 1000 ) } )
-	console.log( performance.now() - start );
+	let url		= REQ_HEADER + 'value=' + 16 + '&idx=' + 199;
+	let	resp	= [];
+	
+	for ( let i = 0; i < 10; i++ ) {
+		let start	= performance.now();
+		await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve(), 1000 ) } )
+		resp.push( performance.now() - start );
+	}
+	
+	resp.forEach( t => console.log( t ) )
 }
 
 window.addEventListener( 'load', function () {
