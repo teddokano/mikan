@@ -45,6 +45,9 @@ div {
 	text-align: left;
 	font-size: 1.0rem;
 }
+.ui_panel {
+	background-color: #EEEEEE;
+}
 .slider_table_row {
 	height: 3.0rem;
 }

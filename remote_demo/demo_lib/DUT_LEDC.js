@@ -1,6 +1,7 @@
 let timeoutId	= null;
 let	count		= 0;
-let	maxReqRate	= 20;
+let	InitReqRate	= 20;
+let	maxReqRate	= InitReqRate;
 
 function updateSlider( moving, id, i ) {
 	let value = document.getElementById( id + i ).value;
@@ -150,8 +151,24 @@ function allRegLoadDone( data ) {
 		 setSliderAndRegisterlistValues( obj.reg[ i ], "register", i, allreg_loading = true )
 	 }
 }
+
+function setMaxReqRate() {
+	elem		= document.getElementById( 'maxReqRate' );
+	maxReqRate	= elem.value;
+	
+	maxReqRate	= (maxReqRate <  1) ?  1 : maxReqRate;
+	maxReqRate	= (30 < maxReqRate) ? 30 : maxReqRate;
+	
+	elem.value	= maxReqRate;
+}
+ 
+function resetMaxReqRate() {
+	maxReqRate	= InitReqRate;
+	document.getElementById( 'maxReqRate' ).value	= maxReqRate;
+}
  
 window.addEventListener( 'load', function () {
 	allRegLoad();
-	setDefaultSelection();	
+	setDefaultSelection();
+	resetMaxReqRate();
 } );
