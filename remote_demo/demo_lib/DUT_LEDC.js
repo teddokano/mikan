@@ -1,5 +1,6 @@
 let timeoutId	= null;
-let	count	= 0;
+let	count		= 0;
+let	maxReqRate	= 20;
 
 function updateSlider( moving, id, i ) {
 	let value = document.getElementById( id + i ).value;
@@ -9,14 +10,14 @@ function updateSlider( moving, id, i ) {
 	if ( moving ) {
 		//	thinning out events		//	https://lab.syncer.jp/Web/JavaScript/Snippet/43/
 		if ( timeoutId ) return ;
-		timeoutId = setTimeout( function () { timeoutId = 0; }, 50 );
+		timeoutId = setTimeout( function () { timeoutId = 0; }, 1000 / maxReqRate );
 	}
-	
+
 	let url	= REQ_HEADER + 'value=' + value + '&idx=' + i
 	//console.log( 'moving = ' + moving + ', value = ' + value );
 	
 	if ( moving )
-		ajaxUpdate( url );
+		ajaxUpdate( url, null, timeout = 1000 / maxReqRate - 5 );
 	else
 		ajaxUpdate( url, updateDone );
 }
