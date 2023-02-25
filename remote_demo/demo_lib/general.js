@@ -2,10 +2,12 @@
  ****	service routine
  ****************************/
  
-function ajaxUpdate( url, func ) {
+function ajaxUpdate( url, func, timeout = 5000 ) {
 	url			= url + '?ver=' + new Date().getTime();
 	
-	fetch( url )
+	console.log( "ajaxUpdate = " + timeout );
+
+	fetch( url, { signal: AbortSignal.timeout( timeout ) } )
 		.then( response => {
 		/*
 			console.log( "response.ok = " + response.ok )
@@ -16,7 +18,8 @@ function ajaxUpdate( url, func ) {
 		} )
 		.then( ( data ) => {
 			func && func( data );
-		} );
+		} )
+		.catch( ( error ) => { console.log( "test" ); console.log( error ); } );
 }
 
 function hex( num ) {

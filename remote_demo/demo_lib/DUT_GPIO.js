@@ -38,8 +38,10 @@ function updateBitField( ri, bi ) {
 let prev_reg	= [];	//	to prevent refresh on user writing field
 let bf_reg		= [];
 
-function allRegLoad() {
+function allRegLoad( timeout = 5000 ) {
 	let url	= REQ_HEADER + 'allreg='
+	
+console.log( 'allRegLoad:' + timeout )
 	
 	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
@@ -59,7 +61,8 @@ function allRegLoad() {
 			}
 		}
 		prev_reg	= obj.reg;
-	} );
+	}, 
+	timeout );
 }
 
 function setRegisterBits( ri, v, pv ) {
@@ -86,7 +89,7 @@ function AutoReloadSwitch() {
 	
 	if ( autoReloadSwitchElement.checked ) {
 		elem.forEach( e => e.style.border = "solid 1px #8080FF" );
-		intervalTimer	= setInterval( allRegLoad, 400 );
+		intervalTimer	= setInterval( allRegLoad, 200, 180 );
 	} else {
 		elem.forEach( e => e.style.border = "solid 1px #FFFFFF" );
 		clearInterval( intervalTimer );
