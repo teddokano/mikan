@@ -166,7 +166,15 @@ function resetMaxReqRate() {
 	maxReqRate	= InitReqRate;
 	document.getElementById( 'maxReqRate' ).value	= maxReqRate;
 }
- 
+
+async function measureResponse() {
+	let url	= REQ_HEADER + 'value=' + 16 + '&idx=' + 199
+
+	let start	= performance.now();
+	await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve( "done" ), 1000 ) } )
+	console.log( performance.now() - start );
+}
+
 window.addEventListener( 'load', function () {
 	allRegLoad();
 	setDefaultSelection();
