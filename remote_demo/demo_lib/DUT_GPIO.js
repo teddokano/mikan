@@ -69,13 +69,22 @@ function setRegisterBits( ri, v, pv ) {
 		{
 			b_v		= ( v >> i) & 0x1;
 			b_pv	= (pv >> i) & 0x1;
+
+			elem		= document.getElementById('bitField' + ri + '-' + i );
 			
-			if ( b_v != b_pv ) {
+			if ( elem.value	!= b_v ) {
+				elem.value	= b_v;
+				highlight( elem );
+			}
+			
+/*
+ 			if ( b_v != b_pv ) {
 				elem		= document.getElementById('bitField' + ri + '-' + i );
 				elem.value	= b_v;
 
 				highlight( elem );
 			}
+ */
 		}
 	}
 }
