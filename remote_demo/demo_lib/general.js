@@ -5,8 +5,6 @@
 function ajaxUpdate( url, func, timeout = 5000 ) {
 	url			= url + '?ver=' + new Date().getTime();
 	
-	console.log( "ajaxUpdate = " + timeout );
-
 	fetch( url, { signal: AbortSignal.timeout( timeout ) } )
 		.then( response => {
 		/*
@@ -19,7 +17,7 @@ function ajaxUpdate( url, func, timeout = 5000 ) {
 		.then( ( data ) => {
 			func && func( data );
 		} )
-		.catch( ( error ) => { console.log( "test" ); console.log( error ); } );
+		.catch( ( error ) => console.log( error ) );
 }
 
 function hex( num ) {

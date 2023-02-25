@@ -41,8 +41,6 @@ let bf_reg		= [];
 function allRegLoad( timeout = 5000 ) {
 	let url	= REQ_HEADER + 'allreg='
 	
-console.log( 'allRegLoad:' + timeout )
-	
 	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
 
