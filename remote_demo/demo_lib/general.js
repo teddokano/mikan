@@ -17,7 +17,7 @@ function ajaxUpdate( url, func, timeout = 5000 ) {
 		.then( ( data ) => {
 			func && func( data );
 		} )
-		.catch( ( error ) => console.log( error ) );
+		.catch( ( error ) => console.log( 'ajaxUpdate - fetch timeout ' + error ) );
 }
 
 function hex( num ) {

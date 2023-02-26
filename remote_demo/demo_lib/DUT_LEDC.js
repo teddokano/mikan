@@ -192,10 +192,12 @@ async function measureResponse( n = 10 ) {
 	console.log( '- median:' + median + 'ms' );
 	
 	setMaxReqRate( reqRate = 1000 / (median + 5) );
+	
+	return median;
 }
 
 window.addEventListener( 'load', function () {
 	allRegLoad();
 	setDefaultSelection();
-	measureResponse();
+	measureResponse().then( (t) => console.log( 'measureResponse():' + t + 'ms' ) );
 } );
