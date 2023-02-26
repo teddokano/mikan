@@ -76,15 +76,6 @@ function setRegisterBits( ri, v, pv ) {
 				elem.value	= b_v;
 				highlight( elem );
 			}
-			
-/*
- 			if ( b_v != b_pv ) {
-				elem		= document.getElementById('bitField' + ri + '-' + i );
-				elem.value	= b_v;
-
-				highlight( elem );
-			}
- */
 		}
 	}
 }
@@ -92,7 +83,7 @@ function setRegisterBits( ri, v, pv ) {
 let	intervalTimer;
 function AutoReloadSwitch() {
 	let autoReloadSwitchElement	= document.getElementById( "AutoReloadSwitch" );
-	var elem = Array.from( document.getElementsByClassName( "reg_table_val" ) );
+	let elem = Array.from( document.getElementsByClassName( "reg_table_val" ) );
 	
 	if ( autoReloadSwitchElement.checked ) {
 		elem.forEach( e => e.style.border = "solid 1px #8080FF" );
