@@ -152,9 +152,13 @@ function allRegLoadDone( data ) {
 	 }
 }
 
-function setMaxReqRate() {
+function setMaxReqRate( reqRate = 0 ) {
 	elem		= document.getElementById( 'maxReqRate' );
-	maxReqRate	= elem.value;
+	
+	if ( !reqRate )
+		maxReqRate	= elem.value;
+	else
+		maxReqRate	= reqRate;
 	
 	maxReqRate	= (maxReqRate <  1) ?  1 : maxReqRate;
 	maxReqRate	= (30 < maxReqRate) ? 30 : maxReqRate;
@@ -167,21 +171,31 @@ function resetMaxReqRate() {
 	document.getElementById( 'maxReqRate' ).value	= maxReqRate;
 }
 
-async function measureResponse() {
+async function measureResponse( n = 10 ) {
 	let url		= REQ_HEADER + 'value=' + 16 + '&idx=' + 199;
 	let	resp	= [];
 	
-	for ( let i = 0; i < 10; i++ ) {
+	for ( let i = 0; i < n; i++ ) {
 		let start	= performance.now();
 		await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve(), 1000 ) } )
 		resp.push( performance.now() - start );
 	}
 	
-	resp.forEach( t => console.log( t ) )
+	resp.sort( (a, b) => (a - b) );
+	median	= resp[ Math.trunc(n / 2) ]
+	
+	//resp.forEach( t => console.log( t ) );
+	
+	console.log( 'measured server response ---' );
+	console.log( '- max:' + Math.max( ...resp ) + 'ms' );
+	console.log( '- min:' + Math.min( ...resp ) + 'ms' );
+	console.log( '- median:' + median + 'ms' );
+	
+	setMaxReqRate( reqRate = 1000 / (median + 5) );
 }
 
 window.addEventListener( 'load', function () {
 	allRegLoad();
 	setDefaultSelection();
-	resetMaxReqRate();
+	measureResponse();
 } );
