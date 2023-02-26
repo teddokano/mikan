@@ -1,3 +1,5 @@
+let initAllRegReloadInterval	= 5;
+let	allRegReloadInterval		= initAllRegReloadInterval;
 
 function updateRegField( idx ) {
 	let valueFieldElement = document.getElementById( "regField" + idx );
@@ -96,12 +98,25 @@ function AutoReloadSwitch() {
 	
 	if ( autoReloadSwitchElement.checked ) {
 		elem.forEach( e => e.style.border = "solid 1px #8080FF" );
-		intervalTimer	= setInterval( allRegLoad, 200, 180 );
+		let interval	= 1000 / allRegReloadInterval;
+		intervalTimer	= setInterval( allRegLoad, interval, interval - 20 );
 	} else {
 		elem.forEach( e => e.style.border = "solid 1px #FFFFFF" );
 		clearInterval( intervalTimer );
 	}
 }
+
+function measureResponse() {
+	let url	= REQ_HEADER + 'allreg='
+	let	resp;
+	
+	responseTime( url )
+		.then( ( resp ) => { 
+			showResponseTimeResult( resp );		
+//			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
+	} );
+}
+
 
 let reg_list	= {};
 
