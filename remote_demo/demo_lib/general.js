@@ -30,3 +30,25 @@ function highlight( elem, duration = 1000 ) {
 		e.style.border = "solid 1px #FFFFFF";
 	}, duration, elem )	
 }
+
+async function responseTime( url, n = 10 ) {
+	let	resp	= {	raw: [] };
+	
+	for ( let i = 0; i < n; i++ ) {
+		let start	= performance.now();
+		await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve(), 1000 ) } )
+		resp.raw.push( performance.now() - start );
+	}
+	
+	resp.raw.sort( (a, b) => (a - b) );
+	resp.median	= resp.raw[ Math.trunc(n / 2) ];
+	resp.max	= Math.max( ...(resp.raw) );
+	resp.min	= Math.min( ...(resp.raw) );
+	
+	return resp;
+}
+
+function showResponseTimeResult( resp ) {
+	console.log( 'measured server response ---' );
+	console.log( resp );
+}

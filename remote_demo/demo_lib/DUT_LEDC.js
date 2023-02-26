@@ -171,33 +171,19 @@ function resetMaxReqRate() {
 	document.getElementById( 'maxReqRate' ).value	= maxReqRate;
 }
 
-async function measureResponse( n = 10 ) {
+function measureResponse() {
 	let url		= REQ_HEADER + 'value=' + 16 + '&idx=' + 199;
-	let	resp	= [];
+	let	resp;
 	
-	for ( let i = 0; i < n; i++ ) {
-		let start	= performance.now();
-		await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve(), 1000 ) } )
-		resp.push( performance.now() - start );
-	}
-	
-	resp.sort( (a, b) => (a - b) );
-	median	= resp[ Math.trunc(n / 2) ]
-	
-	//resp.forEach( t => console.log( t ) );
-	
-	console.log( 'measured server response ---' );
-	console.log( '- max:' + Math.max( ...resp ) + 'ms' );
-	console.log( '- min:' + Math.min( ...resp ) + 'ms' );
-	console.log( '- median:' + median + 'ms' );
-	
-	setMaxReqRate( reqRate = 1000 / (median + 5) );
-	
-	return median;
+	responseTime( url )
+		.then( ( resp ) => { 
+			showResponseTimeResult( resp );		
+			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
+	} );
 }
 
 window.addEventListener( 'load', function () {
 	allRegLoad();
 	setDefaultSelection();
-	measureResponse().then( (t) => console.log( 'measureResponse():' + t + 'ms' ) );
+	measureResponse();
 } );
