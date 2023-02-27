@@ -22,6 +22,7 @@ from	demo_lib	import	DUT_GENERALCALL, General_call
 from	demo_lib	import	DUT_base
 
 MEM_MONITORING	= False
+#MEM_MONITORING	= True	###
 
 class elapsed_time:
 	def __init__( self, start ):
@@ -89,21 +90,21 @@ def main():
 	s.listen( 5 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
+
+	# gc.disable() ###
+
 	while True:
 		res = s.accept()
 		
-		e_time	= elapsed_time( ticks_ms() )
+		e_time	= elapsed_time( ticks_ms() ) ###
 		
-		client_sock = res[0]
-		client_addr = res[1]
+		client_stream	= res[0]
+		client_addr		= res[1]
 		print( "Client address: ", client_addr, end = "" )
-		print( " / socket: ", client_sock )
-
-		client_stream = client_sock
-		e_time.show( "client_stream" )
+		print( " / socket: ", client_stream )
 
 		req = client_stream.readline()
-		e_time.show( "readline done" )
+		e_time.show( "readline done" ) ###
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
 		for dut in dut_list:
@@ -134,12 +135,17 @@ def main():
 		
 		send_response( client_stream, html )
 		client_stream.close()
+		del client_stream
+		del client_addr
+		del html
+		
+		# e_time.show( "before gc" ) ###
 
 		if MEM_MONITORING:
 			gc.collect()
 			print( gc.mem_alloc() / 1024 )
 
-		e_time.show( "end" )
+		e_time.show( "end" ) ###
 		print()
 
 def send_response( stream, str ):
