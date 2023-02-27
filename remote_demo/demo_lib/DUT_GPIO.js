@@ -1,4 +1,4 @@
-let initAllRegReloadInterval	= 5;
+let initAllRegReloadInterval	= 10;
 let	allRegReloadInterval		= initAllRegReloadInterval;
 
 function updateRegField( idx ) {
@@ -55,7 +55,7 @@ function allRegLoad( timeout = 5000 ) {
 			
 			if ( pv != v ) {
 				elem.value	= hex( v );
-				setRegisterBits( i, v, pv )
+				setRegisterBits( i, v )
 				
 				highlight( elem );
 			}
@@ -65,28 +65,17 @@ function allRegLoad( timeout = 5000 ) {
 	timeout );
 }
 
-function setRegisterBits( ri, v, pv ) {
+function setRegisterBits( ri, v ) {
 	if ( bf_reg.includes( ri ) ) {
 		for ( let i = 7; 0 <= i; i-- )
 		{
-			b_v		= ( v >> i) & 0x1;
-			b_pv	= (pv >> i) & 0x1;
-
-			elem		= document.getElementById('bitField' + ri + '-' + i );
+			let b_v		= ( v >> i) & 0x1;
+			let elem	= document.getElementById('bitField' + ri + '-' + i );
 			
 			if ( elem.value	!= b_v ) {
 				elem.value	= b_v;
 				highlight( elem );
 			}
-			
-/*
- 			if ( b_v != b_pv ) {
-				elem		= document.getElementById('bitField' + ri + '-' + i );
-				elem.value	= b_v;
-
-				highlight( elem );
-			}
- */
 		}
 	}
 }
@@ -94,22 +83,31 @@ function setRegisterBits( ri, v, pv ) {
 let	intervalTimer;
 function AutoReloadSwitch() {
 	let autoReloadSwitchElement	= document.getElementById( "AutoReloadSwitch" );
-	var elem = Array.from( document.getElementsByClassName( "reg_table_val" ) );
+	let elem = Array.from( document.getElementsByClassName( "reg_table_val" ) );
 	
 	if ( autoReloadSwitchElement.checked ) {
 		elem.forEach( e => e.style.border = "solid 1px #8080FF" );
 		let interval	= 1000 / allRegReloadInterval;
 		intervalTimer	= setInterval( allRegLoad, interval, interval - 20 );
+		console.log( 'autoReloadSwitchElement=ON: ' );		
+		measureResponseGPIO();
 	} else {
 		elem.forEach( e => e.style.border = "solid 1px #FFFFFF" );
 		clearInterval( intervalTimer );
+		console.log( 'autoReloadSwitchElement=OFF: ' );		
+		measureResponseGPIO();
 	}
 }
 
-function measureResponse() {
+function measureResponseGPIO() {
 	let url	= REQ_HEADER + 'allreg='
 	let	resp;
 	
+	responseTime( url )
+		.then( ( resp ) => { 
+			showResponseTimeResult( resp );		
+//			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
+	} );
 	responseTime( url )
 		.then( ( resp ) => { 
 			showResponseTimeResult( resp );		
@@ -136,4 +134,5 @@ function getRegList() {
 window.addEventListener( 'load', function () {
 	allRegLoad();
 	getRegList();
+	measureResponseGPIO();
 });
