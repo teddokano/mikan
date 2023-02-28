@@ -90,17 +90,17 @@ function AutoReloadSwitch() {
 		let interval	= 1000 / allRegReloadInterval;
 		intervalTimer	= setInterval( allRegLoad, interval, interval - 20 );
 		console.log( 'autoReloadSwitchElement=ON: ' );		
-		measureResponseGPIO();
+		//measureResponseGPIO();
 	} else {
 		elem.forEach( e => e.style.border = "solid 1px #FFFFFF" );
 		clearInterval( intervalTimer );
 		console.log( 'autoReloadSwitchElement=OFF: ' );		
-		measureResponseGPIO();
+		//measureResponseGPIO();
 	}
 }
 
 function measureResponseGPIO() {
-	let url	= REQ_HEADER + 'allreg='
+	let url	= REQ_HEADER + 'allreg=';
 	let	resp;
 	
 	responseTime( url )
@@ -114,7 +114,6 @@ function measureResponseGPIO() {
 //			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
 	} );
 }
-
 
 let reg_list	= {};
 
@@ -134,5 +133,5 @@ function getRegList() {
 window.addEventListener( 'load', function () {
 	allRegLoad();
 	getRegList();
-	measureResponseGPIO();
+	//measureResponseGPIO();
 });

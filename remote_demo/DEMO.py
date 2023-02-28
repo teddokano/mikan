@@ -24,14 +24,10 @@ from	demo_lib	import	DUT_base
 MEM_MONITORING	= False
 #MEM_MONITORING	= True	###
 
-class elapsed_time:
-	def __init__( self, start ):
-		self.start	= start
-	def show( self, m ):
-		print( m, end = ": " )
-		print( ticks_ms() - self.start )
-
 def main():
+	print( "heap used {}".format( gc.mem_alloc() / 1024 ) ) ###
+	print( "heap used {}".format( gc.mem_free()  / 1024 ) ) ###
+
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
@@ -90,9 +86,6 @@ def main():
 	s.listen( 5 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
-
-	# gc.disable() ###
-
 	while True:
 		res = s.accept()
 		
@@ -135,15 +128,17 @@ def main():
 		
 		send_response( client_stream, html )
 		client_stream.close()
-		del client_stream
-		del client_addr
-		del html
 		
-		# e_time.show( "before gc" ) ###
+		e_time.show( "before gc" ) ###
 
 		if MEM_MONITORING:
 			gc.collect()
-			print( gc.mem_alloc() / 1024 )
+			print( "heap used {}".format( gc.mem_alloc() / 1024 ) )
+			print( "heap used {}".format( gc.mem_free()  / 1024 ) )
+		else:
+			pass
+			#print( "heap used {}".format( gc.mem_alloc() / 1024 ) )
+			#print( "heap used {}".format( gc.mem_free()  / 1024 ) )
 
 		e_time.show( "end" ) ###
 		print()
@@ -168,7 +163,6 @@ def get_dut_list( devices, demo_harnesses ):
 
 	return list + [ last_dut ]
 
-
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
 
@@ -184,7 +178,6 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 		lan.ifconfig( ifcnfg_param )
 	except OSError as e:
 		error_loop( 3, "Can't get/set IP address. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
-		
 
 	return lan.ifconfig()
 
@@ -297,5 +290,12 @@ def error_loop( n, message ):
 		for p in pattern:
 			led.value( p )
 			sleep( 0.1 )
+
+class elapsed_time:
+	def __init__( self, start ):
+		self.start	= start
+	def show( self, m ):
+		print( m, end = ": " )
+		print( ticks_ms() - self.start )
 
 main()

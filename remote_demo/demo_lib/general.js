@@ -1,10 +1,19 @@
-/****************************
- ****	service routine
- ****************************/
- 
+let reqInProgress	= false
+
 function ajaxUpdate( url, func, timeout = 5000 ) {
 	url			= url + '?ver=' + new Date().getTime();
 	
+	if ( timeout < 1000 ) {
+		if ( reqInProgress ) {
+			console.log( '*********************** low priority request ignored ***********************' );
+			return;
+		}
+		else {
+			console.log( '###### request executing' );
+		}
+	}
+		
+	reqInProgress	= true;
 	fetch( url, { signal: AbortSignal.timeout( timeout ) } )
 		.then( response => {
 		/*
@@ -16,8 +25,12 @@ function ajaxUpdate( url, func, timeout = 5000 ) {
 		} )
 		.then( ( data ) => {
 			func && func( data );
+			reqInProgress	= false;
 		} )
-		.catch( ( error ) => console.log( 'ajaxUpdate - fetch timeout ' + error ) );
+		.catch( ( error ) => {
+			reqInProgress	= false;
+			console.log( 'ajaxUpdate - fetch timeout ' + error )
+		} );
 }
 
 function hex( num ) {
