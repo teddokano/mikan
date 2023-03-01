@@ -8,6 +8,8 @@ try:
     import usocket as socket
 except:
     import socket
+from utime import ticks_ms
+from utime import sleep
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B, P3T1085
@@ -20,8 +22,12 @@ from	demo_lib	import	DUT_GENERALCALL, General_call
 from	demo_lib	import	DUT_base
 
 MEM_MONITORING	= False
+#MEM_MONITORING	= True	###
 
-def main( micropython_optimize = False ):
+def main():
+	print( "heap used {}".format( gc.mem_alloc() / 1024 ) ) ###
+	print( "heap used {}".format( gc.mem_free()  / 1024 ) ) ###
+
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
@@ -82,17 +88,16 @@ def main( micropython_optimize = False ):
 
 	while True:
 		res = s.accept()
-		client_sock = res[0]
-		client_addr = res[1]
+		
+		e_time	= elapsed_time( ticks_ms() ) ###
+		
+		client_stream	= res[0]
+		client_addr		= res[1]
 		print( "Client address: ", client_addr, end = "" )
-		print( " / socket: ", client_sock )
-
-		if not micropython_optimize:
-			client_stream = client_sock.makefile("rwb")
-		else:
-			client_stream = client_sock
+		print( " / socket: ", client_stream )
 
 		req = client_stream.readline()
+		e_time.show( "readline done" ) ###
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
 		for dut in dut_list:
@@ -122,15 +127,20 @@ def main( micropython_optimize = False ):
 				break
 		
 		send_response( client_stream, html )
-
 		client_stream.close()
-		if not micropython_optimize:
-			client_sock.close()
+		
+		e_time.show( "before gc" ) ###
 
 		if MEM_MONITORING:
 			gc.collect()
-			print( gc.mem_alloc() / 1024 )
+			print( "heap used {}".format( gc.mem_alloc() / 1024 ) )
+			print( "heap used {}".format( gc.mem_free()  / 1024 ) )
+		else:
+			pass
+			#print( "heap used {}".format( gc.mem_alloc() / 1024 ) )
+			#print( "heap used {}".format( gc.mem_free()  / 1024 ) )
 
+		e_time.show( "end" ) ###
 		print()
 
 def send_response( stream, str ):
@@ -153,7 +163,6 @@ def get_dut_list( devices, demo_harnesses ):
 
 	return list + [ last_dut ]
 
-
 def start_network( port = 0, ifcnfg_param = "dhcp" ):
 	print( "starting network" )
 
@@ -169,7 +178,6 @@ def start_network( port = 0, ifcnfg_param = "dhcp" ):
 		lan.ifconfig( ifcnfg_param )
 	except OSError as e:
 		error_loop( 3, "Can't get/set IP address. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
-		
 
 	return lan.ifconfig()
 
@@ -283,4 +291,12 @@ def error_loop( n, message ):
 			led.value( p )
 			sleep( 0.1 )
 
-main( micropython_optimize = True )
+class elapsed_time:
+	def __init__( self, start ):
+		self.start	= start
+	def show( self, m ):
+		#print( m, end = ": " )
+		#print( ticks_ms() - self.start )
+		pass
+
+main()

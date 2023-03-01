@@ -1,9 +1,12 @@
-/****************************
- ****	service routine
- ****************************/
- 
+let reqCount	= 0;
+
 function ajaxUpdate( url, func, timeout = 5000 ) {
 	url			= url + '?ver=' + new Date().getTime();
+	
+	if ( (timeout < 1000) && reqCount )
+			return;	//	ignore since this is low priority request (avoid to disturb server response time)
+		
+	reqCount++;
 	
 	fetch( url, { signal: AbortSignal.timeout( timeout ) } )
 		.then( response => {
@@ -16,8 +19,14 @@ function ajaxUpdate( url, func, timeout = 5000 ) {
 		} )
 		.then( ( data ) => {
 			func && func( data );
+			if ( reqCount )
+				reqCount--;
 		} )
-		.catch( ( error ) => console.log( error ) );
+		.catch( ( error ) => {
+			if ( reqCount )
+				reqCount--;
+			console.log( 'ajaxUpdate - fetch timeout ' + error )
+		} );
 }
 
 function hex( num ) {
@@ -29,4 +38,26 @@ function highlight( elem, duration = 1000 ) {
 	setTimeout( e => {
 		e.style.border = "solid 1px #FFFFFF";
 	}, duration, elem )	
+}
+
+async function responseTime( url, n = 10 ) {
+	let	resp	= {	raw: [] };
+	
+	for ( let i = 0; i < n; i++ ) {
+		let start	= performance.now();
+		await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve(), 1000 ) } )
+		resp.raw.push( performance.now() - start );
+	}
+	
+	resp.raw.sort( (a, b) => (a - b) );
+	resp.median	= resp.raw[ Math.trunc(n / 2) ];
+	resp.max	= Math.max( ...(resp.raw) );
+	resp.min	= Math.min( ...(resp.raw) );
+	
+	return resp;
+}
+
+function showResponseTimeResult( resp ) {
+	console.log( 'measured server response ---' );
+	console.log( resp );
 }
