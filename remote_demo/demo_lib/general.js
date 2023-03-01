@@ -1,19 +1,13 @@
-let reqInProgress	= false
+let reqCount	= 0;
 
 function ajaxUpdate( url, func, timeout = 5000 ) {
 	url			= url + '?ver=' + new Date().getTime();
 	
-	if ( timeout < 1000 ) {
-		if ( reqInProgress ) {
-			console.log( '*********************** low priority request ignored ***********************' );
-			return;
-		}
-		else {
-			console.log( '###### request executing' );
-		}
-	}
+	if ( (timeout < 1000) && reqCount )
+			return;	//	ignore since this is low priority request (avoid to disturb server response time)
 		
-	reqInProgress	= true;
+	reqCount++;
+	
 	fetch( url, { signal: AbortSignal.timeout( timeout ) } )
 		.then( response => {
 		/*
@@ -25,10 +19,12 @@ function ajaxUpdate( url, func, timeout = 5000 ) {
 		} )
 		.then( ( data ) => {
 			func && func( data );
-			reqInProgress	= false;
+			if ( reqCount )
+				reqCount--;
 		} )
 		.catch( ( error ) => {
-			reqInProgress	= false;
+			if ( reqCount )
+				reqCount--;
 			console.log( 'ajaxUpdate - fetch timeout ' + error )
 		} );
 }
