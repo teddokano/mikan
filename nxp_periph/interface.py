@@ -213,7 +213,7 @@ class I2C_target( Interface ):
 			else:
 				raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
 
-	def receive( self, length, retry = 3 ):
+	def receive( self, length, retry = 3, barray = False ):
 		"""
 		receive data (generate read transaction)
 	
@@ -243,7 +243,7 @@ class I2C_target( Interface ):
 		while retry:
 			err	= False
 			try:
-				rtn	= list( self.__if.readfrom( self.__adr, length ) )
+				rtn	= self.__if.readfrom( self.__adr, length )
 			except Exception as e:
 				err		 = True
 				retry	-= 1
@@ -258,7 +258,10 @@ class I2C_target( Interface ):
 			else:
 				raise I2C_target_Error( "I2C error: NACK returned {} times from {}, address 0x{:02X} (0x{:02X})".format( retry_setting, self.__class__.__name__, self.__adr, self.__adr << 1 ) )
 
-		return rtn
+		if barray:
+			return rtn
+		else:
+			return list( rtn )
 
 	def write_registers( self, reg, data ):
 		"""
@@ -293,7 +296,7 @@ class I2C_target( Interface ):
 		data	= [ reg, data ] if type(data) == int else [ reg ] + data
 		self.send( data, stop = True )
 		
-	def read_registers( self, reg, length, repeated_start = True ):
+	def read_registers( self, reg, length, repeated_start = True, barray = False  ):
 		"""
 		reading registers
 	
@@ -324,7 +327,7 @@ class I2C_target( Interface ):
 			reg	   |= self.__ai
 		
 		self.send( [ reg ], stop = not repeated_start )
-		r	= self.receive( length )
+		r	= self.receive( length, barray = barray )
 		
 		return	r[ 0 ] if length is 1 else r
 

@@ -55,7 +55,7 @@ class FXOS8700( I2C_target ):
 		self.write_registers( "M_CTRL_REG1", 0x03 )
 
 	def three_axis( self, reg ):
-		return unpack( ">hhh", bytearray( self.read_registers( reg, 6 ) ) )
+		return unpack( ">hhh", self.read_registers( reg, 6, barray = True ) )
 	
 	def xyz( self ):
 		return self.three_axis( "OUT_X_MSB" )
