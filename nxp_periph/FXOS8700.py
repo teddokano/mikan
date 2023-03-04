@@ -11,9 +11,11 @@ def main():
 	acc.dump_reg()
 
 	while True:
-		print( acc.xyz() )
-		print( acc.mag() )
-		print()
+		xyz	= acc.xyz()
+		g	= sum( [ g * g for g in xyz ] ) ** 0.5
+		print( g, xyz )
+#		print( acc.mag() )
+#		print()
 		sleep( 0.5 )
 
 class FXOS8700( I2C_target ):
@@ -58,10 +60,17 @@ class FXOS8700( I2C_target ):
 		return unpack( ">hhh", self.read_registers( reg, 6, barray = True ) )
 	
 	def xyz( self ):
-		return self.three_axis( "OUT_X_MSB" )
+		return [ d / 2**15 * 2 for d in self.three_axis( "OUT_X_MSB" ) ]
 
 	def mag( self ):
 		return self.three_axis( "M_OUT_X_MSB" )
+
+	def dump( self ):
+		rtn	= []
+		for r in self.REG_NAME:
+			rtn	+= [ self.read_registers( r, 1 ) ]
+		
+		return rtn
 		
 if __name__ == "__main__":
 	main()

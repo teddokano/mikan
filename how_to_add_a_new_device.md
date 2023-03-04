@@ -221,8 +221,21 @@ register dump: "FXOS8700", target address 0x1F (0x3E)
     CMP_Y_MSB        (0x3B) : 0xC1    A_FFMT_THS_Z_LSB (0x78) : 0x13
     CMP_Y_LSB        (0x3C) : 0xF4    Reserved         (0x79) : 0xB8
 >>> 
-
 ```
+
+> **Warning**
+In case of FXOS8700, it has unique modes of auto-increment register access. 
+To avoid effect of auto-increment, each single register access is required for register dump.  
+It can be done by defining a method of `dump` in FXOS8700 class which over-rides same name method in super class. 
+```python
+	def dump( self ):
+		rtn	= []
+		for r in self.REG_NAME:
+			rtn	+= [ self.read_registers( r, 1 ) ]
+		
+		return rtn
+```
+
 
 # Step 6 : Add required device initialization
 The device may need some initialization to start operation.  
