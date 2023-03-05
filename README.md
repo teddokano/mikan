@@ -48,6 +48,8 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [SC18IS606](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/ic-bus-to-spi-bridge:SC18IS606)
 - Stepper motor controller
 	- [PCA9629A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/fm-plus-ic-bus-advanced-stepper-motor-controller:PCA9629APW)
+- Accelerometer
+	- [FXOS8700](https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf)
 
 # Getting started
 ## Guide video
@@ -166,6 +168,8 @@ Video is available --> [https://youtu.be/usPzhs_2IsI](https://youtu.be/usPzhs_2I
 How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)  
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/remo_demo_install.png)](https://youtu.be/fkHqdnd4t1s)
 
+# Applying modification
+Refer to [How a new device can be added?](https://github.com/teddokano/mikan/blob/main/how_to_add_a_new_device.md)
 
 
 💡⏰🌡️↕🔠🔄💁🍎
