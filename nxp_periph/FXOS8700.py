@@ -11,11 +11,13 @@ def main():
 	acc.dump_reg()
 
 	while True:
-		xyz	= acc.xyz()
-		g	= sum( [ g * g for g in xyz ] ) ** 0.5
-		print( g, xyz )
-#		print( acc.mag() )
+#		xyz	= acc.xyz()
+#		g	= sum( [ g * g for g in xyz ] ) ** 0.5
+#		print( g, xyz )
+		print( acc.mag() )
 #		print()
+#		print( acc.six_axis() )
+#		print( acc.xyz() )
 		sleep( 0.5 )
 
 class FXOS8700( I2C_target ):
@@ -52,18 +54,35 @@ class FXOS8700( I2C_target ):
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		super().__init__( i2c, address )
 		
-		self.write_registers( "F_SETUP", 0x00 )
-		self.write_registers( "CTRL_REG1", 0x01 )
-		self.write_registers( "M_CTRL_REG1", 0x03 )
+		self.write_registers( "F_SETUP", 0x00 )		# FIFO is disabled
+		self.write_registers( "CTRL_REG1", 0x01 )	# active
+		self.write_registers( "M_CTRL_REG1", 0x03 )	# hybrid mode, both accelerometer and magnetometer sensors are active
+		self.write_registers( "M_CTRL_REG2", 0x20 )	# can be read xyz and mag together in 12 bytes
+
+		self.fs_range	= 2
+		self.fullscale( self.fs_range )
 
 	def three_axis( self, reg ):
 		return unpack( ">hhh", self.read_registers( reg, 6, barray = True ) )
 	
 	def xyz( self ):
-		return [ d / 2**15 * 2 for d in self.three_axis( "OUT_X_MSB" ) ]
+		return [ d / 2**15 * self.fs_range for d in self.three_axis( "OUT_X_MSB" ) ]	# convert to G
 
 	def mag( self ):
-		return self.three_axis( "M_OUT_X_MSB" )
+		return [ d * 100 for d in self.three_axis( "M_OUT_X_MSB" ) ]	# convert to nano-T
+
+	def six_axis( self ):
+		return unpack( ">hhhhhh", self.read_registers( "OUT_X_MSB", 12, barray = True ) )
+
+	def fullscale( self, v ):
+		if 8 <= v:
+			setting	= 0x2
+		elif 4 <= v:
+			setting	= 0x1
+		else:
+			setting	= 0x0
+		
+		self.bit_operation( "XYZ_DATA_CFG", 0x03, setting )
 
 	def dump( self ):
 		rtn	= []
