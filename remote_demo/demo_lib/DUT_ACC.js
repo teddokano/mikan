@@ -25,25 +25,30 @@ let	acc_data	= {
 			
 			this.draw();
 			
-			console.log( data.x );
 /*			
 			if ( this ) {
 				let elem = document.getElementById( "temperature" );
 				elem.innerText = this.temp[ this.temp.length - 1 ].toFixed( 3 ) + '˚C';
 			}
 			
+ */
 			for ( let i = 0; i < TABLE_LEN; i++ )
 			{
 				document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
 				
-				let	value	= this.temp.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				let	x	= this.x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				let	y	= this.y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				let	z	= this.z.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
 				
-				if ( !isNaN( value ) )
-					value	= value.toFixed( 3 );
+				x	= isNaN( x ) ? x : x.toFixed( 6 );
+				y	= isNaN( y ) ? y : y.toFixed( 6 );
+				z	= isNaN( y ) ? z : z.toFixed( 6 );
 					
-				document.getElementById( "tempField" + i ).value = value;
+				document.getElementById( "xField" + i ).value = x;
+				document.getElementById( "yField" + i ).value = y;
+				document.getElementById( "zField" + i ).value = z;
 			}
-*/
+			
 			document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
 			document.getElementById( "infoFieldValue1" ).value = this.time[ this.time.length - 1 ];
 			document.getElementById( "infoFieldValue2" ).value = this.time.length;
@@ -120,9 +125,9 @@ let	acc_data	= {
 		let str	= [];
 		let	len	= this.time.length;
 		
-		str	+= "time,temp,tos,thyst,os,heater\n";
+		str	+= "time,x,y,z\n";
 		for ( let i = 0; i < len; i++ ) {
-			str	+= this.time[ i ] + "," +  this.temp[ i ] + "," + this.tos[ i ] + "," + this.thyst[ i ] + "," + this.os[ i ] + "," + this.heater[ i ] + "\n";
+			str	+= this.time[ i ] + "," +  this.x[ i ] + "," + this.y[ i ] + "," + this.z[ i ] + "\n";
 		}
 
 		let now		= new Date()
