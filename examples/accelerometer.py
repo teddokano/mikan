@@ -1,7 +1,6 @@
 from nxp_periph		import	FXOS8700
 from machine		import	I2C
-from utime import sleep
-from ustruct import unpack
+from utime			import sleep
 
 def main():
 	i2c		= I2C( 0, freq = (400 * 1000) )
