@@ -78,10 +78,15 @@ class DUT_ACC( DUT_base.DUT_base ):
 		return self.load_html()
 
 	def get_table( self ):
-		s	= [ '<table class="table_TEMP"><tr><td class="td_TEMP">time</td><td class="td_TEMP">temp [˚C]</td></tr>' ]
+		s	= [ '<table class="table_TEMP"><tr><td class="td_TEMP">time</td><td class="td_TEMP">x [g]</td><td class="td_TEMP">y [g]</td><td class="td_TEMP">z [g]</td></tr>' ]
 
 		for i in range( self.TABLE_LENGTH ):
-			s	+= [ '<tr><td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="timeField{}" value = "---"></td><td class="td_TEMP"><input class="input_text_TMP" type="text" id="tempField{}"></td></tr>'.format( i, i ) ]
+			s	+= [ '<tr>' ]
+			s	+= [ '<td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="timeField{}" value = "---"></td>'.format( i ) ]
+			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="xField{}"></td>'.format( i ) ]
+			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="yField{}"></td>'.format( i ) ]
+			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="zField{}"></td>'.format( i ) ]
+			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
 
