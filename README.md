@@ -1,4 +1,4 @@
-# "mikan" 💡⏰🌡️↕🔠🔄💁
+# "mikan" 💡⏰🌡️↕🔠🔄💁🍎
 Peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
@@ -154,7 +154,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 💁|protocol_bridge_SC18IS606_with_AT25010.py|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
 🔄|stepper_motor_simple.py					|Operating stepping motor with simple API																			|PCA9629A
 🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
-
+🍎|FXOS8700.py								|Simple 6 axis data capturing from FXOS8700																			|FXOS8700
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
 `remote_demo/DEMO.py` has 'main()' function to start the demo.  
@@ -168,4 +168,4 @@ How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)
 
 
 
-💡⏰🌡️↕🔠🔄💁
+💡⏰🌡️↕🔠🔄💁🍎

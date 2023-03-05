@@ -25,7 +25,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.data		= []
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "acc", "" ]
-		self.symbol		= 'm'
+		self.symbol		= '🍎'
 
 	def xyz_data( self ):
 		d	= {}
