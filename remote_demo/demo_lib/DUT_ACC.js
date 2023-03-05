@@ -6,24 +6,26 @@ let	acc_data	= {
 	chart: undefined,
 
 	getAndShow: function () {		
-		let	past	= pastSec();
-		let url		= REQ_HEADER + "update=" + (past + 1);
+		let url		= REQ_HEADER + "update=1";
 		
 		ajaxUpdate( url, data => {
 			obj = JSON.parse( data );
 
 			obj.forEach( data => {
-				if ( this.time.includes( data.time ) )
-					return;
-				
-				this.time.push(   data.time   );
-				this.x.push(   data.x   );
-				this.y.push(    data.y    );
-				this.z.push(  data.z  );
+				this.time.push( data.time );
+				this.x.push( data.x );
+				this.y.push( data.y );
+				this.z.push( data.z );
 			});
-				
+			
+			this.time	= this.time.slice( -100 );
+			this.x	= this.x.slice( -100 );
+			this.y	= this.y.slice( -100 );
+			this.z	= this.z.slice( -100 );
+			
 			this.draw();
 			
+			console.log( data.x );
 /*			
 			if ( this ) {
 				let elem = document.getElementById( "temperature" );
@@ -133,25 +135,6 @@ let	acc_data	= {
 }
 
 /****************************
- ****	temp display
- ****************************/
-
-const	pastSec	= (function () {
-	let	last;
-
-	return function () {
-		let	now	= Date.now();
-		let	past	= now - last;
-		lastTime	= now;
-
-		return isNaN( past ) ? MAX_N_DATA : parseInt( past / 1000 );
-	}
-})();
-
-
-
-
-/****************************
  ****	widget handling
  ****************************/
 
@@ -248,5 +231,5 @@ function getTempAndShow() {
 
 window.addEventListener( 'load', function () {
 	acc_data.draw();
-	setInterval( getTempAndShow, 1000 );
+	setInterval( getTempAndShow, 100 );
 });
