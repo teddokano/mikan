@@ -26,9 +26,6 @@ MEM_MONITORING	= False
 #MEM_MONITORING	= True	###
 
 def main():
-	print( "heap used {}".format( gc.mem_alloc() / 1024 ) ) ###
-	print( "heap used {}".format( gc.mem_free()  / 1024 ) ) ###
-
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
@@ -137,11 +134,11 @@ def main():
 		if MEM_MONITORING:
 			gc.collect()
 			print( "heap used {}".format( gc.mem_alloc() / 1024 ) )
-			print( "heap used {}".format( gc.mem_free()  / 1024 ) )
+			print( "heap free {}".format( gc.mem_free()  / 1024 ) )
 		else:
 			pass
 			#print( "heap used {}".format( gc.mem_alloc() / 1024 ) )
-			#print( "heap used {}".format( gc.mem_free()  / 1024 ) )
+			#print( "heap free {}".format( gc.mem_free()  / 1024 ) )
 
 		e_time.show( "end" ) ###
 		print()
