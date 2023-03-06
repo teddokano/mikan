@@ -30,6 +30,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 	def xyz_data( self ):
 		d	= {}
 		xyz	= self.dev.xyz()
+#		xyz	= self.dev.mag()
 		d[ "x" ] = xyz[ 0 ]
 		d[ "y" ] = xyz[ 1 ] 
 		d[ "z" ] = xyz[ 2 ]
