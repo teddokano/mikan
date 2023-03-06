@@ -3,8 +3,8 @@ let	acc_data	= {
 	x:[],
 	y:[],
 	z:[],
-	chart: undefined,
-
+	chart : undefined,
+	
 	getAndShow: function () {		
 		let url		= REQ_HEADER + "update=1";
 		
@@ -25,13 +25,6 @@ let	acc_data	= {
 			
 			this.draw();
 			
-/*			
-			if ( this ) {
-				let elem = document.getElementById( "temperature" );
-				elem.innerText = this.temp[ this.temp.length - 1 ].toFixed( 3 ) + '˚C';
-			}
-			
- */
 			for ( let i = 0; i < TABLE_LEN; i++ )
 			{
 				document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
@@ -55,15 +48,73 @@ let	acc_data	= {
 		} );
 	},
 
+	show_obj: function() {
+		console.log( '========================================================' );
+		console.log( { type: 'line',
+											data: {
+												labels: this.time,
+												datasets: [
+													{
+														label: 'x',
+														data: this.x,
+														borderColor: "rgba( 255, 0, 0, 1 )",
+														backgroundColor: "rgba( 0, 0, 0, 0 )"
+													},
+													{
+														label: 'y',
+														data: this.y,
+														borderColor: "rgba( 0, 255, 0, 1 )",
+														backgroundColor: "rgba( 0, 0, 0, 0 )"
+													},
+													{
+														label: 'z',
+														data: this.z,
+														borderColor: "rgba( 0, 0, 255, 1 )",
+														backgroundColor: "rgba( 0, 0, 0, 0 )"
+													},
+												],
+											},
+											options: {
+												animation: false,
+												title: {
+													display: true,
+													text: '"g" now'
+												},
+												scales: {
+													yAxes: [{
+														ticks: {
+															suggestedMax: GRAPH_HIGH,
+															suggestedMin: GRAPH_LOW,
+															stepSize: 0.1,
+															callback: function(value, index, values){
+															return  value +  ' ˚g'
+															}
+														},
+														scaleLabel: {
+															display: true,
+															labelString: ' gravitational acceleration [g]'
+														}
+													}],
+													xAxes: [{
+														scaleLabel: {
+															display: true,
+															labelString: 'time'
+														}
+													}]
+												},
+											}
+										}  );
+		console.log( '========================================================' );
+		console.log( this.chart_settings );
+	},
+	
 	draw: function () {
 		let	ctx = document.getElementById("myLineChart");
 
-		if ( this.chart ) {
+		if ( this.chart )
 			this.chart.destroy();
-		}
 
-		this.chart = new Chart( ctx, {
-		
+		let cs	= {
 			type: 'line',
 			data: {
 				labels: this.time,
@@ -101,7 +152,7 @@ let	acc_data	= {
 							suggestedMin: GRAPH_LOW,
 							stepSize: 0.1,
 							callback: function(value, index, values){
-							return  value +  ' ˚g'
+							return  value +  ' g'
 							}
 						},
 						scaleLabel: {
@@ -117,9 +168,11 @@ let	acc_data	= {
 					}]
 				},
 			}
-		});
+		};
+
+		this.chart = new Chart( ctx, cs );
 	},
-	
+
 	save: function () {
 		console.log( 'csvFileOut' );
 		let str	= [];
@@ -236,5 +289,6 @@ function getTempAndShow() {
 
 window.addEventListener( 'load', function () {
 	acc_data.draw();
+	acc_data.show_obj();
 	setInterval( getTempAndShow, 100 );
 });
