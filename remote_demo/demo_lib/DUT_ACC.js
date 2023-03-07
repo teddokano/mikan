@@ -2,7 +2,7 @@ let	acc_data	= {
 	cs : {
 			type: 'line',
 			data: {
-				labels: { time:[] },
+				labels: [],
 				datasets: [
 					{
 						label: 'x',
@@ -12,13 +12,13 @@ let	acc_data	= {
 					},
 					{
 						label: 'y',
-						data: { y:[] },
+						data: [],
 						borderColor: "rgba( 0, 255, 0, 1 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: 'z',
-						data: { z:[] },
+						data: [],
 						borderColor: "rgba( 0, 0, 255, 1 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
@@ -58,10 +58,10 @@ let	acc_data	= {
 	
 	getAndShow: function () {		
 		let url		= REQ_HEADER + "update=1";
-		let time	= this.cs.data.labels.time;
+		let time	= this.cs.data.labels;
 		let x		= this.cs.data.datasets[0].data;
-		let y		= this.cs.data.datasets[1].data.y;
-		let z		= this.cs.data.datasets[2].data.z;
+		let y		= this.cs.data.datasets[1].data;
+		let z		= this.cs.data.datasets[2].data;
 		
 		ajaxUpdate( url, data => {
 			obj = JSON.parse( data );
@@ -72,13 +72,12 @@ let	acc_data	= {
 				y.push( data.y );
 				z.push( data.z );
 			});
-
-/*			
-			time	= time.slice( -100 );
-			x		= x.slice( -100 );
-			y		= y.slice( -100 );
-			z		= z.slice( -100 );
-			
+	
+			this.cs.data.labels				= time.slice( -100 );
+			this.cs.data.datasets[0].data	= x.slice( -100 );
+			this.cs.data.datasets[1].data	= y.slice( -100 );
+			this.cs.data.datasets[2].data	= z.slice( -100 );
+	
 			this.draw();
 			
 			for ( let i = 0; i < TABLE_LEN; i++ )
@@ -97,7 +96,7 @@ let	acc_data	= {
 				document.getElementById( "yField" + i ).value = yv;
 				document.getElementById( "zField" + i ).value = zv;
 			}
-*/			
+
 			document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
 			document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
 			document.getElementById( "infoFieldValue2" ).value = time.length;
