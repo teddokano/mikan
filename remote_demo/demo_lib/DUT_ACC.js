@@ -1,139 +1,24 @@
 let	acc_data	= {
-	time:[],
-	x:[],
-	y:[],
-	z:[],
-	chart : undefined,
-	
-	getAndShow: function () {		
-		let url		= REQ_HEADER + "update=1";
-		
-		ajaxUpdate( url, data => {
-			obj = JSON.parse( data );
-
-			obj.forEach( data => {
-				this.time.push( data.time );
-				this.x.push( data.x );
-				this.y.push( data.y );
-				this.z.push( data.z );
-			});
-			
-			this.time	= this.time.slice( -100 );
-			this.x	= this.x.slice( -100 );
-			this.y	= this.y.slice( -100 );
-			this.z	= this.z.slice( -100 );
-			
-			this.draw();
-			
-			for ( let i = 0; i < TABLE_LEN; i++ )
-			{
-				document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				
-				let	x	= this.x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				let	y	= this.y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				let	z	= this.z.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				
-				x	= isNaN( x ) ? x : x.toFixed( 6 );
-				y	= isNaN( y ) ? y : y.toFixed( 6 );
-				z	= isNaN( y ) ? z : z.toFixed( 6 );
-					
-				document.getElementById( "xField" + i ).value = x;
-				document.getElementById( "yField" + i ).value = y;
-				document.getElementById( "zField" + i ).value = z;
-			}
-			
-			document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
-			document.getElementById( "infoFieldValue1" ).value = this.time[ this.time.length - 1 ];
-			document.getElementById( "infoFieldValue2" ).value = this.time.length;
-		} );
-	},
-
-	show_obj: function() {
-		console.log( '========================================================' );
-		console.log( { type: 'line',
-											data: {
-												labels: this.time,
-												datasets: [
-													{
-														label: 'x',
-														data: this.x,
-														borderColor: "rgba( 255, 0, 0, 1 )",
-														backgroundColor: "rgba( 0, 0, 0, 0 )"
-													},
-													{
-														label: 'y',
-														data: this.y,
-														borderColor: "rgba( 0, 255, 0, 1 )",
-														backgroundColor: "rgba( 0, 0, 0, 0 )"
-													},
-													{
-														label: 'z',
-														data: this.z,
-														borderColor: "rgba( 0, 0, 255, 1 )",
-														backgroundColor: "rgba( 0, 0, 0, 0 )"
-													},
-												],
-											},
-											options: {
-												animation: false,
-												title: {
-													display: true,
-													text: '"g" now'
-												},
-												scales: {
-													yAxes: [{
-														ticks: {
-															suggestedMax: GRAPH_HIGH,
-															suggestedMin: GRAPH_LOW,
-															stepSize: 0.1,
-															callback: function(value, index, values){
-															return  value +  ' ˚g'
-															}
-														},
-														scaleLabel: {
-															display: true,
-															labelString: ' gravitational acceleration [g]'
-														}
-													}],
-													xAxes: [{
-														scaleLabel: {
-															display: true,
-															labelString: 'time'
-														}
-													}]
-												},
-											}
-										}  );
-		console.log( '========================================================' );
-		console.log( this.chart_settings );
-	},
-	
-	draw: function () {
-		let	ctx = document.getElementById("myLineChart");
-
-		if ( this.chart )
-			this.chart.destroy();
-
-		let cs	= {
+	cs : {
 			type: 'line',
 			data: {
-				labels: this.time,
+				labels: { time:[] },
 				datasets: [
 					{
 						label: 'x',
-						data: this.x,
+						data: [],
 						borderColor: "rgba( 255, 0, 0, 1 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: 'y',
-						data: this.y,
+						data: { y:[] },
 						borderColor: "rgba( 0, 255, 0, 1 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
 					{
 						label: 'z',
-						data: this.z,
+						data: { z:[] },
 						borderColor: "rgba( 0, 0, 255, 1 )",
 						backgroundColor: "rgba( 0, 0, 0, 0 )"
 					},
@@ -168,9 +53,69 @@ let	acc_data	= {
 					}]
 				},
 			}
-		};
+		},
+	chart : undefined,
+	
+	getAndShow: function () {		
+		let url		= REQ_HEADER + "update=1";
+		let time	= this.cs.data.labels.time;
+		let x		= this.cs.data.datasets[0].data;
+		let y		= this.cs.data.datasets[1].data.y;
+		let z		= this.cs.data.datasets[2].data.z;
+		
+		ajaxUpdate( url, data => {
+			obj = JSON.parse( data );
 
-		this.chart = new Chart( ctx, cs );
+			obj.forEach( data => {
+				time.push( data.time );
+				x.push( data.x );
+				y.push( data.y );
+				z.push( data.z );
+			});
+
+/*			
+			time	= time.slice( -100 );
+			x		= x.slice( -100 );
+			y		= y.slice( -100 );
+			z		= z.slice( -100 );
+			
+			this.draw();
+			
+			for ( let i = 0; i < TABLE_LEN; i++ )
+			{
+				document.getElementById( "timeField" + i ).value = time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				
+				let	xv	= x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				let	yv	= y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				let	zv	= z.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+				
+				xv	= isNaN( xv ) ? x : xv.toFixed( 6 );
+				yv	= isNaN( yv ) ? y : yv.toFixed( 6 );
+				zv	= isNaN( yv ) ? z : zv.toFixed( 6 );
+					
+				document.getElementById( "xField" + i ).value = xv;
+				document.getElementById( "yField" + i ).value = yv;
+				document.getElementById( "zField" + i ).value = zv;
+			}
+*/			
+			document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
+			document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
+			document.getElementById( "infoFieldValue2" ).value = time.length;
+		} );
+	},
+
+	show_obj: function() {
+		console.log( '========================================================' );
+		console.log( this.cs );
+	},
+	
+	draw: function () {
+		let	ctx = document.getElementById("myLineChart");
+
+		if ( this.chart )
+			this.chart.destroy();
+
+		this.chart = new Chart( ctx, this.cs );
 	},
 
 	save: function () {
@@ -288,7 +233,7 @@ function getTempAndShow() {
 }
 
 window.addEventListener( 'load', function () {
-	acc_data.draw();
 	acc_data.show_obj();
+//	acc_data.draw();
 	setInterval( getTempAndShow, 100 );
 });
