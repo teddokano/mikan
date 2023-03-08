@@ -119,12 +119,17 @@ let	acc_data	= {
 
 	save: function () {
 		console.log( 'csvFileOut' );
-		let str	= [];
-		let	len	= this.time.length;
+		let str		= [];
+		let time	= this.cs.data.labels;
+		let x		= this.cs.data.datasets[0].data;
+		let y		= this.cs.data.datasets[1].data;
+		let z		= this.cs.data.datasets[2].data;
+
+		let	len	= time.length;
 		
 		str	+= "time,x,y,z\n";
 		for ( let i = 0; i < len; i++ ) {
-			str	+= this.time[ i ] + "," +  this.x[ i ] + "," + this.y[ i ] + "," + this.z[ i ] + "\n";
+			str	+= time[ i ] + "," +  x[ i ] + "," + y[ i ] + "," + z[ i ] + "\n";
 		}
 
 		let now		= new Date()
