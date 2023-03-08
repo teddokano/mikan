@@ -108,17 +108,12 @@ class GraphDraw {
 
 	save() {
 		console.log( 'csvFileOut' );
-		let str		= [];
-		let time	= this.cs.data.labels;
-		let x		= this.cs.data.datasets[0].data;
-		let y		= this.cs.data.datasets[1].data;
-		let z		= this.cs.data.datasets[2].data;
-
-		let	len	= time.length;
+		let str	= [];
+		let	len	= this.time.length;
 		  
 		str	+= "time,x,y,z\n";
 		for ( let i = 0; i < len; i++ ) {
-			str	+= time[ i ] + "," +  x[ i ] + "," + y[ i ] + "," + z[ i ] + "\n";
+			str	+= this.time[ i ] + "," +  this.x[ i ] + "," + this.y[ i ] + "," + this.z[ i ] + "\n";
 		}
 
 		let now		= new Date()
@@ -186,104 +181,8 @@ let	acc	= {
 	}
 };
 
-accGraph	= new GraphDraw( "Chart0", acc );
-magGraph	= new GraphDraw( "Chart1", acc );
-
-
-/****************************
- ****	widget handling
- ****************************/
-
-/******** updateSlider ********/
-
-function updateSlider( moving, idx ) {
-	let tos		= document.getElementById( "Slider0" ).value;
-	let thyst	= document.getElementById( "Slider1" ).value;
-
-	tos		= parseFloat( tos );	//	<-- this is required to let correct compare
-	thyst	= parseFloat( thyst );	//	<-- this is required to let correct compare
-
-	if ( idx == 0 ) {
-		thyst	= ( tos < thyst ) ? tos : thyst;
-		//thyst=tos;
-	}
-	else {
-		tos		= ( tos < thyst ) ? thyst : tos;
-		//tos=thyst;
-	}
-
-	setSliderValues( 0, tos   );
-	setSliderValues( 1, thyst );
-}
-
-/******** updateValField ********/
-
-function updateValField( idx ) {
-	let valueFieldElement = document.getElementById( "valField" + idx );
-	let value	= parseFloat( valueFieldElement.value );
-	let no_submit	= 0;
-	
-	if ( isNaN( value ) ) {
-		no_submit	= 1;
-		value = document.getElementById( "Slider" + idx ).value;
-	}
-	value	= (value < -55  ) ? -55 : value;
-	value	= (125   < value) ? 125 : value;
-
-	setSliderValues( idx, value );
-}
-
-/******** setSliderValues ********/
-
-function setSliderValues( idx, value ) {
-
-	document.getElementById( "Slider" + idx ).value = value;
-	document.getElementById( "valField" + idx ).value = value.toFixed( 1 );
-}
-
-/******** setTosThyst ********/
-
-function setTosThyst() {
-	let valueFieldElementTos	= document.getElementById( "valField0" );
-	let valueFieldElementThyst	= document.getElementById( "valField1" );
-	let tos		= parseFloat( valueFieldElementTos.value );
-	let thyst	= parseFloat( valueFieldElementThyst.value );
-
-	let url	= REQ_HEADER + 'tos=' + tos.toFixed( 1 ) + '&thyst=' + thyst.toFixed( 1 );
-	ajaxUpdate( url );
-}
-
-function setConfig() {
-	let config_panel = document.getElementById( 'config_panel' );
-	radioNodeList = config_panel.elements[ 'os_polarity' ];
-	let	pol	= radioNodeList.value;
-	radioNodeList = config_panel.elements[ 'os_mode' ];
-	let	mod	= radioNodeList.value;
-	
-	let url	= REQ_HEADER + 'os_polarity=' + pol + '&os_mode=' + mod;
-	ajaxUpdate( url );
-}
-
-function updateHeaterSwitch() {
-	let heaterSwitchElement	= document.getElementById( "heaterSwitch" );
-	let	val;
-	
-	if ( heaterSwitchElement.checked )
-		val	= 1;
-	else
-		val	= 0;
-		
-	let url	= REQ_HEADER + 'heater=' + val;
-	ajaxUpdate( url );
-}
-
 function csvFileOut() {
-	acc_data.save();
-}
-
-function getTempAndShow2() {
-	accGraph.getAndShow();
-	magGraph.getAndShow();
+	accGraph.save();
 }
 
 function getTempAndShow() {
@@ -303,3 +202,7 @@ function getTempAndShow() {
 window.addEventListener( 'load', function () {
 	setInterval( getTempAndShow, 200 );
 });
+
+accGraph	= new GraphDraw( "Chart0", acc );
+magGraph	= new GraphDraw( "Chart1", acc );
+
