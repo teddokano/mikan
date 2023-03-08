@@ -3,23 +3,24 @@ class GraphDraw {
 		this.id		= id;
 		this.cs		= cs;
 		this.chart	= undefined;
+		
+		this.time	= this.cs.data.labels;
+		this.x		= this.cs.data.datasets[0].data;
+		this.y		= this.cs.data.datasets[1].data;
+		this.z		= this.cs.data.datasets[2].data;
 	}
 
 	getAndShow() {		
 		let url		= REQ_HEADER + "update=1";
-		let time	= this.cs.data.labels;
-		let x		= this.cs.data.datasets[0].data;
-		let y		= this.cs.data.datasets[1].data;
-		let z		= this.cs.data.datasets[2].data;
 
 		ajaxUpdate( url, data => {
 			let obj = JSON.parse( data );
 
 			obj.forEach( data => {
-				time.push( data.time );
-				x.push( data.x );
-				y.push( data.y );
-				z.push( data.z );
+				this.time.push( data.time );
+				this.x.push( data.x );
+				this.y.push( data.y );
+				this.z.push( data.z );
 			});
 
 			if ( 100 < time.length ) {
@@ -52,6 +53,43 @@ class GraphDraw {
 			document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
 			document.getElementById( "infoFieldValue2" ).value = time.length;
 		} );
+	}
+
+	push( t, xyz ) {		
+		this.time.push( t );
+		this.x.push( xyz.x );
+		this.y.push( xyz.y );
+		this.z.push( xyz.z );
+
+		if ( 100 < this.time.length ) {
+			this.cs.data.labels.shift();
+			this.cs.data.datasets[0].data.shift();
+			this.cs.data.datasets[1].data.shift();
+			this.cs.data.datasets[2].data.shift();
+		}
+	}
+	
+	update_tables() {
+		for ( let i = 0; i < TABLE_LEN; i++ )
+		{
+			document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+			
+			let	xv	= this.x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+			let	yv	= this.y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+			let	zv	= this.z.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+			
+			xv	= isNaN( xv ) ? xv : xv.toFixed( 6 );
+			yv	= isNaN( yv ) ? yv : yv.toFixed( 6 );
+			zv	= isNaN( yv ) ? zv : zv.toFixed( 6 );
+				
+			document.getElementById( "xField" + i ).value = xv;
+			document.getElementById( "yField" + i ).value = yv;
+			document.getElementById( "zField" + i ).value = zv;
+		}
+
+		document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
+		document.getElementById( "infoFieldValue1" ).value = this.time[ this.time.length - 1 ];
+		document.getElementById( "infoFieldValue2" ).value = this.time.length;
 	}
 
 	show_obj() {
@@ -93,7 +131,7 @@ class GraphDraw {
 }
 
 let	acc	= {
-type: 'line',
+	type: 'line',
 	data: {
 		labels: [],
 		datasets: [
@@ -243,9 +281,23 @@ function csvFileOut() {
 	acc_data.save();
 }
 
-function getTempAndShow() {
+function getTempAndShow2() {
 	accGraph.getAndShow();
 	magGraph.getAndShow();
+}
+
+function getTempAndShow() {
+	let url		= REQ_HEADER + "update=1";
+	
+	ajaxUpdate( url, data => {
+		let obj = JSON.parse( data );
+
+		obj.forEach( data => {
+			accGraph.push( data.time, { x:data.x, y:data.y, z:data.z } );
+			accGraph.draw();
+			accGraph.update_tables();
+		} );
+	} );
 }
 
 window.addEventListener( 'load', function () {
