@@ -1,12 +1,13 @@
 class GraphDraw {
-	constructor( id, cs ) {
+	constructor( id, req, cs ) {
 		this.id		= id;
+		this.req	= req;
 		this.cs		= cs;
 		this.chart	= undefined;
 	}
 
 	getAndShow() {		
-		let url		= REQ_HEADER + "update=1";
+		let url		= REQ_HEADER + this.req;
 		let time	= this.cs.data.labels;
 		let x		= this.cs.data.datasets[0].data;
 		let y		= this.cs.data.datasets[1].data;
@@ -124,8 +125,8 @@ type: 'line',
 		scales: {
 			yAxes: [{
 				ticks: {
-					suggestedMax: 11,
-					suggestedMin: -1,
+					suggestedMax: 2.0,
+					suggestedMin: -2.0,
 					stepSize: 1,
 					callback: function(value, index, values){
 					return  value +  ' g'
@@ -146,7 +147,7 @@ type: 'line',
 	}
 };
 
-accGraph	= new GraphDraw( "Chart0", acc );
+accGraph	= new GraphDraw( "Chart0", "update=1", acc );
 
 
 /****************************
