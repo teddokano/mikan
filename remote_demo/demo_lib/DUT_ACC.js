@@ -1,13 +1,12 @@
 class GraphDraw {
-	constructor( id, req, cs ) {
+	constructor( id, cs ) {
 		this.id		= id;
-		this.req	= req;
 		this.cs		= cs;
 		this.chart	= undefined;
 	}
 
 	getAndShow() {		
-		let url		= REQ_HEADER + this.req;
+		let url		= REQ_HEADER + "update=1";
 		let time	= this.cs.data.labels;
 		let x		= this.cs.data.datasets[0].data;
 		let y		= this.cs.data.datasets[1].data;
@@ -149,7 +148,8 @@ type: 'line',
 	}
 };
 
-accGraph	= new GraphDraw( "Chart0", "update=1", acc );
+accGraph	= new GraphDraw( "Chart0", acc );
+magGraph	= new GraphDraw( "Chart1", acc );
 
 
 /****************************
@@ -245,9 +245,9 @@ function csvFileOut() {
 
 function getTempAndShow() {
 	accGraph.getAndShow();
+	magGraph.getAndShow();
 }
 
 window.addEventListener( 'load', function () {
-	accGraph.draw();
-	setInterval( getTempAndShow, 100 );
+	setInterval( getTempAndShow, 200 );
 });
