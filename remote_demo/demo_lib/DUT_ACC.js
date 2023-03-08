@@ -1,70 +1,19 @@
-let	acc_data	= {
-	cs : {
-			type: 'line',
-			data: {
-				labels: [],
-				datasets: [
-					{
-						label: 'x',
-						data: [],
-						borderColor: "rgba( 255, 0, 0, 1 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
-					},
-					{
-						label: 'y',
-						data: [],
-						borderColor: "rgba( 0, 255, 0, 1 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
-					},
-					{
-						label: 'z',
-						data: [],
-						borderColor: "rgba( 0, 0, 255, 1 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
-					},
-				],
-			},
-			options: {
-				animation: false,
-				title: {
-					display: true,
-					text: '"g" now'
-				},
-				scales: {
-					yAxes: [{
-						ticks: {
-							suggestedMax: GRAPH_HIGH,
-							suggestedMin: GRAPH_LOW,
-							stepSize: 0.1,
-							callback: function(value, index, values){
-							return  value +  ' g'
-							}
-						},
-						scaleLabel: {
-							display: true,
-							labelString: ' gravitational acceleration [g]'
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
-							display: true,
-							labelString: 'time'
-						}
-					}]
-				},
-			}
-		},
-	chart : undefined,
-	
-	getAndShow: function () {		
+class GraphDraw {
+	constructor( id, cs ) {
+		this.id		= id;
+		this.cs		= cs;
+		this.chart	= undefined;
+	}
+
+	getAndShow() {		
 		let url		= REQ_HEADER + "update=1";
 		let time	= this.cs.data.labels;
 		let x		= this.cs.data.datasets[0].data;
 		let y		= this.cs.data.datasets[1].data;
 		let z		= this.cs.data.datasets[2].data;
-		
+
 		ajaxUpdate( url, data => {
-			obj = JSON.parse( data );
+			let obj = JSON.parse( data );
 
 			obj.forEach( data => {
 				time.push( data.time );
@@ -72,14 +21,14 @@ let	acc_data	= {
 				y.push( data.y );
 				z.push( data.z );
 			});
-	
+
 			this.cs.data.labels				= time.slice( -100 );
 			this.cs.data.datasets[0].data	= x.slice( -100 );
 			this.cs.data.datasets[1].data	= y.slice( -100 );
 			this.cs.data.datasets[2].data	= z.slice( -100 );
-	
+
 			this.draw();
-			
+
 			for ( let i = 0; i < TABLE_LEN; i++ )
 			{
 				document.getElementById( "timeField" + i ).value = time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
@@ -101,23 +50,23 @@ let	acc_data	= {
 			document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
 			document.getElementById( "infoFieldValue2" ).value = time.length;
 		} );
-	},
+	}
 
-	show_obj: function() {
+	show_obj() {
 		console.log( '========================================================' );
 		console.log( this.cs );
-	},
-	
-	draw: function () {
-		let	ctx = document.getElementById("myLineChart");
+	}
 
+	draw() {
+		let	ctx = document.getElementById( this.id );
+		
 		if ( this.chart )
 			this.chart.destroy();
 
 		this.chart = new Chart( ctx, this.cs );
-	},
+	}
 
-	save: function () {
+	save() {
 		console.log( 'csvFileOut' );
 		let str		= [];
 		let time	= this.cs.data.labels;
@@ -126,7 +75,7 @@ let	acc_data	= {
 		let z		= this.cs.data.datasets[2].data;
 
 		let	len	= time.length;
-		
+		  
 		str	+= "time,x,y,z\n";
 		for ( let i = 0; i < len; i++ ) {
 			str	+= time[ i ] + "," +  x[ i ] + "," + y[ i ] + "," + z[ i ] + "\n";
@@ -140,6 +89,65 @@ let	acc_data	= {
 		link.click();
 	}
 }
+
+let	acc	= {
+type: 'line',
+	data: {
+		labels: [],
+		datasets: [
+			{
+				label: 'x',
+				data: [],
+				borderColor: "rgba( 255, 0, 0, 1 )",
+				backgroundColor: "rgba( 0, 0, 0, 0 )"
+			},
+			{
+				label: 'y',
+				data: [],
+				borderColor: "rgba( 0, 255, 0, 1 )",
+				backgroundColor: "rgba( 0, 0, 0, 0 )"
+			},
+			{
+				label: 'z',
+				data: [],
+				borderColor: "rgba( 0, 0, 255, 1 )",
+				backgroundColor: "rgba( 0, 0, 0, 0 )"
+			},
+		],
+	},
+	options: {
+		animation: false,
+		title: {
+			display: true,
+			text: '"g" now'
+		},
+		scales: {
+			yAxes: [{
+				ticks: {
+					suggestedMax: 11,
+					suggestedMin: -1,
+					stepSize: 1,
+					callback: function(value, index, values){
+					return  value +  ' g'
+					}
+				},
+				scaleLabel: {
+					display: true,
+					labelString: ' gravitational acceleration [g]'
+				}
+			}],
+			xAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'time'
+				}
+			}]
+		},
+	}
+};
+
+accGraph	= new GraphDraw( "Chart0", acc );
+
 
 /****************************
  ****	widget handling
@@ -233,11 +241,10 @@ function csvFileOut() {
 }
 
 function getTempAndShow() {
-	acc_data.getAndShow();
+	accGraph.getAndShow();
 }
 
 window.addEventListener( 'load', function () {
-	acc_data.show_obj();
-//	acc_data.draw();
+	accGraph.draw();
 	setInterval( getTempAndShow, 100 );
 });
