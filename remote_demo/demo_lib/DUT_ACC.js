@@ -23,11 +23,13 @@ class GraphDraw {
 				z.push( data.z );
 			});
 
-			this.cs.data.labels				= time.slice( -100 );
-			this.cs.data.datasets[0].data	= x.slice( -100 );
-			this.cs.data.datasets[1].data	= y.slice( -100 );
-			this.cs.data.datasets[2].data	= z.slice( -100 );
-
+			if ( 100 < time.length ) {
+				this.cs.data.labels.shift();
+				this.cs.data.datasets[0].data.shift();
+				this.cs.data.datasets[1].data.shift();
+				this.cs.data.datasets[2].data.shift();
+			}
+ 
 			this.draw();
 
 			for ( let i = 0; i < TABLE_LEN; i++ )
