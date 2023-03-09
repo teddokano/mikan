@@ -76,8 +76,10 @@ class GraphDraw {
 }
 
 function csvFileOut() {
-	accGraph.save();
-	magGraph.save();
+	for ( const g of graph ) {
+		g.save();
+
+	}
 }
 
 function getDataAndShow() {
@@ -87,13 +89,14 @@ function getDataAndShow() {
 		let obj = JSON.parse( data );
 
 		obj.forEach( data => {
-			accGraph.push( data.time, { x:data.x, y:data.y, z:data.z } );
-			magGraph.push( data.time, { x:data.mx, y:data.my, z:data.mz } );
+			graph[ 0 ].push( data.time, { x:data.x, y:data.y, z:data.z } );
+			graph[ 1 ].push( data.time, { x:data.mx, y:data.my, z:data.mz } );
 		} );
-		accGraph.draw();
-		accGraph.update_tables();
-		magGraph.draw();
-		magGraph.update_tables();
+		
+		for ( const g of graph ) {
+			g.draw();
+			g.update_tables();
+		}
 	} );
 }
 
@@ -210,5 +213,7 @@ let	mag	= {
 	}
 };
 
-accGraph	= new GraphDraw( SPLIT[ 0 ], acc );
-magGraph	= new GraphDraw( SPLIT[ 1 ], mag );
+let graph	= [];
+
+graph.push( new GraphDraw( SPLIT[ 0 ], acc ) );
+graph.push( new GraphDraw( SPLIT[ 1 ], mag ) );
