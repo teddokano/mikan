@@ -30,10 +30,13 @@ class DUT_ACC( DUT_base.DUT_base ):
 	def xyz_data( self ):
 		d	= {}
 		xyz	= self.dev.xyz()
-#		xyz	= self.dev.mag()
+		mag	= self.dev.mag()
 		d[ "x" ] = xyz[ 0 ]
 		d[ "y" ] = xyz[ 1 ] 
 		d[ "z" ] = xyz[ 2 ]
+		d[ "mx" ] = mag[ 0 ]
+		d[ "my" ] = mag[ 1 ] 
+		d[ "mz" ] = mag[ 2 ]
 		tm	= self.rtc.now()
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 

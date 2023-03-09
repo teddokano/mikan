@@ -92,11 +92,6 @@ class GraphDraw {
 		document.getElementById( "infoFieldValue2" ).value = this.time.length;
 	}
 
-	show_obj() {
-		console.log( '========================================================' );
-		console.log( this.cs );
-	}
-
 	draw() {
 		let	ctx = document.getElementById( this.id );
 		
@@ -120,10 +115,35 @@ class GraphDraw {
 		let blob	= new Blob( [str], {type:"text/csv"} );
 		let link	= document.createElement( 'a' );
 		link.href	= URL.createObjectURL( blob );
-		link.download	= DEV_NAME + "_measurement_result" + now.toString() + ".csv";
+		link.download	= DEV_NAME + this.id + "_measurement_result" + now.toString() + ".csv";
 		link.click();
 	}
 }
+
+function csvFileOut() {
+	accGraph.save();
+	magGraph.save();
+}
+
+function getTempAndShow() {
+	let url		= REQ_HEADER + "update=1";
+	
+	ajaxUpdate( url, data => {
+		let obj = JSON.parse( data );
+
+		obj.forEach( data => {
+			accGraph.push( data.time, { x:data.x, y:data.y, z:data.z } );
+			magGraph.push( data.time, { x:data.mx, y:data.my, z:data.mz } );
+		} );
+		accGraph.draw();
+		accGraph.update_tables();
+		magGraph.draw();
+	} );
+}
+
+window.addEventListener( 'load', function () {
+	setInterval( getTempAndShow, 200 );
+});
 
 let	acc	= {
 	type: 'line',
@@ -168,7 +188,7 @@ let	acc	= {
 				},
 				scaleLabel: {
 					display: true,
-					labelString: ' gravitational acceleration [g]'
+					labelString: ' ]gravitational acceleration [g]'
 				}
 			}],
 			xAxes: [{
@@ -181,28 +201,61 @@ let	acc	= {
 	}
 };
 
-function csvFileOut() {
-	accGraph.save();
-}
-
-function getTempAndShow() {
-	let url		= REQ_HEADER + "update=1";
-	
-	ajaxUpdate( url, data => {
-		let obj = JSON.parse( data );
-
-		obj.forEach( data => {
-			accGraph.push( data.time, { x:data.x, y:data.y, z:data.z } );
-			accGraph.draw();
-			accGraph.update_tables();
-		} );
-	} );
-}
-
-window.addEventListener( 'load', function () {
-	setInterval( getTempAndShow, 200 );
-});
+let	mag	= {
+	type: 'line',
+	data: {
+		labels: [],
+		datasets: [
+			{
+				label: 'x',
+				data: [],
+				borderColor: "rgba( 255, 0, 0, 1 )",
+				backgroundColor: "rgba( 0, 0, 0, 0 )"
+			},
+			{
+				label: 'y',
+				data: [],
+				borderColor: "rgba( 0, 255, 0, 1 )",
+				backgroundColor: "rgba( 0, 0, 0, 0 )"
+			},
+			{
+				label: 'z',
+				data: [],
+				borderColor: "rgba( 0, 0, 255, 1 )",
+				backgroundColor: "rgba( 0, 0, 0, 0 )"
+			},
+		],
+	},
+	options: {
+		animation: false,
+		title: {
+			display: true,
+			text: '"mag" now'
+		},
+		scales: {
+			yAxes: [{
+				ticks: {
+					//suggestedMax: 2.0,
+					//suggestedMin: -2.0,
+					//stepSize: 1,
+					callback: function(value, index, values){
+					return  value +  ' nT'
+					}
+				},
+				scaleLabel: {
+					display: true,
+					labelString: 'geomagnetism [nT]'
+				}
+			}],
+			xAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'time'
+				}
+			}]
+		},
+	}
+};
 
 accGraph	= new GraphDraw( "Chart0", acc );
-magGraph	= new GraphDraw( "Chart1", acc );
-
+magGraph	= new GraphDraw( "Chart1", mag );
