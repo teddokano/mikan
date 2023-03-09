@@ -27,7 +27,9 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.info		= [ "acc", "" ]
 		self.symbol		= '🍎'
 		
-		self.chartlabel	= ( "Chart0", "Chart1" )
+		self.split		= ( { "id": "Chart0", "unit": "g"  }, 
+							{ "id": "Chart1", "unit": "nT" }
+							)
 
 	def xyz_data( self ):
 		d	= {}
@@ -74,28 +76,50 @@ class DUT_ACC( DUT_base.DUT_base ):
 	def page_setup( self ):
 		self.page_data[ "symbol"    ]	= self.symbol
 		self.page_data[ "table_len" ]	= str( self.TABLE_LENGTH )
-		self.page_data[ "table0"     ]	= self.get_table( 0, "g" )
-		self.page_data[ "table1"     ]	= self.get_table( 1, "nT" )
+		self.page_data[ "tables"     ]	= self.get_tables()
 		self.page_data[ "info_tab"  ]	= self.get_info_table()
 
 		self.page_data[ "graph_high"]	= str( self.GRAPH_HIGH )
 		self.page_data[ "graph_low" ]	= str( self.GRAPH_LOW  )
 		self.page_data[ "max_n_data"]	= str( self.SAMPLE_LENGTH )
 
-		self.page_data[ "chart0" ]		= self.chartlabel[ 0 ]
-		self.page_data[ "chart1" ]		= self.chartlabel[ 1 ]
+		self.page_data[ "charts" ]		= self.get_charts()
+		self.page_data[ "split" ]		= self.get_splits()
 
 		return self.load_html()
 
-	def get_table( self, n, unit ):
+	def get_charts( self ):
+		s	= []
+		for d in self.split:
+			s	+= [ '<div><canvas id="{}"></canvas></div>'.format( d[ "id" ] ) ]
+
+		return "\n".join( s )
+
+	def get_splits( self ):
+		s	= [ "[" ]
+		for d in self.split:
+			s	+= [ ' "{}",'.format( d[ "id" ] ) ]
+		s	+= [ " ]" ]
+		return "".join( s )
+
+	def get_tables( self ):
+		s	= []
+		for d in self.split:
+			s	+= [ '<div id="reg_table" class="control_panel reg_table log_panel">' ]
+			s	+= [ self.get_tab( d[ "id" ], d[ "unit" ] ) ]
+			s	+= [ '</div>' ]
+		
+		return "\n".join( s )
+			
+	def get_tab( self, id, unit ):
 		s	= [ '<table class="table_TEMP"><tr><td class="td_TEMP">time</td><td class="td_TEMP">x [{0}]</td><td class="td_TEMP">y [{0}]</td><td class="td_TEMP">z [{0}]</td></tr>'.format( unit ) ]
 
 		for i in range( self.TABLE_LENGTH ):
 			s	+= [ '<tr>' ]
-			s	+= [ '<td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="{}timeField{}" value = "---"></td>'.format( self.chartlabel[ n ], i ) ]
-			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}xField{}"></td>'.format( self.chartlabel[ n ], i ) ]
-			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}yField{}"></td>'.format( self.chartlabel[ n ], i ) ]
-			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}zField{}"></td>'.format( self.chartlabel[ n ], i ) ]
+			s	+= [ '<td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="{}timeField{}" value = "---"></td>'.format( id, i ) ]
+			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}xField{}"></td>'.format( id, i ) ]
+			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}yField{}"></td>'.format( id, i ) ]
+			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}zField{}"></td>'.format( id, i ) ]
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]

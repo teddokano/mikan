@@ -27,8 +27,7 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 		const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 		const	MAX_N_DATA	= {% max_n_data %}
 		
-		const	CHART0		= '{% chart0 %}'
-		const	CHART1		= '{% chart1 %}'
+		const	SPLIT		= {% split %}
 	</script>
 
 	<script async src="general.js"></script>
@@ -39,23 +38,12 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 		<p class="info">{% dev_info %}</p>
 	</div>
 
-	<div>
-		<canvas id={% chart0 %}></canvas>
-	</div>
-	<div>
-		<canvas id={% chart1 %}></canvas>
-	</div>
+	{% charts %}
 	
 	<div class="para">
 		
-		<div id="reg_table" class="control_panel reg_table log_panel">
-			{% table0 %}
-		</div>
-		
-		<div id="reg_table" class="control_panel reg_table log_panel">
-			{% table1 %}
-		</div>
-		
+		{% tables %}
+
 		<div id="reg_table" class="control_panel reg_table info_panel">
 			{% info_tab %}<br/>
 			<input type="button" onclick="csvFileOut();" value="Save" class="tmp_button">

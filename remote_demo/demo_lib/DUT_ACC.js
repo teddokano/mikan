@@ -210,5 +210,5 @@ let	mag	= {
 	}
 };
 
-accGraph	= new GraphDraw( CHART0, acc );
-magGraph	= new GraphDraw( CHART1, mag );
+accGraph	= new GraphDraw( SPLIT[ 0 ], acc );
+magGraph	= new GraphDraw( SPLIT[ 1 ], mag );
