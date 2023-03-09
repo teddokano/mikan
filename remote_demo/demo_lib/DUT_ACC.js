@@ -10,51 +10,6 @@ class GraphDraw {
 		this.z		= this.cs.data.datasets[2].data;
 	}
 
-	getAndShow() {		
-		let url		= REQ_HEADER + "update=1";
-
-		ajaxUpdate( url, data => {
-			let obj = JSON.parse( data );
-
-			obj.forEach( data => {
-				this.time.push( data.time );
-				this.x.push( data.x );
-				this.y.push( data.y );
-				this.z.push( data.z );
-			});
-
-			if ( 100 < time.length ) {
-				this.cs.data.labels.shift();
-				this.cs.data.datasets[0].data.shift();
-				this.cs.data.datasets[1].data.shift();
-				this.cs.data.datasets[2].data.shift();
-			}
- 
-			this.draw();
-
-			for ( let i = 0; i < TABLE_LEN; i++ )
-			{
-				document.getElementById( "timeField" + i ).value = time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				
-				let	xv	= x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				let	yv	= y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				let	zv	= z.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-				
-				xv	= isNaN( xv ) ? x : xv.toFixed( 6 );
-				yv	= isNaN( yv ) ? y : yv.toFixed( 6 );
-				zv	= isNaN( yv ) ? z : zv.toFixed( 6 );
-					
-				document.getElementById( "xField" + i ).value = xv;
-				document.getElementById( "yField" + i ).value = yv;
-				document.getElementById( "zField" + i ).value = zv;
-			}
-
-			document.getElementById( "infoFieldValue0" ).value = time[ 0 ];
-			document.getElementById( "infoFieldValue1" ).value = time[ time.length - 1 ];
-			document.getElementById( "infoFieldValue2" ).value = time.length;
-		} );
-	}
-
 	push( t, xyz ) {		
 		this.time.push( t );
 		this.x.push( xyz.x );
@@ -72,7 +27,7 @@ class GraphDraw {
 	update_tables() {
 		for ( let i = 0; i < TABLE_LEN; i++ )
 		{
-			document.getElementById( "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
+			document.getElementById( this.id + "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
 			
 			let	xv	= this.x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
 			let	yv	= this.y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
@@ -82,9 +37,9 @@ class GraphDraw {
 			yv	= isNaN( yv ) ? yv : yv.toFixed( 6 );
 			zv	= isNaN( yv ) ? zv : zv.toFixed( 6 );
 				
-			document.getElementById( "xField" + i ).value = xv;
-			document.getElementById( "yField" + i ).value = yv;
-			document.getElementById( "zField" + i ).value = zv;
+			document.getElementById( this.id + "xField" + i ).value = xv;
+			document.getElementById( this.id + "yField" + i ).value = yv;
+			document.getElementById( this.id + "zField" + i ).value = zv;
 		}
 
 		document.getElementById( "infoFieldValue0" ).value = this.time[ 0 ];
@@ -125,7 +80,7 @@ function csvFileOut() {
 	magGraph.save();
 }
 
-function getTempAndShow() {
+function getDataAndShow() {
 	let url		= REQ_HEADER + "update=1";
 	
 	ajaxUpdate( url, data => {
@@ -138,11 +93,12 @@ function getTempAndShow() {
 		accGraph.draw();
 		accGraph.update_tables();
 		magGraph.draw();
+		magGraph.update_tables();
 	} );
 }
 
 window.addEventListener( 'load', function () {
-	setInterval( getTempAndShow, 200 );
+	setInterval( getDataAndShow, 200 );
 });
 
 let	acc	= {
@@ -235,9 +191,6 @@ let	mag	= {
 		scales: {
 			yAxes: [{
 				ticks: {
-					//suggestedMax: 2.0,
-					//suggestedMin: -2.0,
-					//stepSize: 1,
 					callback: function(value, index, values){
 					return  value +  ' nT'
 					}
@@ -257,5 +210,5 @@ let	mag	= {
 	}
 };
 
-accGraph	= new GraphDraw( "Chart0", acc );
-magGraph	= new GraphDraw( "Chart1", mag );
+accGraph	= new GraphDraw( CHART0, acc );
+magGraph	= new GraphDraw( CHART1, mag );

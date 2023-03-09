@@ -26,6 +26,9 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 		const	GRAPH_LOW	= {% graph_low %}
 		const	OS_LABEL	= 'OS pin ( high@' + GRAPH_HIGH + ' / low@' + GRAPH_LOW + ' )'
 		const	MAX_N_DATA	= {% max_n_data %}
+		
+		const	CHART0		= '{% chart0 %}'
+		const	CHART1		= '{% chart1 %}'
 	</script>
 
 	<script async src="general.js"></script>
@@ -37,16 +40,20 @@ https://qiita.com/Haruka-Ogawa/items/59facd24f2a8bdb6d369
 	</div>
 
 	<div>
-		<canvas id="Chart0"></canvas>
+		<canvas id={% chart0 %}></canvas>
 	</div>
 	<div>
-		<canvas id="Chart1"></canvas>
+		<canvas id={% chart1 %}></canvas>
 	</div>
 	
 	<div class="para">
 		
 		<div id="reg_table" class="control_panel reg_table log_panel">
-			{% table %}
+			{% table0 %}
+		</div>
+		
+		<div id="reg_table" class="control_panel reg_table log_panel">
+			{% table1 %}
 		</div>
 		
 		<div id="reg_table" class="control_panel reg_table info_panel">
