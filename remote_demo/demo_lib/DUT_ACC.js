@@ -214,7 +214,14 @@ let	settings	= [
 					}
 ];
 
+
 let graph	= [];
 
-graph.push( new GraphDraw( SPLIT[ 0 ], settings[ 0 ] ) );
-graph.push( new GraphDraw( SPLIT[ 1 ], settings[ 1 ] ) );
+ajaxUpdate( REQ_HEADER + "settings", data => {
+	let obj = JSON.parse( data );
+
+	graph.push( new GraphDraw( SPLIT[ 0 ], obj[ 0 ] ) );
+	graph.push( new GraphDraw( SPLIT[ 1 ], obj[ 1 ] ) );
+} );
+
+

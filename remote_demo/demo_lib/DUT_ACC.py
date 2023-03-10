@@ -17,6 +17,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 					}
 
 	regex_update	= ure.compile( r".*update=(\d+)" )
+	regex_settings	= ure.compile( r".*settings" )
 
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
@@ -69,6 +70,10 @@ class DUT_ACC( DUT_base.DUT_base ):
 			if m:
 				self.__read( 0 )	# argument is dummy
 				return self.sending_data( int( m.group( 1 ) ) )
+
+			m	= self.regex_settings.match( req )
+			if m:
+				return ujson.dumps( settings )
 
 	def sending_data( self, length ):
 		return ujson.dumps( self.data[ -length: ] )
@@ -136,3 +141,115 @@ class DUT_ACC( DUT_base.DUT_base ):
 		s	+= [ '</table>' ]
 
 		return "\n".join( s )
+
+settings	= [
+					{
+						"type": 'line',
+						"data": {
+							"labels": [],
+							"datasets": [
+								{
+									"label": 'x',
+									"data": [],
+									"borderColor": "rgba( 255, 0, 0, 1 )",
+									"backgroundColor": "rgba( 0, 0, 0, 0 )"
+								},
+								{
+									"label": 'y',
+									"data": [],
+									"borderColor": "rgba( 0, 255, 0, 1 )",
+									"backgroundColor": "rgba( 0, 0, 0, 0 )"
+								},
+								{
+									"label": 'z',
+									"data": [],
+									"borderColor": "rgba( 0, 0, 255, 1 )",
+									"backgroundColor": "rgba( 0, 0, 0, 0 )"
+								},
+							],
+						},
+						"options": {
+							"animation": False,
+							"title": {
+								"display": True,
+								"text": '"g" now'
+							},
+							"scales": {
+								"yAxes": [{
+									"ticks": {
+										"suggestedMax": 2.0,
+										"suggestedMin": -2.0,
+										"stepSize": 1,
+										#callback: function(value, index, values){
+										#return  value +  ' g'
+										#}
+									},
+									"scaleLabel": {
+										"display": True,
+										"labelString": 'gravitational acceleration [g]'
+									}
+								}],
+								"xAxes": [{
+									"scaleLabel": {
+										"display": True,
+										"labelString": 'time'
+									}
+								}]
+							},
+						}
+					},
+					{
+						"type": 'line',
+						"data": {
+							"labels": [],
+							"datasets": [
+								{
+									"label": 'x',
+									"data": [],
+									"borderColor": "rgba( 255, 0, 0, 1 )",
+									"backgroundColor": "rgba( 0, 0, 0, 0 )"
+								},
+								{
+									"label": 'y',
+									"data": [],
+									"borderColor": "rgba( 0, 255, 0, 1 )",
+									"backgroundColor": "rgba( 0, 0, 0, 0 )"
+								},
+								{
+									"label": 'z',
+									"data": [],
+									"borderColor": "rgba( 0, 0, 255, 1 )",
+									"backgroundColor": "rgba( 0, 0, 0, 0 )"
+								},
+							],
+						},
+						"options": {
+							"animation": False,
+							"title": {
+								"display": True,
+								"text": '"mag" now'
+							},
+							"scales": {
+								"yAxes": [{
+									"ticks": {
+										#callback: function(value, index, values){
+										#return  value +  ' nT'
+										#}
+									},
+									"scaleLabel": {
+										"display": True,
+										"labelString": 'geomagnetism [nT]'
+									}
+								}],
+								"xAxes": [{
+									"scaleLabel": {
+										"display": True,
+										"labelString": 'time'
+									}
+								}]
+							},
+						}
+					}
+]
+
+print(settings)
