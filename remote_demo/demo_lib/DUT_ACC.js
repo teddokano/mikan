@@ -148,7 +148,7 @@ let	settings	= [
 									},
 									scaleLabel: {
 										display: true,
-										labelString: ' ]gravitational acceleration [g]'
+										labelString: 'gravitational acceleration [g]'
 									}
 								}],
 								xAxes: [{
