@@ -27,9 +27,9 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "acc", "" ]
 		self.symbol		= '🍎'
-		
-		self.split		= ( {	"id": "Chart0", 
-								"unit": "g",
+
+		self.split		= ( {	"id"	 : "Chart0", 
+								"unit"	 : "g",
 								"setting": graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
 															{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
 															{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
@@ -41,11 +41,11 @@ class DUT_ACC( DUT_base.DUT_base ):
 															)
 							}, 
 							{ 
-								"id": "Chart1", 
-								"unit": "nT",
-								"setting":  graph_setting( [ { "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-															 { "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-															 { "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+								"id"	 : "Chart1", 
+								"unit"	 : "nT",
+								"setting":  graph_setting( [ { "label": "mx", "color": "rgba( 255,   0,   0, 1 )"},
+															 { "label": "my", "color": "rgba(   0, 255,   0, 1 )"},
+															 { "label": "mz", "color": "rgba(   0,   0, 255, 1 )"},
 															 ], 
 															 title	= '"mag" now', 
 															 xlabel	= 'time',
@@ -57,12 +57,14 @@ class DUT_ACC( DUT_base.DUT_base ):
 		d	= {}
 		xyz	= self.dev.xyz()
 		mag	= self.dev.mag()
-		d[ "x" ] = xyz[ 0 ]
-		d[ "y" ] = xyz[ 1 ] 
-		d[ "z" ] = xyz[ 2 ]
-		d[ "mx" ] = mag[ 0 ]
-		d[ "my" ] = mag[ 1 ] 
-		d[ "mz" ] = mag[ 2 ]
+		print( self.split[0][ "setting" ].data["datasets"][ 0 ][ "label" ] )
+
+		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 0 ][ "label" ] ] = xyz[ 0 ]
+		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 1 ][ "label" ] ] = xyz[ 1 ]
+		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 2 ][ "label" ] ] = xyz[ 2 ]
+		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 0 ][ "label" ] ] = mag[ 0 ]
+		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 1 ][ "label" ] ] = mag[ 1 ]
+		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 2 ][ "label" ] ] = mag[ 2 ]
 		tm	= self.rtc.now()
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 

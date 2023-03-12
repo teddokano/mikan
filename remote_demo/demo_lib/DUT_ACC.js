@@ -104,117 +104,6 @@ window.addEventListener( 'load', function () {
 	setInterval( getDataAndShow, 200 );
 });
 
-let	settings	= [
-					{
-						type: 'line',
-						data: {
-							labels: [],
-							datasets: [
-								{
-									label: 'x',
-									data: [],
-									borderColor: "rgba( 255, 0, 0, 1 )",
-									backgroundColor: "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									label: 'y',
-									data: [],
-									borderColor: "rgba( 0, 255, 0, 1 )",
-									backgroundColor: "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									label: 'z',
-									data: [],
-									borderColor: "rgba( 0, 0, 255, 1 )",
-									backgroundColor: "rgba( 0, 0, 0, 0 )"
-								},
-							],
-						},
-						options: {
-							animation: false,
-							title: {
-								display: true,
-								text: '"g" now'
-							},
-							scales: {
-								yAxes: [{
-									ticks: {
-										suggestedMax: 2.0,
-										suggestedMin: -2.0,
-										stepSize: 1,
-										callback: function(value, index, values){
-										return  value +  ' g'
-										}
-									},
-									scaleLabel: {
-										display: true,
-										labelString: 'gravitational acceleration [g]'
-									}
-								}],
-								xAxes: [{
-									scaleLabel: {
-										display: true,
-										labelString: 'time'
-									}
-								}]
-							},
-						}
-					},
-					{
-						type: 'line',
-						data: {
-							labels: [],
-							datasets: [
-								{
-									label: 'x',
-									data: [],
-									borderColor: "rgba( 255, 0, 0, 1 )",
-									backgroundColor: "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									label: 'y',
-									data: [],
-									borderColor: "rgba( 0, 255, 0, 1 )",
-									backgroundColor: "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									label: 'z',
-									data: [],
-									borderColor: "rgba( 0, 0, 255, 1 )",
-									backgroundColor: "rgba( 0, 0, 0, 0 )"
-								},
-							],
-						},
-						options: {
-							animation: false,
-							title: {
-								display: true,
-								text: '"mag" now'
-							},
-							scales: {
-								yAxes: [{
-									ticks: {
-										callback: function(value, index, values){
-										return  value +  ' nT'
-										}
-									},
-									scaleLabel: {
-										display: true,
-										labelString: 'geomagnetism [nT]'
-									}
-								}],
-								xAxes: [{
-									scaleLabel: {
-										display: true,
-										labelString: 'time'
-									}
-								}]
-							},
-						}
-					}
-];
-
-
 let graph	= [];
 
 ajaxUpdate( REQ_HEADER + "settings", data => {
@@ -222,8 +111,6 @@ ajaxUpdate( REQ_HEADER + "settings", data => {
 
 	graph.push( new GraphDraw( SPLIT[ 0 ], obj[ 0 ] ) );
 	graph.push( new GraphDraw( SPLIT[ 1 ], obj[ 1 ] ) );
-	
-	console.log( obj );
 } );
 
 
