@@ -96,7 +96,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 			if m:
 				s	= []
 				for splt in self.split:
-					s	+= [ ujson.dumps( splt[ "setting" ].setting ) ]
+					s	+= [ ujson.dumps( splt[ "setting" ].__dict__ ) ]
 				s	= ",".join( s )
 				print( s )
 				
@@ -170,35 +170,33 @@ class DUT_ACC( DUT_base.DUT_base ):
 		return "\n".join( s )
 
 class graph_setting:
-	def __init__( self, datasets, type = 'line', title = "title", xlabel = "", ylabel = "", minmax = () ):
-		self.setting	= { "type": type, 
-							"data": {
-								"labels": [], 
-								"datasets": []
+	def __init__( self, datasets, type = "line", title = "title", xlabel = "", ylabel = "", minmax = () ):
+		self.type		= type, 
+		self.data		= { "labels": [], 
+							"datasets": []
+						  }
+		self.options	= {
+							"animation":False,
+							"title": {
+								"display":	True,
+								"text": 	title
 							},
-							"options": {
-								"animation":False,
-								"title": {
-									"display":	True,
-									"text": 	title
-								},
-								"scales": {
-									"yAxes": [{
-										"ticks": {},
-										"scaleLabel": {
-											"display": True,
-											"labelString": ylabel
-										}
-									}],
-									"xAxes": [{
-										"scaleLabel": {
-											"display": True,
-											"labelString": xlabel
-										}
-									}]
-								},
-							}
-						}
+							"scales": {
+								"yAxes": [{
+									"ticks": {},
+									"scaleLabel": {
+										"display": True,
+										"labelString": ylabel
+									}
+								}],
+								"xAxes": [{
+									"scaleLabel": {
+										"display": True,
+										"labelString": xlabel
+									}
+								}]
+							},
+						  }
 			
 		for i in datasets:
 			set	= { "label": i[ "label" ],
@@ -206,140 +204,8 @@ class graph_setting:
 					"backgroundColor": "rgba( 0, 0, 0, 0 )", 
 					"data": []
 			}
-			self.setting[ "data" ][ "datasets" ]	+= [ set ]
+			self.data[ "datasets" ]	+= [ set ]
 			
 		if len( minmax ) == 2:
-			self.setting[ "options" ][ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMax" ]	= minmax[ 0 ] if minmax[ 1 ] < minmax[ 0 ] else minmax[ 1 ]
-			self.setting[ "options" ][ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMin" ]	= minmax[ 0 ] if minmax[ 0 ] < minmax[ 1 ] else minmax[ 1 ]
-		
-gs0	= graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-						{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-						{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
-						], 
-						title	= '"g" now', 
-						xlabel	= 'time',
-						ylabel	= 'gravitational acceleration [g]',
-						minmax	= ( -2, 2 )
-						)
-gs1	= graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-						{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-						{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
-						], 
-						title	= '"mag" now', 
-						xlabel	= 'time',
-						ylabel	= 'geomagnetism [nT]',
-						)
-
-gs	= [ gs0, gs1 ]
-
-settings	= [
-					{
-						"type": 'line',
-						"data": {
-							"labels": [],
-							"datasets": [
-								{
-									"label": 'x',
-									"data": [],
-									"borderColor": "rgba( 255, 0, 0, 1 )",
-									"backgroundColor": "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									"label": 'y',
-									"data": [],
-									"borderColor": "rgba( 0, 255, 0, 1 )",
-									"backgroundColor": "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									"label": 'z',
-									"data": [],
-									"borderColor": "rgba( 0, 0, 255, 1 )",
-									"backgroundColor": "rgba( 0, 0, 0, 0 )"
-								},
-							],
-						},
-						"options": {
-							"animation": False,
-							"title": {
-								"display": True,
-								"text": '"g" now'
-							},
-							"scales": {
-								"yAxes": [{
-									"ticks": {
-										"suggestedMax": 2.0,
-										"suggestedMin": -2.0,
-										"stepSize": 1,
-										#callback: function(value, index, values){
-										#return  value +  ' g'
-										#}
-									},
-									"scaleLabel": {
-										"display": True,
-										"labelString": 'gravitational acceleration [g]'
-									}
-								}],
-								"xAxes": [{
-									"scaleLabel": {
-										"display": True,
-										"labelString": 'time'
-									}
-								}]
-							},
-						}
-					},
-					{
-						"type": 'line',
-						"data": {
-							"labels": [],
-							"datasets": [
-								{
-									"label": 'x',
-									"data": [],
-									"borderColor": "rgba( 255, 0, 0, 1 )",
-									"backgroundColor": "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									"label": 'y',
-									"data": [],
-									"borderColor": "rgba( 0, 255, 0, 1 )",
-									"backgroundColor": "rgba( 0, 0, 0, 0 )"
-								},
-								{
-									"label": 'z',
-									"data": [],
-									"borderColor": "rgba( 0, 0, 255, 1 )",
-									"backgroundColor": "rgba( 0, 0, 0, 0 )"
-								},
-							],
-						},
-						"options": {
-							"animation": False,
-							"title": {
-								"display": True,
-								"text": '"mag" now'
-							},
-							"scales": {
-								"yAxes": [{
-									"ticks": {
-										#callback: function(value, index, values){
-										#return  value +  ' nT'
-										#}
-									},
-									"scaleLabel": {
-										"display": True,
-										"labelString": 'geomagnetism [nT]'
-									}
-								}],
-								"xAxes": [{
-									"scaleLabel": {
-										"display": True,
-										"labelString": 'time'
-									}
-								}]
-							},
-						}
-					}
-]
-
-print( settings )
+			self.options[ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMax" ]	= minmax[ 0 ] if minmax[ 1 ] < minmax[ 0 ] else minmax[ 1 ]
+			self.options[ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMin" ]	= minmax[ 0 ] if minmax[ 0 ] < minmax[ 1 ] else minmax[ 1 ]
