@@ -52,19 +52,31 @@ class DUT_ACC( DUT_base.DUT_base ):
 															 ylabel	= 'geomagnetism [nT]',
 															 )
 							} )
+		for splt in self.split:
+			splt[ "label" ]	= []
+			for dataset in splt[ "setting" ].data["datasets"]:
+				splt[ "label" ]	+= [ dataset[ "label" ] ]
 
 	def xyz_data( self ):
 		d	= {}
 		xyz	= self.dev.xyz()
 		mag	= self.dev.mag()
-		print( self.split[0][ "setting" ].data["datasets"][ 0 ][ "label" ] )
 
+		d[ self.split[ 0 ][ "label" ][ 0 ] ] = xyz[ 0 ]
+		d[ self.split[ 0 ][ "label" ][ 1 ] ] = xyz[ 1 ]
+		d[ self.split[ 0 ][ "label" ][ 2 ] ] = xyz[ 2 ]
+		d[ self.split[ 1 ][ "label" ][ 0 ] ] = mag[ 0 ]
+		d[ self.split[ 1 ][ "label" ][ 1 ] ] = mag[ 1 ]
+		d[ self.split[ 1 ][ "label" ][ 2 ] ] = mag[ 2 ]
+
+		"""
 		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 0 ][ "label" ] ] = xyz[ 0 ]
 		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 1 ][ "label" ] ] = xyz[ 1 ]
 		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 2 ][ "label" ] ] = xyz[ 2 ]
 		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 0 ][ "label" ] ] = mag[ 0 ]
 		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 1 ][ "label" ] ] = mag[ 1 ]
 		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 2 ][ "label" ] ] = mag[ 2 ]
+		"""
 		tm	= self.rtc.now()
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 
