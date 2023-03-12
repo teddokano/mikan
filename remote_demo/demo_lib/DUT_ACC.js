@@ -222,6 +222,8 @@ ajaxUpdate( REQ_HEADER + "settings", data => {
 
 	graph.push( new GraphDraw( SPLIT[ 0 ], obj[ 0 ] ) );
 	graph.push( new GraphDraw( SPLIT[ 1 ], obj[ 1 ] ) );
+	
+	console.log( obj );
 } );
 
 

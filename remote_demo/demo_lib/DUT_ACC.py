@@ -28,9 +28,30 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.info		= [ "acc", "" ]
 		self.symbol		= '🍎'
 		
-		self.split		= ( { "id": "Chart0", "unit": "g"  }, 
-							{ "id": "Chart1", "unit": "nT" }
-							)
+		self.split		= ( {	"id": "Chart0", 
+								"unit": "g",
+								"setting": graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+															{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+															{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+															], 
+															title	= '"g" now', 
+															xlabel	= 'time',
+															ylabel	= 'gravitational acceleration [g]',
+															minmax	= ( -2, 2 )
+															)
+							}, 
+							{ 
+								"id": "Chart1", 
+								"unit": "nT",
+								"setting":  graph_setting( [ { "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+															 { "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+															 { "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+															 ], 
+															 title	= '"mag" now', 
+															 xlabel	= 'time',
+															 ylabel	= 'geomagnetism [nT]',
+															 )
+							} )
 
 	def xyz_data( self ):
 		d	= {}
@@ -73,8 +94,14 @@ class DUT_ACC( DUT_base.DUT_base ):
 
 			m	= self.regex_settings.match( req )
 			if m:
-				return ujson.dumps( settings )
-
+				s	= []
+				for splt in self.split:
+					s	+= [ ujson.dumps( splt[ "setting" ].setting ) ]
+				s	= ",".join( s )
+				print( s )
+				
+				return "["+ s +"]"
+		
 	def sending_data( self, length ):
 		return ujson.dumps( self.data[ -length: ] )
 
@@ -141,6 +168,69 @@ class DUT_ACC( DUT_base.DUT_base ):
 		s	+= [ '</table>' ]
 
 		return "\n".join( s )
+
+class graph_setting:
+	def __init__( self, datasets, type = 'line', title = "title", xlabel = "", ylabel = "", minmax = () ):
+		self.setting	= { "type": type, 
+							"data": {
+								"labels": [], 
+								"datasets": []
+							},
+							"options": {
+								"animation":False,
+								"title": {
+									"display":	True,
+									"text": 	title
+								},
+								"scales": {
+									"yAxes": [{
+										"ticks": {},
+										"scaleLabel": {
+											"display": True,
+											"labelString": ylabel
+										}
+									}],
+									"xAxes": [{
+										"scaleLabel": {
+											"display": True,
+											"labelString": xlabel
+										}
+									}]
+								},
+							}
+						}
+			
+		for i in datasets:
+			set	= { "label": i[ "label" ],
+					"borderColor": i[ "color" ],
+					"backgroundColor": "rgba( 0, 0, 0, 0 )", 
+					"data": []
+			}
+			self.setting[ "data" ][ "datasets" ]	+= [ set ]
+			
+		if len( minmax ) == 2:
+			self.setting[ "options" ][ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMax" ]	= minmax[ 0 ] if minmax[ 1 ] < minmax[ 0 ] else minmax[ 1 ]
+			self.setting[ "options" ][ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMin" ]	= minmax[ 0 ] if minmax[ 0 ] < minmax[ 1 ] else minmax[ 1 ]
+		
+gs0	= graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+						{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+						{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+						], 
+						title	= '"g" now', 
+						xlabel	= 'time',
+						ylabel	= 'gravitational acceleration [g]',
+						minmax	= ( -2, 2 )
+						)
+gs1	= graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+						{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+						{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+						], 
+						title	= '"mag" now', 
+						xlabel	= 'time',
+						ylabel	= 'geomagnetism [nT]',
+						)
+
+gs	= [ gs0, gs1 ]
 
 settings	= [
 					{
@@ -252,4 +342,4 @@ settings	= [
 					}
 ]
 
-print(settings)
+print( settings )
