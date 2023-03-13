@@ -30,9 +30,9 @@ class DUT_ACC( DUT_base.DUT_base ):
 
 		self.split		= ( {	"id"	 : "Chart0", 
 								"unit"	 : "g",
-								"setting": graph_setting( [	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-															{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-															{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+								"setting": graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+																{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+																{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
 															], 
 															title	= '"g" now', 
 															xlabel	= 'time',
@@ -43,9 +43,9 @@ class DUT_ACC( DUT_base.DUT_base ):
 							{ 
 								"id"	 : "Chart1", 
 								"unit"	 : "nT",
-								"setting":  graph_setting( [ { "label": "mx", "color": "rgba( 255,   0,   0, 1 )"},
-															 { "label": "my", "color": "rgba(   0, 255,   0, 1 )"},
-															 { "label": "mz", "color": "rgba(   0,   0, 255, 1 )"},
+								"setting":  graph_setting( 	[	{ "label": "mx", "color": "rgba( 255,   0,   0, 1 )"},
+															 	{ "label": "my", "color": "rgba(   0, 255,   0, 1 )"},
+															 	{ "label": "mz", "color": "rgba(   0,   0, 255, 1 )"},
 															 ], 
 															 title	= '"mag" now', 
 															 xlabel	= 'time',
@@ -69,14 +69,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 		d[ self.split[ 1 ][ "label" ][ 1 ] ] = mag[ 1 ]
 		d[ self.split[ 1 ][ "label" ][ 2 ] ] = mag[ 2 ]
 
-		"""
-		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 0 ][ "label" ] ] = xyz[ 0 ]
-		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 1 ][ "label" ] ] = xyz[ 1 ]
-		d[ self.split[ 0 ][ "setting" ].data["datasets"][ 2 ][ "label" ] ] = xyz[ 2 ]
-		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 0 ][ "label" ] ] = mag[ 0 ]
-		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 1 ][ "label" ] ] = mag[ 1 ]
-		d[ self.split[ 1 ][ "setting" ].data["datasets"][ 2 ][ "label" ] ] = mag[ 2 ]
-		"""
 		tm	= self.rtc.now()
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 
