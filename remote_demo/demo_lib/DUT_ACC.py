@@ -38,26 +38,43 @@ class DUT_ACC( DUT_base.DUT_base ):
 															xlabel	= 'time',
 															ylabel	= 'gravitational acceleration [g]',
 															minmax	= ( -2, 2 )
-															)
+															),
+								"get_data":	self.dev.xyz
 							}, 
 							{ 
 								"id"	 : "Chart1", 
 								"unit"	 : "nT",
-								"setting":  graph_setting( 	[	{ "label": "mx", "color": "rgba( 255,   0,   0, 1 )"},
+								"setting": graph_setting( 	[	{ "label": "mx", "color": "rgba( 255,   0,   0, 1 )"},
 															 	{ "label": "my", "color": "rgba(   0, 255,   0, 1 )"},
 															 	{ "label": "mz", "color": "rgba(   0,   0, 255, 1 )"},
 															 ], 
 															 title	= '"mag" now', 
 															 xlabel	= 'time',
 															 ylabel	= 'geomagnetism [nT]',
-															 )
+															 ),
+								"get_data":	self.dev.mag
 							} )
+							
 		for splt in self.split:
 			splt[ "label" ]	= []
 			for dataset in splt[ "setting" ].data["datasets"]:
 				splt[ "label" ]	+= [ dataset[ "label" ] ]
 
 	def xyz_data( self ):
+		d	= {}
+		for splt in self.split:
+			xyz	= splt[ "get_data" ]()
+		
+			for i, l in enumerate( splt[ "label" ] ):
+				d[ l ]	= xyz[ i ]
+		
+		tm	= self.rtc.now()
+		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
+
+		return d
+
+	
+	def xyz_data2( self ):
 		d	= {}
 		xyz	= self.dev.xyz()
 		mag	= self.dev.mag()
