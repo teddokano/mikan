@@ -78,7 +78,6 @@ class GraphDraw {
 function csvFileOut() {
 	for ( const g of graph ) {
 		g.save();
-
 	}
 }
 
@@ -89,8 +88,9 @@ function getDataAndShow() {
 		let obj = JSON.parse( data );
 
 		obj.forEach( data => {
-			graph[ 0 ].push( data );
-			graph[ 1 ].push( data );
+			for ( const g of graph ) {
+				g.push( data );
+			}
 		} );
 		
 		for ( const g of graph ) {

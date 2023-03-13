@@ -53,7 +53,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 																 xlabel	= 'time',
 																 ylabel	= 'geomagnetism [nT]',
 																 ),
-							} )
+							}, )
 							
 	def xyz_data( self ):
 		d	= {}
@@ -100,7 +100,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 					d[ "id" ]		= splt[ "id" ]
 					d[ "setting" ]	= splt[ "setting" ].__dict__
 					s	+= [ ujson.dumps( d ) ]
-					print( s )
 				s	= ",".join( s )
 				print( s )
 				
@@ -120,7 +119,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.page_data[ "max_n_data"]	= str( self.SAMPLE_LENGTH )
 
 		self.page_data[ "charts" ]		= self.get_charts()
-		self.page_data[ "split" ]		= self.get_splits()
 
 		return self.load_html()
 
@@ -130,13 +128,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 			s	+= [ '<div><canvas id="{}"></canvas></div>'.format( d[ "id" ] ) ]
 
 		return "\n".join( s )
-
-	def get_splits( self ):
-		s	= [ "[" ]
-		for d in self.split:
-			s	+= [ ' "{}",'.format( d[ "id" ] ) ]
-		s	+= [ " ]" ]
-		return "".join( s )
 
 	def get_tables( self ):
 		s	= []
