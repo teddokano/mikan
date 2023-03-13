@@ -95,13 +95,17 @@ class DUT_ACC( DUT_base.DUT_base ):
 			m	= self.regex_settings.match( req )
 			if m:
 				s	= []
+				d	= {}
 				for splt in self.split:
-					s	+= [ ujson.dumps( splt[ "setting" ].__dict__ ) ]
+					d[ "id" ]		= splt[ "id" ]
+					d[ "setting" ]	= splt[ "setting" ].__dict__
+					s	+= [ ujson.dumps( d ) ]
+					print( s )
 				s	= ",".join( s )
 				print( s )
 				
 				return "["+ s +"]"
-		
+
 	def sending_data( self, length ):
 		return ujson.dumps( self.data[ -length: ] )
 

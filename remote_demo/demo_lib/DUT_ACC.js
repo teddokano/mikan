@@ -109,8 +109,9 @@ let graph	= [];
 ajaxUpdate( REQ_HEADER + "settings", data => {
 	let obj = JSON.parse( data );
 
-	graph.push( new GraphDraw( SPLIT[ 0 ], obj[ 0 ] ) );
-	graph.push( new GraphDraw( SPLIT[ 1 ], obj[ 1 ] ) );
+	for ( const o of obj ) {
+		graph.push( new GraphDraw( o.id, o.setting ) );
+	}
 } );
 
 
