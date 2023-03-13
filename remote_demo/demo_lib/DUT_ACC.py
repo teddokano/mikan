@@ -65,27 +65,9 @@ class DUT_ACC( DUT_base.DUT_base ):
 		for splt in self.split:
 			xyz	= splt[ "get_data" ]()
 		
-			for i, l in enumerate( splt[ "label" ] ):
-				d[ l ]	= xyz[ i ]
+			for i, ds in enumerate( splt[ "setting" ].data[ "datasets" ] ):
+				d[ ds[ "label" ] ]	= xyz[ i ]
 		
-		tm	= self.rtc.now()
-		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
-
-		return d
-
-	
-	def xyz_data2( self ):
-		d	= {}
-		xyz	= self.dev.xyz()
-		mag	= self.dev.mag()
-
-		d[ self.split[ 0 ][ "label" ][ 0 ] ] = xyz[ 0 ]
-		d[ self.split[ 0 ][ "label" ][ 1 ] ] = xyz[ 1 ]
-		d[ self.split[ 0 ][ "label" ][ 2 ] ] = xyz[ 2 ]
-		d[ self.split[ 1 ][ "label" ][ 0 ] ] = mag[ 0 ]
-		d[ self.split[ 1 ][ "label" ][ 1 ] ] = mag[ 1 ]
-		d[ self.split[ 1 ][ "label" ][ 2 ] ] = mag[ 2 ]
-
 		tm	= self.rtc.now()
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 
