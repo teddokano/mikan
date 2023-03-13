@@ -10,11 +10,11 @@ class GraphDraw {
 		this.z		= this.cs.data.datasets[2].data;
 	}
 
-	push( t, xyz ) {		
-		this.time.push( t );
-		this.x.push( xyz.x );
-		this.y.push( xyz.y );
-		this.z.push( xyz.z );
+	push( data ) {		
+		this.time.push( data.time );
+		this.x.push( data[ this.cs.data.datasets[ 0 ].label ] );
+		this.y.push( data[ this.cs.data.datasets[ 1 ].label ] );
+		this.z.push( data[ this.cs.data.datasets[ 2 ].label ] );
 
 		if ( 100 < this.time.length ) {
 			this.cs.data.labels.shift();
@@ -89,8 +89,8 @@ function getDataAndShow() {
 		let obj = JSON.parse( data );
 
 		obj.forEach( data => {
-			graph[ 0 ].push( data.time, { x:data.x, y:data.y, z:data.z } );
-			graph[ 1 ].push( data.time, { x:data.mx, y:data.my, z:data.mz } );
+			graph[ 0 ].push( data );
+			graph[ 1 ].push( data );
 		} );
 		
 		for ( const g of graph ) {
