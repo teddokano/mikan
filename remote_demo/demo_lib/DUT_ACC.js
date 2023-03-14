@@ -1,7 +1,7 @@
 class GraphDraw {
-	constructor( id, cs ) {
-		this.id		= id;
-		this.cs		= cs;
+	constructor( obj ) {
+		this.id		= obj.id;
+		this.cs		= obj.setting;
 		this.chart	= undefined;
 		
 		this.time	= this.cs.data.labels;
@@ -57,7 +57,7 @@ class GraphDraw {
 	}
 
 	save() {
-		console.log( 'csvFileOut' );
+		console.log( 'csvFileOut: ' + this.id );
 		let str	= [];
 		let	len	= this.time.length;
 		  
@@ -66,12 +66,16 @@ class GraphDraw {
 			str	+= this.time[ i ] + "," +  this.x[ i ] + "," + this.y[ i ] + "," + this.z[ i ] + "\n";
 		}
 
+		console.log( str );
+
 		let now		= new Date()
 		let blob	= new Blob( [str], {type:"text/csv"} );
 		let link	= document.createElement( 'a' );
 		link.href	= URL.createObjectURL( blob );
-		link.download	= DEV_NAME + this.id + "_measurement_result" + now.toString() + ".csv";
+		link.download	= DEV_NAME + this.id + "_measurement_result " + now.toString() + ".csv";
 		link.click();
+		URL.revokeObjectURL( link.href );
+		console.log( link.download );
 	}
 }
 
@@ -110,7 +114,7 @@ ajaxUpdate( REQ_HEADER + "settings", data => {
 	let obj = JSON.parse( data );
 
 	for ( const o of obj ) {
-		graph.push( new GraphDraw( o.id, o.setting ) );
+		graph.push( new GraphDraw( o ) );
 	}
 } );
 

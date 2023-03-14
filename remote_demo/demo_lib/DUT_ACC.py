@@ -101,7 +101,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 					d[ "setting" ]	= splt[ "setting" ].__dict__
 					s	+= [ ujson.dumps( d ) ]
 				s	= ",".join( s )
-				print( s )
 				
 				return "["+ s +"]"
 
