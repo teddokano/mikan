@@ -61,3 +61,5 @@ function showResponseTimeResult( resp ) {
 	console.log( 'measured server response ---' );
 	console.log( resp );
 }
+
+const zip = ( a1, a2 ) => a1.map( ( _, i ) => [ a1[ i ], a2[ i ] ] );

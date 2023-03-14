@@ -102,6 +102,8 @@ class DUT_ACC( DUT_base.DUT_base ):
 					s	+= [ ujson.dumps( d ) ]
 				s	= ",".join( s )
 				
+				print(s)
+				
 				return "["+ s +"]"
 
 	def sending_data( self, length ):
@@ -132,20 +134,25 @@ class DUT_ACC( DUT_base.DUT_base ):
 		s	= []
 		for d in self.split:
 			s	+= [ '<div id="reg_table" class="control_panel reg_table log_panel">' ]
-			s	+= [ self.get_tab( d[ "id" ], d[ "unit" ] ) ]
+			s	+= [ self.get_tab( d[ "id" ], d[ "unit" ], d[ "setting" ].data[ "datasets" ] ) ]
 			s	+= [ '</div>' ]
 		
 		return "\n".join( s )
 			
-	def get_tab( self, id, unit ):
+	def get_tab( self, id, unit, datasets ):
 		s	= [ '<table class="table_TEMP"><tr><td class="td_TEMP">time</td><td class="td_TEMP">x [{0}]</td><td class="td_TEMP">y [{0}]</td><td class="td_TEMP">z [{0}]</td></tr>'.format( unit ) ]
 
 		for i in range( self.TABLE_LENGTH ):
 			s	+= [ '<tr>' ]
 			s	+= [ '<td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="{}timeField{}" value = "---"></td>'.format( id, i ) ]
-			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}xField{}"></td>'.format( id, i ) ]
-			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}yField{}"></td>'.format( id, i ) ]
-			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}zField{}"></td>'.format( id, i ) ]
+
+#			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}xField{}"></td>'.format( id, i ) ]
+#			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}yField{}"></td>'.format( id, i ) ]
+#			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}zField{}"></td>'.format( id, i ) ]
+
+			for ds in datasets:
+				s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}{}Field{}"></td>'.format( id, ds[ "label" ], i ) ]
+
 			s	+= [ '</tr>' ]
 
 		s	+= [ '</table>' ]
