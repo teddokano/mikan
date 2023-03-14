@@ -5,10 +5,6 @@ class GraphDraw {
 		this.data_s	= [];
 		
 		this.time	= this.cs.data.labels;
-		
-//		this.x		= this.cs.data.datasets[0].data;
-//		this.y		= this.cs.data.datasets[1].data;
-//		this.z		= this.cs.data.datasets[2].data;
 
 		for ( const ds of this.cs.data.datasets ) {
 			this.data_s.push( ds.data );
@@ -18,10 +14,6 @@ class GraphDraw {
 	push( data ) {	
 		this.time.push( data.time );
 		
-//		this.x.push( data[ this.cs.data.datasets[ 0 ].label ] );
-//		this.y.push( data[ this.cs.data.datasets[ 1 ].label ] );
-//		this.z.push( data[ this.cs.data.datasets[ 2 ].label ] );
-
 		for ( const [ series, ds ] of zip( this.data_s, this.cs.data.datasets ) ) {
 			series.push( data[ ds.label ] );
 		}
@@ -29,14 +21,9 @@ class GraphDraw {
 		if ( 100 < this.time.length ) {
 			this.cs.data.labels.shift();
 			
-//			this.cs.data.datasets[0].data.shift();
-//			this.cs.data.datasets[1].data.shift();
-//			this.cs.data.datasets[2].data.shift();
-
 			for ( const ds of this.cs.data.datasets ) {
 				ds.data.shift();
 			}			
-			
 		}
 	}
 	
@@ -44,20 +31,6 @@ class GraphDraw {
 		for ( let i = 0; i < TABLE_LEN; i++ )
 		{
 			document.getElementById( this.id + "timeField" + i ).value = this.time.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-			
-/*			
-			let	xv	= this.x.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-			let	yv	= this.y.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-			let	zv	= this.z.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];
-			
-			xv	= isNaN( xv ) ? xv : xv.toFixed( 6 );
-			yv	= isNaN( yv ) ? yv : yv.toFixed( 6 );
-			zv	= isNaN( yv ) ? zv : zv.toFixed( 6 );
-				
-			document.getElementById( this.id + "xField" + i ).value = xv;
-			document.getElementById( this.id + "yField" + i ).value = yv;
-			document.getElementById( this.id + "zField" + i ).value = zv;
- */
 			
 			for ( const [ series, ds ] of zip( this.data_s, this.cs.data.datasets ) ) {
 				let v	= series.slice( -TABLE_LEN )[ TABLE_LEN - i - 1 ];

@@ -146,10 +146,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 			s	+= [ '<tr>' ]
 			s	+= [ '<td class="td_TEMP" text_align="center"><input class="input_text_TMP" type="text" id="{}timeField{}" value = "---"></td>'.format( id, i ) ]
 
-#			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}xField{}"></td>'.format( id, i ) ]
-#			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}yField{}"></td>'.format( id, i ) ]
-#			s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}zField{}"></td>'.format( id, i ) ]
-
 			for ds in datasets:
 				s	+= [ '<td class="td_TEMP"><input class="input_text_TMP" type="text" id="{}{}Field{}"></td>'.format( id, ds[ "label" ], i ) ]
 
