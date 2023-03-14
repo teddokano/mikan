@@ -15,7 +15,7 @@ class GraphDraw {
 		this.time.push( data.time );
 		
 		for ( const [ series, ds ] of zip( this.data_s, this.cs.data.datasets ) ) {
-			series.push( data[ ds.label ] );
+			series.push( data[ this.id + ds.label ] );
 		}
 		
 		if ( 100 < this.time.length ) {

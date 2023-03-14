@@ -55,16 +55,43 @@ class DUT_ACC( DUT_base.DUT_base ):
 																 ),
 							}, )
 							
+		self.split		= ( {	"id"	 	: "Chart0", 
+								"unit"	 	: "g",
+								"get_data"	: self.dev.xyz,
+								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+																	{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+																	{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+																], 
+																title	= '"g" now', 
+																xlabel	= 'time',
+																ylabel	= 'gravitational acceleration [g]',
+																minmax	= ( -2, 2 )
+																),
+							}, 
+							{ 
+								"id"	 	: "Chart1", 
+								"unit"	 	: "nT",
+								"get_data"	: self.dev.mag,
+								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+																	{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+																	{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+																 ], 
+																 title	= '"mag" now', 
+																 xlabel	= 'time',
+																 ylabel	= 'geomagnetism [nT]',
+																 ),
+							}, )
+							
 	def xyz_data( self ):
 		d	= {}
 		for splt in self.split:
 			xyz	= splt[ "get_data" ]()
 		
 			for i, ds in enumerate( splt[ "setting" ].data[ "datasets" ] ):
-				d[ ds[ "label" ] ]	= xyz[ i ]
+				d[ splt[ "id" ] + ds[ "label" ] ]	= xyz[ i ]
 		
 		tm	= self.rtc.now()
-		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
+		d[ "time" ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 
 		return d
 
