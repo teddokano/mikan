@@ -28,7 +28,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.info		= [ "acc", "" ]
 		self.symbol		= '🍎'
 
-		self.split		= ( {	"id"	 	: "Chart0", 
+		self.split		= ( {	"id"	 	: "acc", 
 								"unit"	 	: "g",
 								"get_data"	: self.dev.xyz,
 								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
@@ -42,34 +42,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 																),
 							}, 
 							{ 
-								"id"	 	: "Chart1", 
-								"unit"	 	: "nT",
-								"get_data"	: self.dev.mag,
-								"setting"	: graph_setting( 	[	{ "label": "mx", "color": "rgba( 255,   0,   0, 1 )"},
-																	{ "label": "my", "color": "rgba(   0, 255,   0, 1 )"},
-																	{ "label": "mz", "color": "rgba(   0,   0, 255, 1 )"},
-																 ], 
-																 title	= '"mag" now', 
-																 xlabel	= 'time',
-																 ylabel	= 'geomagnetism [nT]',
-																 ),
-							}, )
-							
-		self.split		= ( {	"id"	 	: "Chart0", 
-								"unit"	 	: "g",
-								"get_data"	: self.dev.xyz,
-								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-																	{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-																	{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
-																], 
-																title	= '"g" now', 
-																xlabel	= 'time',
-																ylabel	= 'gravitational acceleration [g]',
-																minmax	= ( -2, 2 )
-																),
-							}, 
-							{ 
-								"id"	 	: "Chart1", 
+								"id"	 	: "mag", 
 								"unit"	 	: "nT",
 								"get_data"	: self.dev.mag,
 								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
@@ -223,10 +196,11 @@ class graph_setting:
 						  }
 			
 		for i in datasets:
-			set	= { "label": i[ "label" ],
-					"borderColor": i[ "color" ],
-					"backgroundColor": "rgba( 0, 0, 0, 0 )", 
-					"data": []
+			set	= { "label"			: i[ "label" ],
+					"borderColor"	: i[ "color" ],
+					"lineTension"	: .5,
+					"fill"			: False,
+					"data"			: []
 			}
 			self.data[ "datasets" ]	+= [ set ]
 			
