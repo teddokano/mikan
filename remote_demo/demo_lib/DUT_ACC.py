@@ -102,8 +102,6 @@ class DUT_ACC( DUT_base.DUT_base ):
 					s	+= [ ujson.dumps( d ) ]
 				s	= ",".join( s )
 				
-				print(s)
-				
 				return "["+ s +"]"
 
 	def sending_data( self, length ):
