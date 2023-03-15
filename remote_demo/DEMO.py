@@ -73,7 +73,9 @@ def main():
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
 	
-	ip_info	= start_network( ifcnfg_param = ("192.168.0.99", "255.255.255.0", "192.168.0.1", "8.8.8.8") )
+#	ip_info	= start_network()
+#	ip_info	= start_network( ifcnfg_param = ("192.168.0.99", "255.255.255.0", "192.168.0.1", "8.8.8.8") )
+	ip_info	= start_network( ifcnfg_param = ("10.0.0.99", "255.0.0.0", "10.0.0.1", "0.0.0.0") )
 #	print( ip_info )
 
 	s = socket.socket()
@@ -174,12 +176,11 @@ def start_network( *, port = 0, ifcnfg_param = "dhcp" ):
 	lan.active( True )
 	print( "ethernet port %d is activated" % port )
 
-	if ( "dhcp" == ifcnfg_param ):
-		try:
-			lan.ifconfig( ifcnfg_param )
-		except OSError as e:
-			error_loop( 3, "Can't get/set IP address. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
-
+	try:
+		lan.ifconfig( ifcnfg_param )
+	except OSError as e:
+		error_loop( 3, "Can't get/set IP address. Tried to set {}. OSError:{}".format( ifcnfg_param, e.args ) )	# infinite loop inside of this finction
+		
 	return lan.ifconfig()
 
 class DEMO( DUT_base ):
