@@ -68,61 +68,66 @@ let	temp_data	= {
 						label: 'temperature',
 						data: this.temp,
 						borderColor: "rgba( 255, 0, 0, 1 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
+						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
+						lineTension: 0.4,   //
 					},
 					{
 						label: 'Tos',
 						data: this.tos,
 						borderColor: "rgba( 255, 0, 0, 0.3 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
+						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
+						lineTension: 0.4,   //
 					},
 					{
 						label: 'Thyst',
 						data: this.thyst,
 						borderColor: "rgba( 0, 0, 255, 0.3 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
+						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
+						lineTension: 0.4,   //
 					},
 					{
 						label: OS_LABEL,
 						data: this.os,
 						borderColor: "rgba( 0, 255, 0, 0.5 )",
-						backgroundColor: "rgba( 0, 0, 0, 0 )"
+						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
+						lineTension: 0.4,   //
 					},
 					{
 						label: 'Heater',
 						data: this.heater,
 						borderColor: "rgba( 255, 0, 0, 0.0 )",
-						backgroundColor: "rgba( 255, 0, 0, 0.1 )"
+						backgroundColor: "rgba( 255, 0, 0, 0.1 )",
+						fill: true,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
+						lineTension: 0.4,   //
 					},
 				],
 			},
 			options: {
 				animation: false,
-				title: {
-					display: true,
-					text: 'temperature now'
-				},
+				plugins: {	//
+					title: {
+						display: true,
+						text: 'temperature now'
+					},
+				},	//
 				scales: {
-					yAxes: [{
+					y: {	// yAxes: [{
 						ticks: {
 							suggestedMax: GRAPH_HIGH,
 							suggestedMin: GRAPH_LOW,
 							stepSize: 1,
-							callback: function(value, index, values){
-							return  value +  ' ˚C'
-							}
 						},
-						scaleLabel: {
+						title: {	// scaleLabel: {
 							display: true,
-							labelString: 'temperature [˚C]'
-						}
-					}],
-					xAxes: [{
-						scaleLabel: {
+							text: 'temperature [˚C]',	//	labelString: 'temperature [˚C]',
+						},
+					},			
+					x: {	// xAxes: [{
+						title: {	// scaleLabel: {
 							display: true,
-							labelString: 'time'
+							text: 'time', 	//	labelString: 'time'
 						}
-					}]
+					}
 				},
 			}
 		});
