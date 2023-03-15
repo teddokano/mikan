@@ -26,6 +26,10 @@ MEM_MONITORING	= False
 #MEM_MONITORING	= True	###
 
 def main():
+#	demo( ip = "dhcp" )
+	demo( ip = ( "10.0.0.99", "255.0.0.0", "10.0.0.1", "8.8.8.8" ) )
+
+def demo( ip = "dhcp" ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
@@ -73,9 +77,7 @@ def main():
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
 	
-#	ip_info	= start_network()
-#	ip_info	= start_network( ifcnfg_param = ("192.168.0.99", "255.255.255.0", "192.168.0.1", "8.8.8.8") )
-	ip_info	= start_network( ifcnfg_param = ("10.0.0.99", "255.0.0.0", "10.0.0.1", "0.0.0.0") )
+	ip_info	= start_network( ifcnfg_param = ip )
 #	print( ip_info )
 
 	s = socket.socket()
