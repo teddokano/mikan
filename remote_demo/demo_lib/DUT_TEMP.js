@@ -68,37 +68,37 @@ let	temp_data	= {
 						label: 'temperature',
 						data: this.temp,
 						borderColor: "rgba( 255, 0, 0, 1 )",
-						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
-						lineTension: 0.4,   //
+						fill: false,
+						lineTension: 0.4,
 					},
 					{
 						label: 'Tos',
 						data: this.tos,
 						borderColor: "rgba( 255, 0, 0, 0.3 )",
-						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
-						lineTension: 0.4,   //
+						fill: false,
+						lineTension: 0.4,
 					},
 					{
 						label: 'Thyst',
 						data: this.thyst,
 						borderColor: "rgba( 0, 0, 255, 0.3 )",
-						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
-						lineTension: 0.4,   //
+						fill: false,
+						lineTension: 0.4,
 					},
 					{
 						label: OS_LABEL,
 						data: this.os,
 						borderColor: "rgba( 0, 255, 0, 0.5 )",
-						fill: false,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
-						lineTension: 0.4,   //
+						fill: false,
+						lineTension: 0.4,
 					},
 					{
 						label: 'Heater',
 						data: this.heater,
 						borderColor: "rgba( 255, 0, 0, 0.0 )",
 						backgroundColor: "rgba( 255, 0, 0, 0.1 )",
-						fill: true,	//	backgroundColor: "rgba( 0, 0, 0, 0 )",
-						lineTension: 0.4,   //
+						fill: true,
+						lineTension: 0.4,
 					},
 				],
 			},
@@ -111,21 +111,21 @@ let	temp_data	= {
 					},
 				},	//
 				scales: {
-					y: {	// yAxes: [{
+					y: {
+						suggestedMax: GRAPH_HIGH,
+						suggestedMin: GRAPH_LOW,
 						ticks: {
-							suggestedMax: GRAPH_HIGH,
-							suggestedMin: GRAPH_LOW,
 							stepSize: 1,
 						},
-						title: {	// scaleLabel: {
+						title: {
 							display: true,
-							text: 'temperature [˚C]',	//	labelString: 'temperature [˚C]',
+							text: 'temperature [˚C]',
 						},
 					},			
-					x: {	// xAxes: [{
-						title: {	// scaleLabel: {
+					x: {
+						title: {
 							display: true,
-							text: 'time', 	//	labelString: 'time'
+							text: 'time',
 						}
 					}
 				},

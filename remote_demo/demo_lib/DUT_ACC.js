@@ -105,7 +105,7 @@ let graph	= [];
 
 ajaxUpdate( REQ_HEADER + "settings", data => {
 	let obj = JSON.parse( data );
-
+console.log( obj );
 	for ( const o of obj ) {
 		graph.push( new GraphDraw( o ) );
 	}

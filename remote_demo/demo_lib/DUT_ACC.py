@@ -172,24 +172,26 @@ class graph_setting:
 						  }
 		self.options	= {
 							"animation":False,
-							"title": {
-								"display":	True,
-								"text": 	title
+							"plugins": {
+								"title": {
+									"display":	True,
+									"text": 	title
+								}
 							},
 							"scales": {
-								"yAxes": [{
+								"y": {
 									"ticks": {},
-									"scaleLabel": {
+									"title": {
 										"display": True,
-										"labelString": ylabel
+										"text": ylabel
 									}
-								}],
-								"xAxes": [{
-									"scaleLabel": {
+								},
+								"x": {
+									"title": {
 										"display": True,
-										"labelString": xlabel
+										"text": xlabel
 									}
-								}]
+								}
 							},
 						  }
 			
@@ -203,5 +205,5 @@ class graph_setting:
 			self.data[ "datasets" ]	+= [ set ]
 			
 		if len( minmax ) == 2:
-			self.options[ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMax" ]	= minmax[ 0 ] if minmax[ 1 ] < minmax[ 0 ] else minmax[ 1 ]
-			self.options[ "scales" ][ "yAxes" ][0][ "ticks" ][ "suggestedMin" ]	= minmax[ 0 ] if minmax[ 0 ] < minmax[ 1 ] else minmax[ 1 ]
+			self.options[ "scales" ][ "y" ][ "suggestedMax" ]	= minmax[ 0 ] if minmax[ 1 ] < minmax[ 0 ] else minmax[ 1 ]
+			self.options[ "scales" ][ "y" ][ "suggestedMin" ]	= minmax[ 0 ] if minmax[ 0 ] < minmax[ 1 ] else minmax[ 1 ]
