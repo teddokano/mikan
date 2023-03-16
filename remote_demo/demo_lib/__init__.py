@@ -5,3 +5,4 @@ from	demo_lib.DUT_RTC			import	*
 from	demo_lib.DUT_GPIO			import	*
 from	demo_lib.DUT_ACC			import	*
 from	demo_lib.DUT_base			import	*
+from	demo_lib.DEMO				import	*

@@ -25,10 +25,6 @@ from	demo_lib	import	DUT_base
 MEM_MONITORING	= False
 #MEM_MONITORING	= True	###
 
-def main():
-#	demo( ip = "dhcp" )
-	demo( ip = ( "10.0.0.99", "255.0.0.0", "10.0.0.1", "8.8.8.8" ) )
-
 def demo( ip = "dhcp" ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
@@ -87,7 +83,7 @@ def demo( ip = "dhcp" ):
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
-	s.listen( 5 )
+	s.listen( 10 )
 	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
 
 	while True:
@@ -182,7 +178,7 @@ def start_network( *, port = 0, ifcnfg_param = "dhcp" ):
 		lan.ifconfig( ifcnfg_param )
 	except OSError as e:
 		error_loop( 3, "Can't get/set IP address. Tried to set {}. OSError:{}".format( ifcnfg_param, e.args ) )	# infinite loop inside of this finction
-		
+
 	return lan.ifconfig()
 
 class DEMO( DUT_base ):
@@ -303,4 +299,9 @@ class elapsed_time:
 		#print( ticks_ms() - self.start )
 		pass
 
-main()
+def main():
+#	demo( ip = "dhcp" )
+	demo( ip = ( "10.0.0.99", "255.255.255.0", "10.0.0.1", "8.8.8.8" ) )
+
+if __name__ == "__main__":
+	main()
