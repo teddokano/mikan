@@ -134,7 +134,6 @@ let	temp_data	= {
 	},
 	
 	save: function () {
-		console.log( 'csvFileOut' );
 		let str	= [];
 		let	len	= this.time.length;
 		

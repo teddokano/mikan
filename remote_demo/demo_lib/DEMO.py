@@ -78,13 +78,13 @@ def demo( ip = "dhcp" ):
 
 	s = socket.socket()
 
-	ai = socket.getaddrinfo( "0.0.0.0", 8080 )
+	ai = socket.getaddrinfo( "0.0.0.0", 80 )
 	addr = ai[0][-1]
 
 	s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 	s.bind( addr )
 	s.listen( 10 )
-	print("Listening, connect your browser to http://{}:8080/".format( ip_info[0] ))
+	print("Listening, connect your browser to http://{}/".format( ip_info[0] ))
 
 	while True:
 		res = s.accept()

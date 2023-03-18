@@ -68,7 +68,7 @@ Need to copy 'mikan' class driver into the MCU board storage. The guide video sh
 	1. Install MicroPython into the MCU board
 	1. Follow instraction to MocroPython [download page](https://micropython.org/download/) for each MCU boards. 
 1. Step 2
-	1. Check sys.path on target board
+	1. Check sys.path (**module serch path**) on target board
 		1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mode). 
 		1. Check path setting by typing.. 
 		```
@@ -157,14 +157,17 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🔄|stepper_motor_simple.py					|Operating stepping motor with simple API																			|PCA9629A
 🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
 🍎|FXOS8700.py								|Simple 6 axis data capturing from FXOS8700																			|FXOS8700
+
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
-`remote_demo/DEMO.py` has 'main()' function to start the demo.  
+`remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
 This demonstration works with a network connection. The microcontroller performs a HTTP server to provide user interface on web browsers.  
+
+For more information, refer to `remote_demo/README.md`.
+
 Video is available --> [https://youtu.be/usPzhs_2IsI](https://youtu.be/usPzhs_2IsI)   
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/remo_demo_perform.png)](https://youtu.be/usPzhs_2IsI)
  
-
 How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)  
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/remo_demo_install.png)](https://youtu.be/fkHqdnd4t1s)
 
