@@ -2,6 +2,11 @@
 A demo code for mikan.  
 This demonstration works with a network connection. The microcontroller performs a HTTP server to provide user interface on web browsers.  
 
+```
+Peripheral_devices <---------> Mictocontroller_board <-----> PC(web-browser)
+                    (I²C/SPI)                         (LAN)
+```
+
 ## Install
 You may already installed mikan driver in your microcontroller board.  
 On addition to that, a folder is needed to be copied into the board. 
@@ -17,8 +22,10 @@ So, after installation, the board will have folders like...
 `remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
 Choose one of them and run. 
 
-### In DHCP environment
+For network setup, user can choose both of these options: 
+- Join to existing network
 ```
+
 Internet <---> Router(DHCP server)
                   |
                   +  <---> PC
@@ -27,6 +34,12 @@ Internet <---> Router(DHCP server)
                   |
                   +  <---> Other_devices
 ```
+- Direct PC connection
+```
+PC <---> microcontroller_board(mikan)
+```
+
+### In DHCP environment
 
 `remote_demo/start_w_auto_IP(DHCP).py` is a script to run the demo in network which can use DHCP. 
 IP address will be given from DHCP server after the demo started. 
@@ -51,10 +64,6 @@ Can't get/set IP address. Tried to set dhcp. OSError:('timeout waiting for DHCP 
 ```
 
 ### To use fixed IP address like direct connection with an Ethernet cable
-```
-PC[Ethernet port] <---> microcontroller_board(mikan)
-```
-
 `remote_demo/start_w_fixed_IP.py` is to run the demo with fixed IP address. 
 This can be used for network setting like direct microcontroller board and PC with an Ethernet cable. 
 When you use direct connection to the PC, please set the PC's Ethernet port properlly (IP address and subnet mask).  
@@ -76,6 +85,8 @@ def main():
 if __name__ == "__main__":
 	main()
 ```
+
+## Video
 
 This demonstration works with a network connection. The microcontroller performs a HTTP server to provide user interface on web browsers.  
 Video is available --> [https://youtu.be/usPzhs_2IsI](https://youtu.be/usPzhs_2IsI)   
