@@ -136,9 +136,9 @@ function init3D() {
 	const scene	= new THREE.Scene();
 
 	const camera	= new THREE.PerspectiveCamera( 45, width / height );
-	camera.position.set( 0, 0, +1000 );
+	camera.position.set( 0, 0, +750 );
 
-	const geometry	= new THREE.BoxGeometry( 400, 400, 40 );
+	const geometry	= new THREE.BoxGeometry( 300, 200, 40 );
 	const material	= new THREE.MeshNormalMaterial();
 	const box		= new THREE.Mesh( geometry, material );
 	scene.add( box );
@@ -156,8 +156,8 @@ function init3D() {
 			[ x, y, z ]	= graph[ 0 ].get_last_data();
 		}
 		console.log( x, y, z );
-		box.rotation.x	= Math.asin( x / 1 );
-		box.rotation.y	= Math.asin( y / 1 );
+		box.rotation.x	= Math.asin( -y / 1 );
+		box.rotation.y	= Math.asin( x / 1 );
 //		box.rotation.z	= Math.asin( z / 1 );
 		box.rotation.z	= 0;
 
