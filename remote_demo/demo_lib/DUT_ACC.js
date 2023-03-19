@@ -70,6 +70,16 @@ class GraphDraw {
 		link.click();
 		URL.revokeObjectURL( link.href );
 	}
+	
+	get_last_data() {
+		let data	= [];
+		
+		for ( const ds of this.cs.data.datasets ) {
+			data.push( ds.data.slice( -1 )[ 0 ] );
+		}			
+
+		return data;
+	}
 }
 
 function csvFileOut() {
@@ -137,8 +147,19 @@ function init3D() {
 
 	function tick() {
 		//box.rotation.x += 0.01;
-		box.rotation.y += 0.01;
+		//box.rotation.y += 0.01;
 		//box.rotation.z += 0.01;
+		
+		let x, y, z;
+		
+		if ( graph[ 0 ] ) {
+			[ x, y, z ]	= graph[ 0 ].get_last_data();
+		}
+		console.log( x, y, z );
+		box.rotation.x	= Math.asin( x / 1 );
+		box.rotation.y	= Math.asin( y / 1 );
+//		box.rotation.z	= Math.asin( z / 1 );
+		box.rotation.z	= 0;
 
 		renderer.render( scene, camera ); // レンダリング
 
