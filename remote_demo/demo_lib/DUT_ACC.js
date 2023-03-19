@@ -1,6 +1,7 @@
 class GraphDraw {
 	constructor( obj ) {
 		this.id		= obj.id;
+		this.ctx	= document.getElementById( this.id );		
 		this.cs		= obj.setting;
 		this.data_s	= [];
 		
@@ -45,12 +46,10 @@ class GraphDraw {
 	}
 
 	draw() {
-		let	ctx = document.getElementById( this.id );
-		
 		if ( this.chart )
 			this.chart.destroy();
 
-		this.chart = new Chart( ctx, this.cs );
+		this.chart = new Chart( this.ctx, this.cs );
 	}
 
 	save() {
@@ -128,8 +127,8 @@ for ( let i = -1; i <= 1; i += 0.1 ) {
 }
 
 function init3D() {
-	const	width	= 960;
-	const	height	= 540;
+	const	width	= 480;
+	const	height	= 270;
 
 	const renderer	= new THREE.WebGLRenderer({
 		canvas: document.querySelector( "#myCanvas" )
