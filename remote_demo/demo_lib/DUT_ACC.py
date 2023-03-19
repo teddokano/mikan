@@ -171,6 +171,7 @@ class graph_setting:
 							"datasets": []
 						  }
 		self.options	= {
+							"aspectRatio":3,
 							"animation":False,
 							"plugins": {
 								"title": {
