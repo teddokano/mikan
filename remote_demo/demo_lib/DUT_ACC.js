@@ -98,6 +98,7 @@ function getDataAndShow() {
 }
 
 window.addEventListener( 'load', function () {
+	init3D();
 	setInterval( getDataAndShow, 200 );
 });
 
@@ -110,3 +111,39 @@ ajaxUpdate( REQ_HEADER + "settings", data => {
 		graph.push( new GraphDraw( o ) );
 	}
 } );
+
+
+function init3D() {
+	const	width	= 960;
+	const	height	= 540;
+
+	const renderer	= new THREE.WebGLRenderer({
+		canvas: document.querySelector( "#myCanvas" )
+	});
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( width, height );
+
+	const scene	= new THREE.Scene();
+
+	const camera	= new THREE.PerspectiveCamera( 45, width / height );
+	camera.position.set( 0, 0, +1000 );
+
+	const geometry	= new THREE.BoxGeometry( 400, 400, 40 );
+	const material	= new THREE.MeshNormalMaterial();
+	const box		= new THREE.Mesh( geometry, material );
+	scene.add( box );
+
+	tick();
+
+	function tick() {
+		//box.rotation.x += 0.01;
+		box.rotation.y += 0.01;
+		//box.rotation.z += 0.01;
+
+		renderer.render( scene, camera ); // レンダリング
+
+		requestAnimationFrame( tick );
+	}
+}
+
+//window.addEventListener( 'DOMContentLoaded', init3D );
