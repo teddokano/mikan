@@ -123,6 +123,10 @@ ajaxUpdate( REQ_HEADER + "settings", data => {
 } );
 
 
+for ( let i = -1; i <= 1; i += 0.1 ) {
+	console.log( Math.atan2( i, 1 ), Math.atan2( i, -1 ) )
+}
+
 function init3D() {
 	const	width	= 960;
 	const	height	= 540;
@@ -179,19 +183,13 @@ function init3D() {
 		if ( graph[ 0 ] ) {
 			[ x, y, z ]	= graph[ 0 ].get_last_data();
 		}
+			
+		boxes.rotation.x	= Math.atan2( -y, z );
+		boxes.rotation.y	= Math.atan2(  x, (y * y + z * z ) ** 0.5 );
 		
-		if ( 0 < z ) {
-			console.log( '+ ' + x + ', ' + y );
-			boxes.rotation.x	= Math.atan2( -y, z );
-			boxes.rotation.y	= Math.atan2(  x, z );
-		} else {
-			console.log( '- ' + x + ', ' + y );
-			boxes.rotation.x	= Math.atan2( -y, -z ) + Math.PI;
-			boxes.rotation.y	= Math.atan2(  x, -z ) + Math.PI;
-		}			
-//		console.log( boxes.rotation.x, boxes.rotation.y );
-//		box.rotation.z	= Math.asin( z / 1 );
-		boxes.rotation.z	= 0;
+		let xx	= (boxes.rotation.x / Math.PI) * 180 % 360;
+		let yy	= (boxes.rotation.y / Math.PI) * 180 % 360;
+//		console.log( xx.toFixed( 0 ), yy.toFixed( 0 ) );
 
 		renderer.render( scene, camera );
 
