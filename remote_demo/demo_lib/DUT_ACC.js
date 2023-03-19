@@ -136,13 +136,37 @@ function init3D() {
 	const scene	= new THREE.Scene();
 
 	const camera	= new THREE.PerspectiveCamera( 45, width / height );
-	camera.position.set( 0, 0, +750 );
+	camera.position.set( 0, 0, 500);
 
-	const geometry	= new THREE.BoxGeometry( 300, 200, 40 );
-	const material	= new THREE.MeshNormalMaterial();
-	const box		= new THREE.Mesh( geometry, material );
-	scene.add( box );
+	let box0 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 300, 200, 20 ), 
+								  new THREE.MeshLambertMaterial({color: 0x33FF33})
+								);
+	let box1 = new THREE.Mesh(
+								  new THREE.BoxGeometry(  30,  50, 25 ),
+								  new THREE.MeshPhongMaterial({color: 0xC0C0C0})
+								);
+	let box2 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 100, 100, 20 ),
+								  new THREE.MeshLambertMaterial({color: 0x33EE33})
+								);
 
+	box0.position.set(    0,  0,  0 );
+	box1.position.set(  70, -80, 25 );
+	box2.position.set( -100,  0, 25 );
+
+	let boxes = new THREE.Group();
+	boxes.add(box0);
+	boxes.add(box1);
+	boxes.add(box2);
+	scene.add( boxes );
+	const ambient	= new THREE.AmbientLight( 0xFFFFFF, 0.2 );
+	scene.add( ambient );
+//	  const hemi	= new THREE.HemisphereLight( 0x0000FF, 0xFF0000, 0.2 );
+//	  scene.add( hemi );
+	const light	= new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
+	light.position.set( -1, 1, 1 );
+	scene.add( light );
 	tick();
 
 	function tick() {
@@ -155,13 +179,21 @@ function init3D() {
 		if ( graph[ 0 ] ) {
 			[ x, y, z ]	= graph[ 0 ].get_last_data();
 		}
-		console.log( x, y, z );
-		box.rotation.x	= Math.asin( -y / 1 );
-		box.rotation.y	= Math.asin( x / 1 );
+		
+		if ( 0 < z ) {
+			console.log( '+ ' + x + ', ' + y );
+			boxes.rotation.x	= Math.atan2( -y, z );
+			boxes.rotation.y	= Math.atan2(  x, z );
+		} else {
+			console.log( '- ' + x + ', ' + y );
+			boxes.rotation.x	= Math.atan2( -y, -z ) + Math.PI;
+			boxes.rotation.y	= Math.atan2(  x, -z ) + Math.PI;
+		}			
+//		console.log( boxes.rotation.x, boxes.rotation.y );
 //		box.rotation.z	= Math.asin( z / 1 );
-		box.rotation.z	= 0;
+		boxes.rotation.z	= 0;
 
-		renderer.render( scene, camera ); // レンダリング
+		renderer.render( scene, camera );
 
 		requestAnimationFrame( tick );
 	}
