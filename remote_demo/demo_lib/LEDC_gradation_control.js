@@ -68,6 +68,7 @@ class GradationFunc	{
 const	TABLE_LEN	= 10
 const	GRAPH_HIGH	= 1
 const	GRAPH_LOW	= 0
+let 	myChart;
 
 function drawChart( time, groups ) {
 	let	ds	= [];
@@ -93,7 +94,15 @@ function drawChart( time, groups ) {
 	});
 
 	var ctx = document.getElementById('myLineChart');
-	window.myLineChart = new Chart(ctx, {
+
+	console.log( myChart );
+	
+	if ( myChart ) {
+		console.log( 'myChart.destroy()' );
+		myChart.destroy();
+	}
+
+	myChart = new Chart(ctx, {
 		type: 'line',
 		data: {
 			labels: time,
@@ -101,31 +110,30 @@ function drawChart( time, groups ) {
 		},
 		options: {
 			animation: false,
-			title: {
-				display: true,
-				text: 'gradation curves'
+			plugins: {
+				title: {
+					display: true,
+					text: 'gradation curves'
+				}
 			},
 			scales: {
-				yAxes: [{
+				y:{
+					suggestedMax: GRAPH_HIGH,
+					suggestedMin: GRAPH_LOW,
 					ticks: {
-						suggestedMax: GRAPH_HIGH,
-						suggestedMin: GRAPH_LOW,
 						stepSize: 0.1,
-						callback: function( value, index, values ){
-							return  value +  ''
-						}
 					},
-					scaleLabel: {
+					title: {
 						display: true,
-						labelString: 'current ratio'
+						text: 'current ratio'
 					}
-				}],
-				xAxes: [{
-					scaleLabel: {
+				},
+				x: {
+					title: {
 						display: true,
-						labelString: 'time [second]'
+						text: 'time [second]'
 					}
-				}]
+				}
 			},
 		}
 	});

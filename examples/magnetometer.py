@@ -23,7 +23,7 @@ def main():
 		sleep( 0.2 )
 
 def calibration( acc ):
-	print( "calibration for 10 seconds: rotate the board" )
+	print( "calibration for 10 seconds: rotate the board on X-Y plane" )
 	
 	xs	= []
 	ys	= []

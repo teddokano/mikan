@@ -127,8 +127,9 @@ for ( let i = -1; i <= 1; i += 0.1 ) {
 }
 
 function init3D() {
-	const	width	= 480;
-	const	height	= 270;
+	const	pic_sz	= 320;
+	const	width	= pic_sz;
+	const	height	= pic_sz;
 
 	const renderer	= new THREE.WebGLRenderer({
 		canvas: document.querySelector( "#myCanvas" )
@@ -142,7 +143,7 @@ function init3D() {
 	camera.position.set( 0, 0, 500);
 
 	let box0 = new THREE.Mesh(
-								  new THREE.BoxGeometry( 300, 200, 20 ), 
+								  new THREE.BoxGeometry( 300, 200, 10 ), 
 								  new THREE.MeshLambertMaterial({color: 0x33FF33})
 								);
 	let box1 = new THREE.Mesh(
@@ -150,13 +151,13 @@ function init3D() {
 								  new THREE.MeshPhongMaterial({color: 0xC0C0C0})
 								);
 	let box2 = new THREE.Mesh(
-								  new THREE.BoxGeometry( 100, 100, 20 ),
+								  new THREE.BoxGeometry( 100, 100, 10 ),
 								  new THREE.MeshLambertMaterial({color: 0x33EE33})
 								);
 
-	box0.position.set(    0,  0,  0 );
-	box1.position.set(  70, -80, 25 );
-	box2.position.set( -100,  0, 25 );
+	box0.position.set(    0,  0, -10 );
+	box1.position.set(  70, -80,   8 );
+	box2.position.set( -100,  0,  15 );
 
 	let boxes = new THREE.Group();
 	boxes.add(box0);
@@ -165,8 +166,8 @@ function init3D() {
 	scene.add( boxes );
 	const ambient	= new THREE.AmbientLight( 0xFFFFFF, 0.2 );
 	scene.add( ambient );
-//	  const hemi	= new THREE.HemisphereLight( 0x0000FF, 0xFF0000, 0.2 );
-//	  scene.add( hemi );
+	//const hemi	= new THREE.HemisphereLight( 0x0000FF, 0xFF0000, 0.5 );
+	//scene.add( hemi );
 	const light	= new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
 	light.position.set( -1, 1, 1 );
 	scene.add( light );
@@ -177,12 +178,17 @@ function init3D() {
 		//box.rotation.y += 0.01;
 		//box.rotation.z += 0.01;
 		
-		let x, y, z;
+		let  x,  y,  z;
+		let mx, my, mz;
 		
 		if ( graph[ 0 ] ) {
 			[ x, y, z ]	= graph[ 0 ].get_last_data();
 		}
 			
+		if ( graph[ 1 ] ) {
+			[ mx, my, mz ]	= graph[ 1 ].get_last_data();
+		}
+		
 		boxes.rotation.x	= Math.atan2( -y, z );
 		boxes.rotation.y	= Math.atan2(  x, (y * y + z * z ) ** 0.5 );
 		

@@ -230,7 +230,9 @@ class DUT_LEDC( DUT_base.DUT_base ):
 		t	= """\
 				<div id="reg_table" class="control_panel reg_table">
 					<canvas id="myLineChart" width="40" height="10"></canvas>
-					<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+					<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script> -->
+					<script async src="jslib/chart.umd.js"></script>
+
 
 				<div id="reg_table" class="control_panel reg_table">
 				Gradation enable (IREF value is controlled by gradation)<br/>
