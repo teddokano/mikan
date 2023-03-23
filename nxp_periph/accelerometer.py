@@ -24,7 +24,7 @@ def main():
 class ACCELEROMETER_base:
 	pass
 
-class FXOS8700( I2C_target ):
+class FXOS8700( ACCELEROMETER_base,I2C_target ):
 	DEFAULT_ADDR		= 0x1F
 
 	REG_NAME	= ( "STATUS", 
@@ -128,6 +128,8 @@ class FXLS8974( ACCELEROMETER_base, I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		super().__init__( i2c, address )
+
+		print( "FXLS8974 {}".format( hex( address ) ) )
 
 		self.fs_range	= 2
 		self.fullscale( self.fs_range )

@@ -30,38 +30,49 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.info		= [ "acc", "" ]
 		self.symbol		= '🍎'
 
-		splits			= ( {	"id"	 	: "acc", 
-								"unit"	 	: "g",
-								"get_data"	: self.dev.xyz,
-								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-																	{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-																	{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
-																], 
-																title	= '"g" now', 
-																xlabel	= 'time',
-																ylabel	= 'gravitational acceleration [g]',
-																minmax	= ( -2, 2 )
-																),
-							}, 
-							{ 
-								"id"	 	: "mag", 
-								"unit"	 	: "nT",
-								"get_data"	: self.dev.mag,
-								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-																	{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-																	{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
-																 ], 
-																 title	= '"mag" now', 
-																 xlabel	= 'time',
-																 ylabel	= 'geomagnetism [nT]',
-																 ),
-							}, )
-							
 		if ( isinstance( self.dev, FXOS8700 ) ):
-			self.split	= splits
+			self.split	= splits	= ( {	"id"	 	: "acc", 
+											"unit"	 	: "g",
+											"get_data"	: self.dev.xyz,
+											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+																				{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+																				{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+																			], 
+																			title	= '"g" now', 
+																			xlabel	= 'time',
+																			ylabel	= 'gravitational acceleration [g]',
+																			minmax	= ( -2, 2 )
+																			),
+										}, 
+										{ 
+											"id"	 	: "mag", 
+											"unit"	 	: "nT",
+											"get_data"	: self.dev.mag,
+											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+																				{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+																				{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+																			 ], 
+																			 title	= '"mag" now', 
+																			 xlabel	= 'time',
+																			 ylabel	= 'geomagnetism [nT]',
+																			 ),
+										}, )
+
 		elif ( isinstance( self.dev, FXLS8974 ) ):
-			self.split	= ( splits[ 0 ], )
-							
+			self.split	= splits	= ( {	"id"	 	: "acc", 
+											"unit"	 	: "g",
+											"get_data"	: self.dev.xyz,
+											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
+																				{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
+																				{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
+																			], 
+																			title	= '"g" now', 
+																			xlabel	= 'time',
+																			ylabel	= 'gravitational acceleration [g]',
+																			minmax	= ( -2, 2 )
+																			),
+										}, )
+						
 	def xyz_data( self ):
 		d	= {}
 		for splt in self.split:
