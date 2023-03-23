@@ -5,20 +5,24 @@ from ustruct import unpack
 
 def main():
 	i2c		= I2C( 0, freq = (400 * 1000) )
-	acc		= FXOS8700( i2c )
+#	acc		= FXOS8700( i2c )
+	acc		= FXLS8974( i2c )
 
-	print( 	i2c.scan() )
+	print(	i2c.scan() )
 	acc.dump_reg()
 
 	while True:
 #		xyz	= acc.xyz()
 #		g	= sum( [ g * g for g in xyz ] ) ** 0.5
 #		print( g, xyz )
-		print( acc.mag() )
+#		print( acc.mag() )
 #		print()
 #		print( acc.six_axis() )
-#		print( acc.xyz() )
+		print( acc.xyz() )
 		sleep( 0.5 )
+
+class ACCELEROMETER_base:
+	pass
 
 class FXOS8700( I2C_target ):
 	DEFAULT_ADDR		= 0x1F
@@ -83,6 +87,69 @@ class FXOS8700( I2C_target ):
 			setting	= 0x0
 		
 		self.bit_operation( "XYZ_DATA_CFG", 0x03, setting )
+
+	def dump( self ):
+		rtn	= []
+		for r in self.REG_NAME:
+			rtn	+= [ self.read_registers( r, 1 ) ]
+		
+		return rtn
+		
+class FXLS8974( ACCELEROMETER_base, I2C_target ):
+	DEFAULT_ADDR		= 0x19
+
+	REG_NAME	= ( "INT_STATUS", "TEMP_OUT", "VECM_LSB", "VECM_MSB",
+					"OUT_X_LSB", "OUT_X_MSB",
+					"OUT_Y_LSB", "OUT_Y_MSB",
+					"OUT_Z_LSB", "OUT_Z_MSB",
+					"RESERVED_REG1",
+					"BUF_STATUS",
+					"BUF_X_LSB", "BUF_X_MSB",
+					"BUF_Y_LSB", "BUF_Y_MSB",
+					"BUF_Z_LSB", "BUF_Z_MSB",
+					"PROD_REV", "WHO_AM_I",
+					"SYS_MODE",
+					"SENS_CONFIG1", "SENS_CONFIG2", "SENS_CONFIG3", "SENS_CONFIG4", "SENS_CONFIG5",
+					"WAKE_IDLE _LSB", "WAKE_IDLE_MSB",
+					"SLEEP_IDLE_LSB", "SLEEP_IDLE_MSB",
+					"ASLP_COUNT_LSB", "ASLP_COUNT_MSB",
+					"INT_EN", "INT_PIN_SEL",
+					"OFF_X", "OFF_Y", "OFF_Z",
+					"RESERVED_REG2",
+					"BUF_CONFIG1", "BUF_CONFIG2",
+					"ORIENT_STATUS", "ORIENT_CONFIG", "ORIENT_DBCOUNT", "ORIENT_BF_ZCOMP", "ORIENT_THS_REG",
+					"SDCD_INT_SRC1", "SDCD_INT_SRC2",
+					"SDCD_CONFIG1", "SDCD_CONFIG2",
+					"SDCD_OT_DBCNT", "SDCD_WT_DBCNT",
+					"SDCD_LTHS_LSB", "SDCD_LTHS_MSB",
+					"SDCD_UTHS_LSB", "SDCD_UTHS_MSB",
+					"SELF_TEST_CONFIG1", "SELF_TEST_CONFIG2",
+					)
+
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		super().__init__( i2c, address )
+
+		self.fs_range	= 2
+		self.fullscale( self.fs_range )
+		self.bit_operation( "SENS_CONFIG1", 0x01, 0x01 )
+
+	def three_axis( self, reg ):
+		return unpack( "<hhh", self.read_registers( reg, 6, barray = True ) )
+	
+	def xyz( self ):
+		return [ (d << 4) / 2**15 * self.fs_range for d in self.three_axis( "OUT_X_LSB" ) ]	# convert to G
+
+	def fullscale( self, v ):
+		if 16 <= v:
+			setting	= 0x3
+		elif 8 <= v:
+			setting	= 0x2
+		elif 4 <= v:
+			setting	= 0x1
+		else:
+			setting	= 0x0
+		
+		self.bit_operation( "SENS_CONFIG1", 0x06, setting << 1 )
 
 	def dump( self ):
 		rtn	= []

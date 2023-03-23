@@ -3,17 +3,19 @@ import	ure
 import	ujson
 import	micropython
 
-from	nxp_periph	import	FXOS8700
+from	nxp_periph	import	FXOS8700, FXLS8974
+from	nxp_periph	import	ACCELEROMETER_base
 from	demo_lib	import	DUT_base
 
 class DUT_ACC( DUT_base.DUT_base ):
-	APPLIED_TO		= FXOS8700
+	APPLIED_TO		= ACCELEROMETER_base
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 60
 	GRAPH_HIGH		= 2
 	GRAPH_LOW		= -2
 
 	DS_URL		= { "FXOS8700": "https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf",
+					"FXLS8974": "https://www.nxp.jp/docs/en/data-sheet/FXLS8974CF.pdf",
 					}
 
 	regex_update	= ure.compile( r".*update=(\d+)" )
@@ -28,7 +30,7 @@ class DUT_ACC( DUT_base.DUT_base ):
 		self.info		= [ "acc", "" ]
 		self.symbol		= '🍎'
 
-		self.split		= ( {	"id"	 	: "acc", 
+		splits			= ( {	"id"	 	: "acc", 
 								"unit"	 	: "g",
 								"get_data"	: self.dev.xyz,
 								"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
@@ -54,6 +56,11 @@ class DUT_ACC( DUT_base.DUT_base ):
 																 ylabel	= 'geomagnetism [nT]',
 																 ),
 							}, )
+							
+		if ( isinstance( self.dev, FXOS8700 ) ):
+			self.split	= splits
+		elif ( isinstance( self.dev, FXLS8974 ) ):
+			self.split	= ( splits[ 0 ], )
 							
 	def xyz_data( self ):
 		d	= {}

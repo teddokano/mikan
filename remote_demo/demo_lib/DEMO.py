@@ -15,7 +15,7 @@ from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
 from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
-from	nxp_periph	import	FXOS8700
+from	nxp_periph	import	FXOS8700, FXLS8974
 from	nxp_periph	import	i2c_fullscan
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC, DUT_GPIO, DUT_ACC
@@ -53,6 +53,7 @@ def demo( ip = "dhcp" ):
 #						PCF2131( spi ),
 #						PCF85063( i2c ),
 						P3T1085( si2c ),
+						FXLS8974( i2c ),
 						FXOS8700( i2c ),
 						General_call( i2c ),
 						]
