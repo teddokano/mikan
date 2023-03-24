@@ -131,9 +131,8 @@ for ( let i = -1; i <= 1; i += 0.1 ) {
 }
 
 function init3D() {
-	const	pic_sz	= 320;
-	const	width	= pic_sz;
-	const	height	= pic_sz;
+	const	width	= 480;
+	const	height	= 320;
 
 	const renderer	= new THREE.WebGLRenderer({
 		canvas: document.querySelector( "#myCanvas" )
@@ -197,26 +196,62 @@ function init3D() {
 
 function board_RT() {
 	let box0 = new THREE.Mesh(
-								  new THREE.BoxGeometry( 300, 200, 10 ), 
-								  new THREE.MeshLambertMaterial({color: 0x33FF33})
-								);
+		new THREE.BoxGeometry( 300, 200, 10 ), 
+		new THREE.MeshLambertMaterial({color: 0x33FF33})
+	);
 	let box1 = new THREE.Mesh(
-								  new THREE.BoxGeometry(  30,  50, 25 ),
-								  new THREE.MeshPhongMaterial({color: 0xC0C0C0})
-								);
+		new THREE.BoxGeometry(  30,  50, 25 ),
+		new THREE.MeshPhongMaterial({color: 0xC0C0C0})
+	);
 	let box2 = new THREE.Mesh(
-								  new THREE.BoxGeometry( 100, 100, 10 ),
-								  new THREE.MeshLambertMaterial({color: 0x33EE33})
-								);
+		new THREE.BoxGeometry( 100, 100, 10 ),
+		new THREE.MeshLambertMaterial({color: 0x33EE33})
+	);
+	let box3 = new THREE.Mesh(
+		new THREE.BoxGeometry( 6, 6, 3 ),
+		new THREE.MeshLambertMaterial({color: 0x404040})
+	);
+	let box4 = new THREE.Mesh(
+		new THREE.BoxGeometry( 50, 6, 16 ),
+		new THREE.MeshLambertMaterial({color: 0x808080})
+	);
 
+	let box5 = new THREE.Mesh(
+		new THREE.BoxGeometry( 50, 6, 16 ),
+		new THREE.MeshLambertMaterial({color: 0x808080})
+	);
+
+	let box6 = new THREE.Mesh(
+		new THREE.BoxGeometry( 40, 6, 16 ),
+		new THREE.MeshLambertMaterial({color: 0x808080})
+	);
+
+	let box7 = new THREE.Mesh(
+		new THREE.BoxGeometry( 30, 6, 16 ),
+		new THREE.MeshLambertMaterial({color: 0x808080})
+	);
 	box0.position.set(    0,  0, -10 );
 	box1.position.set(  70, -80,   8 );
 	box2.position.set( -100,  0,  15 );
 
+	box0.position.set(  30,  -45, -10 );
+	box1.position.set( 100, -125,   8 );
+	box2.position.set( -60,  -45,  15 );
+	box3.position.set(   0,    0,   2 );
+	box4.position.set( -88,    6,   5 );
+	box5.position.set( -35,    6,   5 );
+	box6.position.set( -80,  -95,   5 );
+	box7.position.set( -35,  -95,   5 );
+	
 	let boxes = new THREE.Group();
-	boxes.add(box0);
-	boxes.add(box1);
-	boxes.add(box2);
+	boxes.add( box0 );
+	boxes.add( box1 );
+//  boxes.add( box2 );
+	boxes.add( box3 );
+	boxes.add( box4 );
+	boxes.add( box5 );
+	boxes.add( box6 );
+	boxes.add( box7 );
 
 	return boxes;
 }
