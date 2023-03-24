@@ -246,12 +246,27 @@ function board_ARD() {
 								new THREE.BoxGeometry( 10, 10, 5 ), 
 								new THREE.MeshLambertMaterial({color: 0x404040})
 							  );
+	let box6 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 25, 10, 30 ), 
+								  new THREE.MeshLambertMaterial({color: 0x808080})
+								);
+	let box7 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 25, 10, 30 ), 
+								  new THREE.MeshLambertMaterial({color: 0x808080})
+								);
+	let box8 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 25, 10, 30 ), 
+								  new THREE.MeshLambertMaterial({color: 0x808080})
+							  );
 	box0.position.set(    0,   0,  0 );
 	box1.position.set(  110, -25, 20 );
 	box2.position.set(  110,  75, 20 );
 	box3.position.set( -110, -60, 20 );
 	box4.position.set( -110,  70, 20 );
 	box5.position.set(    0,   0,  5 );
+	box6.position.set(   65,  65, 20 );
+	box7.position.set(   65,  90, 20 );
+	box8.position.set(   65, 115, 20 );
 
 	let boxes = new THREE.Group();
 	boxes.add( box0 );
@@ -260,9 +275,9 @@ function board_ARD() {
 	boxes.add( box3 );
 	boxes.add( box4 );
 	boxes.add( box5 );
+	boxes.add( box6 );
+	boxes.add( box7 );
+	boxes.add( box8 );
 
 	return boxes;
 }
-
-
-//window.addEventListener( 'DOMContentLoaded', init3D );
