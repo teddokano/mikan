@@ -107,19 +107,23 @@ function getDataAndShow() {
 }
 
 window.addEventListener( 'load', function () {
-	init3D();
+	initial_data_loading();
 	setInterval( getDataAndShow, 200 );
 });
 
 let graph	= [];
 
-ajaxUpdate( REQ_HEADER + "settings", data => {
-	let obj = JSON.parse( data );
+function initial_data_loading() {
+	ajaxUpdate( REQ_HEADER + "settings", data => {
+		let obj = JSON.parse( data );
 
-	for ( const o of obj ) {
-		graph.push( new GraphDraw( o ) );
-	}
-} );
+		for ( const o of obj ) {
+			graph.push( new GraphDraw( o ) );
+		}
+		
+		init3D();
+	} );
+}
 
 
 for ( let i = -1; i <= 1; i += 0.1 ) {
@@ -142,27 +146,15 @@ function init3D() {
 	const camera	= new THREE.PerspectiveCamera( 45, width / height );
 	camera.position.set( 0, 0, 500);
 
-	let box0 = new THREE.Mesh(
-								  new THREE.BoxGeometry( 300, 200, 10 ), 
-								  new THREE.MeshLambertMaterial({color: 0x33FF33})
-								);
-	let box1 = new THREE.Mesh(
-								  new THREE.BoxGeometry(  30,  50, 25 ),
-								  new THREE.MeshPhongMaterial({color: 0xC0C0C0})
-								);
-	let box2 = new THREE.Mesh(
-								  new THREE.BoxGeometry( 100, 100, 10 ),
-								  new THREE.MeshLambertMaterial({color: 0x33EE33})
-								);
-
-	box0.position.set(    0,  0, -10 );
-	box1.position.set(  70, -80,   8 );
-	box2.position.set( -100,  0,  15 );
-
-	let boxes = new THREE.Group();
-	boxes.add(box0);
-	boxes.add(box1);
-	boxes.add(box2);
+	let boxes;
+	
+	console.log( graph.length )
+	
+	if ( graph.length == 1 )
+		boxes	= board_ARD();
+	else
+		boxes	= board_RT();
+	
 	scene.add( boxes );
 	const ambient	= new THREE.AmbientLight( 0xFFFFFF, 0.2 );
 	scene.add( ambient );
@@ -201,5 +193,76 @@ function init3D() {
 		requestAnimationFrame( tick );
 	}
 }
+
+
+function board_RT() {
+	let box0 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 300, 200, 10 ), 
+								  new THREE.MeshLambertMaterial({color: 0x33FF33})
+								);
+	let box1 = new THREE.Mesh(
+								  new THREE.BoxGeometry(  30,  50, 25 ),
+								  new THREE.MeshPhongMaterial({color: 0xC0C0C0})
+								);
+	let box2 = new THREE.Mesh(
+								  new THREE.BoxGeometry( 100, 100, 10 ),
+								  new THREE.MeshLambertMaterial({color: 0x33EE33})
+								);
+
+	box0.position.set(    0,  0, -10 );
+	box1.position.set(  70, -80,   8 );
+	box2.position.set( -100,  0,  15 );
+
+	let boxes = new THREE.Group();
+	boxes.add(box0);
+	boxes.add(box1);
+	boxes.add(box2);
+
+	return boxes;
+}
+
+function board_ARD() {
+	let box0 = new THREE.Mesh(
+								new THREE.BoxGeometry( 250, 280, 10 ), 
+								new THREE.MeshLambertMaterial({color: 0xFF8000})
+							);
+	let box1 = new THREE.Mesh(
+								new THREE.BoxGeometry(  10, 100, 40 ),
+								new THREE.MeshLambertMaterial({color: 0x808080})
+							);
+	let box2 = new THREE.Mesh(
+								new THREE.BoxGeometry(  10,  75, 40 ),
+								new THREE.MeshLambertMaterial({color: 0x808080})
+							);
+	let box3 = new THREE.Mesh(
+								new THREE.BoxGeometry(  10, 125, 40 ),
+								new THREE.MeshLambertMaterial({color: 0x808080})
+							);
+	let box4 = new THREE.Mesh(
+								new THREE.BoxGeometry(  10, 125, 40 ),
+								new THREE.MeshLambertMaterial({color: 0x808080})
+							);
+	let box5 = new THREE.Mesh(
+								new THREE.BoxGeometry( 10, 10, 5 ), 
+								new THREE.MeshLambertMaterial({color: 0x404040})
+							  );
+	box0.position.set(    0,   0,  0 );
+	box1.position.set(  110, -25, 20 );
+	box2.position.set(  110,  75, 20 );
+	box3.position.set( -110, -60, 20 );
+	box4.position.set( -110,  70, 20 );
+	box5.position.set(    0,   0,  5 );
+
+	let boxes = new THREE.Group();
+	boxes.add( box0 );
+	boxes.add( box1 );
+	boxes.add( box2 );
+	boxes.add( box3 );
+	boxes.add( box4 );
+	boxes.add( box5 );
+
+	return boxes;
+}
+
 
 //window.addEventListener( 'DOMContentLoaded', init3D );

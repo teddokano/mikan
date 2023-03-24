@@ -34,7 +34,7 @@ def demo( ip = "dhcp" ):
 	regex_file	= ure.compile( r"GET /(\S+)\sHTTP" )
 
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
-#	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
+	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
 	si2c		= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
 	
 	devices			= [
