@@ -2,16 +2,54 @@ from nxp_periph.interface	import	I2C_target
 from ustruct 				import unpack
 
 class ACCELEROMETER_base:
+	"""
+	An abstraction class to make user interface.
+	"""
 	def three_axis( self, reg ):
+		"""
+		get 3-axis data
+		
+		Parameters
+		----------
+		reg : int or string
+			1st register pointer or name
+			
+		Returns
+		-------
+		int, int, int : 3 integers as 16bit register values
+
+		"""
+		
 		return self.__three_axis( reg )
 
 	def xyz( self ):
+		"""
+		get 3-axis "g" (gravitational acceleration) data
+		
+		Parameters
+		Returns
+		-------
+		float, float, float : 3 "g" values
+
+		"""
+
 		return self.__xyz()
 
-	def fullscale( self, v ):
-		return self.__fullscale( v )
+	def fullscale( self, g ):
+		"""
+		Fullscale setting
+
+		Parameters
+		----------
+		g		: settting value
+
+		"""
+		self.__fullscale( g )
 
 	def dump( self ):
+		"""
+		Overriding "dump()" in nxp_periph.interface class
+		"""
 		rtn	= []
 		for r in self.REG_NAME:
 			rtn	+= [ self.read_registers( r, 1 ) ]
@@ -50,6 +88,15 @@ class FXOS8700( ACCELEROMETER_base,I2C_target ):
 					)
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Initializer for PCA8561 class instance
+
+		Parameters
+		----------
+		i2c		: I2C instance
+		address	: int, option
+
+		"""
 		super().__init__( i2c, address )
 		
 		self.write_registers( "F_SETUP",     0x00 )	# FIFO is disabled
@@ -77,9 +124,27 @@ class FXOS8700( ACCELEROMETER_base,I2C_target ):
 		self.bit_operation( "XYZ_DATA_CFG", 0x03, setting )
 
 	def mag( self ):
+		"""
+		get 3-axis magnetometer output in nano-Tesla
+		
+		Parameters
+		Returns
+		-------
+		int, int, int : 3-axis magnetometer output values
+
+		"""
 		return [ d * 100 for d in self.three_axis( "M_OUT_X_MSB" ) ]	# convert to nano-T
 
 	def six_axis( self ):
+		"""
+		get 6-axis accelerometer and magnetometer outputs
+		
+		Parameters
+		Returns
+		-------
+		int, int, int : 3-axis accelerometer 3-axis magnetometer outputs as 16bit register values
+
+		"""
 		return unpack( ">hhhhhh", self.read_registers( "OUT_X_MSB", 12, barray = True ) )
 
 class FXLS8974( ACCELEROMETER_base, I2C_target ):
@@ -114,6 +179,15 @@ class FXLS8974( ACCELEROMETER_base, I2C_target ):
 					)
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Initializer for PCA8561 class instance
+
+		Parameters
+		----------
+		i2c		: I2C instance
+		address	: int, option
+
+		"""
 		super().__init__( i2c, address )
 
 		print( "FXLS8974 {}".format( hex( address ) ) )

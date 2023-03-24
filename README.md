@@ -50,6 +50,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCA9629A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/fm-plus-ic-bus-advanced-stepper-motor-controller:PCA9629APW)
 - Accelerometer
 	- [FXOS8700](https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf)
+	- [FXLS8974](https://www.nxp.jp/docs/en/data-sheet/FXLS8974CF.pdf)
 
 # Getting started
 ## Guide video
@@ -156,7 +157,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 💁|protocol_bridge_SC18IS606_with_AT25010.py|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
 🔄|stepper_motor_simple.py					|Operating stepping motor with simple API																			|PCA9629A
 🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
-🍎|FXOS8700.py								|Simple 6 axis data capturing from FXOS8700																			|FXOS8700
+🍎|accelerometer.py							|Simple 3 axis data capturing from FXOS8700 or FXLS8974																|FXOS8700, FXLS8974
+🍎|magnetometer.py							|Simple compass application using FXOS8700																			|FXOS8700
 
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  

@@ -18,7 +18,6 @@ def main():
 	while True:
 		x, y, _	= acc.mag()
 		deg	= math.atan2( y - yc, x - xc ) / math.pi * 180
-#		deg	= deg + 360 if deg < 0 else deg
 		print( deg )
 		sleep( 0.2 )
 
