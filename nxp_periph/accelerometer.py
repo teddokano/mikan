@@ -1,28 +1,22 @@
 from nxp_periph.interface	import	I2C_target
-from machine		import	Pin, I2C
-from utime import sleep
-from ustruct import unpack
-
-def main():
-	i2c		= I2C( 0, freq = (400 * 1000) )
-#	acc		= FXOS8700( i2c )
-	acc		= FXLS8974( i2c )
-
-	print(	i2c.scan() )
-	acc.dump_reg()
-
-	while True:
-#		xyz	= acc.xyz()
-#		g	= sum( [ g * g for g in xyz ] ) ** 0.5
-#		print( g, xyz )
-#		print( acc.mag() )
-#		print()
-#		print( acc.six_axis() )
-		print( acc.xyz() )
-		sleep( 0.5 )
+from ustruct 				import unpack
 
 class ACCELEROMETER_base:
-	pass
+	def three_axis( self, reg ):
+		return self.__three_axis( reg )
+
+	def xyz( self ):
+		return self.__xyz()
+
+	def fullscale( self, v ):
+		return self.__fullscale( v )
+
+	def dump( self ):
+		rtn	= []
+		for r in self.REG_NAME:
+			rtn	+= [ self.read_registers( r, 1 ) ]
+		
+		return rtn
 
 class FXOS8700( ACCELEROMETER_base,I2C_target ):
 	DEFAULT_ADDR		= 0x1F
@@ -58,27 +52,21 @@ class FXOS8700( ACCELEROMETER_base,I2C_target ):
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		super().__init__( i2c, address )
 		
-		self.write_registers( "F_SETUP", 0x00 )		# FIFO is disabled
-		self.write_registers( "CTRL_REG1", 0x01 )	# active
+		self.write_registers( "F_SETUP",     0x00 )	# FIFO is disabled
+		self.write_registers( "CTRL_REG1",   0x01 )	# active
 		self.write_registers( "M_CTRL_REG1", 0x03 )	# hybrid mode, both accelerometer and magnetometer sensors are active
 		self.write_registers( "M_CTRL_REG2", 0x20 )	# can be read xyz and mag together in 12 bytes
 
 		self.fs_range	= 2
 		self.fullscale( self.fs_range )
 
-	def three_axis( self, reg ):
+	def __three_axis( self, reg ):
 		return unpack( ">hhh", self.read_registers( reg, 6, barray = True ) )
 	
-	def xyz( self ):
+	def __xyz( self ):
 		return [ d / 2**15 * self.fs_range for d in self.three_axis( "OUT_X_MSB" ) ]	# convert to G
 
-	def mag( self ):
-		return [ d * 100 for d in self.three_axis( "M_OUT_X_MSB" ) ]	# convert to nano-T
-
-	def six_axis( self ):
-		return unpack( ">hhhhhh", self.read_registers( "OUT_X_MSB", 12, barray = True ) )
-
-	def fullscale( self, v ):
+	def __fullscale( self, v ):
 		if 8 <= v:
 			setting	= 0x2
 		elif 4 <= v:
@@ -88,13 +76,12 @@ class FXOS8700( ACCELEROMETER_base,I2C_target ):
 		
 		self.bit_operation( "XYZ_DATA_CFG", 0x03, setting )
 
-	def dump( self ):
-		rtn	= []
-		for r in self.REG_NAME:
-			rtn	+= [ self.read_registers( r, 1 ) ]
-		
-		return rtn
-		
+	def mag( self ):
+		return [ d * 100 for d in self.three_axis( "M_OUT_X_MSB" ) ]	# convert to nano-T
+
+	def six_axis( self ):
+		return unpack( ">hhhhhh", self.read_registers( "OUT_X_MSB", 12, barray = True ) )
+
 class FXLS8974( ACCELEROMETER_base, I2C_target ):
 	DEFAULT_ADDR		= 0x19
 
@@ -135,13 +122,13 @@ class FXLS8974( ACCELEROMETER_base, I2C_target ):
 		self.fullscale( self.fs_range )
 		self.bit_operation( "SENS_CONFIG1", 0x01, 0x01 )
 
-	def three_axis( self, reg ):
+	def __three_axis( self, reg ):
 		return unpack( "<hhh", self.read_registers( reg, 6, barray = True ) )
 	
-	def xyz( self ):
+	def __xyz( self ):
 		return [ (d << 4) / 2**15 * self.fs_range for d in self.three_axis( "OUT_X_LSB" ) ]	# convert to G
 
-	def fullscale( self, v ):
+	def __fullscale( self, v ):
 		if 16 <= v:
 			setting	= 0x3
 		elif 8 <= v:
@@ -153,12 +140,27 @@ class FXLS8974( ACCELEROMETER_base, I2C_target ):
 		
 		self.bit_operation( "SENS_CONFIG1", 0x06, setting << 1 )
 
-	def dump( self ):
-		rtn	= []
-		for r in self.REG_NAME:
-			rtn	+= [ self.read_registers( r, 1 ) ]
-		
-		return rtn
+
+from machine	import	Pin, I2C
+from utime		import sleep
+
+def main():
+	i2c		= I2C( 0, freq = (400 * 1000) )
+#	acc		= FXOS8700( i2c )
+	acc		= FXLS8974( i2c )
+
+	print(	i2c.scan() )
+	acc.dump_reg()
+
+	while True:
+#		xyz	= acc.xyz()
+#		g	= sum( [ g * g for g in xyz ] ) ** 0.5
+#		print( g, xyz )
+#		print( acc.mag() )
+#		print()
+#		print( acc.six_axis() )
+		print( acc.xyz() )
+		sleep( 0.5 )
 		
 if __name__ == "__main__":
 	main()
