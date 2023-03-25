@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.protocol_bridge &mdash; mikan 1.7 documentation</title>
+  <title>nxp_periph.protocol_bridge &mdash; mikan 1.10 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -11,9 +11,6 @@
   <![endif]-->
   
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> mikan
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            mikan
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -51,7 +52,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
       <li class="breadcrumb-item active">nxp_periph.protocol_bridge</li>
       <li class="wy-breadcrumbs-aside">
@@ -70,7 +71,7 @@
 
 
 <div class="viewcode-block" id="SC16IS7xx_base"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base">[docs]</a><span class="k">class</span> <span class="nc">SC16IS7xx_base</span><span class="p">():</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A base class to abstract behavior of SC16IS7xx. </span>
 <span class="sd">	</span>
 <span class="sd">	This makes SC16IS7xx behavior independent from interface. 	</span>
@@ -88,7 +89,7 @@
 					<span class="p">}</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">osc</span> <span class="o">=</span> <span class="mi">14746500</span><span class="p">,</span> <span class="n">baud</span> <span class="o">=</span> <span class="mi">9600</span><span class="p">,</span> <span class="n">bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">parity</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		A base class to abstract behavior of SC16IS7xx</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
@@ -135,7 +136,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;FCR&quot;</span><span class="p">,</span> <span class="mh">0x01</span> <span class="p">)</span>	<span class="c1"># enable FIFO mode</span>
 		
 <div class="viewcode-block" id="SC16IS7xx_base.info"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.info">[docs]</a>	<span class="k">def</span> <span class="nf">info</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Not overriding interface.info() since inheritance structure can not allow</span>
 <span class="sd">		This methos is called by SC16IS7xx_I2C and SC16IS7xx_SPI classes</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -154,7 +155,7 @@
 		<span class="k">return</span> <span class="n">s</span></div>
 		
 <div class="viewcode-block" id="SC16IS7xx_base.baud"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.baud">[docs]</a>	<span class="k">def</span> <span class="nf">baud</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">baud</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		baudrate setting</span>
 <span class="sd">	</span>
 <span class="sd">		Parameters</span>
@@ -173,7 +174,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;LCR&quot;</span><span class="p">,</span> <span class="n">lcr</span> <span class="p">)</span></div>
 		
 <div class="viewcode-block" id="SC16IS7xx_base.sendbreak"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.sendbreak">[docs]</a>	<span class="k">def</span> <span class="nf">sendbreak</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		sends break: keeps TX signal LOW for specified duration</span>
 <span class="sd">	</span>
 <span class="sd">		Parameters</span>
@@ -188,7 +189,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;LCR&quot;</span><span class="p">,</span> <span class="o">~</span><span class="mh">0x40</span> <span class="o">&amp;</span> <span class="n">lcr</span> <span class="p">)</span></div>
 	
 <div class="viewcode-block" id="SC16IS7xx_base.reg_access"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.reg_access">[docs]</a>	<span class="k">def</span> <span class="nf">reg_access</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		register access interface</span>
 <span class="sd">		</span>
 <span class="sd">		SC16IS7xx is not having register structure like LED controllers (PCA995x).</span>
@@ -229,20 +230,20 @@
 			<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;reg_access error&quot;</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_base.thr_ready"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.thr_ready">[docs]</a>	<span class="k">def</span> <span class="nf">thr_ready</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		retruns True when THR register is ready to be written</span>
 <span class="sd">		&quot;&quot;&quot;</span>		
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;LSR&quot;</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x20</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_base.wait_tx_ready"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.wait_tx_ready">[docs]</a>	<span class="k">def</span> <span class="nf">wait_tx_ready</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		wait until THR register is ready to be written</span>
 <span class="sd">		&quot;&quot;&quot;</span>		
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">thr_ready</span><span class="p">():</span>
 			<span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_base.write"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		data to be sent on TX</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
@@ -262,20 +263,20 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;THR&quot;</span><span class="p">,</span> <span class="n">d</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_base.any"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.any">[docs]</a>	<span class="k">def</span> <span class="nf">any</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		returns True if received data available</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;LSR&quot;</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x01</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_base.flush"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.flush">[docs]</a>	<span class="k">def</span> <span class="nf">flush</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		wait all data in TX buffer to be sent</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;LSR&quot;</span> <span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x40</span><span class="p">:</span>
 			<span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_base.read"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_base.read">[docs]</a>	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		get received data</span>
 <span class="sd">		</span>
 <span class="sd">		This method can take single argument to specify length of receiving data</span>
@@ -301,11 +302,11 @@
 		<span class="k">return</span> <span class="n">data</span></div></div>
 
 <div class="viewcode-block" id="SC16IS7xx_I2C"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_I2C">[docs]</a><span class="k">class</span> <span class="nc">SC16IS7xx_I2C</span><span class="p">(</span> <span class="n">SC16IS7xx_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	SC16IS7xx class with I2C interface</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">osc</span> <span class="o">=</span> <span class="mi">14746500</span><span class="p">,</span> <span class="n">baud</span> <span class="o">=</span> <span class="mi">9600</span><span class="p">,</span> <span class="n">bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">parity</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="mi">1</span>  <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Initializer to be called from &quot;SC16IS7xx()&quot; function</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">I2C_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span>
@@ -318,11 +319,11 @@
 		<span class="k">return</span> <span class="n">s</span></div></div>
 		
 <div class="viewcode-block" id="SC16IS7xx_SPI"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_SPI">[docs]</a><span class="k">class</span> <span class="nc">SC16IS7xx_SPI</span><span class="p">(</span> <span class="n">SC16IS7xx_base</span><span class="p">,</span> <span class="n">SPI_target</span> <span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	SC16IS7xx class with SPI interface</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">osc</span> <span class="o">=</span> <span class="mi">14746500</span><span class="p">,</span> <span class="n">baud</span> <span class="o">=</span> <span class="mi">9600</span><span class="p">,</span> <span class="n">bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">parity</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Initializer to be called from &quot;SC16IS7xx()&quot; function</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">SPI_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span>
@@ -335,13 +336,13 @@
 		<span class="k">return</span> <span class="n">s</span></div>
 
 <div class="viewcode-block" id="SC16IS7xx_SPI.read_registers"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_SPI.read_registers">[docs]</a>	<span class="k">def</span> <span class="nf">read_registers</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">n</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Overriding interface.read_registers() for device specific access method</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="p">[</span> <span class="mh">0x80</span> <span class="o">|</span> <span class="n">reg</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">]</span> <span class="p">)[</span> <span class="mi">1</span> <span class="p">]</span></div>
 		
 <div class="viewcode-block" id="SC16IS7xx_SPI.write_registers"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx_SPI.write_registers">[docs]</a>	<span class="k">def</span> <span class="nf">write_registers</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Overriding interface.read_registers() for device specific access method</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span> <span class="p">[</span> <span class="n">reg</span><span class="p">,</span> <span class="n">v</span> <span class="p">]</span> <span class="p">)</span></div></div>
@@ -350,7 +351,7 @@
 <span class="n">DEFAULT_CS</span>		<span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="SC16IS7xx"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC16IS7xx">[docs]</a><span class="k">def</span> <span class="nf">SC16IS7xx</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="n">DEFAULT_CS</span><span class="p">,</span> <span class="n">channel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">osc</span> <span class="o">=</span> <span class="mi">14746500</span><span class="p">,</span> <span class="n">baud</span> <span class="o">=</span> <span class="mi">9600</span><span class="p">,</span> <span class="n">bits</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">parity</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A constructor interface for SC16IS7xx</span>
 
 <span class="sd">	Parameters</span>
@@ -388,7 +389,7 @@
 		<span class="k">return</span> <span class="n">SC16IS7xx_SPI</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span><span class="p">,</span> <span class="n">osc</span> <span class="o">=</span> <span class="n">osc</span><span class="p">,</span> <span class="n">baud</span> <span class="o">=</span> <span class="n">baud</span><span class="p">,</span> <span class="n">bits</span> <span class="o">=</span> <span class="n">bits</span><span class="p">,</span> <span class="n">parity</span> <span class="o">=</span> <span class="n">parity</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">stop</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC18IS606"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606">[docs]</a><span class="k">class</span> <span class="nc">SC18IS606</span><span class="p">(</span> <span class="n">I2C_target</span> <span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	SC18IS606 class</span>
 <span class="sd">	</span>
 <span class="sd">	The instance of SC18IS606 class will be machine.SPI compatible object.</span>
@@ -420,7 +421,7 @@
 	<span class="n">LSB</span>	<span class="o">=</span> <span class="n">SPI</span><span class="o">.</span><span class="n">LSB</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">csn</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDRESS</span><span class="p">,</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">baudrate</span> <span class="o">=</span> <span class="mi">1875000</span><span class="p">,</span> <span class="n">polarity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">phase</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">firstbit</span> <span class="o">=</span> <span class="n">SPI</span><span class="o">.</span><span class="n">MSB</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Initializer for SC18IS606</span>
 
 <span class="sd">		Parameters</span>
@@ -457,13 +458,13 @@
 
 		
 	<span class="k">def</span> <span class="nf">__callback</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pin</span> <span class="p">):</span>	<span class="c1">#	interrupt handler</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		interrupt handler (instance internal use)</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__flag</span>	<span class="o">=</span> <span class="kc">True</span>
 
 	<span class="k">def</span> <span class="nf">__wait_tsfr_done</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">read_wait</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		wait for transfer completed</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">__flag</span>	<span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -475,13 +476,13 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">__clear_int</span><span class="p">()</span>
 		
 	<span class="k">def</span> <span class="nf">__clear_int</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		interrupt clear</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">(</span> <span class="p">[</span> <span class="n">SC18IS606</span><span class="o">.</span><span class="n">FuncID_Clear_Interrupt</span> <span class="p">]</span> <span class="p">)</span>
 	
 <div class="viewcode-block" id="SC18IS606.command"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.command">[docs]</a>	<span class="k">def</span> <span class="nf">command</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		command to SC18IS606</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
@@ -493,7 +494,7 @@
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">send</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC18IS606.send"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.send">[docs]</a>	<span class="k">def</span> <span class="nf">send</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		send data on SPI and return when completed (blocking transfer)</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
@@ -506,7 +507,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">__wait_tsfr_done</span><span class="p">()</span></div>
 		
 <div class="viewcode-block" id="SC18IS606.receive"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.receive">[docs]</a>	<span class="k">def</span> <span class="nf">receive</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		send/receive on SPI and return data when completed (blocking transfer)</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
@@ -525,7 +526,7 @@
 		<span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC18IS606.init"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.init">[docs]</a>	<span class="k">def</span> <span class="nf">init</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">baudrate</span> <span class="o">=</span> <span class="mi">1875000</span><span class="p">,</span> <span class="n">polarity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">phase</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">firstbit</span> <span class="o">=</span> <span class="n">SPI</span><span class="o">.</span><span class="n">MSB</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		setting SPI parameters</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">FREQ</span>	<span class="o">=</span> <span class="p">[</span> <span class="mi">58000</span><span class="p">,</span> <span class="mi">115000</span><span class="p">,</span> <span class="mi">455000</span><span class="p">,</span> <span class="mi">1875000</span> <span class="p">]</span>
@@ -547,19 +548,19 @@
 							<span class="o">+</span> <span class="p">[</span> <span class="p">(</span><span class="n">order</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">polarity</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">phase</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="n">f_idx</span> <span class="p">]</span> <span class="p">)</span></div>
 		
 <div class="viewcode-block" id="SC18IS606.info"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.info">[docs]</a>	<span class="k">def</span> <span class="nf">info</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		overrides interface.info() for additional information</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">Hz, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span> <span class="s2">&quot;freq&quot;</span> <span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span> <span class="s2">&quot;oeder&quot;</span> <span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span> <span class="s2">&quot;polarity&quot;</span> <span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span> <span class="s2">&quot;phase&quot;</span> <span class="p">]</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC18IS606.read"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.read">[docs]</a>	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">write</span> <span class="o">=</span> <span class="mh">0x00</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		machine.SPI.read() compatible</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="p">[</span> <span class="n">write</span> <span class="p">]</span> <span class="o">*</span> <span class="n">nbytes</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC18IS606.readinto"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.readinto">[docs]</a>	<span class="k">def</span> <span class="nf">readinto</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">write</span> <span class="o">=</span> <span class="mh">0x00</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		machine.SPI.readinto() compatible</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">buf</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">buf</span> <span class="p">),</span> <span class="n">write</span> <span class="o">=</span> <span class="n">write</span> <span class="p">)</span>
@@ -567,13 +568,13 @@
 			<span class="n">buf</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">m</span></div>
 
 <div class="viewcode-block" id="SC18IS606.write"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">buf</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		machine.SPI.write() compatible</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span> <span class="nb">list</span><span class="p">(</span> <span class="n">buf</span> <span class="p">)</span> <span class="p">)</span></div>
 
 <div class="viewcode-block" id="SC18IS606.write_readinto"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.protocol_bridge.SC18IS606.write_readinto">[docs]</a>	<span class="k">def</span> <span class="nf">write_readinto</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">write_buf</span><span class="p">,</span> <span class="n">read_buf</span> <span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		machine.SPI.write_readinto() compatible</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="nb">list</span><span class="p">(</span> <span class="n">write_buf</span> <span class="p">)</span> <span class="p">)</span> <span class="p">):</span>

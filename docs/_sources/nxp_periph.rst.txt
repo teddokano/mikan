@@ -36,6 +36,14 @@ nxp\_periph.RTC module
    :undoc-members:
    :show-inheritance:
 
+nxp\_periph.accelerometer module
+--------------------------------
+
+.. automodule:: nxp_periph.accelerometer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 nxp\_periph.interface module
 ----------------------------
 

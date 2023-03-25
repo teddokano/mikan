@@ -1,5 +1,5 @@
 from nxp_periph.interface	import	I2C_target
-from ustruct 				import unpack
+from ustruct 				import	unpack
 
 class ACCELEROMETER_base:
 	"""
@@ -57,6 +57,13 @@ class ACCELEROMETER_base:
 		return rtn
 
 class FXOS8700( ACCELEROMETER_base,I2C_target ):
+	"""
+	FXOS8700: 6-axis accerelometer and magnetometer
+	
+	A device class for a 6-axis accerelometer and magnetometer
+	This class enables to get its realtime data 
+	
+	"""
 	DEFAULT_ADDR		= 0x1F
 
 	REG_NAME	= ( "STATUS", 
@@ -148,6 +155,13 @@ class FXOS8700( ACCELEROMETER_base,I2C_target ):
 		return unpack( ">hhhhhh", self.read_registers( "OUT_X_MSB", 12, barray = True ) )
 
 class FXLS8974( ACCELEROMETER_base, I2C_target ):
+	"""
+	FXLS8974: 3-axis accerelometer
+	
+	A device class for a 3-axis accerelometer
+	This class enables to get its realtime data 
+	
+	"""
 	DEFAULT_ADDR		= 0x19
 
 	REG_NAME	= ( "INT_STATUS", "TEMP_OUT", "VECM_LSB", "VECM_MSB",

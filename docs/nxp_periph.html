@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph package &mdash; mikan 1.7 documentation</title>
+  <title>nxp_periph package &mdash; mikan 1.10 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -12,9 +12,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -27,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> mikan
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            mikan
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -273,6 +274,29 @@
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-nxp_periph.accelerometer">nxp_periph.accelerometer module</a><ul>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base"><code class="docutils literal notranslate"><span class="pre">ACCELEROMETER_base</span></code></a><ul>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base.dump"><code class="docutils literal notranslate"><span class="pre">ACCELEROMETER_base.dump()</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base.fullscale"><code class="docutils literal notranslate"><span class="pre">ACCELEROMETER_base.fullscale()</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base.three_axis"><code class="docutils literal notranslate"><span class="pre">ACCELEROMETER_base.three_axis()</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base.xyz"><code class="docutils literal notranslate"><span class="pre">ACCELEROMETER_base.xyz()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXLS8974"><code class="docutils literal notranslate"><span class="pre">FXLS8974</span></code></a><ul>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXLS8974.DEFAULT_ADDR"><code class="docutils literal notranslate"><span class="pre">FXLS8974.DEFAULT_ADDR</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXLS8974.REG_NAME"><code class="docutils literal notranslate"><span class="pre">FXLS8974.REG_NAME</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXOS8700"><code class="docutils literal notranslate"><span class="pre">FXOS8700</span></code></a><ul>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXOS8700.DEFAULT_ADDR"><code class="docutils literal notranslate"><span class="pre">FXOS8700.DEFAULT_ADDR</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXOS8700.REG_NAME"><code class="docutils literal notranslate"><span class="pre">FXOS8700.REG_NAME</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXOS8700.mag"><code class="docutils literal notranslate"><span class="pre">FXOS8700.mag()</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.FXOS8700.six_axis"><code class="docutils literal notranslate"><span class="pre">FXOS8700.six_axis()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nxp_periph.accelerometer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-nxp_periph.interface">nxp_periph.interface module</a><ul>
 <li><a class="reference internal" href="#nxp_periph.interface.I2C_target"><code class="docutils literal notranslate"><span class="pre">I2C_target</span></code></a><ul>
 <li><a class="reference internal" href="#nxp_periph.interface.I2C_target.ping"><code class="docutils literal notranslate"><span class="pre">I2C_target.ping()</span></code></a></li>
@@ -439,7 +463,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">nxp_periph package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/nxp_periph.rst.txt" rel="nofollow"> View page source</a>
@@ -472,17 +496,17 @@
 <span class="sig-name descname"><span class="pre">config_0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#GPIO_base.config_0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.GPIO_base.config_0" title="Permalink to this definition"></a></dt>
 <dd><p>set/read configuration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong> (<em>int or</em>) – When this method takes 1 argument, the value is set in register
 It takes an integer value if 8 bit GPIO.
 Takes a list if the GPIO has multiple ports. First value is for port-0</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>int or list</strong> – When this method takes no argument, the value is read from register
 It returns an integer value if 8 bit GPIO.
 Returns a list if the GPIO has multiple ports. First value is for port-0</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>port value</p>
 </dd>
 </dl>
@@ -498,11 +522,11 @@ Returns a list if the GPIO has multiple ports. First value is for port-0</p>
 <span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#GPIO_base.input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.GPIO_base.input" title="Permalink to this definition"></a></dt>
 <dd><p>read input</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>int or list</strong> – It returns an integer value if 8 bit GPIO.
 Returns a list if the GPIO has multiple ports. First value is for port-0</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>port value</p>
 </dd>
 </dl>
@@ -513,7 +537,7 @@ Returns a list if the GPIO has multiple ports. First value is for port-0</p>
 <span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#GPIO_base.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.GPIO_base.output" title="Permalink to this definition"></a></dt>
 <dd><p>set output</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong> (<em>int or</em>) – It takes an integer value if 8 bit GPIO.
 Takes a list if the GPIO has multiple ports. First value is for port-0</p>
 </dd>
@@ -525,17 +549,17 @@ Takes a list if the GPIO has multiple ports. First value is for port-0</p>
 <span class="sig-name descname"><span class="pre">polarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#GPIO_base.polarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.GPIO_base.polarity" title="Permalink to this definition"></a></dt>
 <dd><p>set/read polarity</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong> (<em>int or</em>) – When this method takes 1 argument, the value is set in register
 It takes an integer value if 8 bit GPIO.
 Takes a list if the GPIO has multiple ports. First value is for port-0</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>int or list</strong> – When this method takes no argument, the value is read from register
 It returns an integer value if 8 bit GPIO.
 Returns a list if the GPIO has multiple ports. First value is for port-0</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>port value</p>
 </dd>
 </dl>
@@ -546,10 +570,10 @@ Returns a list if the GPIO has multiple ports. First value is for port-0</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#nxp_periph.GPIO.GPIO_base.value" title="Permalink to this definition"></a></dt>
 <dd><p>Read port</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list or int</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>port read value</p>
 </dd>
 </dl>
@@ -803,10 +827,10 @@ This class can operate its family devices of</p>
 <span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL65xx_base.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL65xx_base.dump" title="Permalink to this definition"></a></dt>
 <dd><p>dump register values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong> – List of integers</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>register data</p>
 </dd>
 </dl>
@@ -881,7 +905,7 @@ This class can operate its family devices of</p>
 <p>Generated pattern is stored in reg_buffer.
 To show the result on the LCD, call PCA8561.flush()</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pos</strong> (<em>int</em>) – Character position (0 to 3 from left)</p></li>
 <li><p><strong>c</strong> (<em>str</em>) – A character</p></li>
@@ -914,7 +938,7 @@ To show the result on the LCD, call PCA8561.flush()</p>
 <p>If the string contains more than 4 characters,
 the last 4 characters will be shown unless char_per_sec is given.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>c</strong> (<em>str</em>) – A character to print</p></li>
 <li><p><strong>buffer_update_only</strong> (<em>bool</em><em>, </em><em>default = False</em>) – Character is not shoun in LCD. Just fills str_buffer</p></li>
@@ -930,7 +954,7 @@ the last 4 characters will be shown unless char_per_sec is given.</p>
 <p>If the string contains more than 4 characters,
 the last 4 characters will be shown unless char_per_sec is given.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> (<em>string</em>) – A string to print</p></li>
 <li><p><strong>char_per_sec</strong> (<em>float</em><em>, </em><em>default = 0</em>) – Character scroll speed</p></li>
@@ -995,7 +1019,7 @@ when the LED controller need to be updated.</p>
 </dl>
 <p>self.flash()                            # LED controller updated in this timing</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ch</strong> (<em>int</em>) – Channel number</p></li>
 <li><p><strong>val</strong> (<em>int</em><em> or </em><em>float</em>) – PWM value stored in buffer
@@ -1086,7 +1110,7 @@ self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)</p>
 <p>PCA9632 class</p>
 <p>For constructing an instance, following parameters can be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i2c</strong> (<em>machine.I2C instance</em>) – </p></li>
 <li><p><strong>address</strong> (<em>int</em>) – I2C target (device) address</p></li>
@@ -1153,7 +1177,7 @@ self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)</p>
 <p>PCA9955B class</p>
 <p>For constructing an instance, following parameters can be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i2c</strong> (<em>machine.I2C instance</em>) – </p></li>
 <li><p><strong>address</strong> (<em>int</em>) – I2C target (device) address</p></li>
@@ -1193,7 +1217,7 @@ self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)</p>
 <p>PCA9956B class</p>
 <p>For constructing an instance, following parameters can be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i2c</strong> (<em>machine.I2C instance</em>) – </p></li>
 <li><p><strong>address</strong> (<em>int</em>) – I2C target (device) address</p></li>
@@ -1228,7 +1252,7 @@ self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)</p>
 <p>PCA9957 class</p>
 <p>For constructing an instance, following parameters can be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i2c</strong> (<em>machine.I2C instance</em>) – </p></li>
 <li><p><strong>address</strong> (<em>int</em>) – I2C target (device) address</p></li>
@@ -1288,7 +1312,7 @@ self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)</p>
 <span class="sig-name descname"><span class="pre">read_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#PCA9957_base.read_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.PCA9957_base.read_registers" title="Permalink to this definition"></a></dt>
 <dd><p>reading register</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>length</strong> (<em>int</em>) – Number of bytes for receiveing.</p></li>
@@ -1306,7 +1330,7 @@ generated between write and read transactions.</p></li>
 <span class="sig-name descname"><span class="pre">write_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#PCA9957_base.write_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.PCA9957_base.write_registers" title="Permalink to this definition"></a></dt>
 <dd><p>writing register</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>data</strong> (<em>list</em><em> or </em><em>int</em>) – Data for sending.
@@ -1350,10 +1374,10 @@ If the data is integer, single byte will be sent.</p></li>
 <span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#PCA995xB_base.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.PCA995xB_base.dump" title="Permalink to this definition"></a></dt>
 <dd><p>dump register values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong> – List of integers</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>register data</p>
 </dd>
 </dl>
@@ -1386,7 +1410,7 @@ This class provides interface to control this feature.</p>
 <span class="sig-name descname"><span class="pre">gradation_channel_enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#gradation_control.gradation_channel_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.gradation_control.gradation_channel_enable" title="Permalink to this definition"></a></dt>
 <dd><p>Specifying channels for gradation control</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>list</strong> (<em>int</em><em> or </em><em>list</em>) – A channel number or a list of channel numbers</p></li>
 <li><p><strong>exponential</strong> (<em>bool</em><em>, </em><em>default False</em>) – Enables exponential adjustment for gradation control</p></li>
@@ -1400,7 +1424,7 @@ This class provides interface to control this feature.</p>
 <span class="sig-name descname"><span class="pre">gradation_ctrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#gradation_control.gradation_ctrl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.gradation_control.gradation_ctrl" title="Permalink to this definition"></a></dt>
 <dd><p>gradation start/stop</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group</strong> (<em>int</em><em> or </em><em>list</em>) – A group number or a list of group numbers</p></li>
 <li><p><strong>start</strong> (<em>bool</em>) – True for start, False for stop</p></li>
@@ -1415,7 +1439,7 @@ This class provides interface to control this feature.</p>
 <span class="sig-name descname"><span class="pre">gradation_group_assign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lists</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#gradation_control.gradation_group_assign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.gradation_control.gradation_group_assign" title="Permalink to this definition"></a></dt>
 <dd><p>Assigns channels into groups</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>lists</strong> (<em>list</em><em> of </em><em>list</em>) – Lists of channel list.
 First list is for group 0, second list is for group 1 …</p>
 </dd>
@@ -1427,7 +1451,7 @@ First list is for group 0, second list is for group 1 …</p>
 <span class="sig-name descname"><span class="pre">gradation_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#gradation_control.gradation_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.gradation_control.gradation_start" title="Permalink to this definition"></a></dt>
 <dd><p>gradation start for a group</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group</strong> (<em>int</em><em> or </em><em>list</em>) – A group number or a list of group numbers</p></li>
 <li><p><strong>continuous</strong> (<em>bool</em><em>, </em><em>default True</em>) – False for single-shot</p></li>
@@ -1441,7 +1465,7 @@ First list is for group 0, second list is for group 1 …</p>
 <span class="sig-name descname"><span class="pre">gradation_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/LED_controller.html#gradation_control.gradation_stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.LED_controller.gradation_control.gradation_stop" title="Permalink to this definition"></a></dt>
 <dd><p>gradation start for a group</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>group</strong> (<em>int</em><em> or </em><em>list</em>) – A group number or a list of group numbers</p>
 </dd>
 </dl>
@@ -1455,7 +1479,7 @@ First list is for group 0, second list is for group 1 …</p>
 The calculation done to make finest ramp-up/down steps and closest
 hold-on/off time</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group_num</strong> (<em>int</em>) – Group number</p></li>
 <li><p><strong>max_iref</strong> (<em>float</em>) – Peak output current setting in range of 0.0 - 1.0</p></li>
@@ -1466,10 +1490,10 @@ hold-on/off time</p>
 <li><p><strong>off</strong> (<em>float</em><em>, </em><em>default 0.0</em>) – Hold-OFF time</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>total cycle time</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -1485,18 +1509,18 @@ hold-on/off time</p>
 <span class="sig-prename descclassname"><span class="pre">nxp_periph.RTC.</span></span><span class="sig-name descname"><span class="pre">PCF2131</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">83</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#PCF2131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.PCF2131" title="Permalink to this definition"></a></dt>
 <dd><p>A constructor interface for PCF2131</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>interface</strong> (<em>machine.I2C</em><em> or </em><em>machine.SPI object</em>) – </p></li>
 <li><p><strong>address</strong> (<em>int</em><em>, </em><em>option</em>) – If need to specify (for I2C interface)</p></li>
 <li><p><strong>cs</strong> (<em>machine.Pin object</em>) – If need to specify (for SPI interface)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>returns PCF2131_I2C when interface == I2C
 returns PCF2131_SPI when interface == SPI</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#nxp_periph.RTC.PCF2131_I2C" title="nxp_periph.RTC.PCF2131_I2C">PCF2131_I2C</a> or PCF2131_SPI object</p>
 </dd>
 </dl>
@@ -1537,7 +1561,7 @@ returns PCF2131_SPI when interface == SPI</p>
 The PCF2131 class can be composed with one of interface class: I2C_target or SPI_target</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.RTC.PCF2131_base.EVENTS">
-<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[{'periodic':</span> <span class="pre">128,</span> <span class="pre">'watchdog':</span> <span class="pre">16,</span> <span class="pre">'alarm':</span> <span class="pre">64,</span> <span class="pre">'xx':</span> <span class="pre">0},</span> <span class="pre">{'battery</span> <span class="pre">switch</span> <span class="pre">over':</span> <span class="pre">8,</span> <span class="pre">'battery</span> <span class="pre">low':</span> <span class="pre">4},</span> <span class="pre">{'ts1':</span> <span class="pre">128,</span> <span class="pre">'ts2':</span> <span class="pre">16,</span> <span class="pre">'ts3':</span> <span class="pre">32,</span> <span class="pre">'ts4':</span> <span class="pre">64}]</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF2131_base.EVENTS" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[{'periodic':</span> <span class="pre">0,</span> <span class="pre">'watchdog':</span> <span class="pre">16,</span> <span class="pre">'alarm':</span> <span class="pre">64,</span> <span class="pre">'xx':</span> <span class="pre">128},</span> <span class="pre">{'battery</span> <span class="pre">switch</span> <span class="pre">over':</span> <span class="pre">8,</span> <span class="pre">'battery</span> <span class="pre">low':</span> <span class="pre">4},</span> <span class="pre">{'ts1':</span> <span class="pre">16,</span> <span class="pre">'ts2':</span> <span class="pre">32,</span> <span class="pre">'ts3':</span> <span class="pre">64,</span> <span class="pre">'ts4':</span> <span class="pre">128}]</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF2131_base.EVENTS" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1696,7 +1720,7 @@ doesn’t inherit machine.RTC to separate its behavior</p>
 <span class="sig-name descname"><span class="pre">alarm_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin_select</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.alarm_int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.alarm_int" title="Permalink to this definition"></a></dt>
 <dd><p>set alarm interrupt</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pin_select</strong> (<em>string which contains &quot;A&quot;</em><em> or </em><em>&quot;B&quot;</em>) – This parameter will be ignored if the RTC has only one
 interrupt output.
@@ -1717,7 +1741,7 @@ The alarm will notify every hour at xx:37.</p></li>
 <span class="sig-name descname"><span class="pre">battery_switchover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">switch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.battery_switchover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.battery_switchover" title="Permalink to this definition"></a></dt>
 <dd><p>enabling battery switch over</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>switch</strong> (<em>bool</em>) – Enable battery switch-over by True</p>
 </dd>
 </dl>
@@ -1728,13 +1752,13 @@ The alarm will notify every hour at xx:37.</p></li>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bcd2bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.bcd2bin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.bcd2bin" title="Permalink to this definition"></a></dt>
 <dd><p>converts binary-coded-decimal (BCD) to normal int</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – BCD</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>int</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>normal integer</p>
 </dd>
 </dl>
@@ -1745,13 +1769,13 @@ The alarm will notify every hour at xx:37.</p></li>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bin2bcd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.bin2bcd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.bin2bcd" title="Permalink to this definition"></a></dt>
 <dd><p>converts normal int to binary-coded-decimal (BCD)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – normal integer number</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>int</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BCD</p>
 </dd>
 </dl>
@@ -1768,13 +1792,13 @@ The alarm will notify every hour at xx:37.</p></li>
 <span class="sig-name descname"><span class="pre">check_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.check_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.check_events" title="Permalink to this definition"></a></dt>
 <dd><p>translate events from flags to names</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>events</strong> (<em>list</em><em> of </em><em>event flags</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>list</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of event names</p>
 </dd>
 </dl>
@@ -1807,10 +1831,10 @@ the 1st argument should be 8-tuple in format with</p>
 <p>the tzinfo is a dummy and it will be ignored.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>args</strong><strong>[</strong><strong>0</strong><strong>]</strong> (<em>8-tuple</em><em>, </em><em>optional</em>) – tuple of date&amp;time</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p><strong>tuple</strong> –</p>
 <dl class="simple">
 <dt>( “year”, “month”, “day”, “hours”,</dt><dd><dl class="simple">
@@ -1821,7 +1845,7 @@ the 1st argument should be 8-tuple in format with</p>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>date&amp;time info</p>
 </dd>
 </dl>
@@ -1840,7 +1864,7 @@ and date&amp;time is set to ( 2015, 1, 1, 0, 0, 0, 0, None )</p>
 <span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('year',</span> <span class="pre">'month',</span> <span class="pre">'day',</span> <span class="pre">'hours',</span> <span class="pre">'minutes',</span> <span class="pre">'seconds',</span> <span class="pre">'subseconds',</span> <span class="pre">'tzinfo')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weekday</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.init" title="Permalink to this definition"></a></dt>
 <dd><p>set date&amp;time</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>datetime</strong> (<em>tuple</em><em>, </em><em>optional</em>) – <p>date&amp;time tuple.
 ( “year”, “month”, “day”, “hours”,</p>
@@ -1862,10 +1886,10 @@ tzinfo is not required (ignored)</p>
 <span class="sig-name descname"><span class="pre">interrupt_clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.interrupt_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.interrupt_clear" title="Permalink to this definition"></a></dt>
 <dd><p>interrupt clear</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list of flags</p>
 </dd>
 </dl>
@@ -1876,7 +1900,7 @@ tzinfo is not required (ignored)</p>
 <span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.now" title="Permalink to this definition"></a></dt>
 <dd><p>get current date&amp;time</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p><strong>tuple</strong> –</p>
 <dl class="simple">
 <dt>( “year”, “month”, “day”, “hours”,</dt><dd><dl class="simple">
@@ -1887,7 +1911,7 @@ tzinfo is not required (ignored)</p>
 </dl>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>date&amp;time info</p>
 </dd>
 </dl>
@@ -1898,11 +1922,11 @@ tzinfo is not required (ignored)</p>
 <span class="sig-name descname"><span class="pre">oscillator_stopped</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.oscillator_stopped"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.oscillator_stopped" title="Permalink to this definition"></a></dt>
 <dd><p>detects the RTC was beeing reset</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>bool</strong> – True  = stopped
 False = never</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>active state</p>
 </dd>
 </dl>
@@ -1913,7 +1937,7 @@ False = never</p>
 <span class="sig-name descname"><span class="pre">periodic_interrupt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin_select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.periodic_interrupt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.periodic_interrupt" title="Permalink to this definition"></a></dt>
 <dd><p>set periodic (every minutes or seconds) interrupt</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pin_select</strong> (<em>string which contains &quot;A&quot;</em><em> or </em><em>&quot;B&quot;</em>) – This parameter will be ignored if the RTC has only one
 interrupt output.
@@ -1930,7 +1954,7 @@ If both characters are there, it will set “A” interrupt.</p></li>
 <span class="sig-name descname"><span class="pre">set_timestamp_interrupt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_event</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.set_timestamp_interrupt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.set_timestamp_interrupt" title="Permalink to this definition"></a></dt>
 <dd><p>set timestamp interrupt</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pin_select</strong> (<em>string which contains &quot;A&quot;</em><em> or </em><em>&quot;B&quot;</em><em>, </em><em>default &quot;B&quot;</em>) – This parameter will be ignored if the RTC has only one
 interrupt output.
@@ -1949,7 +1973,7 @@ If False, it will store first event date&amp;time</p></li>
 <span class="sig-name descname"><span class="pre">timer_alarm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hours</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.timer_alarm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.timer_alarm" title="Permalink to this definition"></a></dt>
 <dd><p>set timer</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>hours</strong> (<em>int</em>) – </p></li>
 <li><p><strong>minutes</strong> (<em>int</em>) – </p></li>
@@ -1968,10 +1992,10 @@ If both characters are there, it will set “A” interrupt.</p></li>
 <span class="sig-name descname"><span class="pre">timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.timestamp" title="Permalink to this definition"></a></dt>
 <dd><p>get timestamp</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>num</strong> (<em>int</em>) – timestamp number</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul>
 <li><p><strong>tuple</strong> (<em>date&amp;time info</em>) –</p>
 <dl class="simple">
@@ -2003,17 +2027,17 @@ False = disabled</p></li>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tuple2dt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weekday</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.tuple2dt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.tuple2dt" title="Permalink to this definition"></a></dt>
 <dd><p>converts a tuple format data into a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>datetime</strong> (<em>tuple</em>) – </p></li>
 <li><p><strong>form</strong> (<em>string</em>) – tuple or list of key labels</p></li>
 <li><p><strong>weekday</strong> (<em>int</em><em>, </em><em>default = 0</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict with keys of NOW_TUPPLE_FORM</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -2024,19 +2048,133 @@ False = disabled</p></li>
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tuple2str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tpl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/RTC.html#RTC_base.tuple2str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.RTC.RTC_base.tuple2str" title="Permalink to this definition"></a></dt>
 <dd><p>converts a tuple format data into a string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>datetime</strong> (<em>tuple</em>) – </p></li>
 <li><p><strong>form</strong> (<em>sstringtr</em>) – tuple or list of key labels</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>string</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
+
+</section>
+<section id="module-nxp_periph.accelerometer">
+<span id="nxp-periph-accelerometer-module"></span><h2>nxp_periph.accelerometer module<a class="headerlink" href="#module-nxp_periph.accelerometer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.ACCELEROMETER_base">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.accelerometer.</span></span><span class="sig-name descname"><span class="pre">ACCELEROMETER_base</span></span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#ACCELEROMETER_base"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.ACCELEROMETER_base" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An abstraction class to make user interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.ACCELEROMETER_base.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#ACCELEROMETER_base.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.ACCELEROMETER_base.dump" title="Permalink to this definition"></a></dt>
+<dd><p>Overriding “dump()” in nxp_periph.interface class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.ACCELEROMETER_base.fullscale">
+<span class="sig-name descname"><span class="pre">fullscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#ACCELEROMETER_base.fullscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.ACCELEROMETER_base.fullscale" title="Permalink to this definition"></a></dt>
+<dd><p>Fullscale setting</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>g</strong> (<em>settting value</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.ACCELEROMETER_base.three_axis">
+<span class="sig-name descname"><span class="pre">three_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#ACCELEROMETER_base.three_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.ACCELEROMETER_base.three_axis" title="Permalink to this definition"></a></dt>
+<dd><p>get 3-axis data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reg</strong> (<em>int</em><em> or </em><em>string</em>) – 1st register pointer or name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>int, int, int</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>3 integers as 16bit register values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.ACCELEROMETER_base.xyz">
+<span class="sig-name descname"><span class="pre">xyz</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#ACCELEROMETER_base.xyz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.ACCELEROMETER_base.xyz" title="Permalink to this definition"></a></dt>
+<dd><p>get 3-axis “g” (gravitational acceleration) data</p>
+<p>Parameters
+:returns: <strong>float, float, float</strong>
+:rtype: 3 “g” values</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXLS8974">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.accelerometer.</span></span><span class="sig-name descname"><span class="pre">FXLS8974</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#FXLS8974"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.FXLS8974" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base" title="nxp_periph.accelerometer.ACCELEROMETER_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">ACCELEROMETER_base</span></code></a>, <a class="reference internal" href="#nxp_periph.interface.I2C_target" title="nxp_periph.interface.I2C_target"><code class="xref py py-class docutils literal notranslate"><span class="pre">I2C_target</span></code></a></p>
+<p>FXLS8974: 3-axis accerelometer</p>
+<p>A device class for a 3-axis accerelometer
+This class enables to get its realtime data</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXLS8974.DEFAULT_ADDR">
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25</span></em><a class="headerlink" href="#nxp_periph.accelerometer.FXLS8974.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXLS8974.REG_NAME">
+<span class="sig-name descname"><span class="pre">REG_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('INT_STATUS',</span> <span class="pre">'TEMP_OUT',</span> <span class="pre">'VECM_LSB',</span> <span class="pre">'VECM_MSB',</span> <span class="pre">'OUT_X_LSB',</span> <span class="pre">'OUT_X_MSB',</span> <span class="pre">'OUT_Y_LSB',</span> <span class="pre">'OUT_Y_MSB',</span> <span class="pre">'OUT_Z_LSB',</span> <span class="pre">'OUT_Z_MSB',</span> <span class="pre">'RESERVED_REG1',</span> <span class="pre">'BUF_STATUS',</span> <span class="pre">'BUF_X_LSB',</span> <span class="pre">'BUF_X_MSB',</span> <span class="pre">'BUF_Y_LSB',</span> <span class="pre">'BUF_Y_MSB',</span> <span class="pre">'BUF_Z_LSB',</span> <span class="pre">'BUF_Z_MSB',</span> <span class="pre">'PROD_REV',</span> <span class="pre">'WHO_AM_I',</span> <span class="pre">'SYS_MODE',</span> <span class="pre">'SENS_CONFIG1',</span> <span class="pre">'SENS_CONFIG2',</span> <span class="pre">'SENS_CONFIG3',</span> <span class="pre">'SENS_CONFIG4',</span> <span class="pre">'SENS_CONFIG5',</span> <span class="pre">'WAKE_IDLE</span> <span class="pre">_LSB',</span> <span class="pre">'WAKE_IDLE_MSB',</span> <span class="pre">'SLEEP_IDLE_LSB',</span> <span class="pre">'SLEEP_IDLE_MSB',</span> <span class="pre">'ASLP_COUNT_LSB',</span> <span class="pre">'ASLP_COUNT_MSB',</span> <span class="pre">'INT_EN',</span> <span class="pre">'INT_PIN_SEL',</span> <span class="pre">'OFF_X',</span> <span class="pre">'OFF_Y',</span> <span class="pre">'OFF_Z',</span> <span class="pre">'RESERVED_REG2',</span> <span class="pre">'BUF_CONFIG1',</span> <span class="pre">'BUF_CONFIG2',</span> <span class="pre">'ORIENT_STATUS',</span> <span class="pre">'ORIENT_CONFIG',</span> <span class="pre">'ORIENT_DBCOUNT',</span> <span class="pre">'ORIENT_BF_ZCOMP',</span> <span class="pre">'ORIENT_THS_REG',</span> <span class="pre">'SDCD_INT_SRC1',</span> <span class="pre">'SDCD_INT_SRC2',</span> <span class="pre">'SDCD_CONFIG1',</span> <span class="pre">'SDCD_CONFIG2',</span> <span class="pre">'SDCD_OT_DBCNT',</span> <span class="pre">'SDCD_WT_DBCNT',</span> <span class="pre">'SDCD_LTHS_LSB',</span> <span class="pre">'SDCD_LTHS_MSB',</span> <span class="pre">'SDCD_UTHS_LSB',</span> <span class="pre">'SDCD_UTHS_MSB',</span> <span class="pre">'SELF_TEST_CONFIG1',</span> <span class="pre">'SELF_TEST_CONFIG2')</span></em><a class="headerlink" href="#nxp_periph.accelerometer.FXLS8974.REG_NAME" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXOS8700">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.accelerometer.</span></span><span class="sig-name descname"><span class="pre">FXOS8700</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">31</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#FXOS8700"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.FXOS8700" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nxp_periph.accelerometer.ACCELEROMETER_base" title="nxp_periph.accelerometer.ACCELEROMETER_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">ACCELEROMETER_base</span></code></a>, <a class="reference internal" href="#nxp_periph.interface.I2C_target" title="nxp_periph.interface.I2C_target"><code class="xref py py-class docutils literal notranslate"><span class="pre">I2C_target</span></code></a></p>
+<p>FXOS8700: 6-axis accerelometer and magnetometer</p>
+<p>A device class for a 6-axis accerelometer and magnetometer
+This class enables to get its realtime data</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXOS8700.DEFAULT_ADDR">
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">31</span></em><a class="headerlink" href="#nxp_periph.accelerometer.FXOS8700.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXOS8700.REG_NAME">
+<span class="sig-name descname"><span class="pre">REG_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('STATUS',</span> <span class="pre">'OUT_X_MSB',</span> <span class="pre">'OUT_X_LSB',</span> <span class="pre">'OUT_Y_MSB',</span> <span class="pre">'OUT_Y_LSB',</span> <span class="pre">'OUT_Z_MSB',</span> <span class="pre">'OUT_Z_LSB',</span> <span class="pre">'Reserved',</span> <span class="pre">'Reserved',</span> <span class="pre">'F_SETUP',</span> <span class="pre">'TRIG_CFG',</span> <span class="pre">'SYSMOD',</span> <span class="pre">'INT_SOURCE',</span> <span class="pre">'WHO_AM_I',</span> <span class="pre">'XYZ_DATA_CFG',</span> <span class="pre">'HP_FILTER_CUTOFF',</span> <span class="pre">'PL_STATUS',</span> <span class="pre">'PL_CFG',</span> <span class="pre">'PL_COUNT',</span> <span class="pre">'PL_BF_ZCOMP',</span> <span class="pre">'PL_THS_REG',</span> <span class="pre">'A_FFMT_CFG',</span> <span class="pre">'A_FFMT_SRC',</span> <span class="pre">'A_FFMT_THS',</span> <span class="pre">'A_FFMT_COUNT',</span> <span class="pre">'Reserved',</span> <span class="pre">'Reserved',</span> <span class="pre">'Reserved',</span> <span class="pre">'Reserved',</span> <span class="pre">'TRANSIENT_CFG',</span> <span class="pre">'TRANSIENT_SRC',</span> <span class="pre">'TRANSIENT_THS',</span> <span class="pre">'TRANSIENT_COUNT',</span> <span class="pre">'PULSE_CFG',</span> <span class="pre">'PULSE_SRC',</span> <span class="pre">'PULSE_THSX',</span> <span class="pre">'PULSE_THSY',</span> <span class="pre">'PULSE_THSZ',</span> <span class="pre">'PULSE_TMLT',</span> <span class="pre">'PULSE_LTCY',</span> <span class="pre">'PULSE_WIND',</span> <span class="pre">'ASLP_COUNT',</span> <span class="pre">'CTRL_REG1',</span> <span class="pre">'CTRL_REG2',</span> <span class="pre">'CTRL_REG3',</span> <span class="pre">'CTRL_REG4',</span> <span class="pre">'CTRL_REG5',</span> <span class="pre">'OFF_X',</span> <span class="pre">'OFF_Y',</span> <span class="pre">'OFF_Z',</span> <span class="pre">'M_DR_STATUS',</span> <span class="pre">'M_OUT_X_MSB',</span> <span class="pre">'M_OUT_X_LSB',</span> <span class="pre">'M_OUT_Y_MSB',</span> <span class="pre">'M_OUT_Y_LSB',</span> <span class="pre">'M_OUT_Z_MSB',</span> <span class="pre">'M_OUT_Z_LSB',</span> <span class="pre">'CMP_X_MSB',</span> <span class="pre">'CMP_X_LSB',</span> <span class="pre">'CMP_Y_MSB',</span> <span class="pre">'CMP_Y_LSB',</span> <span class="pre">'CMP_Z_MSB',</span> <span class="pre">'CMP_Z_LSB',</span> <span class="pre">'M_OFF_X_MSB',</span> <span class="pre">'M_OFF_X_LSB',</span> <span class="pre">'M_OFF_Y_MSB',</span> <span class="pre">'M_OFF_Y_LSB',</span> <span class="pre">'M_OFF_Z_MSB',</span> <span class="pre">'M_OFF_Z_LSB',</span> <span class="pre">'MAX_X_MSB',</span> <span class="pre">'MAX_X_LSB',</span> <span class="pre">'MAX_Y_MSB',</span> <span class="pre">'MAX_Y_LSB',</span> <span class="pre">'MAX_Z_MSB',</span> <span class="pre">'MAX_Z_LSB',</span> <span class="pre">'MIN_X_MSB',</span> <span class="pre">'MIN_X_LSB',</span> <span class="pre">'MIN_Y_MSB',</span> <span class="pre">'MIN_Y_LSB',</span> <span class="pre">'MIN_Z_MSB',</span> <span class="pre">'MIN_Z_LSB',</span> <span class="pre">'TEMP',</span> <span class="pre">'M_THS_CFG',</span> <span class="pre">'M_THS_SRC',</span> <span class="pre">'M_THS_X_MSB',</span> <span class="pre">'M_THS_X_LSB',</span> <span class="pre">'M_THS_Y_MSB',</span> <span class="pre">'M_THS_Y_LSB',</span> <span class="pre">'M_THS_Z_MSB',</span> <span class="pre">'M_THS_Z_LSB',</span> <span class="pre">'M_THS_COUNT',</span> <span class="pre">'M_CTRL_REG1',</span> <span class="pre">'M_CTRL_REG2',</span> <span class="pre">'M_CTRL_REG3',</span> <span class="pre">'M_INT_SRC',</span> <span class="pre">'A_VECM_CFG',</span> <span class="pre">'A_VECM_THS_MSB',</span> <span class="pre">'A_VECM_THS_LSB',</span> <span class="pre">'A_VECM_CNT',</span> <span class="pre">'A_VECM_INITX_MSB',</span> <span class="pre">'A_VECM_INITX_LSB',</span> <span class="pre">'A_VECM_INITY_MSB',</span> <span class="pre">'A_VECM_INITY_LSB',</span> <span class="pre">'A_VECM_INITZ_MSB',</span> <span class="pre">'A_VECM_INITZ_LSB',</span> <span class="pre">'M_VECM_CFG',</span> <span class="pre">'M_VECM_THS_MSB',</span> <span class="pre">'M_VECM_THS_LSB',</span> <span class="pre">'M_VECM_CNT',</span> <span class="pre">'M_VECM_INITX_MSB',</span> <span class="pre">'M_VECM_INITX_LSB',</span> <span class="pre">'M_VECM_INITY_MSB',</span> <span class="pre">'M_VECM_INITY_LSB',</span> <span class="pre">'M_VECM_INITZ_MSB',</span> <span class="pre">'M_VECM_INITZ_LSB',</span> <span class="pre">'A_FFMT_THS_X_MSB',</span> <span class="pre">'A_FFMT_THS_X_LSB',</span> <span class="pre">'A_FFMT_THS_Y_MSB',</span> <span class="pre">'A_FFMT_THS_Y_LSB',</span> <span class="pre">'A_FFMT_THS_Z_MSB',</span> <span class="pre">'A_FFMT_THS_Z_LSB',</span> <span class="pre">'Reserved')</span></em><a class="headerlink" href="#nxp_periph.accelerometer.FXOS8700.REG_NAME" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXOS8700.mag">
+<span class="sig-name descname"><span class="pre">mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#FXOS8700.mag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.FXOS8700.mag" title="Permalink to this definition"></a></dt>
+<dd><p>get 3-axis magnetometer output in nano-Tesla</p>
+<p>Parameters
+:returns: <strong>int, int, int</strong>
+:rtype: 3-axis magnetometer output values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.FXOS8700.six_axis">
+<span class="sig-name descname"><span class="pre">six_axis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#FXOS8700.six_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.FXOS8700.six_axis" title="Permalink to this definition"></a></dt>
+<dd><p>get 6-axis accelerometer and magnetometer outputs</p>
+<p>Parameters
+:returns: <strong>int, int, int</strong>
+:rtype: 3-axis accelerometer 3-axis magnetometer outputs as 16bit register values</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nxp_periph.accelerometer.main">
+<span class="sig-prename descclassname"><span class="pre">nxp_periph.accelerometer.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/accelerometer.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.accelerometer.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 <section id="module-nxp_periph.interface">
@@ -2059,10 +2197,10 @@ in inherited class (device class).</p>
 If the device returned ACK, it keeps self.live=True. If device
 rturned NACK, the self.live is changed to False.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>bool</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Returns self.live</p>
 </dd>
 </dl>
@@ -2070,10 +2208,10 @@ rturned NACK, the self.live is changed to False.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nxp_periph.interface.I2C_target.read_registers">
-<span class="sig-name descname"><span class="pre">read_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#I2C_target.read_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.I2C_target.read_registers" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">read_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeated_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#I2C_target.read_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.I2C_target.read_registers" title="Permalink to this definition"></a></dt>
 <dd><p>reading registers</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>length</strong> (<em>int</em>) – Number of bytes for receiveing.</p></li>
@@ -2092,7 +2230,7 @@ data = self.read_registers( 10, 4 ):            # register specified by address<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nxp_periph.interface.I2C_target.receive">
-<span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#I2C_target.receive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.I2C_target.receive" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">barray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#I2C_target.receive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.I2C_target.receive" title="Permalink to this definition"></a></dt>
 <dd><p>receive data (generate read transaction)</p>
 <p>Receiving list-data from the device.
 It trys receiving 3 times if the device respond NACK.
@@ -2100,13 +2238,13 @@ If the device is kept not responding, the self.live is set to
 False to prevent further access to the failed device.</p>
 <p>Forcing self.live=True can re-live the device.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – Number of bytes for receiveing.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>list</strong> – List of integers which was converted from bytearray.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>received data</p>
 </dd>
 </dl>
@@ -2122,7 +2260,7 @@ If the device is kept not responding, the self.live is set to
 False to prevent further access to the failed device.</p>
 <p>Forcing self.live=True can re-live the device.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tsfr</strong> (<em>list</em>) – Data for sending. List of integers will be converted to
 bytearray before sending.</p></li>
@@ -2139,7 +2277,7 @@ transaction.</p></li>
 <span class="sig-name descname"><span class="pre">write_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#I2C_target.write_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.I2C_target.write_registers" title="Permalink to this definition"></a></dt>
 <dd><p>writing registers</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>data</strong> (<em>list</em><em> or </em><em>int</em>) – Data for sending.
@@ -2174,7 +2312,7 @@ self.write_registers( 10, [0xFF] * 4 ):         # register specified by address<
 <span class="sig-name descname"><span class="pre">bit_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_bits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#Interface.bit_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.Interface.bit_operation" title="Permalink to this definition"></a></dt>
 <dd><p>register bit set/clear</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>target_bits</strong> (<em>int</em>) – select target bits by setting its bit position 1</p></li>
@@ -2183,7 +2321,7 @@ The bits only set/cleared with same position at
 1 in target_bits.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>int</strong> (<em>register value before modifying</em>)</p></li>
 <li><p><strong>int</strong> (<em>register value after modifying</em>)</p></li>
@@ -2198,10 +2336,10 @@ The bits only set/cleared with same position at
 <span class="sig-name descname"><span class="pre">dev_access</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#Interface.dev_access"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.Interface.dev_access" title="Permalink to this definition"></a></dt>
 <dd><p>device access information</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>string</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>device access information</p>
 </dd>
 </dl>
@@ -2212,10 +2350,10 @@ The bits only set/cleared with same position at
 <span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#Interface.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.Interface.dump" title="Permalink to this definition"></a></dt>
 <dd><p>dump register values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>list</strong> – List of integers</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>register data</p>
 </dd>
 </dl>
@@ -2232,10 +2370,10 @@ The bits only set/cleared with same position at
 <span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#Interface.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.Interface.info" title="Permalink to this definition"></a></dt>
 <dd><p>device information</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>string</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>device information</p>
 </dd>
 </dl>
@@ -2246,7 +2384,7 @@ The bits only set/cleared with same position at
 <span class="sig-name descname"><span class="pre">show_reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#Interface.show_reg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.Interface.show_reg" title="Permalink to this definition"></a></dt>
 <dd><p>showing register name, address/pointer and value</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>reg</strong> (<em>string</em>) – Register name</p>
 </dd>
 </dl>
@@ -2274,7 +2412,7 @@ in inherited class (device class).</p>
 <span class="sig-name descname"><span class="pre">read_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#SPI_target.read_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.SPI_target.read_registers" title="Permalink to this definition"></a></dt>
 <dd><p>reading registers</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>length</strong> (<em>int</em>) – Number of bytes for receiveing.</p></li>
@@ -2292,14 +2430,14 @@ generated between write and read transactions.</p></li>
 <span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsfr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#SPI_target.receive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.SPI_target.receive" title="Permalink to this definition"></a></dt>
 <dd><p>receive data (generate write &amp; read transaction)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tsfr</strong> (<em>list</em>) – Data for sending. List of integers will be converted to
 bytearray before sending.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>list</strong> – List of integers which was converted from bytearray.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>received data</p>
 </dd>
 </dl>
@@ -2310,7 +2448,7 @@ bytearray before sending.</p>
 <span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#SPI_target.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.SPI_target.send" title="Permalink to this definition"></a></dt>
 <dd><p>send data (generate write transaction)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tsfr</strong> (<em>list</em>) – Data for sending. List of integers will be converted to
 bytearray before sending.</p>
 </dd>
@@ -2322,7 +2460,7 @@ bytearray before sending.</p>
 <span class="sig-name descname"><span class="pre">write_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/interface.html#SPI_target.write_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.interface.SPI_target.write_registers" title="Permalink to this definition"></a></dt>
 <dd><p>writing registers</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or register address/pointer.</p></li>
 <li><p><strong>data</strong> (<em>list</em><em> or </em><em>int</em>) – Data for sending.
@@ -2371,13 +2509,13 @@ No physical access will be performed with this class.</p>
 Because the machine.I2C.scan() does scan is limited in range of 0x08(0x10)
 to 0x77(0xEE).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>i2c</strong> (<em>obj</em>) – machine.I2C instance</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>list</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Responding target ddress list</p>
 </dd>
 </dl>
@@ -2391,7 +2529,7 @@ to 0x77(0xEE).</p>
 <span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC16IS7xx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">72</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">osc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">14746500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baud</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC16IS7xx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC16IS7xx" title="Permalink to this definition"></a></dt>
 <dd><p>A constructor interface for SC16IS7xx</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>interface</strong> (<em>machine.I2C</em><em> or </em><em>machine.SPI object</em>) – </p></li>
 <li><p><strong>address</strong> (<em>int</em><em>, </em><em>option</em>) – If need to specify (for I2C interface)</p></li>
@@ -2405,11 +2543,11 @@ to 0x77(0xEE).</p>
 <li><p><strong>stop</strong> (<em>int</em><em>, </em><em>default 1</em>) – Stop bit setting. 1 or 2</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>returns SC16IS7xx_I2C when interface == I2C
 returns SC16IS7xx_SPI when interface == SPI</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#nxp_periph.protocol_bridge.SC16IS7xx_I2C" title="nxp_periph.protocol_bridge.SC16IS7xx_I2C">SC16IS7xx_I2C</a> or SC16IS7xx_SPI object</p>
 </dd>
 </dl>
@@ -2477,7 +2615,7 @@ This methos is called by SC16IS7xx_I2C and SC16IS7xx_SPI classes</p>
 <span class="sig-name descname"><span class="pre">baud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baud</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC16IS7xx_base.baud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC16IS7xx_base.baud" title="Permalink to this definition"></a></dt>
 <dd><p>baudrate setting</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>baud</strong> (<em>int</em>) – baudrate</p>
 </dd>
 </dl>
@@ -2502,13 +2640,13 @@ This methos is called by SC16IS7xx_I2C and SC16IS7xx_SPI classes</p>
 <dd><p>get received data</p>
 <p>This method can take single argument to specify length of receiving data</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>args</strong><strong>[</strong><strong>0</strong><strong>]</strong> (<em>int</em><em>, </em><em>option</em>) – length of receiving data</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>received data</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -2525,16 +2663,16 @@ Use this method to access the registers.</p>
 2nd argument can be a value for register writing.
 If no 2nd argument given, the method returns register read value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>args</strong><strong>[</strong><strong>0</strong><strong>]</strong> (<em>int</em><em> or </em><em>string</em>) – register address of name</p></li>
 <li><p><strong>args</strong><strong>[</strong><strong>1</strong><strong>]</strong> (<em>int</em><em>, </em><em>option</em>) – method returns this 2nd argument is not available</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>register value</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int, if 2nd argument is not exist</p>
 </dd>
 </dl>
@@ -2550,7 +2688,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">sendbreak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC16IS7xx_base.sendbreak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC16IS7xx_base.sendbreak" title="Permalink to this definition"></a></dt>
 <dd><p>sends break: keeps TX signal LOW for specified duration</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>duration</strong> (<em>float</em>) – keeps TX signal LOW for given second</p>
 </dd>
 </dl>
@@ -2573,7 +2711,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC16IS7xx_base.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC16IS7xx_base.write" title="Permalink to this definition"></a></dt>
 <dd><p>data to be sent on TX</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>int</em><em> or </em><em>list</em>) – data on TX</p>
 </dd>
 </dl>
@@ -2583,7 +2721,7 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC18IS606</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address=40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4345022544'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC18IS606</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address=40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4356762448'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.interface.I2C_target" title="nxp_periph.interface.I2C_target"><code class="xref py py-class docutils literal notranslate"><span class="pre">I2C_target</span></code></a></p>
 <blockquote>
 <div><p>SC18IS606 class</p>
@@ -2655,12 +2793,12 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.LSB">
-<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.LSB'</span> <span class="pre">id='4345030368'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.LSB" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.LSB'</span> <span class="pre">id='4341867280'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.LSB" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.MSB">
-<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4345022544'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.MSB" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4356762448'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.MSB" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2668,7 +2806,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.command" title="Permalink to this definition"></a></dt>
 <dd><p>command to SC18IS606</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>list</em>) – Sends data to SC18IS606</p>
 </dd>
 </dl>
@@ -2682,7 +2820,7 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.init">
-<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4345022544'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.init" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4356762448'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.init" title="Permalink to this definition"></a></dt>
 <dd><p>setting SPI parameters</p>
 </dd></dl>
 
@@ -2703,13 +2841,13 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.receive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.receive" title="Permalink to this definition"></a></dt>
 <dd><p>send/receive on SPI and return data when completed (blocking transfer)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>list</em>) – send data on SPI</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>received data</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -2720,7 +2858,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.send" title="Permalink to this definition"></a></dt>
 <dd><p>send data on SPI and return when completed (blocking transfer)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>list</em>) – send data on SPI</p>
 </dd>
 </dl>
@@ -2785,7 +2923,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">drv_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/stepper_motor.html#StepperMotor_base.drv_phase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.stepper_motor.StepperMotor_base.drv_phase" title="Permalink to this definition"></a></dt>
 <dd><p>Setting drive phase mode</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>v</strong> (<em>float</em>) – PCA9629 series can set 1 phase, 2 phase and half step drive.
 1 and 2 are for 1-pahse and 2-phase drive. 0.5 for half-step drive.</p>
 </dd>
@@ -2797,7 +2935,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrasteps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/stepper_motor.html#StepperMotor_base.home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.stepper_motor.StepperMotor_base.home" title="Permalink to this definition"></a></dt>
 <dd><p>Go to home position</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pps</strong> (<em>float</em>) – Motor move speed setting by pps</p></li>
 <li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>default False</em>) – Motor move direction to go back home position</p></li>
@@ -2818,7 +2956,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">pps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/stepper_motor.html#StepperMotor_base.pps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.stepper_motor.StepperMotor_base.pps" title="Permalink to this definition"></a></dt>
 <dd><p>Set pulse per second (pps)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pps</strong> (<em>float</em>) – Setting motor move speed by pps</p></li>
 <li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>default False</em>) – True for reverse direction setting</p></li>
@@ -2838,7 +2976,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/stepper_motor.html#StepperMotor_base.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.stepper_motor.StepperMotor_base.start" title="Permalink to this definition"></a></dt>
 <dd><p>Start motor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>default False</em>) – True for reverse direction setting</p>
 </dd>
 </dl>
@@ -2849,7 +2987,7 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/stepper_motor.html#StepperMotor_base.steps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.stepper_motor.StepperMotor_base.steps" title="Permalink to this definition"></a></dt>
 <dd><p>Set steps</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>step</strong> (<em>int</em>) – Setting motor move angre/rotation by number of steps</p></li>
 <li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>default False</em>) – True for reverse direction setting</p></li>
@@ -2994,10 +3132,10 @@ If no 2nd argument given, the method returns register read value.</p>
 <span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/temp_sensor.html#temp_sensor_base.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.temp_sensor.temp_sensor_base.read" title="Permalink to this definition"></a></dt>
 <dd><p>Read temperature</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>float</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>temperature in degree-Celsius</p>
 </dd>
 </dl>
@@ -3014,16 +3152,16 @@ This reg_access() method does 8 bit and 16 bit access automatically</p>
 If 2 arguments are geven, it performs write.
 If only 1 argument is geven, read is performed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>args</strong><strong>[</strong><strong>0</strong><strong>]</strong> (<em>string</em><em> or </em><em>int</em>) – Register name or pointer.</p></li>
 <li><p><strong>args</strong><strong>[</strong><strong>1</strong><strong>]</strong> (<em>int</em><em>, </em><em>optional</em>) – Data to be written.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>int</strong> – Nothing will be returned when write is done.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>register data</p>
 </dd>
 </dl>
@@ -3037,10 +3175,10 @@ value   = self.reg_access( “Temp” )     # reads 16 bit data</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">temp</span></span><a class="headerlink" href="#nxp_periph.temp_sensor.temp_sensor_base.temp" title="Permalink to this definition"></a></dt>
 <dd><p>Read temperature</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>float</strong></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>temperature in degree-Celsius</p>
 </dd>
 </dl>
@@ -3051,16 +3189,16 @@ value   = self.reg_access( “Temp” )     # reads 16 bit data</p>
 <span class="sig-name descname"><span class="pre">temp_setting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/temp_sensor.html#temp_sensor_base.temp_setting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.temp_sensor.temp_sensor_base.temp_setting" title="Permalink to this definition"></a></dt>
 <dd><p>Over-temperature threshold and hysterisis setting</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>lst</strong> (<em>list</em><em> of </em><em>2 float numbers</em>) – Values are given in degree-Celsius.
 Bigger value will be the Over-temperature threshold
 and smaller value will be the hysterisis.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>list</strong> – Actual values set in the device in order of
 [ hysterisis, over_temp_threshold ] .</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of 2 float numbers</p>
 </dd>
 </dl>
