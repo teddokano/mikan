@@ -30,8 +30,9 @@ def demo( ip = "dhcp" ):
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
 	
-	src_dir		= "demo_lib/"
-	regex_file	= ure.compile( r"GET /(\S+)\sHTTP" )
+	src_dir			= "demo_lib/"
+	regex_file		= ure.compile( r"GET /(\S+)\sHTTP" )
+	regex_suffix	= ure.compile( r".*\.(.*)" )
 
 	i2c			= machine.I2C( 0, freq = (400 * 1000) )
 	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
@@ -101,6 +102,9 @@ def demo( ip = "dhcp" ):
 		e_time.show( "readline done" ) ###
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
+		server	= "mikan"
+		content_type	= "text/html"
+
 		for dut in dut_list:
 			html	= dut.parse( req )
 			if html:
@@ -114,8 +118,19 @@ def demo( ip = "dhcp" ):
 						html	 = ""
 						html 	+= f.read()
 						html	+= "\n"
+						
+						print( "requested file: ", src_dir + fn )
+						try:
+							ext	= regex_suffix.match( fn ).group( 1 )
+							print( "suffix: ", ext )
+							content_type	= ext_content[ ext ]
+						except:
+							print( "suffix: none" )
+							pass
+						
 				except OSError as e:
 					html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
+					#print( "** requested file has not been found: \"%s\"" % src_dir + fn )			
 			
 			elif "GET / " in req:
 				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )			
@@ -127,7 +142,7 @@ def demo( ip = "dhcp" ):
 			if h == b"" or h == b"\r\n":
 				break
 		
-		send_response( client_stream, html )
+		send_response( client_stream, html, content_type )
 		client_stream.close()
 		
 		e_time.show( "before gc" ) ###
@@ -144,9 +159,10 @@ def demo( ip = "dhcp" ):
 		e_time.show( "end" ) ###
 		print()
 
-def send_response( stream, str ):
+def send_response( stream, str, content_type ):
 	try:
-		stream.write( "HTTP/1.0 200 OK\n\n" + str )
+		stream.write( "HTTP/1.0 200 OK\nServer:mikan\nContent-Type: {}\n\n".format( content_type ) + str )
+#		stream.write( "HTTP/1.0 200 OK\n\n" + str )
 	except OSError as e:
 		print( "!!! OSError:", e.args )
 
@@ -299,6 +315,13 @@ class elapsed_time:
 		#print( m, end = ": " )
 		#print( ticks_ms() - self.start )
 		pass
+
+ext_content	= {	"css" : "text/css",
+				"html": "text/html",
+				"js"  : "application/javascript",
+				"png" : "image/png",
+				"jpg" : "image/jpg",
+				}
 
 def main():
 #	demo( ip = "dhcp" )

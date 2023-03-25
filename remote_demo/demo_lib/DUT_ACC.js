@@ -125,11 +125,6 @@ function initial_data_loading() {
 	} );
 }
 
-
-for ( let i = -1; i <= 1; i += 0.1 ) {
-	console.log( Math.atan2( i, 1 ), Math.atan2( i, -1 ) )
-}
-
 function init3D() {
 	const	width	= 480;
 	const	height	= 320;
@@ -144,10 +139,9 @@ function init3D() {
 
 	const camera	= new THREE.PerspectiveCamera( 45, width / height );
 	camera.position.set( 0, 0, 500);
-
-	let boxes;
+//	const controls = new THREE.OrbitControls( camera, document.body );
 	
-	console.log( graph.length )
+	let boxes;
 	
 	if ( graph.length == 1 )
 		boxes	= board_ARD();
