@@ -119,18 +119,14 @@ def demo( ip = "dhcp" ):
 						html 	+= f.read()
 						html	+= "\n"
 						
-						print( "requested file: ", src_dir + fn )
 						try:
 							ext	= regex_suffix.match( fn ).group( 1 )
-							print( "suffix: ", ext )
 							content_type	= ext_content[ ext ]
 						except:
-							print( "suffix: none" )
 							pass
 						
 				except OSError as e:
 					html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
-					#print( "** requested file has not been found: \"%s\"" % src_dir + fn )			
 			
 			elif "GET / " in req:
 				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )			
