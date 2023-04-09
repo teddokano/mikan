@@ -34,18 +34,26 @@ def demo( ip = "dhcp" ):
 	regex_file		= ure.compile( r"GET /(\S+)\sHTTP" )
 	regex_suffix	= ure.compile( r".*\.(.*)" )
 
-	i2c			= machine.I2C( 0, freq = (400 * 1000) )
-	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
-	si2c		= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
-	
+
+	if "MIMXRT" in os.uname().machine:
+		print( "Host = MIMXRT" )
+		i2c		= machine.I2C( 0, freq = 400_000 )
+		spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = 400_000 )
+	elif "Raspberry Pi Pico W" in os.uname().machine:
+		print( "Host = Raspberry Pi Pico W" )
+		i2c		= machine.I2C( 0, sda = machine.Pin(0), scl = machine.Pin(1), freq = 400_000 )
+		spi		= machine.SPI( 1, 1000_000, sck = machine.Pin( 10 ), mosi = machine.Pin( 11 ), miso = machine.Pin( 12 ) )
+		si2c	= i2c
+
 	devices			= [
 						PCA9956B( i2c, 0x02 >>1 ),
 						PCA9956B( i2c, 0x04 >>1 ),
 						PCA9955B( i2c, 0x06 >>1 ),
 						PCA9955B( i2c, 0x08 >>1 ),
 						PCA9632( i2c ),
-						PCA9957( spi, setup_EVB = True ),
-						PCT2075( i2c, setup_EVB = True  ),
+#						PCA9957( spi, setup_EVB = True ),
+#						PCT2075( i2c, setup_EVB = True  ),
 						PCF2131( i2c ),
 #						PCAL6408( i2c, 0x21, setup_EVB = True ),
 #						PCAL6416( i2c, 0x20, setup_EVB = True ),
@@ -54,8 +62,8 @@ def demo( ip = "dhcp" ):
 #						PCF2131( spi ),
 #						PCF85063( i2c ),
 						P3T1085( si2c ),
-						FXLS8974( i2c, address = 0x18 ),
-						FXOS8700( i2c ),
+#						FXLS8974( i2c, address = 0x18 ),
+#						FXOS8700( i2c ),
 						General_call( i2c ),
 						]
 	
@@ -75,7 +83,8 @@ def demo( ip = "dhcp" ):
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
 	
-	ip_info	= start_network( ifcnfg_param = ip )
+#	ip_info	= start_network( ifcnfg_param = ip )
+	ip_info	= start_WLAN()
 #	print( ip_info )
 
 	s = socket.socket()
@@ -193,6 +202,32 @@ def start_network( *, port = 0, ifcnfg_param = "dhcp" ):
 		error_loop( 3, "Can't get/set IP address. Tried to set {}. OSError:{}".format( ifcnfg_param, e.args ) )	# infinite loop inside of this finction
 
 	return lan.ifconfig()
+
+def start_WLAN():
+	print( "starting network" )
+
+	with open('connect.json') as f:
+		connect_info	= ujson.load( f )
+
+	wlan	= network.WLAN( network.STA_IF )
+	wlan.active(True)
+
+	print( "ethernet port %d is activated" % network.STA_IF )
+
+	wlan.connect( connect_info[ "ssid" ], connect_info[ "passwd" ] )
+
+	max_wait	= 10
+	while max_wait > 0:
+		if wlan.status() < 0 or wlan.status() >= 3:
+			break
+		max_wait	-= 1
+		print( "waiting for connection..." )
+		time.sleep( 1 )
+		
+	if wlan.status() != 3:
+		raise RuntimeError( "network connection failed" )
+
+	return wlan.ifconfig()
 
 class DEMO( DUT_base ):
 	def __init__( self ):
