@@ -105,9 +105,8 @@ def demo( rtc ):
 				print( "new alarm seting = {}".format( ", ".join( alm ) ) )
 
 			if "ts1" in event:
-				for i in range( 1, 5 ):
-					tsl	= rtc.timestamp()
-					print( rtc.timestamp2str( tsl ) )
+				tsl	= rtc.timestamp()
+				print( rtc.timestamp2str( tsl ) )
 
 			if not dt[ 6 ] % 30:
 				rtc.dump_reg()
