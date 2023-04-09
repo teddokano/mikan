@@ -509,7 +509,8 @@ class PCF2131_base( RTC_base ):
 		
 		if int_pin:
 			select	= "A" if "A" in int_pin else "B"
-			self.bit_operation( self.INT_MASK[ select ][ 1 ], 0x0F, ~(0x01 << (3 - num)) )
+			self.bit_operation( self.INT_MASK[ select ][ 1 ], (0x01 << (3 - num)), ~(0x01 << (3 - num)) )
+			self.bit_operation( "Control_5", 0x1 << (7 - num), 0x1 << (7 - num) )
 
 	def __get_timestamp_reg( self, num ):
 		dt		= {}
