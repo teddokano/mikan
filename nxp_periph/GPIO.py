@@ -272,7 +272,7 @@ class PCAL6408( PCAL6xxx_base ):
 	PCAL6408: 8 bit GPIO expander
 	
 	"""
-	ADDR_BIT		= 1
+	ADDR_BIT		= 0
 	DEFAULT_ADDR	= (0x40 >> 1) + ADDR_BIT
 	N_PORTS			= 1
 	N_BITS			= 8
@@ -321,7 +321,7 @@ class PCAL6416( PCAL6xxx_base ):
 	PCAL6416: 16 bit GPIO expander
 	
 	"""
-	ADDR_BIT		= 1
+	ADDR_BIT		= 0
 	DEFAULT_ADDR	= (0x40 >> 1) + ADDR_BIT
 	N_PORTS			= 2
 	N_BITS			= 16
@@ -375,7 +375,7 @@ class PCAL6524( PCAL65xx_base ):
 	PCAL6524: 24 bit GPIO expander
 	
 	"""
-	ADDR_BIT		= 1
+	ADDR_BIT		= 0
 	DEFAULT_ADDR	= (0x44 >> 1) + ADDR_BIT
 	N_PORTS			= 3
 	N_BITS			= 24
@@ -477,7 +477,7 @@ class PCAL6534( PCAL65xx_base ):
 	PCAL6534: 34 bit GPIO expander
 	
 	"""
-	ADDR_BIT		= 1
+	ADDR_BIT		= 0
 	DEFAULT_ADDR	= (0x44 >> 1) + ADDR_BIT
 	N_PORTS			= 5
 	N_BITS			= 34
