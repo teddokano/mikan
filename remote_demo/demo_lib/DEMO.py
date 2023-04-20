@@ -50,7 +50,7 @@ def demo( ip = "dhcp" ):
 #						PCAL6408( i2c, 0x21, setup_EVB = True ),
 #						PCAL6416( i2c, 0x20, setup_EVB = True ),
 #						PCAL6524( i2c, 0x22, setup_EVB = True ),
-#						PCAL6534( i2c, 0x23, setup_EVB = True ),
+						PCAL6534( i2c, 0x22, setup_EVB = True ),
 #						PCF2131( spi ),
 #						PCF85063( i2c ),
 						P3T1085( si2c ),

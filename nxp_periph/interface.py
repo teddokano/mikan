@@ -24,6 +24,10 @@ class Interface:
 		int : register value after modifying
 
 		"""
+		
+		if not self.live:
+			return
+
 		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
 		rv	= self.read_registers( reg, 1 )
 		wv	= rv
