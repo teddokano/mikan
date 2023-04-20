@@ -24,7 +24,7 @@ class Interface:
 		int : register value after modifying
 
 		"""
-		
+
 		if not self.live:
 			return
 

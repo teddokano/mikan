@@ -206,6 +206,8 @@ class FXLS8974( ACCELEROMETER_base, I2C_target ):
 
 		print( "FXLS8974 {}".format( hex( address ) ) )
 
+		self.ping()	#	need to ping before "self.bit_operation()" call
+
 		self.fs_range	= 2
 		self.fullscale( self.fs_range )
 		self.bit_operation( "SENS_CONFIG1", 0x01, 0x01 )
