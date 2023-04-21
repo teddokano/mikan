@@ -28,14 +28,18 @@ class Interface:
 		if not self.live:
 			return
 
-		reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
-		rv	= self.read_registers( reg, 1 )
-		wv	= rv
-		
-		wv	&= ~(target_bits & ~value)
-		wv	|=  (target_bits &  value)
+		try:
+			reg	= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+			rv	= self.read_registers( reg, 1 )
+			wv	= rv
+			
+			wv	&= ~(target_bits & ~value)
+			wv	|=  (target_bits &  value)
 
-		self.write_registers( reg, wv )
+			self.write_registers( reg, wv )
+		except Exception as e:
+			self.live	= False
+			rv, wv		= 0, 0
 		
 		return rv, wv
 
