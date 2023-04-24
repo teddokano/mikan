@@ -96,7 +96,7 @@ class FXOS8700( ACCELEROMETER_base,I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		"""
-		Initializer for PCA8561 class instance
+		Initializer for FXOS8700 class instance
 
 		Parameters
 		----------
@@ -194,7 +194,7 @@ class FXLS8974( ACCELEROMETER_base, I2C_target ):
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		"""
-		Initializer for PCA8561 class instance
+		Initializer for FXLS8974 class instance
 
 		Parameters
 		----------
