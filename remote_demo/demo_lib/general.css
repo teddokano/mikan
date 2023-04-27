@@ -133,17 +133,23 @@ input[type="text"] {
 	border: solid 1px #EEEEEE;
 	text-align: center;
 }
-
 .input_text_TMP {
 	width: 10em;
 }
 .para {
 	display: flex;
-     flex-wrap: nowrap;
-     align-items: stretch;
-     justify-content: flex-start;
-     align-content: stretch;
-     }
+	flex-wrap: nowrap;
+	align-items: stretch;
+	justify-content: flex-start;
+	align-content: stretch;
+}
+.para_center {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	justify-content: center;
+	align-content: stretch;
+}
 .log_panel, .info_panel {
 	border: solid 0px #FFFFFF;
 	padding: 5px;
