@@ -1,6 +1,6 @@
 let gauge0 = new JustGage({
 	id: 'gauge0',
-	value: 20,
+	value: 0,
 	min: -55,
 	max: 125,
 	decimals: 3,
@@ -30,7 +30,7 @@ let gauge0 = new JustGage({
 
 let gauge1 = new JustGage({
 	id: 'gauge1',
-	value: 20,
+	value: 0,
 	min: 10,
 	max: 30,
 	decimals: 3,
