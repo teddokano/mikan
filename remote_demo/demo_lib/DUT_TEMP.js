@@ -1,3 +1,59 @@
+let gauge0 = new JustGage({
+	id: 'gauge0',
+	value: 20,
+	min: -55,
+	max: 125,
+	decimals: 3,
+	symbol: '℃',
+	pointer: true,
+	gaugeWidthScale: 0.5,
+	customSectors: [
+		{
+			color: '#0000ff',
+			lo: -55,
+			hi: 15
+		},
+		{
+			color: '#00ff00',
+			lo: 15,
+			hi: 30
+		},
+		{
+			color: '#ff0000',
+			lo: 30,
+			hi: 125
+		}
+	],
+	counter: false
+});
+
+
+let gauge1 = new JustGage({
+	id: 'gauge1',
+	value: 20,
+	min: 10,
+	max: 30,
+	decimals: 3,
+	symbol: '℃',
+	pointer: true,
+	gaugeWidthScale: 0.5,
+	customSectors: [
+		{
+			color: '#00ff00',
+			lo: 10,
+			hi: 27
+		},
+		{
+			color: '#ff0000',
+			lo: 27,
+			hi: 30
+		}
+	],
+	counter: false
+});
+
+
+
 let	temp_data	= {
 	time:[],
 	temp:[],
@@ -6,6 +62,7 @@ let	temp_data	= {
 	os:[],
 	heater:[],
 	chart: undefined,
+
 
 	getAndShow: function () {		
 		let	past	= pastSec();
@@ -30,7 +87,13 @@ let	temp_data	= {
 			
 			if ( this ) {
 				let elem = document.getElementById( "temperature" );
-				elem.innerText = this.temp[ this.temp.length - 1 ].toFixed( 3 ) + '˚C';
+				
+				let temp_now	= this.temp[ this.temp.length - 1 ];
+				
+				elem.innerText = temp_now.toFixed( 3 ) + '˚C';
+
+				gauge0.refresh( temp_now );
+				gauge1.refresh( temp_now );
 			}
 			
 			for ( let i = 0; i < TABLE_LEN; i++ )
@@ -264,6 +327,7 @@ function csvFileOut() {
 function getTempAndShow() {
 	temp_data.getAndShow();
 }
+
 
 window.addEventListener( 'load', function () {
 	temp_data.draw();
