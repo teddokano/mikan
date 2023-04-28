@@ -367,7 +367,8 @@ class SPI_target( Interface ):
 		"""
 		self.__cs	= cs
 		self.__if	= spi
-
+		self.live	= True
+		
 		self.chip_select	= 1
 
 	def send( self, data ):
