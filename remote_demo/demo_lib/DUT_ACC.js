@@ -1,3 +1,60 @@
+let gaugeX = new JustGage({
+	id: 'gaugeX',
+	value: 0,
+	min: -2,
+	max: 2,
+	decimals: 3,
+	symbol: 'g',
+	pointer: true,
+	gaugeWidthScale: 0.5,
+	customSectors: [
+		{
+			color: '#ff0000',
+			lo: -2,
+			hi: 2
+		}
+	],
+	counter: false
+});
+
+let gaugeY = new JustGage({
+	id: 'gaugeY',
+	value: 0,
+	min: -2,
+	max: 2,
+	decimals: 3,
+	symbol: 'g',
+	pointer: true,
+	gaugeWidthScale: 0.5,
+	customSectors: [
+		{
+			color: '#00ff00',
+			lo: -2,
+			hi: 2
+		}
+	],
+	counter: false
+});
+
+let gaugeZ = new JustGage({
+	id: 'gaugeZ',
+	value: 0,
+	min: -2,
+	max: 2,
+	decimals: 3,
+	symbol: 'g',
+	pointer: true,
+	gaugeWidthScale: 0.5,
+	customSectors: [
+		{
+			color: '#0000ff',
+			lo: -2,
+			hi: 2
+		}
+	],
+	counter: false
+});
+
 class GraphDraw {
 	constructor( obj ) {
 		this.id		= obj.id;
@@ -103,6 +160,16 @@ function getDataAndShow() {
 			g.draw();
 			g.update_tables();
 		}
+		
+		if ( graph[ 0 ] ) {
+			[ x, y, z ]	= graph[ 0 ].get_last_data();
+			
+			gaugeX.refresh( x );
+			gaugeY.refresh( y );
+			gaugeZ.refresh( z );
+		}
+			
+
 	} );
 }
 
