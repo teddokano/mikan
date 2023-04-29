@@ -103,15 +103,55 @@ function getDataAndShow() {
 			g.draw();
 			g.update_tables();
 		}
+		
+		if ( graph[ 0 ] ) {
+			[ x, y, z ]	= graph[ 0 ].get_last_data();
+			
+			gauge[0].refresh( x );
+			gauge[1].refresh( y );
+			gauge[2].refresh( z );
+		}
 	} );
 }
 
 window.addEventListener( 'load', function () {
+	set_gauge( [ 
+				{ id: 'gaugeX', color: '#ff0000' },
+				{ id: 'gaugeY', color: '#00ff00' },
+				{ id: 'gaugeZ', color: '#0000ff' },
+				] );
 	initial_data_loading();
 	setInterval( getDataAndShow, 200 );
 });
 
 let graph	= [];
+let gauge	= [];
+
+function set_gauge( obj_arry ) {
+	let setting	= {
+		value: 0,
+		min: -1.1,
+		max: 1.1,
+		decimals: 3,
+		symbol: 'g',
+		pointer: true,
+		gaugeWidthScale: 0.5,
+		customSectors: [
+			{
+				lo: -2,
+				hi: 2
+			}
+		],
+		counter: false
+	};
+	
+	for ( const obj of obj_arry ) {
+		setting.id							= obj.id;
+		setting.customSectors[ 0 ].color	= obj.color;
+		
+		gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );		
+	}
+}
 
 function initial_data_loading() {
 	ajaxUpdate( REQ_HEADER + "settings", data => {

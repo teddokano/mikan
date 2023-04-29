@@ -9,14 +9,30 @@
 	
 	<title>{% dev_name %} server</title>
 	<link href="general.css" rel="stylesheet">
+		
+		<style>
+		.gauge {
+		  width: 500px;
+		  height: 300px;
+		}
+		</style>
+
 </head>
 <body>
 	<div class="header">
 		<p>{% symbol %} {% dev_link %} server</p>
 		<p class="info">{% dev_info %}</p>
 	</div>
-	<div id="temperature" class="datetime"></div>
-
+	<div id="temperature" class="datetime">
+	</div>
+	
+	<!--
+	<div class="para_center">
+		<div id="gauge0" class="gauge"></div>
+		<div id="gauge1" class="gauge"></div>
+	</div>
+	-->
+	
 	<div>
 	<canvas id="myLineChart"></canvas>
 	<!--
@@ -24,6 +40,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 	-->
 	<script async src="jslib/chart.umd.js"></script>
+	<script async src="jslib/raphael-2.1.4.min.js"></script>
+	<script async src="jslib/justgage.js"></script>
 
 	<script>
 		const	DEV_NAME	= '{% dev_name %}';
@@ -40,7 +58,9 @@
 	<script async src="DUT_TEMP.js"></script>
 
 	</div>
-	
+
+
+
 	<div class="para">
 		
 		<div id="reg_table" class="control_panel reg_table log_panel">
