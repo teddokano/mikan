@@ -125,68 +125,34 @@ let graph	= [];
 let gauge	= [];
 
 function set_gauge() {
-	gauge.push( new JustGage({
-			id: 'gaugeX',
-			value: 0,
-			min: -1.1,
-			max: 1.1,
-			decimals: 3,
-			symbol: 'g',
-			pointer: true,
-			gaugeWidthScale: 0.5,
-			customSectors: [
-			   {
-				   color: '#ff0000',
-				   lo: -2,
-				   hi: 2
-			   }
-			],
-			counter: false
-		})
-	);
+	let setting	= {
+		value: 0,
+		min: -1.1,
+		max: 1.1,
+		decimals: 3,
+		symbol: 'g',
+		pointer: true,
+		gaugeWidthScale: 0.5,
+		customSectors: [
+			{
+				lo: -2,
+				hi: 2
+			}
+		],
+		counter: false
+	};
+	
+	setting.id	= 'gaugeX';
+	setting.customSectors[ 0 ].color	= '#ff0000';
+	gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );
 
-	gauge.push( new JustGage({
-			id: 'gaugeY',
-			value: 0,
-			min: -1.1,
-			max: 1.1,
-			decimals: 3,
-			symbol: 'g',
-			pointer: true,
-			gaugeWidthScale: 0.5,
-			customSectors: [
-				{
-					color: '#00ff00',
-					lo: -2,
-					hi: 2
-				}
-			],
-			counter: false
-		})
-	);
+	setting.id	= 'gaugeY';
+	setting.customSectors[ 0 ].color	= '#00ff00';
+	gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );
 
-
-	gauge.push( new JustGage({
-			id: 'gaugeZ',
-			value: 0,
-			min: -1.1,
-			max: 1.1,
-			decimals: 3,
-			symbol: 'g',
-			pointer: true,
-			gaugeWidthScale: 0.5,
-			customSectors: [
-				{
-					color: '#0000ff',
-					lo: -2,
-					hi: 2
-				}
-			],
-			counter: false
-		})
-	);
-
-
+	setting.id	= 'gaugeZ';
+	setting.customSectors[ 0 ].color	= '#0000ff';
+	gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );
 }
 
 function initial_data_loading() {
