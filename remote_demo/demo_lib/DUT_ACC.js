@@ -104,13 +104,9 @@ function getDataAndShow() {
 			g.update_tables();
 		}
 		
-		if ( graph[ 0 ] ) {
-			[ x, y, z ]	= graph[ 0 ].get_last_data();
-			
-			gauge[0].refresh( x );
-			gauge[1].refresh( y );
-			gauge[2].refresh( z );
-		}
+		if ( graph[ 0 ] )
+			for ( const [ g, data ] of zip( gauge, graph[ 0 ].get_last_data() ) )
+				g.refresh( data );
 	} );
 }
 
