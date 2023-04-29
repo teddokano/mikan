@@ -1,4 +1,3 @@
-
 class GraphDraw {
 	constructor( obj ) {
 		this.id		= obj.id;
@@ -116,7 +115,11 @@ function getDataAndShow() {
 }
 
 window.addEventListener( 'load', function () {
-	set_gauge();
+	set_gauge( [ 
+				{ id: 'gaugeX', color: '#ff0000' },
+				{ id: 'gaugeY', color: '#00ff00' },
+				{ id: 'gaugeZ', color: '#0000ff' },
+				] );
 	initial_data_loading();
 	setInterval( getDataAndShow, 200 );
 });
@@ -124,7 +127,7 @@ window.addEventListener( 'load', function () {
 let graph	= [];
 let gauge	= [];
 
-function set_gauge() {
+function set_gauge( obj_arry ) {
 	let setting	= {
 		value: 0,
 		min: -1.1,
@@ -142,17 +145,12 @@ function set_gauge() {
 		counter: false
 	};
 	
-	setting.id	= 'gaugeX';
-	setting.customSectors[ 0 ].color	= '#ff0000';
-	gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );
-
-	setting.id	= 'gaugeY';
-	setting.customSectors[ 0 ].color	= '#00ff00';
-	gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );
-
-	setting.id	= 'gaugeZ';
-	setting.customSectors[ 0 ].color	= '#0000ff';
-	gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );
+	for ( const obj of obj_arry ) {
+		setting.id							= obj.id;
+		setting.customSectors[ 0 ].color	= obj.color;
+		
+		gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );		
+	}
 }
 
 function initial_data_loading() {
