@@ -1,65 +1,3 @@
-let gauge	= [];
-
-gauge.push( new JustGage({
-		id: 'gaugeX',
-		value: 0,
-		min: -1.1,
-		max: 1.1,
-		decimals: 3,
-		symbol: 'g',
-		pointer: true,
-		gaugeWidthScale: 0.5,
-		customSectors: [
-		   {
-			   color: '#ff0000',
-			   lo: -2,
-			   hi: 2
-		   }
-		],
-		counter: false
-	})
-);
-
-gauge.push( new JustGage({
-		id: 'gaugeY',
-		value: 0,
-		min: -1.1,
-		max: 1.1,
-		decimals: 3,
-		symbol: 'g',
-		pointer: true,
-		gaugeWidthScale: 0.5,
-		customSectors: [
-			{
-				color: '#00ff00',
-				lo: -2,
-				hi: 2
-			}
-		],
-		counter: false
-	})
-);
-
-
-gauge.push( new JustGage({
-		id: 'gaugeZ',
-		value: 0,
-		min: -1.1,
-		max: 1.1,
-		decimals: 3,
-		symbol: 'g',
-		pointer: true,
-		gaugeWidthScale: 0.5,
-		customSectors: [
-			{
-				color: '#0000ff',
-				lo: -2,
-				hi: 2
-			}
-		],
-		counter: false
-	})
-);
 
 class GraphDraw {
 	constructor( obj ) {
@@ -178,11 +116,78 @@ function getDataAndShow() {
 }
 
 window.addEventListener( 'load', function () {
+	set_gauge();
 	initial_data_loading();
 	setInterval( getDataAndShow, 200 );
 });
 
 let graph	= [];
+let gauge	= [];
+
+function set_gauge() {
+	gauge.push( new JustGage({
+			id: 'gaugeX',
+			value: 0,
+			min: -1.1,
+			max: 1.1,
+			decimals: 3,
+			symbol: 'g',
+			pointer: true,
+			gaugeWidthScale: 0.5,
+			customSectors: [
+			   {
+				   color: '#ff0000',
+				   lo: -2,
+				   hi: 2
+			   }
+			],
+			counter: false
+		})
+	);
+
+	gauge.push( new JustGage({
+			id: 'gaugeY',
+			value: 0,
+			min: -1.1,
+			max: 1.1,
+			decimals: 3,
+			symbol: 'g',
+			pointer: true,
+			gaugeWidthScale: 0.5,
+			customSectors: [
+				{
+					color: '#00ff00',
+					lo: -2,
+					hi: 2
+				}
+			],
+			counter: false
+		})
+	);
+
+
+	gauge.push( new JustGage({
+			id: 'gaugeZ',
+			value: 0,
+			min: -1.1,
+			max: 1.1,
+			decimals: 3,
+			symbol: 'g',
+			pointer: true,
+			gaugeWidthScale: 0.5,
+			customSectors: [
+				{
+					color: '#0000ff',
+					lo: -2,
+					hi: 2
+				}
+			],
+			counter: false
+		})
+	);
+
+
+}
 
 function initial_data_loading() {
 	ajaxUpdate( REQ_HEADER + "settings", data => {
