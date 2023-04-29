@@ -1,8 +1,8 @@
 let gaugeX = new JustGage({
 	id: 'gaugeX',
 	value: 0,
-	min: -2,
-	max: 2,
+	min: -1.1,
+	max: 1.1,
 	decimals: 3,
 	symbol: 'g',
 	pointer: true,
@@ -20,8 +20,8 @@ let gaugeX = new JustGage({
 let gaugeY = new JustGage({
 	id: 'gaugeY',
 	value: 0,
-	min: -2,
-	max: 2,
+	min: -1.1,
+	max: 1.1,
 	decimals: 3,
 	symbol: 'g',
 	pointer: true,
@@ -39,8 +39,8 @@ let gaugeY = new JustGage({
 let gaugeZ = new JustGage({
 	id: 'gaugeZ',
 	value: 0,
-	min: -2,
-	max: 2,
+	min: -1.1,
+	max: 1.1,
 	decimals: 3,
 	symbol: 'g',
 	pointer: true,
