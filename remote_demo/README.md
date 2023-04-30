@@ -75,15 +75,15 @@ The code will be looked like below. Edit **IP address**, **Subnet mask**, **Gate
 from demo_lib import demo
 
 def main():
-	demo( ip = (	"10.0.0.99", 		#	IP address
-					"255.255.255.0", 	#	Subnet mask
-					"10.0.0.1", 		#	Gateway
-					"0.0.0.0" 			#	DNS
-					)
-				)
+    demo( ip = (    "10.0.0.99",        # IP address
+                    "255.255.255.0",    # Subnet mask
+                    "10.0.0.1",         # Gateway
+                    "0.0.0.0"           # DNS
+			   )
+		)
 
 if __name__ == "__main__":
-	main()
+    main()
 ```
 
 ## Video
