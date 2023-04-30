@@ -79,7 +79,7 @@ def main():
                     "255.255.255.0",    # Subnet mask
                     "10.0.0.1",         # Gateway
                     "0.0.0.0"           # DNS
-			   )
+               )
 		)
 
 if __name__ == "__main__":
