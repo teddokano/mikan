@@ -36,13 +36,15 @@ def demo( ip = "dhcp" ):
 
 
 	if "i.MX RT1170 EVK" in os.uname().machine:
-		i2c		= machine.I2C( 2, freq = (400 * 1000) )
-		spi		= machine.SPI( 0, 1000 * 1000, cs = 0 )
-		si2c	= machine.I2C( 0, freq = (400 * 1000) )
+		i2c		= machine.I2C( 2, freq = (400_000) )
+		spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		si2c	= machine.I2C( 0, freq = (400_000) )
+		ep_num	= 1	# 1 for 1G port, 0 for 100M port
 	else:
-		i2c		= machine.I2C( 0, freq = (400 * 1000) )
-		spi		= machine.SPI( 0, 1000 * 1000, cs = 0 )
-		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
+		i2c		= machine.I2C( 0, freq = (400_000) )
+		spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+		ep_num	= 0
 	
 	devices			= [
 						PCA9956B( i2c, 0x02 >>1 ),
@@ -80,8 +82,8 @@ def demo( ip = "dhcp" ):
 	
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
-	
-	ip_info	= start_network( ifcnfg_param = ip )
+
+	ip_info	= start_network( port = ep_num, ifcnfg_param = ip )
 #	print( ip_info )
 
 	s = socket.socket()
@@ -98,6 +100,7 @@ def demo( ip = "dhcp" ):
 		res = s.accept()
 		
 		e_time	= elapsed_time( ticks_ms() ) ###
+		#e_time.enable	= True
 		
 		client_stream	= res[0]
 		client_addr		= res[1]
@@ -129,7 +132,7 @@ def demo( ip = "dhcp" ):
 					with open( src_dir + fn, "rb" ) as f:
 						html 	= f.read()					
 				except OSError as e:
-					html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
+					html = None
 			
 			elif "GET / " in req:
 				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )			
@@ -160,8 +163,11 @@ def demo( ip = "dhcp" ):
 
 def send_response( stream, content, content_type ):
 	try:
-		stream.write( "HTTP/1.0 200 OK\nServer:mikan\nContent-Type: {}\n\n".format( content_type ) )
-		stream.write( content )
+		if None == content:
+			stream.write( "HTTP/1.0 404 NOT FOUND\n\nFile Not Found" )
+		else:
+			stream.write( "HTTP/1.0 200 OK\nServer:mikan\nContent-Type: {}\n\n".format( content_type ) )
+			stream.write( content )
 	except OSError as e:
 		print( "!!! OSError:", e.args )
 
@@ -310,10 +316,13 @@ def error_loop( n, message ):
 class elapsed_time:
 	def __init__( self, start ):
 		self.start	= start
+		self.enable	= False
 	def show( self, m ):
-		#print( m, end = ": " )
-		#print( ticks_ms() - self.start )
-		pass
+		if self.enable:
+			print( m, end = ": " )
+			print( ticks_ms() - self.start )
+		else:
+			pass
 
 ext_content	= {	"css" : "text/css",
 				"html": "text/html",
