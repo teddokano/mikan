@@ -124,26 +124,10 @@ def demo( ip = "dhcp" ):
 					content_type	= ext_content[ ext ]
 				except:
 					pass
-				
 
 				try:
-					if "text/" in content_type:
-						with open( src_dir + fn, "r" ) as f:
-							print( "src_dir + fn: ", src_dir + fn )
-			
-							html	 = ""
-							html 	+= f.read()
-							html	+= "\n"
-					else:
-						with open( src_dir + fn, "rb" ) as f:
-							print( "src_dir + fn: ", src_dir + fn )
-			
-							html	 = ""
-							html 	+= str( f.read() )
-							html	+= "\n"
-					
-					
-					
+					with open( src_dir + fn, "rb" ) as f:
+						html 	= f.read()					
 				except OSError as e:
 					html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
 			
@@ -174,10 +158,10 @@ def demo( ip = "dhcp" ):
 		e_time.show( "end" ) ###
 		print()
 
-def send_response( stream, str, content_type ):
+def send_response( stream, content, content_type ):
 	try:
-		stream.write( "HTTP/1.0 200 OK\nServer:mikan\nContent-Type: {}\n\n".format( content_type ) + str )
-#		stream.write( "HTTP/1.0 200 OK\n\n" + str )
+		stream.write( "HTTP/1.0 200 OK\nServer:mikan\nContent-Type: {}\n\n".format( content_type ) )
+		stream.write( content )
 	except OSError as e:
 		print( "!!! OSError:", e.args )
 
