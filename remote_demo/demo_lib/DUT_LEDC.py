@@ -80,11 +80,7 @@ class DUT_LEDC( DUT_base.DUT_base ):
 
 			m	= self.regex_grch.match( req )
 			if m:
-#				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ) ) )
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
-
-				print("###########################")
-				print( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )	########################################
 
 				self.dev.gradation_channel_enable( obj[ "channels" ] )
 				self.dev.gradation_group_assign( obj[ "group" ] )
@@ -96,12 +92,8 @@ class DUT_LEDC( DUT_base.DUT_base ):
 
 			m	= self.regex_grss.match( req )
 			if m:
-#				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ) ) )
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
 				
-				print("###########################")
-				print( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )	########################################
-
 				if ( obj[ "start" ] ):
 					timing_list	= sorted( obj[ "grps" ].keys() )
 					

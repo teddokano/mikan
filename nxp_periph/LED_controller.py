@@ -702,9 +702,6 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 		self.__pwm_base		= self.REG_NAME.index( "IREF0" if current_control else "PWM0" )
 		self.__iref_base	= self.REG_NAME.index( "PWM0"  if current_control else "IREF0" )
 
-		for r, v in { 0xFF: 0xFF, 0xFE: 0xFE, 0xFD: 0xFD }.items():
-			self.write_registers( r, v )
-		
 		init	=	{
 						"MODE2"		: 0x18,		#	to forth the channel working when wrror happened
 						"LEDOUT0"	: [ 0xAA ] * (self.CHANNELS // 4),
@@ -714,7 +711,7 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 					
 		for r, v in init.items():	#	don't care: register access order
 			self.write_registers( r, v )
-	
+
 	def iref( self, *args ):
 		"""
 		output current setting
