@@ -34,9 +34,15 @@ def demo( ip = "dhcp" ):
 	regex_file		= ure.compile( r"GET /(\S+)\sHTTP" )
 	regex_suffix	= ure.compile( r".*\.(.*)" )
 
-	i2c			= machine.I2C( 0, freq = (400 * 1000) )
-	spi			= machine.SPI( 0, 1000 * 1000, cs = 0 )
-	si2c		= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
+
+	if "i.MX RT1170 EVK" in os.uname().machine:
+		i2c		= machine.I2C( 2, freq = (400 * 1000) )
+		spi		= machine.SPI( 0, 1000 * 1000, cs = 0 )
+		si2c	= machine.I2C( 0, freq = (400 * 1000) )
+	else:
+		i2c		= machine.I2C( 0, freq = (400 * 1000) )
+		spi		= machine.SPI( 0, 1000 * 1000, cs = 0 )
+		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400 * 1000) )
 	
 	devices			= [
 						PCA9956B( i2c, 0x02 >>1 ),
@@ -114,17 +120,30 @@ def demo( ip = "dhcp" ):
 			m	= regex_file.match( req )
 			if m and (fn	:= m.group( 1 ).decode()):
 				try:
-					with open( src_dir + fn, "r" ) as f:
-						html	 = ""
-						html 	+= f.read()
-						html	+= "\n"
-						
-						try:
-							ext	= regex_suffix.match( fn ).group( 1 )
-							content_type	= ext_content[ ext ]
-						except:
-							pass
-						
+					ext	= regex_suffix.match( fn ).group( 1 )
+					content_type	= ext_content[ ext ]
+				except:
+					pass
+				
+
+				try:
+					if "text/" in content_type:
+						with open( src_dir + fn, "r" ) as f:
+							print( "src_dir + fn: ", src_dir + fn )
+			
+							html	 = ""
+							html 	+= f.read()
+							html	+= "\n"
+					else:
+						with open( src_dir + fn, "rb" ) as f:
+							print( "src_dir + fn: ", src_dir + fn )
+			
+							html	 = ""
+							html 	+= str( f.read() )
+							html	+= "\n"
+					
+					
+					
 				except OSError as e:
 					html = 'HTTP/1.0 404 NOT FOUND\n\nFile Not Found'
 			
@@ -314,9 +333,10 @@ class elapsed_time:
 
 ext_content	= {	"css" : "text/css",
 				"html": "text/html",
-				"js"  : "application/javascript",
+				"js"  : "text/javascript",
 				"png" : "image/png",
 				"jpg" : "image/jpg",
+				"ico" : "image/ico",
 				}
 
 def main():
