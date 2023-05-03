@@ -53,7 +53,7 @@ def demo( ip = "dhcp" ):
 						PCA9955B( i2c, 0x08 >>1 ),
 						PCA9632( i2c ),
 						PCA9957( spi, setup_EVB = True ),
-#						PCT2075( i2c, setup_EVB = True  ),
+						PCT2075( i2c, setup_EVB = True  ),
 						PCF2131( i2c ),
 #						PCAL6408( i2c, 0x21, setup_EVB = True ),
 #						PCAL6416( i2c, 0x20, setup_EVB = True ),

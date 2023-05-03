@@ -5,6 +5,7 @@ _The name of this repository has been changed from "mp_driver" to "mikan" (2022 
 > **Warning**  
 > As of 2023 May 04, **MicroPython v1.20.0** is available. Use this 1.20.0 for **MIMXRT1170-EVK**. It's a stable version for the MIMXRT1170-EVK.  
 > For **MIMXRT1050-EVKB**, you may face a problem when you install the files. It seems the v1.20.0 is not stable to access from PC to flash storage. Use **v1.19.1** for proper operation.  
+> It seems the storage operation problem is fixed in latest v1.20 nightly build **MIMXRT1050_EVK-20230503-unstable-v1.20.0-39-g61b8e1b2d.bin**. This could be an option to play 'mikan' on the MIMXRT1050-EVKB. 
 
 # What is this?
 NXP peripheral device drivers (SDK) for [MicroPython](https://micropython.org) and its usage examples and demo.  
