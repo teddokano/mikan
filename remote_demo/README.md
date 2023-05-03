@@ -11,7 +11,7 @@ Peripheral_devices <---------> Mictocontroller_board <-----> PC(web-browser)
 You may already installed mikan driver in your microcontroller board.  
 On addition to that, a folder is needed to be copied into the board. 
 It is `remote_demo/demo_lib` folder. The `demo_lib` should be copied in **module serch path**.  
-In case of the MIMXRT1050-EVKB, it can be copied under `/flash` folder. 
+In case of the **MIMXRT1050-EVKB** and **MIMXRT1170-EVK**, it can be copied under `/flash` folder. 
 So, after installation, the board will have folders like...
 ```
 /flash/lib/nxp_periph/
@@ -39,13 +39,19 @@ Internet <---> Router(DHCP server)
 PC <---> microcontroller_board(mikan)
 ```
 
+> **Note**  
+> The **MIMXRT1170-EVK** has two Ethernet ports. Choose 1Gbps port for the network connection.  
+> If you need to change the port to 100Mbps, a variable:`ep_num` should be edited in `remote_demo/demo_lib/DEMO.py`.   
+
+
+
 ### In DHCP environment
 
 `remote_demo/start_w_auto_IP(DHCP).py` is a script to run the demo in network which can use DHCP. 
 IP address will be given from DHCP server after the demo started. 
 
-> **Note**
-The **DHCP server** is a server which gives IP address to every devices in local network.  
+> **Note**  
+> The **DHCP server** is a server which gives IP address to every devices in local network.  
 
 When your microcontroller board is connected existing network, you may try this. If the DHCP is not working, the demo will show an error message as below and the board will keep to repeat blinking LED 3 times. 
 

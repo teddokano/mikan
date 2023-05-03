@@ -2,6 +2,9 @@
 Peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
+> **Warning**  
+> As of 2023 May 04, **MicroPython v1.20.0** is available. Use this 1.20.0 for **MIMXRT1170-EVK**. It's a stable version for the MIMXRT1170-EVK.  
+> For **MIMXRT1050-EVKB**, you may face a problem when you install the files. It seems the v1.20.0 is not stable to access from PC to flash storage. Use **v1.19.1** for proper operation.  
 
 # What is this?
 NXP peripheral device drivers (SDK) for [MicroPython](https://micropython.org) and its usage examples and demo.  
@@ -136,6 +139,12 @@ For more information of examples, please find next section of this document.
 ## Examples
 The example code files are in `examples/` folder.  
 It shows simple usage examples for the drivers and standalome demo for target devices.  
+
+> **Note**  
+> These examples should work on any MicroPython platform but need to absorb hardware difference.  
+> All these examples runs as it is on MIMXRT1050-EVK. If you try on MIMXRT1170-EVK, the hardware I2C has different ID for A4/A5 pins. The ID must be changed from 0 to 2.  
+> Refer to pinout document for each platforms. For i.MXRT, the pinout information is available [here](https://docs.micropython.org/en/latest/mimxrt/pinout.html#mimxrt-i2c-pinout).
+
 
 ?|File name|Description|Device type
 ---|---|---|---
