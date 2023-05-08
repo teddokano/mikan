@@ -12,6 +12,8 @@
     ["nxp_periph/temp_sensor.py", "github:teddokano/mikan/nxp_periph/temp_sensor.py"],
   ],
   "deps": [
-  ],
+	["collections-defaultdict", "latest"],
+	["os-path", "latest"]
+  ], 
   "version": "1.10.6"
 }
