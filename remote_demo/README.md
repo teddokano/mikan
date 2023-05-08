@@ -8,6 +8,11 @@ Peripheral_devices <---------> Mictocontroller_board <-----> PC(web-browser)
 ```
 
 ## Install
+
+Installation can be done by manual file copy into the microcontroller performs storage or by using `mip` with `mpremote`.  
+
+### Manual install
+
 You may already installed mikan driver in your microcontroller board.  
 On addition to that, a folder is needed to be copied into the board. 
 It is `remote_demo/demo_lib` folder. The `demo_lib` should be copied in **module serch path**.  
@@ -16,6 +21,20 @@ So, after installation, the board will have folders like...
 ```
 /flash/lib/nxp_periph/
 /flash/demo_lib/
+```
+
+### Install by `mip` with `mpremote`
+
+If the `mpremote` is installed on PC, the install can be done by terminal command. 
+To install the _**remote_demo**_, type next command. 
+
+```
+mpremote mip install github:teddokano/mikan/remote_demo
+```
+
+The 'mikan' class driver needed to be installed already. It can be done by..
+```
+mpremote mip install github:teddokano/mikan
 ```
 
 ## Give it a try!
