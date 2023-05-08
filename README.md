@@ -57,21 +57,18 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [FXLS8974](https://www.nxp.jp/docs/en/data-sheet/FXLS8974CF.pdf)
 
 # Getting started
-## Guide video
-### Step 1: Install MicroPython on the MCU board
-Follow this video to install MicroPython into the MCU board. This is an example of i.MXRT1050-EVK. 
-[https://youtu.be/L2AVKoXI4vI](https://youtu.be/L2AVKoXI4vI)  
-[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/L2AVKoXI4vI)
 
-### Step 2: Install 'mikan' into the MCU board
-Need to copy 'mikan' class driver into the MCU board storage. The guide video shows how to copy using Thonny. 
-[https://youtu.be/rG8MwNkk9xs](https://youtu.be/rG8MwNkk9xs)  
-[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step2.png)](https://youtu.be/rG8MwNkk9xs)
+> **Note**  
+> Install can be done with a package management tool called: [`mip`](https://docs.micropython.org/en/latest/reference/packages.html#installing-packages-with-mpremote).  
+> It can be done with command of `mpremote mip install github:teddokano/mikan`.  
+> Using `mpremote` is easy way to install the library. However it needs to setup the tool on your PC. So in this document, manual install steps described to do it in simple way. 
 
 ## The steps
+
+The instllation can be completed in 2 steps as follows.  
+
 1. Step 1
-	1. Install MicroPython into the MCU board
-	1. Follow instraction to MocroPython [download page](https://micropython.org/download/) for each MCU boards. 
+	1. Install MicroPython into the MCU board (Follow instraction to MicroPython [download page](https://micropython.org/download/) for each MCU boards). 
 1. Step 2
 	1. Check sys.path (**module serch path**) on target board
 		1. Connect your MCU board and PC, get REPL environment. When the [MIMXRT1050_EVK](https://www.nxp.com/design/development-boards/i-mx-evaluation-and-development-boards/i-mx-rt1050-evaluation-kit:MIMXRT1050-EVK) is connected to terminal, press 'Ctrl + b' keys to get prompt (exit from 'raw' mode). 
@@ -91,6 +88,22 @@ Need to copy 'mikan' class driver into the MCU board storage. The guide video sh
 	1. Copy "nxp_periph" folder into target's' "lib" (it could be '/flash/lib' or '/lib') directory.  For file/folder copying, some tools can be used like [Thonny](https://thonny.org), [rshell](https://github.com/dhylands/rshell), etc.
 	1. Now it's ready to play! Choose an example code in "example" folder and run.
 
+### Video guide
+
+Video guide is available which was explained above.  
+Take following step1 and step2 to complete the installation. 
+
+#### Step 1: Install MicroPython on the MCU board
+Follow this video to install MicroPython into the MCU board. This is an example of i.MXRT1050-EVK. 
+[https://youtu.be/L2AVKoXI4vI](https://youtu.be/L2AVKoXI4vI)  
+[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/L2AVKoXI4vI)
+
+#### Step 2: Install 'mikan' into the MCU board
+Need to copy 'mikan' class driver into the MCU board storage. The guide video shows how to copy using Thonny. 
+[https://youtu.be/rG8MwNkk9xs](https://youtu.be/rG8MwNkk9xs)  
+[![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step2.png)](https://youtu.be/rG8MwNkk9xs)
+
+
 # What is inside?
 ## Drivers
 The drivers are main part of this repo.  
@@ -99,8 +112,8 @@ The drivers are provided as class-libraries with device names (type-numbers). Wi
 
 For example, for the LED controller (PCA9955B) ...
 ```python
-from machine    import I2C      # Importing 'I²C' class library from MocroPython's 'machine' module
-from utime      import sleep    # Importing 'sleep' from MocroPython's 'utime' module
+from machine    import I2C      # Importing 'I²C' class library from MicroPython's 'machine' module
+from utime      import sleep    # Importing 'sleep' from MicroPython's 'utime' module
 from nxp_periph import PCA9955B # Importing the device class library of 'PCA9955B'
 
 i2c   = I2C( 0, freq = (400 * 1000) ) # Making an instance of I²C with 400kHz clock setting
@@ -122,8 +135,8 @@ led_c.write_registers( "LEDOUT0", [ 0xAA, 0xAA, 0xAA, 0xAA ] ) # example of four
 
 Next sample is a temperature sensor operation. Simple interface enables just read the temperature in celcius.
 ```python
-from machine    import I2C     # Importing 'I²C' class library from MocroPython's 'machine' module
-from utime      import sleep   # Importing 'sleep' from MocroPython's 'utime' module
+from machine    import I2C     # Importing 'I²C' class library from MicroPython's 'machine' module
+from utime      import sleep   # Importing 'sleep' from MicroPython's 'utime' module
 from nxp_periph import PCT2075 # Importing the device class library of 'PCT2075'
 
 i2c         = I2C( 0, freq = (400 * 1000) ) # Making an instance of I²C with 400kHz clock setting
