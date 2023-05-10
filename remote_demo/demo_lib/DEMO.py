@@ -18,7 +18,7 @@ from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
 from	nxp_periph	import	FXOS8700, FXLS8974
 from	nxp_periph	import	i2c_fullscan
 
-from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC, DUT_GPIO, DUT_ACC
+from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC, DUT_GPIO, DUT_ACC, DUT_AFE
 from	demo_lib	import	DUT_GENERALCALL, General_call
 from	demo_lib	import	DUT_base
 
@@ -71,7 +71,8 @@ def demo( ip = "dhcp" ):
 						DUT_TEMP,
 						DUT_RTC,
 						DUT_GPIO,
-						DUT_ACC,
+#						DUT_ACC,
+						DUT_AFE,
 						DUT_GENERALCALL,
 						]
 	

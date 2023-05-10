@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="Thu, 01 Dec 1994 16:00:00 GMT">
+	
+	<title>{% dev_name %} server</title>
+	<link href="general.css" rel="stylesheet">
+		
+		<style>
+		.gauge {
+		  width: 400px;
+		  height: 240px;
+		}
+		</style>
+
+
+</head>
+<body>
+	<script async src="jslib/chart.umd.js"></script>
+	<script async src="jslib/raphael-2.1.4.min.js"></script>
+	<script async src="jslib/justgage.js"></script>
+	
+	<script>
+		const	DEV_NAME	= '{% dev_name %}';
+		const	REQ_HEADER	= '/' + DEV_NAME + '?';
+
+		const	TABLE_LEN	= {% table_len %}
+		const	GRAPH_HIGH	= {% graph_high %}
+		const	GRAPH_LOW	= {% graph_low %}
+		const	MAX_N_DATA	= {% max_n_data %}
+	</script>
+
+	<script async src="general.js"></script>
+	<script async src="DUT_AFE.js"></script>
+
+	<div class="header">
+		<p>TEST*TEST*TEST {% symbol %} {% dev_link %} server</p>
+		<p class="info">{% dev_info %}</p>
+	</div>
+
+	<div class="para_center">
+		<div>
+			<div id="gaugeX" class="gauge"></div>
+			<div id="gaugeY" class="gauge"></div>
+			<div id="gaugeZ" class="gauge"></div>
+		</div>
+	</div>
+	
+	{% charts %}
+	
+	<div class="para">
+		
+		{% tables %}
+
+		<div id="reg_table" class="control_panel reg_table info_panel">
+			{% info_tab %}<br/>
+			<input type="button" onclick="csvFileOut();" value="Save" class="tmp_button">
+		</div>
+		
+	</div>
+	<div class="foot_note">
+		{% signature %}
+	</div>
+
+</body>
+</html>
