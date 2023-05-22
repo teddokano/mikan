@@ -3,20 +3,16 @@ import	math
 from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
 from	nxp_periph	import	PCA9955B, PCA9956B, PCA9957, PCA9632, LED
 
-IREF_INIT	= 0x10
+IREF_INIT	= 0xFF
 
 def main():
 	print( "Demo is running on {}".format( os.uname().machine ) )
 
-	i2c		= I2C( 0, freq = (400 * 1000) )
+	i2c		= I2C( 0 )
 	led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT )
-#	led_c	= PCA9955B( i2c, 0x06 >>1, iref = IREF_INIT )
-#	led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT, setup_EVB = True )
-#	led_c	= PCA9632( i2c )
-
 	"""
 	spi		= SPI( 0, 1000 * 1000, cs = 0 )
-	led_c	= PCA9957( spi, setup_EVB = True, iref = IREF_INIT )
+	led_c	= PCA9957( spi, iref = IREF_INIT )
 	"""
 
 	print( led_c.info() )
@@ -28,19 +24,9 @@ def main():
 	if "PCA9957" in led_c.info():
 		color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ), ( 9, 10, 11 ) )
 		white_led_idx	= ( range( 12, 24 ) )
-	elif "PCA9956B" in led_c.info():
-		color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ), ( 9, 10, 11 ), ( 12, 13, 14 ), ( 15, 16, 17 ), ( 18, 19, 20 ), ( 21, 22, 23 ) )
-		white_led_idx	= ()
 	elif "PCA9955B" in led_c.info():
 		color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ) )
 		white_led_idx	= ( 9, 10, 11, 12, 13, 14, 15 )
-		
-		#### followings are LED configurations for PCA9955BTW-ARD
-		#	color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ) )
-		#	white_led_idx	= ( 9, 10, 11, 12, 13, 14 )
-	elif "PCA9632" in led_c.info():
-		color_led_idx	= ( ( 0, 1, 2 ), )
-		white_led_idx	= ( 3, )
 
 	c_demo	= Color_demo( [ [leds[ i ] for i in u] for u in color_led_idx ] )
 	w_demo	= White_demo( [ leds[ i ] for i in white_led_idx ] )

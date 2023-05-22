@@ -1,6 +1,5 @@
-from	machine	import	Pin, I2C, SoftSPI, SPI
-from	utime	import	sleep
-
+from	machine	import		Pin, I2C, SoftSPI, SPI
+from	utime	import		sleep
 from	nxp_periph	import	PCA9955B, PCA9957
 
 #USE_PCA9955B	= True
@@ -9,7 +8,7 @@ USE_PCA9955B	= False
 def main():
 	
 	if USE_PCA9955B:
-		i2c		= I2C( 0, freq = (400 * 1000) )
+		i2c		= I2C( 0, freq = (400_000) )
 		led_c	= PCA9955B( i2c, address = 0x06 >> 1 )
 		
 		enabling_channel	= [ 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15 ]

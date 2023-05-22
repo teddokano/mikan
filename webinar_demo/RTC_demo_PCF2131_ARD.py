@@ -5,7 +5,7 @@ import	machine
 BAT_SWOVR	= True
 
 def main():
-	intf	= I2C( 0, freq = (400 * 1000) )
+	intf	= I2C( 0, freq = (400_000) )
 #	intf	= SPI( 0, 500 * 1000, cs = 0 )
 	rtc		= PCF2131( intf )
 
