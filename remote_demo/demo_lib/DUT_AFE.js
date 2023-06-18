@@ -77,7 +77,10 @@ class GraphDraw {
 			data.push( ds.data.slice( -1 )[ 0 ] );
 		}			
 
-		return data;
+		/* *************************************** */
+		console.log( data[ 0 ] );
+		
+		return data[ 0 ];
 	}
 }
 
@@ -104,9 +107,14 @@ function getDataAndShow() {
 			g.update_tables();
 		}
 		
+		gauge[ 0 ]( graph[ 0 ].get_last_data() );
+		gauge[ 1 ]( graph[ 1 ].get_last_data() );
+
+		/*
 		if ( graph[ 0 ] )
 			for ( const [ g, data ] of zip( gauge, graph[ 0 ].get_last_data() ) )
 				g.refresh( data );
+		 */
 	} );
 }
 
@@ -114,7 +122,6 @@ window.addEventListener( 'load', function () {
 	set_gauge( [ 
 				{ id: 'gaugeX', color: '#ff0000' },
 				{ id: 'gaugeY', color: '#00ff00' },
-				{ id: 'gaugeZ', color: '#0000ff' },
 				] );
 	initial_data_loading();
 	setInterval( getDataAndShow, 200 );
@@ -126,16 +133,16 @@ let gauge	= [];
 function set_gauge( obj_arry ) {
 	let setting	= {
 		value: 0,
-		min: -1.1,
-		max: 1.1,
-		decimals: 3,
-		symbol: 'g',
+		min: -100,
+		max: 500,
+		decimals: 1,
+		symbol: '',
 		pointer: true,
 		gaugeWidthScale: 0.5,
 		customSectors: [
 			{
-				lo: -2,
-				hi: 2
+				lo: -50,
+				hi: 200
 			}
 		],
 		counter: false

@@ -16,6 +16,7 @@ from	nxp_periph	import	PCT2075, LM75B, P3T1085
 from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
 from	nxp_periph	import	FXOS8700, FXLS8974
+from	nxp_periph	import	NAFE13388
 from	nxp_periph	import	i2c_fullscan
 
 from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC, DUT_GPIO, DUT_ACC, DUT_AFE
@@ -42,7 +43,11 @@ def demo( ip = "dhcp" ):
 		ep_num	= 1	# Ethernet port selection. 1 for 1G port, 0 for 100M port
 	else:
 		i2c		= machine.I2C( 0, freq = (400_000) )
-		spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		#spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		
+		# for NAFE13388
+		spi		= machine.SPI( 0, 1000_000, cs = 0, phase = 1 )
+		
 		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
 		ep_num	= 0
 	
@@ -64,6 +69,7 @@ def demo( ip = "dhcp" ):
 						P3T1085( si2c ),
 						FXLS8974( i2c, address = 0x18 ),
 						FXOS8700( i2c ),
+						NAFE13388( spi ),
 						General_call( i2c ),
 						]
 	
@@ -71,7 +77,7 @@ def demo( ip = "dhcp" ):
 						DUT_TEMP,
 						DUT_RTC,
 						DUT_GPIO,
-#						DUT_ACC,
+						DUT_ACC,
 						DUT_AFE,
 						DUT_GENERALCALL,
 						]

@@ -3,19 +3,18 @@ import	ure
 import	ujson
 import	micropython
 
-from	nxp_periph	import	FXOS8700, FXLS8974
-from	nxp_periph	import	ACCELEROMETER_base
+from	nxp_periph	import	NAFE13388
+from	nxp_periph	import	AFE_base
 from	demo_lib	import	DUT_base
 
 class DUT_AFE( DUT_base.DUT_base ):
-	APPLIED_TO		= ACCELEROMETER_base
+	APPLIED_TO		= AFE_base
 	TABLE_LENGTH	= 10
 	SAMPLE_LENGTH	= 60
 	GRAPH_HIGH		= 2
 	GRAPH_LOW		= -2
 
-	DS_URL		= { "FXOS8700": "https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf",
-					"FXLS8974": "https://www.nxp.jp/docs/en/data-sheet/FXLS8974CF.pdf",
+	DS_URL		= { "NAFE13388": "https://www.nxp.com/docs/en/data-sheet/NAFE11388DS.pdf",
 					}
 
 	regex_update	= ure.compile( r".*update=(\d+)" )
@@ -30,13 +29,11 @@ class DUT_AFE( DUT_base.DUT_base ):
 		self.info		= [ "AFE", "" ]
 		self.symbol		= '〰'
 
-		if ( isinstance( self.dev, FXOS8700 ) ):
+		if ( isinstance( self.dev, NAFE13388 ) ):
 			self.split	= splits	= ( {	"id"	 	: "acc", 
 											"unit"	 	: "g",
-											"get_data"	: self.dev.xyz,
+											"get_data"	: self.dev.ch0,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-																				{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-																				{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
 																			], 
 																			title	= '"g" now', 
 																			xlabel	= 'time',
@@ -47,39 +44,26 @@ class DUT_AFE( DUT_base.DUT_base ):
 										{ 
 											"id"	 	: "mag", 
 											"unit"	 	: "nT",
-											"get_data"	: self.dev.mag,
+											"get_data"	: self.dev.ch1,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-																				{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-																				{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
 																			 ], 
 																			 title	= '"mag" now', 
 																			 xlabel	= 'time',
 																			 ylabel	= 'geomagnetism [nT]',
 																			 ),
 										}, )
-
-		elif ( isinstance( self.dev, FXLS8974 ) ):
-			self.split	= splits	= ( {	"id"	 	: "acc", 
-											"unit"	 	: "g",
-											"get_data"	: self.dev.xyz,
-											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
-																				{ "label": "y", "color": "rgba(   0, 255,   0, 1 )"},
-																				{ "label": "z", "color": "rgba(   0,   0, 255, 1 )"},
-																			], 
-																			title	= '"g" now', 
-																			xlabel	= 'time',
-																			ylabel	= 'gravitational acceleration [g]',
-																			minmax	= ( -2, 2 )
-																			),
-										}, )
-						
+	
 	def xyz_data( self ):
 		d	= {}
 		for splt in self.split:
 			xyz	= splt[ "get_data" ]()
-		
+			
+			########################
+			print( "####", end="  " )
+			print( xyz )
+			
 			for i, ds in enumerate( splt[ "setting" ].data[ "datasets" ] ):
-				d[ splt[ "id" ] + ds[ "label" ] ]	= xyz[ i ]
+				d[ splt[ "id" ] + ds[ "label" ] ]	= xyz
 		
 		tm	= self.rtc.now()
 		d[ "time" ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
