@@ -76,10 +76,6 @@ class GraphDraw {
 		for ( const ds of this.cs.data.datasets ) {
 			data.push( ds.data.slice( -1 )[ 0 ] );
 		}			
-
-		/* *************************************** */
-		console.log( data[ 0 ] );
-		
 		return data[ 0 ];
 	}
 }
@@ -107,14 +103,8 @@ function getDataAndShow() {
 			g.update_tables();
 		}
 		
-		gauge[ 0 ]( graph[ 0 ].get_last_data() );
-		gauge[ 1 ]( graph[ 1 ].get_last_data() );
-
-		/*
-		if ( graph[ 0 ] )
-			for ( const [ g, data ] of zip( gauge, graph[ 0 ].get_last_data() ) )
-				g.refresh( data );
-		 */
+		gauge[ 0 ].refresh( graph[ 0 ].get_last_data() );
+		gauge[ 1 ].refresh( graph[ 1 ].get_last_data() );
 	} );
 }
 
