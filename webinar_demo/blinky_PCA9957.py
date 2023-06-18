@@ -2,7 +2,7 @@ from	machine	import		SPI
 from	utime	import		sleep
 from	nxp_periph	import	PCA9957
 
-ledd	= PCA9957( SPI( 0, 1000_000, cs = 0 ), iref = 0xFF )
+ledd	= PCA9957( SPI( 0, 1000_000, cs = 0 ), iref = 0xFF, setup_EVB = True )
 
 print( ledd.info() )
 

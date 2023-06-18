@@ -9,7 +9,9 @@ from	nxp_periph	import	P3T1085
 
 def main():
 	i2c			= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
-	temp_sensor	= P3T1085( i2c )
+	
+	print( i2c.scan() )
+	temp_sensor	= P3T1085( i2c, 76 )
 
 	print( temp_sensor.info() )
 
