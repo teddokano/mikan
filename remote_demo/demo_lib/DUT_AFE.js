@@ -123,16 +123,16 @@ let gauge	= [];
 function set_gauge( obj_arry ) {
 	let setting	= {
 		value: 0,
-		min: -100,
-		max: 500,
+		min: -10,
+		max: 1200,
 		decimals: 1,
-		symbol: '',
+		symbol: 'g',
 		pointer: true,
 		gaugeWidthScale: 0.5,
 		customSectors: [
 			{
-				lo: -50,
-				hi: 200
+				lo: 250,
+				hi: 750
 			}
 		],
 		counter: false

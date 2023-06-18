@@ -35,10 +35,10 @@ class DUT_AFE( DUT_base.DUT_base ):
 											"get_data"	: self.dev.ch0,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
 																			], 
-																			title	= '"g" now', 
+																			title	= 'weight', 
 																			xlabel	= 'time',
-																			ylabel	= 'gravitational acceleration [g]',
-																			minmax	= ( -2, 2 )
+																			ylabel	= 'weight [g]',
+																			minmax	= ( -10, 1200 )
 																			),
 										}, 
 										{ 
@@ -47,9 +47,10 @@ class DUT_AFE( DUT_base.DUT_base ):
 											"get_data"	: self.dev.ch1,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
 																			 ], 
-																			 title	= '"mag" now', 
+																			 title	= 'weight', 
 																			 xlabel	= 'time',
-																			 ylabel	= 'geomagnetism [nT]',
+																			 ylabel	= 'weight [g]',
+																			 minmax	= ( -10, 1200 )
 																			 ),
 										}, )
 	
@@ -57,10 +58,6 @@ class DUT_AFE( DUT_base.DUT_base ):
 		d	= {}
 		for splt in self.split:
 			xyz	= splt[ "get_data" ]()
-			
-			########################
-			print( "####", end="  " )
-			print( xyz )
 			
 			for i, ds in enumerate( splt[ "setting" ].data[ "datasets" ] ):
 				d[ splt[ "id" ] + ds[ "label" ] ]	= xyz
