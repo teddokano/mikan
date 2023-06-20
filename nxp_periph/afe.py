@@ -92,8 +92,16 @@ class NAFE13388( AFE_base, SPI_target ):
 	def ch0( self ):
 		return self.lc0.read()
 		
-	def ch1( self ):
+	def ch1_( self ):
 		return (self.lc1.read() + 50) * (1050 / 527.2)
+
+	def ch1( self ):
+		oversmpl	= 100
+		r			= 0
+		for _ in range( oversmpl ):
+			r	+= (self.lc1.read() + 50) * (1050 / 527.2)
+			
+		return r / oversmpl
 
 class AFE_LogicalChannel:
 	rlist	= [ 0x0020, 0x0021, 0x0022, 0x0023 ]
@@ -130,19 +138,28 @@ def main():
 	afe.write_reg( 0x0001 )
 	afe.dump( [ 0x20, 0x21, 0x22, 0x23 ] )
 	
+	count	= 0
+	
 	while True:
 #		print( afe.lc0.read(), end="  " )
 #		print( afe.lc1.read() )
+#		print( count, end = ",  " )
 
 #		print( afe.ch0(), end="  " )
 
+		t	= afe.ch0()
+
 		w	= afe.ch1() + 50
 		w	*= (1050 / 527.2)
-		print( w )
+		#print( w )
 
-		
+		print( f"{t}, {w}" )
 
-		sleep( 0.2 )
+
+		count	+= 1
+
+#		sleep( 0.2 )
+#		sleep( 0.01 )
 
 if __name__ == "__main__":
 	main()
