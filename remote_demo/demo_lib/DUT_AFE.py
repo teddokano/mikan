@@ -35,10 +35,10 @@ class DUT_AFE( DUT_base.DUT_base ):
 											"get_data"	: self.dev.ch0,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
 																			], 
-																			title	= 'weight', 
+																			title	= 'temperature', 
 																			xlabel	= 'time',
-																			ylabel	= 'weight [g]',
-																			minmax	= ( -10, 1200 )
+																			ylabel	= 'temperature [℃]',
+																			minmax	= ( -50, 500 )
 																			),
 										}, 
 										{ 
