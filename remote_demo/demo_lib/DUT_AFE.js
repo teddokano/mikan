@@ -121,7 +121,24 @@ let graph	= [];
 let gauge	= [];
 
 function set_gauge( obj_arry ) {
-	let setting	= {
+	let setting	= [
+		{
+		value: 0,
+		min: -50,
+		max: 500,
+		decimals: 1,
+		symbol: '℃',
+		pointer: true,
+		gaugeWidthScale: 0.5,
+		customSectors: [
+			{
+				lo: 0,
+				hi: 100
+			}
+		],
+		counter: false
+	},
+	{
 		value: 0,
 		min: -10,
 		max: 1200,
@@ -136,13 +153,13 @@ function set_gauge( obj_arry ) {
 			}
 		],
 		counter: false
-	};
+	}]
 	
-	for ( const obj of obj_arry ) {
-		setting.id							= obj.id;
-		setting.customSectors[ 0 ].color	= obj.color;
+	for ( const [ s, obj ] of zip( setting, obj_arry ) ) {
+		s.id						= obj.id;
+		s.customSectors[ 0 ].color	= obj.color;
 		
-		gauge.push( new JustGage( JSON.parse( JSON.stringify( setting ) ) ) );		
+		gauge.push( new JustGage( JSON.parse( JSON.stringify( s ) ) ) );		
 	}
 }
 
