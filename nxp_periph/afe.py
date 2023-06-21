@@ -39,7 +39,11 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.temperature_coeff	= 1 / 1000
 		self.temperature_base	= 25
 
-		
+		"""
+		if self.dev.live and not self.reactive_mode:
+			tim0	= machine.Timer( 0 )
+			tim0.init( period = int( sampling_interval * 1000.0 ), callback = self.tim_cb )
+		"""
 	def	write_reg( self, reg, val = None ):
 		reg		<<= 1
 	
@@ -103,7 +107,7 @@ class NAFE13388( AFE_base, SPI_target ):
 	def read( self, ch ):
 		return self.logical_channel[ ch ].read()
 
-	def stable_read( self, ch, over_sample = 100 ):
+	def stable_read( self, ch, over_sample = 10 ):
 		r			= 0
 		for _ in range( over_sample ):
 			r	+= self.read( ch )

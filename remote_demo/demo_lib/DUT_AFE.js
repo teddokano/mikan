@@ -124,16 +124,16 @@ function set_gauge( obj_arry ) {
 	let setting	= [
 		{
 		value: 0,
-		min: -50,
-		max: 500,
+		min: 20,
+		max: 35,
 		decimals: 1,
 		symbol: '℃',
 		pointer: true,
 		gaugeWidthScale: 0.5,
 		customSectors: [
 			{
-				lo: 0,
-				hi: 100
+				lo: 25,
+				hi: 30
 			}
 		],
 		counter: false

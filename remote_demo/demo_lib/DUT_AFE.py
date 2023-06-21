@@ -32,19 +32,19 @@ class DUT_AFE( DUT_base.DUT_base ):
 		if ( isinstance( self.dev, NAFE13388 ) ):
 			self.split	= splits	= ( {	"id"	 	: "acc", 
 											"unit"	 	: "g",
-											"get_data"	: self.dev.ch0,
+											"get_data"	: self.dev.temperature,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
 																			], 
 																			title	= 'temperature', 
 																			xlabel	= 'time',
 																			ylabel	= 'temperature [℃]',
-																			minmax	= ( -50, 500 )
+																			minmax	= ( 20, 35 )
 																			),
 										}, 
 										{ 
 											"id"	 	: "mag", 
 											"unit"	 	: "nT",
-											"get_data"	: self.dev.ch1,
+											"get_data"	: self.dev.weight,
 											"setting"	: graph_setting( 	[	{ "label": "x", "color": "rgba( 255,   0,   0, 1 )"},
 																			 ], 
 																			 title	= 'weight', 
