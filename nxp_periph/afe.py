@@ -25,9 +25,20 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.reset_pin.value( 1 )
 		self.syn_pin.value( 1 )
 		
-		self.lc0	= AFE_LogicalChannel( self, 0, [ 0x1110, 0x0040, 0x1400, 0x0000 ] )
-	#	self.lc1	= AFE_LogicalChannel( self, 1, [ 0x3310, 0x0040, 0x4100, 0x3060 ] )
-		self.lc1	= AFE_LogicalChannel( self, 1, [ 0x3350, 0x0040, 0x4100, 0x3060 ] )
+		self.logical_channel	= [
+#									AFE_LogicalChannel( self, 0, [ 0x1110, 0x0040, 0x1400, 0x0000, 0x0001 ] ),
+#									AFE_LogicalChannel( self, 1, [ 0x3350, 0x0040, 0x4100, 0x3060, 0x0002 ] ),
+									AFE_LogicalChannel( self, 0, [ 0x11F0, 0x0040, 0x1400, 0x0000, 0x0001 ] ),
+									AFE_LogicalChannel( self, 1, [ 0x33F0, 0x0040, 0x4100, 0x3060, 0x0002 ] ),
+									]
+		
+		self.weight_offset	= -172.7
+		self.weight_coeff	= 1044 / (10388.61 - self.weight_offset)
+
+		self.temperature_offset	= -1600
+		self.temperature_coeff	= 1 / 1000
+		self.temperature_base	= 25
+
 		
 	def	write_reg( self, reg, val = None ):
 		reg		<<= 1
@@ -89,19 +100,23 @@ class NAFE13388( AFE_base, SPI_target ):
 			else:
 				print( "" )
 
-	def ch0( self ):
-		return self.lc0.read()
-		
-	def ch1_( self ):
-		return (self.lc1.read() + 50) * (1050 / 527.2)
+	def read( self, ch ):
+		return self.logical_channel[ ch ].read()
 
-	def ch1( self ):
-		oversmpl	= 100
+	def stable_read( self, ch, over_sample = 100 ):
 		r			= 0
-		for _ in range( oversmpl ):
-			r	+= (self.lc1.read() + 50) * (1050 / 527.2)
-			
-		return r / oversmpl
+		for _ in range( over_sample ):
+			r	+= self.read( ch )
+		
+		return r / over_sample
+
+	def temperature( self ):
+		t	= self.stable_read( 0 )
+		return (t - self.temperature_offset) * self.temperature_coeff + self.temperature_base
+		
+	def weight( self ):
+		w	= self.stable_read( 1 )
+		return (w - self.weight_offset) * self.weight_coeff
 
 class AFE_LogicalChannel:
 	rlist	= [ 0x0020, 0x0021, 0x0022, 0x0023 ]
@@ -116,7 +131,7 @@ class AFE_LogicalChannel:
 		
 		for r, v in zip( self.rlist, self.cnfg ):
 			self.afe.write_reg( r, v )
-	
+		
 		self.afe.write_reg( 0x2000 )
 		sleep( 0.001 )
 		return self.afe.read_data( 0x2040 + self.ch )
@@ -136,30 +151,16 @@ def main():
 
 	print( "ch 1" )
 	afe.write_reg( 0x0001 )
-	afe.dump( [ 0x20, 0x21, 0x22, 0x23 ] )
+	afe.dump( [ 0x20, 0x21, 0x22, 0x23, 0x24 ] )
 	
 	count	= 0
 	
 	while True:
-#		print( afe.lc0.read(), end="  " )
-#		print( afe.lc1.read() )
-#		print( count, end = ",  " )
-
-#		print( afe.ch0(), end="  " )
-
-		t	= afe.ch0()
-
-		w	= afe.ch1() + 50
-		w	*= (1050 / 527.2)
-		#print( w )
-
-		print( f"{t}, {w}" )
-
-
+#		print( "{:.2f}, {:.2f}".format( afe.stable_read( 0 ), afe.stable_read( 1 ) ) )
+#		print( "{:.2f}".format( afe.stable_read( 1 )-afe.weight_offset ) , end="    ")
+#		print( "{:.2f}".format( afe.weight() ) )
+		print( "{:.2f}  {:.2f}".format( afe.temperature(), afe.weight() ) )
 		count	+= 1
-
-#		sleep( 0.2 )
-#		sleep( 0.01 )
 
 if __name__ == "__main__":
 	main()
