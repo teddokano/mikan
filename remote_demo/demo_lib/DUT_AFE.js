@@ -109,10 +109,7 @@ function getDataAndShow() {
 }
 
 window.addEventListener( 'load', function () {
-	set_gauge( [ 
-				{ id: 'gaugeX', color: '#ff0000' },
-				{ id: 'gaugeY', color: '#00ff00' },
-				] );
+	set_gauge();
 	initial_data_loading();
 	setInterval( getDataAndShow, 200 );
 });
@@ -120,9 +117,12 @@ window.addEventListener( 'load', function () {
 let graph	= [];
 let gauge	= [];
 
-function set_gauge( obj_arry ) {
+function set_gauge() {
 	let setting	= [
 		{
+		id: 'gaugeX', 
+		label: 'Temperature',
+		color: '#ff0000',
 		value: 0,
 		min: 20,
 		max: 35,
@@ -139,6 +139,9 @@ function set_gauge( obj_arry ) {
 		counter: false
 	},
 	{
+		id: 'gaugeY', 
+		label: 'Weight',
+		color: '#00ff00',
 		value: 0,
 		min: -10,
 		max: 1200,
@@ -153,12 +156,9 @@ function set_gauge( obj_arry ) {
 			}
 		],
 		counter: false
-	}]
+	}];
 	
-	for ( const [ s, obj ] of zip( setting, obj_arry ) ) {
-		s.id						= obj.id;
-		s.customSectors[ 0 ].color	= obj.color;
-		
+	for ( const s of setting ) {
 		gauge.push( new JustGage( JSON.parse( JSON.stringify( s ) ) ) );		
 	}
 }
