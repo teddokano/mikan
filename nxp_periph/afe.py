@@ -11,6 +11,8 @@ class AFE_base:
 	pass
 
 class NAFE13388( AFE_base, SPI_target ):
+	ch_cnfg_reg	= [ 0x0020, 0x0021, 0x0022, 0x0023 ]
+
 	def __init__( self, spi, cs = None ):
 		SPI_target.__init__( self, spi, cs )
 #		self.spi	= spi
@@ -23,9 +25,12 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.reset_pin.value( 1 )
 		self.syn_pin.value( 1 )
 		
+		self.reset()
+		self.boot()
+		
 		self.logical_channel	= [
-									AFE_LogicalChannel( self, 0, [ 0x11F0, 0x0040, 0x1400, 0x0000 ] ),
-									AFE_LogicalChannel( self, 1, [ 0x33F0, 0x0040, 0x4100, 0x3060 ] ),
+									self.logical_ch_config( 0, [ 0x11F0, 0x0040, 0x1400, 0x0000 ] ),
+									self.logical_ch_config( 1, [ 0x33F0, 0x0040, 0x4100, 0x3060 ] ),
 									]
 		
 		self.weight_offset	= -172.7
@@ -35,11 +40,10 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.temperature_coeff	= 1 / 1000
 		self.temperature_base	= 25
 
-		"""
-		if self.dev.live and not self.reactive_mode:
-			tim0	= machine.Timer( 0 )
-			tim0.init( period = int( sampling_interval * 1000.0 ), callback = self.tim_cb )
-		"""
+	def start_ADC( self ):
+		self.write_r16( 0x2003 )
+
+
 	def	write_r16( self, reg, val = None ):
 		reg		<<= 1
 	
@@ -80,7 +84,7 @@ class NAFE13388( AFE_base, SPI_target ):
 
 	def boot( self ):
 		reg_init	= [
-						{	0x0010: None,
+						{	0x0010: None, 
 							0x002A: 0x0000,
 							0x002B: 0x0000,
 							0x002C: 0x0000,
@@ -95,7 +99,7 @@ class NAFE13388( AFE_base, SPI_target ):
 			for k, v in step.items():
 				self.write_r16( k, v )
 			sleep( 0.001 )
-		
+
 	def reset( self ):
 		self.write_r16( 0x0014 )
 		sleep( 0.001 )
@@ -106,9 +110,6 @@ class NAFE13388( AFE_base, SPI_target ):
 				print( "0x{:04X} = {:04X}".format( r, self.read_r16( r ) ) )
 			else:
 				print( "" )
-
-	def read( self, ch ):
-		return self.logical_channel[ ch ].read()
 
 	def stable_read( self, ch, over_sample = 10 ):
 		r			= 0
@@ -125,49 +126,78 @@ class NAFE13388( AFE_base, SPI_target ):
 		w	= self.stable_read( 1 )
 		return (w - self.weight_offset) * self.weight_coeff
 
-class AFE_LogicalChannel:
-	rlist	= [ 0x0020, 0x0021, 0x0022, 0x0023 ]
-	
-	def __init__( self, afe, ch, list ):
-		self.afe	= afe
-		self.ch		= ch
-		self.cnfg	= list
+	def logical_ch_config( self, logical_channel, list ):
+		self.write_r16( 0x0000 + logical_channel )
+
+		for r, v in zip( self.ch_cnfg_reg, list ):
+			self.write_r16( r, v )
+		self.dump( [ 0x20, 0x21, 0x22, 0x23 ] )
 		
+		mask	= 1
+		bits	= self.read_r16( 0x24 ) | mask << logical_channel
+		self.write_r16( 0x24, bits )
+		
+		print( f"bits = {bits}" )
+		
+		self.num_logcal_ch	= 0
+		for i in range( 16 ):
+			if bits & (mask << i):
+				self.num_logcal_ch	+= 1
+		
+		print( f"self.num_logcal_ch = {self.num_logcal_ch}" )
+		
+
 	def read( self ):
-		self.afe.write_r16( 0x0000 + self.ch )
+		reg		= 0x2003 << 1
+		regH	= reg >> 8 & 0xFF
+		regL	= reg & 0xFF
+
+		data	= bytearray( [ regH, regL ] + ([ 0xFF ] * (3 * self.num_logcal_ch) ) )
+
+		self.__if.write_readinto( data, data )
+
+		values	= []
 		
-		for r, v in zip( self.rlist, self.cnfg ):
-			self.afe.write_r16( r, v )
+		for i in range( self.num_logcal_ch ):
+			offset	= 2 + 3 * i
+			v		= data[ offset : offset + 3 ]
+			v		+= b'\x00'		
+			values	+= [ unpack( ">l", v )[ 0 ] >> 8 ]
+		"""
 		
-		self.afe.write_r16( 0x2000 )
+#		self.logical_ch_config( 0, [ 0x11F0, 0x0040, 0x1400, 0x0000 ] )
+		self.write_r16( 0x2000 )
 		sleep( 0.001 )
-		return self.afe.read_r24( 0x2040 + self.ch )
+		values	+= [ self.read_r24( 0x2040 ) ]
+#		self.logical_ch_config( 1, [ 0x33F0, 0x0040, 0x4100, 0x3060 ] )
+		self.write_r16( 0x2000 )
+		sleep( 0.001 )
+		values	+= [ self.read_r24( 0x2041 ) ]
+		"""
+
+		values	+= [ self.read_r24( 0x2040 ) ]
+		values	+= [ self.read_r24( 0x2041 ) ]
+		
+		print( values )
+
+		return values
 
 def main():
 	spi	= SPI( 0, 1000_000, cs = 0, phase = 1 )
 
 	afe	= NAFE13388( spi, None )
-	afe.reset()
-	afe.boot()
-	
 	afe.dump( [ 0x7C, 0x7D, 0x7E, 0xAE, 0xAF, 0x34, 0x37, None, 0x30, 0x31 ] )
-
-	print( "ch 0" )
-	afe.write_r16( 0x0000 )
-	afe.dump( [ 0x20, 0x21, 0x22, 0x23 ] )
-
-	print( "ch 1" )
-	afe.write_r16( 0x0001 )
-	afe.dump( [ 0x20, 0x21, 0x22, 0x23 ] )
+	
+	afe.start_ADC()
 	
 	count	= 0
 	
 	while True:
-#		print( "{:.2f}, {:.2f}".format( afe.stable_read( 0 ), afe.stable_read( 1 ) ) )
-#		print( "{:.2f}".format( afe.stable_read( 1 )-afe.weight_offset ) , end="    ")
-#		print( "{:.2f}".format( afe.weight() ) )
-		print( "{:.2f}  {:.2f}".format( afe.temperature(), afe.weight() ) )
+		afe.read()
+#		t, w	= afe.read()
+#		print( "{:.2f}  {:.2f}".format( t, w ) )
 		count	+= 1
+		sleep( 0.1 )
 
 if __name__ == "__main__":
 	main()
