@@ -40,10 +40,6 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.temperature_coeff	= 1 / 1000
 		self.temperature_base	= 25
 
-	def start_ADC( self ):
-		self.write_r16( 0x2003 )
-
-
 	def	write_r16( self, reg, val = None ):
 		reg		<<= 1
 	
@@ -98,11 +94,11 @@ class NAFE13388( AFE_base, SPI_target ):
 		for step in reg_init:
 			for k, v in step.items():
 				self.write_r16( k, v )
-			sleep( 0.001 )
+			sleep( WAIT )
 
 	def reset( self ):
 		self.write_r16( 0x0014 )
-		sleep( 0.001 )
+		sleep( WAIT )
 
 	def dump( self, list ):
 		for r in list:
@@ -148,35 +144,14 @@ class NAFE13388( AFE_base, SPI_target ):
 		
 
 	def read( self ):
-		reg		= 0x2003 << 1
-		regH	= reg >> 8 & 0xFF
-		regL	= reg & 0xFF
-
-		data	= bytearray( [ regH, regL ] + ([ 0xFF ] * (3 * self.num_logcal_ch) ) )
-
-		self.__if.write_readinto( data, data )
-
 		values	= []
-		
-		for i in range( self.num_logcal_ch ):
-			offset	= 2 + 3 * i
-			v		= data[ offset : offset + 3 ]
-			v		+= b'\x00'		
-			values	+= [ unpack( ">l", v )[ 0 ] >> 8 ]
-		"""
-		
-#		self.logical_ch_config( 0, [ 0x11F0, 0x0040, 0x1400, 0x0000 ] )
-		self.write_r16( 0x2000 )
-		sleep( 0.001 )
-		values	+= [ self.read_r24( 0x2040 ) ]
-#		self.logical_ch_config( 1, [ 0x33F0, 0x0040, 0x4100, 0x3060 ] )
-		self.write_r16( 0x2000 )
-		sleep( 0.001 )
-		values	+= [ self.read_r24( 0x2041 ) ]
-		"""
 
-		values	+= [ self.read_r24( 0x2040 ) ]
-		values	+= [ self.read_r24( 0x2041 ) ]
+		command	= 0x2003
+
+		for i in range( self.num_logcal_ch ):
+			self.write_r16( command )
+			sleep( WAIT )
+			values	+= [ self.read_r24( 0x2040 + i ) ]
 		
 		print( values )
 
@@ -187,8 +162,6 @@ def main():
 
 	afe	= NAFE13388( spi, None )
 	afe.dump( [ 0x7C, 0x7D, 0x7E, 0xAE, 0xAF, 0x34, 0x37, None, 0x30, 0x31 ] )
-	
-	afe.start_ADC()
 	
 	count	= 0
 	
