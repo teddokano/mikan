@@ -111,7 +111,7 @@ function getDataAndShow() {
 window.addEventListener( 'load', function () {
 	set_gauge();
 	initial_data_loading();
-	setInterval( getDataAndShow, 200 );
+	setInterval( getDataAndShow, 400 );
 });
 
 let graph	= [];
