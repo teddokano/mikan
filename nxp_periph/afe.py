@@ -37,15 +37,16 @@ class NAFE13388( AFE_base, SPI_target ):
 									self.logical_ch_config( 1, [ 0x3350, 0x00BC, 0x4100, 0x3060 ] ),
 									]
 
-		self.weight_offset	= -172.7
-		self.weight_coeff	= 1044 / (10388.61 - self.weight_offset)
+		self.weight_offset	= -38
+		self.weight_coeff	= 1044 / (354 - self.weight_offset)
 
-		self.temperature_offset	= -1600
-		self.temperature_coeff	= 1 / 1000
+		self.temperature_offset	= -70
+		self.temperature_coeff	= 1 / 40
 		self.temperature_base	= 25
 
-		self.ch	= [ 0 ] * self.num_logcal_ch
-
+		self.ch		= [ 0 ] * self.num_logcal_ch
+		self.done	= False
+		
 		tim0 = Timer(0)
 		tim0.init( period= 200, callback = self.tim_cb )
 
@@ -65,6 +66,9 @@ class NAFE13388( AFE_base, SPI_target ):
 		
 		self.cb_count	+= 1
 		self.cb_count	%= (self.num_logcal_ch << 1)
+		
+		if self.cb_count == 0:
+			self.done	= True
 	
 	def tim_cb( self, tim_obj ):
 		schedule( self.sch_cb, 0 )
@@ -137,11 +141,11 @@ class NAFE13388( AFE_base, SPI_target ):
 				print( "" )
 
 	def temperature( self ):
-		t	= self.stable_read( 0 )
+		t	= self.ch[ 0 ]
 		return (t - self.temperature_offset) * self.temperature_coeff + self.temperature_base
 		
 	def weight( self ):
-		w	= self.stable_read( 1 )
+		w	= self.ch[ 1 ]
 		return (w - self.weight_offset) * self.weight_coeff
 
 	def logical_ch_config( self, logical_channel, list ):
@@ -164,7 +168,6 @@ class NAFE13388( AFE_base, SPI_target ):
 		
 		print( f"self.num_logcal_ch = {self.num_logcal_ch}" )
 		
-
 	def measure( self, ch = None ):
 		if ch is not None:
 			self.write_r16( 0x0000 + ch )
@@ -221,9 +224,13 @@ def main():
 #		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )},  {afe.measure( 2 )}" )
 #		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )}" )
 #		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )}" )
-		print( f"{count},  {afe.ch[ 0 ]},  {afe.ch[ 1 ]}" )
+
+		if afe.done:
+			afe.done	= False
+#			print( f"{count},  {afe.ch[ 0 ]},  {afe.ch[ 1 ]}" )
+			print( f"{afe.temperature()},  {afe.weight()}" )
+			
 		count	+= 1
-		sleep( 0.5 )
 
 if __name__ == "__main__":
 	main()
