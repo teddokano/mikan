@@ -1,6 +1,7 @@
-from	machine		import	SPI, Pin
-from	utime		import	sleep
+from	machine		import	SPI, Pin, Timer
+from	utime		import	sleep, sleep_ms, sleep_us
 from	struct		import	unpack
+from	micropython	import	schedule
 from nxp_periph.interface	import	SPI_target
 
 WAIT	= 0.001
@@ -14,6 +15,9 @@ class NAFE13388( AFE_base, SPI_target ):
 	ch_cnfg_reg	= [ 0x0020, 0x0021, 0x0022, 0x0023 ]
 
 	def __init__( self, spi, cs = None ):
+		self.tim_flag	= False
+		self.cb_count	= 0
+
 		SPI_target.__init__( self, spi, cs )
 #		self.spi	= spi
 
@@ -29,16 +33,41 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.boot()
 		
 		self.logical_channel	= [
-									self.logical_ch_config( 0, [ 0x11F0, 0x0040, 0x1400, 0x0000 ] ),
-									self.logical_ch_config( 1, [ 0x33F0, 0x0040, 0x4100, 0x3060 ] ),
+									self.logical_ch_config( 0, [ 0x1150, 0x00BC, 0x1400, 0x0000 ] ),
+									self.logical_ch_config( 1, [ 0x3350, 0x00BC, 0x4100, 0x3060 ] ),
 									]
-		
+
 		self.weight_offset	= -172.7
 		self.weight_coeff	= 1044 / (10388.61 - self.weight_offset)
 
 		self.temperature_offset	= -1600
 		self.temperature_coeff	= 1 / 1000
 		self.temperature_base	= 25
+
+		self.ch	= [ 0 ] * self.num_logcal_ch
+
+		tim0 = Timer(0)
+		tim0.init( period= 200, callback = self.tim_cb )
+
+	def sch_cb( self, _ ):
+#		print( f"self.cb_count = {self.cb_count}" )
+		
+		ch	= self.cb_count >> 1
+
+		if self.cb_count % 2:
+#			print( f"ch{ch} read" )
+			v	= self.read_r24( 0x2040 + ch )
+			self.ch[ ch ]	= ((v * 10 / (2 ** 24)) / 0.8) * 1e6
+		else:
+#			print( f"ch{ch} command" )
+			self.write_r16( 0x0000 + ch )
+			self.write_r16( 0x2000 )
+		
+		self.cb_count	+= 1
+		self.cb_count	%= (self.num_logcal_ch << 1)
+	
+	def tim_cb( self, tim_obj ):
+		schedule( self.sch_cb, 0 )
 
 	def	write_r16( self, reg, val = None ):
 		reg		<<= 1
@@ -107,13 +136,6 @@ class NAFE13388( AFE_base, SPI_target ):
 			else:
 				print( "" )
 
-	def stable_read( self, ch, over_sample = 10 ):
-		r			= 0
-		for _ in range( over_sample ):
-			r	+= self.read( ch )
-		
-		return r / over_sample
-
 	def temperature( self ):
 		t	= self.stable_read( 0 )
 		return (t - self.temperature_offset) * self.temperature_coeff + self.temperature_base
@@ -143,20 +165,44 @@ class NAFE13388( AFE_base, SPI_target ):
 		print( f"self.num_logcal_ch = {self.num_logcal_ch}" )
 		
 
-	def read( self ):
+	def measure( self, ch = None ):
+		if ch is not None:
+			self.write_r16( 0x0000 + ch )
+			self.write_r16( 0x2000 )
+			sleep_ms( 100 )
+			v	= self.read_r24( 0x2040 + ch )
+	
+			return ((v * 10 / (2 ** 24)) / 0.8) * 1e6
+	
 		values	= []
 
-		command	= 0x2003
+		command	= 0x2004
 
 		for i in range( self.num_logcal_ch ):
 			self.write_r16( command )
-			sleep( WAIT )
+			"""
+			print( f"after command" )
+			for i in range( 100 ):
+				print( f"0x31 = {self.read_r16( 0x31 ):04X}" )
+				sleep_us( 10 )
+			"""
+			sleep_ms( 10 )
 			values	+= [ self.read_r24( 0x2040 + i ) ]
 		
 		print( values )
 
 		return values
+		
+	def read( self, ch = None ):
+		values	= []
 
+		for i in range( self.num_logcal_ch ):
+			values	+= [ self.read_r24( 0x2040 + i ) ]
+		
+		print( values )
+
+		return values
+		
 def main():
 	spi	= SPI( 0, 1000_000, cs = 0, phase = 1 )
 
@@ -164,13 +210,20 @@ def main():
 	afe.dump( [ 0x7C, 0x7D, 0x7E, 0xAE, 0xAF, 0x34, 0x37, None, 0x30, 0x31 ] )
 	
 	count	= 0
-	
+
 	while True:
-		afe.read()
+#		afe.measure( 0 )
+		
+		
 #		t, w	= afe.read()
 #		print( "{:.2f}  {:.2f}".format( t, w ) )
+#		print( f"{count},  {afe.measure( 1 )},  {afe.measure( 2 )},  {afe.measure( 3 )}" )
+#		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )},  {afe.measure( 2 )}" )
+#		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )}" )
+#		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )}" )
+		print( f"{count},  {afe.ch[ 0 ]},  {afe.ch[ 1 ]}" )
 		count	+= 1
-		sleep( 0.1 )
+		sleep( 0.5 )
 
 if __name__ == "__main__":
 	main()
