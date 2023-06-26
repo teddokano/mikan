@@ -33,8 +33,8 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.boot()
 		
 		self.logical_channel	= [
-									self.logical_ch_config( 0, [ 0x1150, 0x00BC, 0x1400, 0x0000 ] ),
-									self.logical_ch_config( 1, [ 0x3350, 0x00BC, 0x4100, 0x3060 ] ),
+									self.logical_ch_config( 0, [ 0x1150, 0x00AC, 0x1400, 0x0000 ] ),
+									self.logical_ch_config( 1, [ 0x3350, 0x00A4, 0x1400, 0x3060 ] ),
 									]
 
 		self.weight_offset	= -38
@@ -47,27 +47,31 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
 		
+	def periodic_measurement_start( self ):
 		tim0 = Timer(0)
-		tim0.init( period= 200, callback = self.tim_cb )
+		tim0.init( period= 100, callback = self.tim_cb )
 
 	def sch_cb( self, _ ):
 #		print( f"self.cb_count = {self.cb_count}" )
 		
-		ch	= self.cb_count >> 1
+		ch_start	= (self.cb_count + 1) % 2
+		ch_read		= self.cb_count % 2
 
-		if self.cb_count % 2:
-#			print( f"ch{ch} read" )
-			v	= self.read_r24( 0x2040 + ch )
-			self.ch[ ch ]	= ((v * 10 / (2 ** 24)) / 0.8) * 1e6
-		else:
-#			print( f"ch{ch} command" )
-			self.write_r16( 0x0000 + ch )
-			self.write_r16( 0x2000 )
+#		print( f"ch_read = {ch_read},  ch_start = {ch_start}" )
+
+		# read data
+		v	= self.read_r24( 0x2040 + ch_read )
+#		print( f"reading {ch_read}ch = { v }" )
+		
+		self.ch[ ch_read ]	= ((v * 10 / (2 ** 24)) / 0.8) * 1e6
+
+		# start ADC operation
+		self.write_r16( 0x0000 + ch_start )
+		self.write_r16( 0x2000 )
 		
 		self.cb_count	+= 1
-		self.cb_count	%= (self.num_logcal_ch << 1)
 		
-		if self.cb_count == 0:
+		if self.cb_count % 2:
 			self.done	= True
 	
 	def tim_cb( self, tim_obj ):
@@ -213,6 +217,8 @@ def main():
 	afe.dump( [ 0x7C, 0x7D, 0x7E, 0xAE, 0xAF, 0x34, 0x37, None, 0x30, 0x31 ] )
 	
 	count	= 0
+
+	afe.periodic_measurement_start()
 
 	while True:
 #		afe.measure( 0 )

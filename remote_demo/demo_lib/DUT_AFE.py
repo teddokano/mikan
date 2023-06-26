@@ -54,6 +54,8 @@ class DUT_AFE( DUT_base.DUT_base ):
 																			 ),
 										}, )
 	
+		self.dev.periodic_measurement_start()
+		
 	def xyz_data( self ):
 		d	= {}
 		for splt in self.split:
