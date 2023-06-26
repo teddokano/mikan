@@ -19,7 +19,6 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.cb_count	= 0
 
 		SPI_target.__init__( self, spi, cs )
-#		self.spi	= spi
 
 		self.reset_pin	= Pin( "D6", Pin.OUT )
 		self.syn_pin	= Pin( "D5", Pin.OUT )
@@ -44,6 +43,8 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.temperature_coeff	= 1 / 40
 		self.temperature_base	= 25
 
+		self.coeff_microvolt	= ((10 / (2 ** 24)) / 0.8) * 1e6
+
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
 		
@@ -52,18 +53,11 @@ class NAFE13388( AFE_base, SPI_target ):
 		tim0.init( period= 100, callback = self.tim_cb )
 
 	def sch_cb( self, _ ):
-#		print( f"self.cb_count = {self.cb_count}" )
-		
 		ch_start	= (self.cb_count + 1) % 2
 		ch_read		= self.cb_count % 2
 
-#		print( f"ch_read = {ch_read},  ch_start = {ch_start}" )
-
 		# read data
-		v	= self.read_r24( 0x2040 + ch_read )
-#		print( f"reading {ch_read}ch = { v }" )
-		
-		self.ch[ ch_read ]	= ((v * 10 / (2 ** 24)) / 0.8) * 1e6
+		self.ch[ ch_read ]	= self.read_r24( 0x2040 + ch_read )	* self.coeff_microvolt
 
 		# start ADC operation
 		self.write_r16( 0x0000 + ch_start )
@@ -177,10 +171,8 @@ class NAFE13388( AFE_base, SPI_target ):
 			self.write_r16( 0x0000 + ch )
 			self.write_r16( 0x2000 )
 			sleep_ms( 100 )
-			v	= self.read_r24( 0x2040 + ch )
-	
-			return ((v * 10 / (2 ** 24)) / 0.8) * 1e6
-	
+			return self.read_r24( 0x2040 + ch ) * self.coeff_microvolt
+		
 		values	= []
 
 		command	= 0x2004

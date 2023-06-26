@@ -130,12 +130,21 @@ function set_gauge() {
 		symbol: '℃',
 		pointer: true,
 		gaugeWidthScale: 0.5,
-		customSectors: [
-			{
-				lo: 25,
-				hi: 30
-			}
-		],
+		customSectors: {
+			percents: true,
+			ranges: [
+				{
+					color : "#0000FF",
+					lo : 0,
+					hi : 50
+				},
+				{
+					color : "#FF0000",
+					lo : 51,
+					hi : 100
+				},
+			]
+		},
 		counter: false
 	},
 	{
@@ -149,12 +158,95 @@ function set_gauge() {
 		symbol: 'g',
 		pointer: true,
 		gaugeWidthScale: 0.5,
-		customSectors: [
-			{
-				lo: 250,
-				hi: 750
-			}
-		],
+		customSectors: {
+			percents: true,
+			ranges: [
+				{
+					color : "#0000FF",
+					lo : 0,
+					hi : 50
+				},
+				{
+					color : "#FF0000",
+					lo : 51,
+					hi : 100
+				},
+			]
+		},
+		counter: false
+	}];
+	
+	for ( const s of setting ) {
+		gauge.push( new JustGage( JSON.parse( JSON.stringify( s ) ) ) );		
+	}
+}
+
+function set_gauge2() {
+	let setting	= [
+		{
+		id: 'gaugeX', 
+		label: 'Temperature',
+		color: '#ff0000',
+		value: 0,
+		min: 20,
+		max: 35,
+		decimals: 1,
+		symbol: '℃',
+		pointer: true,
+		gaugeWidthScale: 0.5,
+		customSectors: {
+			percents: true,
+			ranges: [
+				{
+					color : "#0000FF",
+					lo : 0,
+					hi : 33
+			  	},
+				{
+					color : "#00FF00",
+					lo : 34,
+					hi : 66
+				},
+				{
+					color : "#FF0000",
+					lo : 67,
+					hi : 100
+				},
+			]
+		},
+		counter: false
+	},
+	{
+		id: 'gaugeY', 
+		label: 'Weight',
+		color: '#00ff00',
+		value: 0,
+		min: -10,
+		max: 1200,
+		decimals: 1,
+		symbol: 'g',
+		pointer: true,
+		gaugeWidthScale: 0.5,
+		customSectors: {
+			percents: true,
+			ranges: [
+				{
+					color : "#0000FF",
+					lo : 0,
+					hi : 33
+				},
+				{
+					color : "#00FF00",
+					lo : 34,
+					hi : 66
+				},
+				{
+					color : "#FF0000",
+					lo : 67,
+					hi : 100
+				},
+			]
+		},
 		counter: false
 	}];
 	
