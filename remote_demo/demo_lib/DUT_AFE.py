@@ -7,6 +7,9 @@ from	nxp_periph	import	NAFE13388
 from	nxp_periph	import	AFE_base
 from	demo_lib	import	DUT_base
 
+DEFAULT_SETTING_FILE	= "demo_lib/local_setting/AFE_default_setting.json"
+UPDATED_SETTING_FILE	= "demo_lib/local_setting/AFE_updated_setting.json"
+
 class DUT_AFE( DUT_base.DUT_base ):
 	APPLIED_TO		= AFE_base
 	TABLE_LENGTH	= 10
@@ -22,6 +25,18 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
+		
+		print( f"self.dev.weight_offset      = {self.dev.weight_offset}"      )
+		print( f"self.dev.weight_coeff       = {self.dev.weight_coeff}"       )
+		print( f"self.dev.temperature_offset = {self.dev.temperature_offset}" )
+		print( f"self.dev.temperature_coeff  = {self.dev.temperature_coeff}"  )
+		print( f"self.dev.temperature_base   = {self.dev.temperature_base}"   )
+		print( "" )
+
+		if not self.load_setting_file( UPDATED_SETTING_FILE ):
+			self.load_setting_file( DEFAULT_SETTING_FILE )
+		
+		self.save_setting_file( UPDATED_SETTING_FILE )
 		
 		self.read_ref	= self.__read
 		self.data		= []
@@ -55,7 +70,54 @@ class DUT_AFE( DUT_base.DUT_base ):
 										}, )
 	
 		self.dev.periodic_measurement_start()
+
+	def save_setting_file( self, path ):
+		setting	= { "weight": {}, "temperature": {}, "remark": "AFE demo updated setting file" }
 		
+		setting[ "weight"      ][ "ofst"  ]	= self.dev.weight_offset
+		setting[ "weight"      ][ "coeff" ]	= self.dev.weight_coeff
+		setting[ "temperature" ][ "ofst"  ]	= self.dev.temperature_offset
+		setting[ "temperature" ][ "coeff" ]	= self.dev.temperature_coeff
+		setting[ "temperature" ][ "base"  ]	= self.dev.temperature_base
+
+		with open( path, mode = "w" ) as f:
+			ujson.dump( setting, f )
+
+
+	def load_setting_file( self, path ):
+	
+		try:
+			with open( path ) as f:
+				setting	= ujson.loads( f.read() )
+				print( f'setting file loaded: "{path}"' )
+		except:
+			print( f'setting file load fail: "{path}" ' )
+			return False
+		
+		print( setting )
+		
+		print( f'setting[ "weight" ][ "ofst" ]       = {setting[ "weight" ][ "ofst" ]}' )
+		print( f'setting[ "weight" ][ "coeff" ]      = {setting[ "weight" ][ "coeff" ]}' )
+		print( f'setting[ "temperature" ][ "ofst" ]  = {setting[ "temperature" ][ "ofst" ]}' )
+		print( f'setting[ "temperature" ][ "coeff" ] = {setting[ "temperature" ][ "coeff" ]}' )
+		print( f'setting[ "temperature" ][ "base" ]  = {setting[ "temperature" ][ "base" ]}' )
+		
+		self.dev.weight_offset		= setting[ "weight"      ][ "ofst"  ]
+		self.dev.weight_coeff		= setting[ "weight"      ][ "coeff" ]
+		self.dev.temperature_offset	= setting[ "temperature" ][ "ofst"  ]
+		self.dev.temperature_coeff	= setting[ "temperature" ][ "coeff" ]
+		self.dev.temperature_base	= setting[ "temperature" ][ "base"  ]
+
+		print( f"self.dev.weight_offset      = {self.dev.weight_offset}"      )
+		print( f"self.dev.weight_coeff       = {self.dev.weight_coeff}"       )
+		print( f"self.dev.temperature_offset = {self.dev.temperature_offset}" )
+		print( f"self.dev.temperature_coeff  = {self.dev.temperature_coeff}"  )
+		print( f"self.dev.temperature_base   = {self.dev.temperature_base}"   )
+		print( "" )
+
+		return True
+
+
 	def xyz_data( self ):
 		d	= {}
 		for splt in self.split:
