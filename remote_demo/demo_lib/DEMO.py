@@ -22,6 +22,9 @@ from	demo_lib	import	DUT_LEDC, DUT_TEMP, DUT_RTC, DUT_GPIO, DUT_ACC
 from	demo_lib	import	DUT_GENERALCALL, General_call
 from	demo_lib	import	DUT_base
 
+from	demo_lib.I2C_Character_LCD	import	AE_AQM0802
+
+
 MEM_MONITORING	= False
 #MEM_MONITORING	= True	###
 
@@ -75,6 +78,9 @@ def demo( ip = "dhcp" ):
 						DUT_GENERALCALL,
 						]
 	
+	lcd_panel	= AE_AQM0802( i2c )
+	lcd_panel.print( [ "Hello", "AFE demo" ] )
+	
 	dut_list	= get_dut_list( devices, demo_harnesses )
 
 #	for d in dut_list:
@@ -83,7 +89,7 @@ def demo( ip = "dhcp" ):
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
 
-	ip_info	= start_network( port = ep_num, ifcnfg_param = ip )
+	ip_info	= start_network( port = ep_num, ifcnfg_param = ip, lcd = lcd_panel )
 #	print( ip_info )
 
 	s = socket.socket()
@@ -96,6 +102,8 @@ def demo( ip = "dhcp" ):
 	s.listen( 10 )
 	print("Listening, connect your browser to http://{}/".format( ip_info[0] ))
 
+	lcd_panel.print( f"{ip_info[0]}" )
+	
 	while True:
 		res = s.accept()
 		
@@ -185,12 +193,14 @@ def get_dut_list( devices, demo_harnesses ):
 
 	return list + [ last_dut ]
 
-def start_network( *, port = 0, ifcnfg_param = "dhcp" ):
+def start_network( *, port = 0, ifcnfg_param = "dhcp", lcd = None ):
 	print( "starting network" )
 
 	try:
 		lan = network.LAN( port )
 	except OSError as e:
+		if lcd is not None:
+			lcd.print( [ "No LAN", " cable?" ] )
 		error_loop( 2, "Check LAN cable connection. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
 		
 	lan.active( True )
@@ -199,6 +209,8 @@ def start_network( *, port = 0, ifcnfg_param = "dhcp" ):
 	try:
 		lan.ifconfig( ifcnfg_param )
 	except OSError as e:
+		if lcd is not None:
+			lcd.print( [ "DHCP", " fail :(" ] )
 		error_loop( 3, "Can't get/set IP address. Tried to set {}. OSError:{}".format( ifcnfg_param, e.args ) )	# infinite loop inside of this finction
 
 	return lan.ifconfig()
