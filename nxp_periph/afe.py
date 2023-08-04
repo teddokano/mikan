@@ -77,12 +77,12 @@ class NAFE13388( AFE_base, SPI_target ):
 		regH	= reg >> 8 & 0xFF
 		regL	= reg & 0xFF
 
-		if val:
+		if val is None:
+			self.send( [ regH, regL ] )
+		else:
 			valH	= val >> 8 & 0xFF
 			valL	= val & 0xFF
 			self.send( [ regH, regL, valH, valL ] )
-		else:
-			self.send( [ regH, regL ] )
 
 	def	read_r16( self, reg ):
 		reg		<<= 1
