@@ -36,6 +36,7 @@
 
 	<script async src="general.js"></script>
 	<script async src="DUT_AFE.js"></script>
+	<script async src="DUT_AFE_setting.js"></script>
 
 	<div class="header">
 		<p>{% symbol %} {% dev_link %} server</p>
@@ -59,6 +60,39 @@
 		</div>
 		
 	</div>
+	
+	<div class="foot_note">
+		Setting: 
+		<input type = "button" id = "show_button"  value = "show" onclick = "show_setting_panel()">
+			<input type = "button" id = "hide_button" value = "hide" onclick = "hide_setting_panel()" >
+
+		<div class="foot_note" id = "setting">
+			AFE setting
+			
+			<form id="config_panel" class="control_panel reg_table log_panel"">
+				<table class="table_TEMP"><tr>
+					<td class="td_TEMP_la">Ch0: Weight</td>
+					<td class="td_TEMP_la">
+	  <input type = "button" value = "Zero setting" onclick = "zero_setting()">
+	  <input type = "button" value = "Scale calibration" onclick = "scale_calibration()">
+		Calibration [mV]: <input type="text" onchange="updateValField( 0 )" id="valField0" minlength=4 size=5 value="0"><br />
+				</td></tr>
+				<tr>
+					<td class="td_TEMP_la">Ch1: Temperature</td>
+					<td class="td_TEMP_la">
+						Offset [mV]: <input type="text" onchange="updateValField( 4 )" id="valField4" minlength=4 size=5 value="4"><br />
+						Coefficient: <input type="text" onchange="updateValField( 5 )" id="valField5" minlength=4 size=5 value="5"><br />
+						Base: <input type="text" onchange="updateValField( 6 )" id="valField6" minlength=4 size=5 value="6"><br />
+						<input type="text" onchange="updateValField( 7 )" id="valField7" minlength=4 size=5 value="7"><br />
+					</td>
+				</tr></table>
+			</form>
+			<input type="button" onclick="setConfig();" value="Save" class="tmp_button"><br/>
+		
+				
+		</div>
+	</div>
+	
 	<div class="foot_note">
 		{% signature %}
 	</div>

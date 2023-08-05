@@ -1,0 +1,13 @@
+{	"weight": 
+	{
+		"ofst":		-38, 
+		"coeff":	2.663265306122449
+	}, 
+	"temperature": 
+	{
+		"ofst":		-70, 
+		"coeff":	0.025 
+		"base":		25
+	}, 
+	"remark": "AFE demo default setting file"
+}

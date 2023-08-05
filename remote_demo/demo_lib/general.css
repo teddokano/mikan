@@ -237,3 +237,7 @@ input[type="text"] {
 	background-color: #EEEEFF;
 	text-align: right;
 }
+
+#setting {
+	display:none;
+}
