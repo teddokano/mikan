@@ -20,17 +20,15 @@ class DUT_AFE( DUT_base.DUT_base ):
 	DS_URL		= { "NAFE13388": "https://www.nxp.com/docs/en/data-sheet/NAFE11388DS.pdf",
 					}
 
-	regex_update	= ure.compile( r".*update=(\d+)" )
-	regex_settings	= ure.compile( r".*settings" )
+	regex_update			= ure.compile( r".*update=(\d+)" )
+	regex_settings			= ure.compile( r".*settings" )
+	regex_cal_weigt_scale	= ure.compile( r".*cal_weigt_scale=(\d+)" )
+	regex_cal_temp			= ure.compile( r".*cal_temp=(.+)\?" )
 
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
 		
-		print( f"self.dev.weight_offset      = {self.dev.weight_offset}"      )
-		print( f"self.dev.weight_coeff       = {self.dev.weight_coeff}"       )
-		print( f"self.dev.temperature_offset = {self.dev.temperature_offset}" )
-		print( f"self.dev.temperature_coeff  = {self.dev.temperature_coeff}"  )
-		print( f"self.dev.temperature_base   = {self.dev.temperature_base}"   )
+#		print( f"self.dev.setting      = {self.dev.setting}"      )
 		print( "" )
 
 		if not self.load_setting_file( UPDATED_SETTING_FILE ):
@@ -72,49 +70,19 @@ class DUT_AFE( DUT_base.DUT_base ):
 		self.dev.periodic_measurement_start()
 
 	def save_setting_file( self, path ):
-		setting	= { "weight": {}, "temperature": {}, "remark": "AFE demo updated setting file" }
-		
-		setting[ "weight"      ][ "ofst"  ]	= self.dev.weight_offset
-		setting[ "weight"      ][ "coeff" ]	= self.dev.weight_coeff
-		setting[ "temperature" ][ "ofst"  ]	= self.dev.temperature_offset
-		setting[ "temperature" ][ "coeff" ]	= self.dev.temperature_coeff
-		setting[ "temperature" ][ "base"  ]	= self.dev.temperature_base
-
 		with open( path, mode = "w" ) as f:
-			ujson.dump( setting, f )
-
+			ujson.dump( self.dev.setting, f )
 
 	def load_setting_file( self, path ):
-	
 		try:
 			with open( path ) as f:
-				setting	= ujson.loads( f.read() )
+				self.dev.setting	= ujson.loads( f.read() )
 				print( f'setting file loaded: "{path}"' )
 		except:
 			print( f'setting file load fail: "{path}" ' )
 			return False
 		
-		print( setting )
-		
-		print( f'setting[ "weight" ][ "ofst" ]       = {setting[ "weight" ][ "ofst" ]}' )
-		print( f'setting[ "weight" ][ "coeff" ]      = {setting[ "weight" ][ "coeff" ]}' )
-		print( f'setting[ "temperature" ][ "ofst" ]  = {setting[ "temperature" ][ "ofst" ]}' )
-		print( f'setting[ "temperature" ][ "coeff" ] = {setting[ "temperature" ][ "coeff" ]}' )
-		print( f'setting[ "temperature" ][ "base" ]  = {setting[ "temperature" ][ "base" ]}' )
-		
-		self.dev.weight_offset		= setting[ "weight"      ][ "ofst"  ]
-		self.dev.weight_coeff		= setting[ "weight"      ][ "coeff" ]
-		self.dev.temperature_offset	= setting[ "temperature" ][ "ofst"  ]
-		self.dev.temperature_coeff	= setting[ "temperature" ][ "coeff" ]
-		self.dev.temperature_base	= setting[ "temperature" ][ "base"  ]
-
-		print( f"self.dev.weight_offset      = {self.dev.weight_offset}"      )
-		print( f"self.dev.weight_coeff       = {self.dev.weight_coeff}"       )
-		print( f"self.dev.temperature_offset = {self.dev.temperature_offset}" )
-		print( f"self.dev.temperature_coeff  = {self.dev.temperature_coeff}"  )
-		print( f"self.dev.temperature_base   = {self.dev.temperature_base}"   )
-		print( "" )
-
+		print( self.dev.setting )
 		return True
 
 
@@ -166,6 +134,31 @@ class DUT_AFE( DUT_base.DUT_base ):
 				s	= ",".join( s )
 				
 				return "["+ s +"]"
+			
+			m	= self.regex_cal_weigt_scale.match( req )
+			if m:
+				print( f"regex_cal_weigt_scale = {m.group( 1 )}" )
+				return
+			
+			m	= self.regex_cal_temp.match( req )
+			if m:
+				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
+#				print( f"regex_cal_weigt_scale = {obj}" )
+				
+				self.dev.setting[ "temperature" ][ "ofst"  ]	= obj[ "ofst"   ]
+				self.dev.setting[ "temperature" ][ "coeff" ]	= obj[ "coeff"  ]
+				self.dev.setting[ "temperature" ][ "base"  ]	= obj[ "base"   ]
+				
+				return
+				
+			if "weight_zero" in req:
+				print( "weight_zero" )
+
+			if "start_setting" in req:
+				print( "start_setting" )
+				print( self.dev.setting )
+				
+				return ujson.dumps( self.dev.setting )
 
 	def sending_data( self, length ):
 		return ujson.dumps( self.data[ -length: ] )

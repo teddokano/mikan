@@ -36,17 +36,20 @@ class NAFE13388( AFE_base, SPI_target ):
 									self.logical_ch_config( 1, [ 0x3350, 0x00A4, 0x1400, 0x3060 ] ),
 									]
 
-		self.weight_offset	= -38
-		self.weight_coeff	= 1044 / (354 - self.weight_offset)
+		self.setting	= { "weight": {}, "temperature": {}, "remark": "AFE demo updated setting file" }
 
-		self.temperature_offset	= -70
-		self.temperature_coeff	= 1 / 40
-		self.temperature_base	= 25
+		self.setting[ "weight"      ][ "ofst"  ]	= -38
+		self.setting[ "weight"      ][ "coeff" ]	= 1044 / (354 - self.setting[ "weight" ][ "ofst" ])
+		self.setting[ "temperature" ][ "ofst"  ]	= -70
+		self.setting[ "temperature" ][ "coeff" ]	= 1 / 40
+		self.setting[ "temperature" ][ "base"  ]	= 25
 
 		self.coeff_microvolt	= ((10 / (2 ** 24)) / 0.8) * 1e6
 
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
+		
+		print( self.setting )
 		
 	def periodic_measurement_start( self ):
 		tim0 = Timer(0)
@@ -140,11 +143,11 @@ class NAFE13388( AFE_base, SPI_target ):
 
 	def temperature( self ):
 		t	= self.ch[ 0 ]
-		return (t - self.temperature_offset) * self.temperature_coeff + self.temperature_base
+		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + self.setting[ "temperature" ][ "base" ]
 		
 	def weight( self ):
 		w	= self.ch[ 1 ]
-		return (w - self.weight_offset) * self.weight_coeff
+		return (w - self.setting[ "weight" ][ "ofst" ]) * self.setting[ "weight" ][ "coeff" ]
 
 	def logical_ch_config( self, logical_channel, list ):
 		self.write_r16( 0x0000 + logical_channel )
