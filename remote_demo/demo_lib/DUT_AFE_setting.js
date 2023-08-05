@@ -2,8 +2,6 @@ function show_setting_panel() {
 	let url		= REQ_HEADER + "start_setting";
 	
 	ajaxUpdate( url, data => {
-		console.log( 'data = ' + data );	
-		
 		let obj = JSON.parse( data );
 
 		document.getElementById( 'TempOffset' ).value	= obj.temperature.ofst;
@@ -24,13 +22,23 @@ function hide_setting_panel() {
 
 function zero_setting() {
 	let url		= REQ_HEADER + "weight_zero";
-	
 	ajaxUpdate( url );
+}
+
+function load_default_setting() {
+	let url		= REQ_HEADER + "load_default_setting";
+
+	ajaxUpdate( url, data => {
+		let obj = JSON.parse( data );
+
+		document.getElementById( 'TempOffset' ).value	= obj.temperature.ofst;
+		document.getElementById( 'TempCoeff'  ).value	= 1 / obj.temperature.coeff;
+		document.getElementById( 'TempBase'   ).value	= obj.temperature.base;
+	} );
 }
 
 function scale_calibration() {
 	let url		= REQ_HEADER + "cal_weigt_scale=1000";
-	
 	ajaxUpdate( url );
 }
 

@@ -149,14 +149,24 @@ class DUT_AFE( DUT_base.DUT_base ):
 				self.dev.setting[ "temperature" ][ "coeff" ]	= obj[ "coeff"  ]
 				self.dev.setting[ "temperature" ][ "base"  ]	= obj[ "base"   ]
 				
+				self.save_setting_file( UPDATED_SETTING_FILE )
+
 				return
 				
 			if "weight_zero" in req:
 				print( "weight_zero" )
-
+				
+				return
+				
 			if "start_setting" in req:
 				print( "start_setting" )
 				print( self.dev.setting )
+				
+				return ujson.dumps( self.dev.setting )
+
+			if "load_default_setting" in req:
+				print( "load_default_setting" )
+				self.load_setting_file( DEFAULT_SETTING_FILE )
 				
 				return ujson.dumps( self.dev.setting )
 
