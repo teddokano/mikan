@@ -12,12 +12,16 @@ function show_setting_panel() {
 	document.getElementById('show_button').style.display = 'none';
 	document.getElementById('hide_button').style.display = 'block';
 	document.getElementById('AFEsetting' ).style.display = 'block';
+	document.getElementById('graph_acc'  ).style.display = 'none';
+	document.getElementById('graph_mag'  ).style.display = 'none';
 }
 
 function hide_setting_panel() {
 	document.getElementById('show_button').style.display = 'block';
 	document.getElementById('hide_button').style.display = 'none';
 	document.getElementById('AFEsetting' ).style.display = 'none';
+	document.getElementById('graph_acc'  ).style.display = 'block';
+	document.getElementById('graph_mag'  ).style.display = 'block';
 }
 
 function zero_setting() {

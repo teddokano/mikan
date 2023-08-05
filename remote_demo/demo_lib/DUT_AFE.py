@@ -192,7 +192,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 	def get_charts( self ):
 		s	= []
 		for d in self.split:
-			s	+= [ '<div><canvas id="{}"></canvas></div>'.format( d[ "id" ] ) ]
+			s	+= [ '<div id="graph_{0}"><canvas id="{0}"></canvas></div>'.format( d[ "id" ] ) ]
 
 		return "\n".join( s )
 
