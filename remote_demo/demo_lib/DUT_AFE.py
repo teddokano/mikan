@@ -22,7 +22,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 	regex_update			= ure.compile( r".*update=(\d+)" )
 	regex_settings			= ure.compile( r".*settings" )
-	regex_cal_weigt_scale	= ure.compile( r".*cal_weigt_scale=(\d+)" )
+	regex_cal_weigt_scale	= ure.compile( r".*cal_weight_scale=(.+)\?" )
 	regex_cal_temp			= ure.compile( r".*cal_temp=(.+)\?" )
 
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
@@ -137,13 +137,15 @@ class DUT_AFE( DUT_base.DUT_base ):
 			
 			m	= self.regex_cal_weigt_scale.match( req )
 			if m:
-				print( f"regex_cal_weigt_scale = {m.group( 1 )}" )
+				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
+				
+				print( f"cal value = {obj[ 'cal' ]}" )
+				
 				return
 			
 			m	= self.regex_cal_temp.match( req )
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
-#				print( f"regex_cal_weigt_scale = {obj}" )
 				
 				self.dev.setting[ "temperature" ][ "ofst"  ]	= obj[ "ofst"   ]
 				self.dev.setting[ "temperature" ][ "coeff" ]	= obj[ "coeff"  ]

@@ -11,13 +11,13 @@ function show_setting_panel() {
 
 	document.getElementById('show_button').style.display = 'none';
 	document.getElementById('hide_button').style.display = 'block';
-	document.getElementById('setting'    ).style.display = 'block';
+	document.getElementById('AFEsetting' ).style.display = 'block';
 }
 
 function hide_setting_panel() {
 	document.getElementById('show_button').style.display = 'block';
 	document.getElementById('hide_button').style.display = 'none';
-	document.getElementById('setting'    ).style.display = 'none';
+	document.getElementById('AFEsetting' ).style.display = 'none';
 }
 
 function zero_setting() {
@@ -38,8 +38,20 @@ function load_default_setting() {
 }
 
 function scale_calibration() {
-	let url		= REQ_HEADER + "cal_weigt_scale=1000";
-	ajaxUpdate( url );
+	const fields	= { 'cal_scale_input': 'cal' }
+	let obj	= {};
+	
+	for ( let key in fields ) {
+		value	= document.getElementById( key ).value - 0;
+		
+		if ( isNaN( value ) ) {
+			return;
+		}
+		
+		obj[ fields[ key ] ]	= value;
+	}
+
+	ajaxUpdate( REQ_HEADER + "cal_weight_scale=" + JSON.stringify( obj ) );
 }
 
 function updateTempSetting() {
@@ -58,10 +70,5 @@ function updateTempSetting() {
 	
 	obj.coeff	= 1 / obj.coeff;
 	
-	let json	= JSON.stringify( obj );
-	let url		= REQ_HEADER + "cal_temp=" + json;
-
-	console.log( 'json = ' + json );
-	
-	ajaxUpdate( url );
+	ajaxUpdate( REQ_HEADER + "cal_temp=" + JSON.stringify( obj ) );
 }

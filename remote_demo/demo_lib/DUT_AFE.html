@@ -9,6 +9,7 @@
 	
 	<title>{% dev_name %} server</title>
 	<link href="general.css" rel="stylesheet">
+	<link href="DUT_AFE.css" rel="stylesheet">
 		
 		<style>
 		.gauge {
@@ -50,7 +51,7 @@
 	
 	{% charts %}
 	
-	<div class="para">
+	<div class="para" id="AFEtable">
 		
 		{% tables %}
 
@@ -61,29 +62,29 @@
 		
 	</div>
 	
-	<div class="foot_note">
-		Setting: 
-		<input type = "button" id = "show_button"  value = "show" onclick = "show_setting_panel()">
+	<div class="setting_panel">
+		Setting: <br />
+		<input type = "button" id = "show_button" value = "show" onclick = "show_setting_panel()">
 		<input type = "button" id = "hide_button" value = "hide" onclick = "hide_setting_panel()" >
 
-		<div class="foot_note" id = "setting">
+		<div class="foot_note" id = "AFEsetting">
 			AFE setting
 			
 			<form id="config_panel" class="control_panel reg_table log_panel"">
 				<table class="table_TEMP"><tr>
 					 <td class="td_TEMP_la">Ch0: Temperature</td>
 					 <td class="td_TEMP_la">
-						 Offset [μV]:	<input type="text" onchange="updateTempSetting()" id="TempOffset" minlength=4 size=5><br />
-						 Coefficient [μV / ℃]:	<input type="text" onchange="updateTempSetting()" id="TempCoeff"  minlength=4 size=5><br />
-						 Base [℃]: 		<input type="text" onchange="updateTempSetting()" id="TempBase"   minlength=4 size=5><br />
+						 Offset [μV]:			<input type="text" class="ifld" onchange="updateTempSetting()" id="TempOffset" minlength=4 size=5><br />
+						 Coefficient [μV / ℃]:	<input type="text" class="ifld" onchange="updateTempSetting()" id="TempCoeff"  minlength=4 size=5><br />
+						 Base [℃]: 				<input type="text" class="ifld" onchange="updateTempSetting()" id="TempBase"   minlength=4 size=5><br />
 					 </td>
 	 			</tr>
 				<tr>
 					<td class="td_TEMP_la">Ch1: Weight</td>
 					<td class="td_TEMP_la">
-						<input type = "button" value = "Zero setting" onclick = "zero_setting()"><br />
+						<input type = "button" value = "Zero setting" onclick = "zero_setting()"><br /><br />
+						Calibration [g]: <input type="text" id="cal_scale_input" minlength=4 size=5 value="1000">
 						<input type = "button" value = "Scale calibration" onclick = "scale_calibration()">
-						Calibration [g]: <input type="text" onchange="updateValField( 0 )" id="valField0" minlength=4 size=5 value="0"><br />
 					</td>
 			</tr></table>
 			</form>

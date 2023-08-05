@@ -1,0 +1,21 @@
+.setting_panel {
+	text-align: left;
+	font-size: 1rem;
+	padding: 0.5rem;
+}
+.ifld {
+	border: solid 1px #808080;	
+	text-align: right;
+}
+#AFEtable {
+	display:none;
+}
+#AFEsetting {
+	display:none;
+}
+
+#hide_button {
+	display:none;
+}
+
+
