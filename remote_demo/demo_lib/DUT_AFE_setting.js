@@ -4,9 +4,12 @@ function show_setting_panel() {
 	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
 
-		document.getElementById( 'TempOffset' ).value	= obj.temperature.ofst;
-		document.getElementById( 'TempCoeff'  ).value	= 1 / obj.temperature.coeff;
-		document.getElementById( 'TempBase'   ).value	= obj.temperature.base;
+		document.getElementById( 'TempOffset'  ).value	= obj.temperature.ofst;
+		document.getElementById( 'TempCoeff'   ).value	= 1 / obj.temperature.coeff;
+		document.getElementById( 'TempBase'    ).value	= obj.temperature.base;
+		document.getElementById( 'TempAddress' ).value	= hex( obj.rjt.target );
+		
+		
 	} );
 
 	document.getElementById('show_button').style.display = 'none';
@@ -35,9 +38,10 @@ function load_default_setting() {
 	ajaxUpdate( url, data => {
 		let obj = JSON.parse( data );
 
-		document.getElementById( 'TempOffset' ).value	= obj.temperature.ofst;
-		document.getElementById( 'TempCoeff'  ).value	= 1 / obj.temperature.coeff;
-		document.getElementById( 'TempBase'   ).value	= obj.temperature.base;
+		document.getElementById( 'TempOffset'  ).value	= obj.temperature.ofst;
+		document.getElementById( 'TempCoeff'   ).value	= 1 / obj.temperature.coeff;
+		document.getElementById( 'TempBase'    ).value	= obj.temperature.base;
+		document.getElementById( 'TempAddress' ).value	= hex( obj.rjt.target );
 	} );
 }
 
