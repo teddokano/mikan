@@ -4,7 +4,7 @@
 	padding: 0.5rem;
 }
 .ifld {
-	border: none;
+	border: solid;
 	background: #e7edf8;
 }
 #AFEtable {
