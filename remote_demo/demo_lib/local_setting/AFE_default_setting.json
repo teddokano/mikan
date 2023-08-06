@@ -6,8 +6,13 @@
 	"temperature": 
 	{
 		"ofst":		-70, 
-		"coeff":	0.025 
+		"coeff":	0.025,
 		"base":		25
 	}, 
+	"rjt":
+	{
+		"select":	0,
+		"target":	144
+	},
 	"remark": "AFE demo default setting file"
 }

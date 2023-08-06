@@ -89,8 +89,12 @@ class DUT_AFE( DUT_base.DUT_base ):
 			with open( path ) as f:
 				self.dev.setting	= ujson.loads( f.read() )
 				print( f'setting file loaded: "{path}"' )
-		except:
-			print( f'setting file load fail: "{path}" ' )
+		except ValueError:
+			print( f'setting file load fail: "{path}". Syntax error in JSON' )
+			return False
+		
+		except OSError:
+			print( f'setting file load fail: "{path}". NO FILE FOUND' )
 			return False
 		
 		return True
