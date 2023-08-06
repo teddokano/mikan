@@ -72,41 +72,53 @@
 			
 			
 				<table class="table_TEMP">
-					<tr><td class="td_TEMP_la" rowspan="3">
+				<tr>
+					<td class="td_TEMP_la" rowspan="3">
 						Ch0: Thermocouple
 					</td>
 					<td class="td_TEMP_la">
-						Offset [μV]:			<input type="text" class="ifld" onchange="updateTempSetting()" id="TempOffset" minlength=4 size=5><br />
-					</td></tr>
-					<tr><td class="td_TEMP_la">
-						Coefficient [μV / ℃]:	<input type="text" class="ifld" onchange="updateTempSetting()" id="TempCoeff"  minlength=4 size=5><br />
-					</td></tr>
-					<tr><td class="td_TEMP_la">
+						Offset:
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempOffset" minlength=4 size=5>[μV]:			
+					</td>
+				</tr>
+				<tr>
+					<td class="td_TEMP_la">
+						Coefficient:
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempCoeff"  minlength=4 size=5>[μV / ℃]:	
+					</td>
+				</tr>
+				<tr>
+					<td class="td_TEMP_la">
 						Reference junction temp<br />
 
 						<input type="radio" id="rjt_constant" name="rjt" value="constant" checked />
-						<label for="constant">Constant [℃]:</label>
-						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempBase" minlength=4 size=5><br />
+						<label for="constant">Constant:</label>
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempBase" minlength=4 size=5>[℃]<br />
 
 						<input type="radio" id="rjt_external" name="rjt" value="external" />
-						<label for="dewey">External sensot [target address (hexadecimal)]</label>
-						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempAddress" minlength=4 size=5><br />
+						<label for="dewey">External sensot:</label>
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempAddress" minlength=4 size=5>[address (0x)]<br />
 
 						<input type="radio" id="rjt_internal" name="rjt" value="internal" />
 						<label for="louie">Internal sensor</label>
-					</td></tr>
+					</td>
+				</tr>
 		
 		
-					<tr><td class="td_TEMP_la" rowspan="2">
+				<tr>
+					<td class="td_TEMP_la" rowspan="2">
 						Ch1: Load-cell
 					</td>
 					<td class="td_TEMP_la">
 						<input type = "button" value = "Zero setting" onclick = "zero_setting()"><br />
-					</td></tr>
-					<tr><td class="td_TEMP_la">
-						Calibration [g]: <input type="text" id="cal_scale_input" minlength=4 size=5 value="1000">
+					</td>
+				</tr>
+				<tr>
+					<td class="td_TEMP_la">
+						Calibration: <input type="text" class="ifld" id="cal_scale_input" minlength=4 size=5 value="1000">[g]
 						<input type = "button" value = "Scale calibration" onclick = "scale_calibration()">
-					</td></tr>
+					</td>
+				</tr>
 				</table>
 
 			<input type="button" onclick="load_default_setting();" value="Load Default Setting" class="tmp_button"><br/>
