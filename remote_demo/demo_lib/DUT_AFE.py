@@ -4,8 +4,11 @@ import	ujson
 import	micropython
 
 from	nxp_periph	import	NAFE13388
+from	nxp_periph	import	LM75B
 from	nxp_periph	import	AFE_base
 from	demo_lib	import	DUT_base
+
+import	machine
 
 DEFAULT_SETTING_FILE	= "demo_lib/local_setting/AFE_default_setting.json"
 UPDATED_SETTING_FILE	= "demo_lib/local_setting/AFE_updated_setting.json"
@@ -28,9 +31,6 @@ class DUT_AFE( DUT_base.DUT_base ):
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
 		
-#		print( f"self.dev.setting      = {self.dev.setting}"      )
-		print( "" )
-
 		if not self.load_setting_file( UPDATED_SETTING_FILE ):
 			self.load_setting_file( DEFAULT_SETTING_FILE )
 		
@@ -41,6 +41,13 @@ class DUT_AFE( DUT_base.DUT_base ):
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "AFE", "" ]
 		self.symbol		= '〰'
+
+		self.temp_sense	= LM75B( machine.I2C( 0, 400_000 ) )
+		self.temp_sense.ping()
+		print( f"****************************************** self.temp_sense.live = {self.temp_sense.live}" )
+
+		print( f"****************************************** self.get_temp() = {self.get_temp()}" )
+
 
 		if ( isinstance( self.dev, NAFE13388 ) ):
 			self.split	= splits	= ( {	"id"	 	: "acc", 
@@ -69,6 +76,10 @@ class DUT_AFE( DUT_base.DUT_base ):
 	
 		self.dev.periodic_measurement_start()
 
+	def get_temp( self ):
+		if self.temp_sense.live:
+			return self.temp_sense.temp
+
 	def save_setting_file( self, path ):
 		with open( path, mode = "w" ) as f:
 			ujson.dump( self.dev.setting, f )
@@ -82,7 +93,6 @@ class DUT_AFE( DUT_base.DUT_base ):
 			print( f'setting file load fail: "{path}" ' )
 			return False
 		
-		print( self.dev.setting )
 		return True
 
 
