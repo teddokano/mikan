@@ -14,17 +14,17 @@ function show_setting_panel() {
 	document.getElementById('graph_acc'  ).style.display = 'none';
 	document.getElementById('graph_mag'  ).style.display = 'none';
 	
-	setInterval( get_temp_message, 200 )
+	temp_message_interval	= setInterval( get_temp_message, 200 )
 }
 
 function hide_setting_panel() {
+	clearInterval( temp_message_interval );
+
 	document.getElementById('show_button').style.display = 'block';
 	document.getElementById('hide_button').style.display = 'none';
 	document.getElementById('AFEsetting' ).style.display = 'none';
 	document.getElementById('graph_acc'  ).style.display = 'block';
-	document.getElementById('graph_mag'  ).style.display = 'block';
-	
-	clearInterval( temp_message_interval );
+	document.getElementById('graph_mag'  ).style.display = 'block';	
 }
 
 function zero_setting() {
