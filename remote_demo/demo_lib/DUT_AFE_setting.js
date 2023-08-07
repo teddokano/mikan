@@ -1,4 +1,5 @@
 let	reference_junction_temp_select	= 0;
+let	temp_message_interval;
 
 function show_setting_panel() {
 	let url		= REQ_HEADER + "start_setting";
@@ -12,6 +13,8 @@ function show_setting_panel() {
 	document.getElementById('AFEsetting' ).style.display = 'block';
 	document.getElementById('graph_acc'  ).style.display = 'none';
 	document.getElementById('graph_mag'  ).style.display = 'none';
+	
+	setInterval( get_temp_message, 200 )
 }
 
 function hide_setting_panel() {
@@ -20,6 +23,8 @@ function hide_setting_panel() {
 	document.getElementById('AFEsetting' ).style.display = 'none';
 	document.getElementById('graph_acc'  ).style.display = 'block';
 	document.getElementById('graph_mag'  ).style.display = 'block';
+	
+	clearInterval( temp_message_interval );
 }
 
 function zero_setting() {
@@ -103,9 +108,13 @@ function updateTempSetting() {
 	obj.coeff	= 1 / obj.coeff;
 	obj.select	= reference_junction_temp_select;
 	
-	ajaxUpdate( REQ_HEADER + "cal_temp=" + JSON.stringify( obj ), data => {
-		console.log( data );
-		let elem = document.getElementById( "temp_message" );
-		elem.innerText = data;
-	} );
+	ajaxUpdate( REQ_HEADER + "cal_temp=" + JSON.stringify( obj ) );
+}
+
+function get_temp_message() {
+	ajaxUpdate( REQ_HEADER + "get_temp_message", data => {
+		document.getElementById( "temp_message" ).innerText = data;
+		}, 
+		100
+	);	
 }

@@ -180,14 +180,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 				self.set_external_sensor()
 				
-				die_temp	= self.dev.die_temp()
-				
-				if temp_read := self.get_temp():
-					rtn	= f"ext_sensor read: {temp_read}℃\ndie temp = {die_temp}℃"
-				else:
-					rtn	= "ext_sensor is not responding\ndie temp = {die_temp}℃"
-					
-				return rtn
+				return
 				
 			if "weight_zero" in req:
 				print( "weight_zero" )
@@ -205,6 +198,18 @@ class DUT_AFE( DUT_base.DUT_base ):
 				self.load_setting_file( DEFAULT_SETTING_FILE )
 				
 				return ujson.dumps( self.dev.setting )
+
+			if "get_temp_message" in req:
+				die_temp	= self.dev.die_temp()
+				
+				if temp_read := self.get_temp():
+					rtn	= f"ext_sensor read: {temp_read}℃\ndie temp = {die_temp}℃"
+				else:
+					rtn	= "ext_sensor is not responding\ndie temp = {die_temp}℃"
+					
+				return rtn
+				
+
 
 	def sending_data( self, length ):
 		return ujson.dumps( self.data[ -length: ] )
