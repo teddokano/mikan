@@ -42,12 +42,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 		self.info		= [ "AFE", "" ]
 		self.symbol		= '〰'
 
-		self.temp_sense	= LM75B( machine.I2C( 0, 400_000 ) )
-		self.temp_sense.ping()
-		print( f"****************************************** self.temp_sense.live = {self.temp_sense.live}" )
-
-		print( f"****************************************** self.get_temp() = {self.get_temp()}" )
-
+		self.set_external_sensor()
 
 		if ( isinstance( self.dev, NAFE13388 ) ):
 			self.split	= splits	= ( {	"id"	 	: "acc", 
@@ -76,9 +71,20 @@ class DUT_AFE( DUT_base.DUT_base ):
 	
 		self.dev.periodic_measurement_start()
 
+	def set_external_sensor( self ):
+		self.temp_sense	= LM75B( machine.I2C( 0, 400_000 ), self.dev.setting[ "temperature" ][ "target" ] >> 1 )
+		
+		rtn	= self.temp_sense.ping()
+		print( f"* self.temp_sense.live = {self.temp_sense.live} (address = 0x{self.dev.setting[ 'temperature' ][ 'target' ]:02X})" )
+		print( f"* self.get_temp() = {self.get_temp()}" )
+
+		return rtn
+
 	def get_temp( self ):
 		if self.temp_sense.live:
 			return self.temp_sense.temp
+		else:
+			return None
 
 	def save_setting_file( self, path ):
 		with open( path, mode = "w" ) as f:
@@ -134,6 +140,9 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 			m	= self.regex_update.match( req )
 			if m:
+				if 1 == self.dev.setting[ "temperature" ][ "select" ]:
+					self.dev.setting[ "temperature" ][ "measured" ]	= self.get_temp()
+			
 				self.__read( 0 )	# argument is dummy
 				return self.sending_data( int( m.group( 1 ) ) )
 
@@ -161,13 +170,17 @@ class DUT_AFE( DUT_base.DUT_base ):
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
 				
-				self.dev.setting[ "temperature" ][ "ofst"  ]	= obj[ "ofst"   ]
-				self.dev.setting[ "temperature" ][ "coeff" ]	= obj[ "coeff"  ]
-				self.dev.setting[ "temperature" ][ "base"  ]	= obj[ "base"   ]
+				self.dev.setting[ "temperature" ][ "ofst"   ]	= obj[ "ofst"   ]
+				self.dev.setting[ "temperature" ][ "coeff"  ]	= obj[ "coeff"  ]
+				self.dev.setting[ "temperature" ][ "base"   ]	= obj[ "base"   ]
+				self.dev.setting[ "temperature" ][ "target" ]	= obj[ "target" ]
+				self.dev.setting[ "temperature" ][ "select" ]	= obj[ "select" ]
 				
 				self.save_setting_file( UPDATED_SETTING_FILE )
 
-				return
+				self.set_external_sensor()
+
+				return f"ext_sensor = {self.get_temp()}℃"
 				
 			if "weight_zero" in req:
 				print( "weight_zero" )

@@ -78,28 +78,28 @@
 					</td>
 					<td class="td_TEMP_la">
 						Offset:
-						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempOffset" minlength=4 size=5>[μV]:			
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempOffset" minlength=4 size=5> [μV]:			
 					</td>
 				</tr>
 				<tr>
 					<td class="td_TEMP_la">
 						Coefficient:
-						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempCoeff"  minlength=4 size=5>[μV / ℃]:	
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempCoeff"  minlength=4 size=5> [μV / ℃]:	
 					</td>
 				</tr>
 				<tr>
 					<td class="td_TEMP_la">
 						Reference junction temp<br />
 
-						<input type="radio" id="rjt_constant" name="rjt" value="constant" checked />
+						<input type="radio" id="rjt_constant" name="rjt" onchange="updateTempRadio( 0 )" value="constant" checked />
 						<label for="constant">Constant:</label>
-						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempBase" minlength=4 size=5>[℃]<br />
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempBase" minlength=4 size=5> [℃]<br />
 
-						<input type="radio" id="rjt_external" name="rjt" value="external" />
-						<label for="dewey">External sensot:</label>
-						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempAddress" minlength=4 size=5>[address (0x, 8bit)]<br />
+						<input type="radio" id="rjt_external" name="rjt" onchange="updateTempRadio( 1 )" value="external" />
+						<label for="dewey">External sensor:</label>
+						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempAddress" minlength=4 size=5> [address (0x, 8bit)]<br />
 
-						<input type="radio" id="rjt_internal" name="rjt" value="internal" />
+						<input type="radio" id="rjt_internal" name="rjt" onchange="updateTempRadio( 2 )" value="internal" />
 						<label for="louie">Internal sensor</label>
 					</td>
 				</tr>

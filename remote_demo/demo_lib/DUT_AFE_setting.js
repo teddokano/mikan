@@ -1,15 +1,10 @@
+let	reference_junction_temp_select	= 0;
+
 function show_setting_panel() {
 	let url		= REQ_HEADER + "start_setting";
 	
 	ajaxUpdate( url, data => {
-		let obj = JSON.parse( data );
-
-		document.getElementById( 'TempOffset'  ).value	= obj.temperature.ofst;
-		document.getElementById( 'TempCoeff'   ).value	= 1 / obj.temperature.coeff;
-		document.getElementById( 'TempBase'    ).value	= obj.temperature.base;
-		document.getElementById( 'TempAddress' ).value	= hex( obj.rjt.target );
-		
-		
+		set_fields( data );
 	} );
 
 	document.getElementById('show_button').style.display = 'none';
@@ -36,13 +31,29 @@ function load_default_setting() {
 	let url		= REQ_HEADER + "load_default_setting";
 
 	ajaxUpdate( url, data => {
-		let obj = JSON.parse( data );
-
-		document.getElementById( 'TempOffset'  ).value	= obj.temperature.ofst;
-		document.getElementById( 'TempCoeff'   ).value	= 1 / obj.temperature.coeff;
-		document.getElementById( 'TempBase'    ).value	= obj.temperature.base;
-		document.getElementById( 'TempAddress' ).value	= hex( obj.rjt.target );
+		set_fields( data );
 	} );
+}
+
+function set_fields( data ) {
+	let obj = JSON.parse( data );
+
+	document.getElementById( 'TempOffset'  ).value	= obj.temperature.ofst;
+	document.getElementById( 'TempCoeff'   ).value	= 1 / obj.temperature.coeff;
+	document.getElementById( 'TempBase'    ).value	= obj.temperature.base;
+	document.getElementById( 'TempAddress' ).value	= hex( obj.temperature.target );
+	
+	reference_junction_temp_select	= obj.temperature.select;
+	
+	let elements = document.getElementsByName( 'rjt' );
+	elements[ obj.temperature.select ].checked = true;
+}
+
+function updateTempRadio( select ) {
+	console.log( "updateTempRadio = " + select  );
+	reference_junction_temp_select	= select;
+	
+	updateTempSetting();
 }
 
 function scale_calibration() {
@@ -67,7 +78,7 @@ function updateTempSetting() {
 	let obj	= {};
 	
 	for ( let key in fields ) {
-		value	= document.getElementById( key ).value - 0;
+		let value	= document.getElementById( key ).value - 0;
 		
 		if ( isNaN( value ) ) {
 			return;
@@ -76,7 +87,23 @@ function updateTempSetting() {
 		obj[ fields[ key ] ]	= value;
 	}
 	
-	obj.coeff	= 1 / obj.coeff;
+	let value	= parseInt( document.getElementById( 'TempAddress' ).value, 16 );
+
+	if ( isNaN( value ) ) {
+		return;
+	}
 	
-	ajaxUpdate( REQ_HEADER + "cal_temp=" + JSON.stringify( obj ) );
+	obj.target	= value;
+	
+	if ( 0 == obj.coeff )
+	{
+		obj.coeff	= 0.01;
+		document.getElementById( 'TempCoeff' ).value	= obj.coeff;
+	}
+	obj.coeff	= 1 / obj.coeff;
+	obj.select	= reference_junction_temp_select;
+	
+	ajaxUpdate( REQ_HEADER + "cal_temp=" + JSON.stringify( obj ), data => {
+		console.log( data );
+	} );
 }
