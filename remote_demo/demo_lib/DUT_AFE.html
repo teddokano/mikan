@@ -92,15 +92,17 @@
 						Reference junction temp<br />
 
 						<input type="radio" id="rjt_constant" name="rjt" onchange="updateTempRadio( 0 )" value="constant" checked />
-						<label for="constant">Constant:</label>
+						<label for="rjt_constant">Constant:</label>
 						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempBase" minlength=4 size=5> [℃]<br />
 
 						<input type="radio" id="rjt_external" name="rjt" onchange="updateTempRadio( 1 )" value="external" />
-						<label for="dewey">External sensor:</label>
+						<label for="rjt_external">External sensor:</label>
 						<input type="text" class="ifld" onchange="updateTempSetting()" id="TempAddress" minlength=4 size=5> [address (0x, 8bit)]<br />
 
 						<input type="radio" id="rjt_internal" name="rjt" onchange="updateTempRadio( 2 )" value="internal" />
-						<label for="louie">Internal sensor</label>
+						<label for="rjt_internal">Internal sensor</label>
+						
+						<div id="temp_message" class="td_TEMP_la"></div>
 					</td>
 				</tr>
 		

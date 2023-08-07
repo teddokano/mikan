@@ -105,5 +105,7 @@ function updateTempSetting() {
 	
 	ajaxUpdate( REQ_HEADER + "cal_temp=" + JSON.stringify( obj ), data => {
 		console.log( data );
+		let elem = document.getElementById( "temp_message" );
+		elem.innerText = data;
 	} );
 }

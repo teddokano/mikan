@@ -179,8 +179,14 @@ class DUT_AFE( DUT_base.DUT_base ):
 				self.save_setting_file( UPDATED_SETTING_FILE )
 
 				self.set_external_sensor()
-
-				return f"ext_sensor = {self.get_temp()}℃"
+				
+				
+				if temp_read := self.get_temp():
+					rtn	= f"ext_sensor read: {temp_read}℃"
+				else:
+					rtn	= "ext_sensor is not responding"
+					
+				return rtn
 				
 			if "weight_zero" in req:
 				print( "weight_zero" )
