@@ -7,6 +7,11 @@
 	border: solid;
 	background: #e7edf8;
 }
+.temp_message {
+	text-align: left;
+	font-size: 1rem;
+	padding: 0.5rem;
+}
 #AFEtable {
 	display:none;
 }

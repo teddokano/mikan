@@ -87,7 +87,7 @@ class NAFE13388( AFE_base, SPI_target ):
 			valL	= val & 0xFF
 			self.send( [ regH, regL, valH, valL ] )
 
-	def	read_r16( self, reg ):
+	def	read_r16( self, reg, signed = False ):
 		reg		<<= 1
 		reg		|= 0x4000
 		regH	= reg >> 8 & 0xFF
@@ -96,7 +96,7 @@ class NAFE13388( AFE_base, SPI_target ):
 		data	= bytearray( [ regH, regL, 0xFF, 0xFF ] )
 		self.__if.write_readinto( data, data )
 		
-		return unpack( ">H", data[2:] )[ 0 ]
+		return unpack( ">h" if signed else ">H", data[2:] )[ 0 ]
 
 	def	read_r24( self, reg ):
 		reg		<<= 1
@@ -143,7 +143,18 @@ class NAFE13388( AFE_base, SPI_target ):
 
 	def temperature( self ):
 		t	= self.ch[ 0 ]
-		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + self.setting[ "temperature" ][ "base" ]
+		
+		if self.setting[ "temperature" ][ "select" ] == 0:
+			base	= self.setting[ "temperature" ][ "base" ]
+		elif self.setting[ "temperature" ][ "select" ] == 1:
+			if self.setting[ "temperature" ][ "measured" ] is None:
+				base	= self.setting[ "temperature" ][ "base" ]
+			else:
+				base	= self.setting[ "temperature" ][ "measured" ]
+		else:
+			base	= self.die_temp()
+			
+		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + base
 		
 	def weight( self ):
 		w	= self.ch[ 1 ]
@@ -204,6 +215,9 @@ class NAFE13388( AFE_base, SPI_target ):
 		print( values )
 
 		return values
+	
+	def die_temp( self ):
+		return self.read_r16( 0x34, signed = True ) / 64
 		
 def main():
 	spi	= SPI( 0, 1000_000, cs = 0, phase = 1 )

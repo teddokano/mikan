@@ -180,11 +180,12 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 				self.set_external_sensor()
 				
+				die_temp	= self.dev.die_temp()
 				
 				if temp_read := self.get_temp():
-					rtn	= f"ext_sensor read: {temp_read}℃"
+					rtn	= f"ext_sensor read: {temp_read}℃\ndie temp = {die_temp}℃"
 				else:
-					rtn	= "ext_sensor is not responding"
+					rtn	= "ext_sensor is not responding\ndie temp = {die_temp}℃"
 					
 				return rtn
 				
