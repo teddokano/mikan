@@ -9,16 +9,21 @@ class I2C_Character_LCD:
 		self.blank			= "".join( [ " " for _ in range( self.width ) ] )
 		self.device_present	= True
 		
+		self.backlightpin	= Pin( "A3", Pin.OUT )
+		self.backlight()
+		
 	def send( self, data_flag, value ):
 		if self.device_present:
 			try:
 				self.i2c.writeto( self.address, bytearray( [ self.data_byte if data_flag else self.command_byte, value ] ) )
 			except Exception as e:
 				self.device_present	= False
+				print( "No LCD panel detected" )
 
 	def command( self, command ):
 		self.send( False, command )
 		utime.sleep_us( 27 )
+		utime.sleep_ms( 1 )
 
 	def data( self, data ):
 		self.send( True, data )
@@ -48,6 +53,8 @@ class I2C_Character_LCD:
 				if s is not None:
 					self.puts( s + self.blank, i )
 
+	def backlight( self, on = True ):
+		self.backlightpin.value( on )
 
 class AE_AQM0802( I2C_Character_LCD ):
 	DEFAULT_ADDR		= (0x7C >> 1)

@@ -79,7 +79,8 @@ def demo( ip = "dhcp" ):
 						DUT_GENERALCALL,
 						]
 	
-	lcd_panel	= AE_AQM0802( i2c )
+	lcd_panel	= AE_AQM0802( si2c )
+	print( "******************" )
 	lcd_panel.print( [ "Hello", "mikan" ] )
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
@@ -110,6 +111,8 @@ def demo( ip = "dhcp" ):
 		
 		e_time	= elapsed_time( ticks_ms() ) ###
 		#e_time.enable	= True
+		
+		lcd_panel.backlight( False )
 		
 		client_stream	= res[0]
 		client_addr		= res[1]
