@@ -44,8 +44,8 @@
 		<p class="info">{% dev_info %}</p>
 	</div>
 
-	<dialog class="alarm_dialog" id="dialog">
-		Communication initializing<br/><br/>
+	<dialog class="init_dialog" id="dialog">
+		Communication initializing
 	</dialog>
 
 	<div class="para_center">
@@ -71,8 +71,8 @@
 		<input type = "button" id = "show_button" value = "show" onclick = "show_setting_panel()">
 		<input type = "button" id = "hide_button" value = "hide" onclick = "hide_setting_panel()" >
 
-		<div class="foot_note" id = "AFEsetting">
-			AFE setting
+		<div class="afe_setting" id = "AFEsetting">
+			AFE measurement settings:
 			
 			
 				<table class="table_TEMP">
@@ -128,7 +128,7 @@
 				</table>
 
 				<br />
-				Gauge scale settings:
+				Gauge scale settings (system reboot needed):
 				<table class="table_TEMP">
 				<tr>
 					<td class="td_TEMP_la" rowspan="3">

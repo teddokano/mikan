@@ -116,7 +116,7 @@ window.addEventListener( 'load', function () {
 	setTimeout( () => { 
 		document.getElementById( 'dialog' ).close();
 		setInterval( getDataAndShow, 200 ); 
-	}, 3000 );
+	}, 5000 );
 });
 
 let graph	= [];
