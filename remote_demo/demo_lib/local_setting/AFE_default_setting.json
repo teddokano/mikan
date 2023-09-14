@@ -14,13 +14,13 @@
 	"scales": 
 	[
 		{
-		"max":	50, 
-		"min":	10,
-		"text":	"temperature",
+			"max":	35, 
+			"min":	20,
+			"text":	"temperature",
 		},
 		{
-			"max":	1500, 
-			"min":	-20,
+			"max":	1200, 
+			"min":	-10,
 			"text":	"weight [g]"
 		}
 	],

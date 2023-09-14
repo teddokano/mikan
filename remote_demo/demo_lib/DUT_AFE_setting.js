@@ -85,7 +85,7 @@ function scale_calibration() {
 
 function updateTempSetting() {
 	const fields	= { 'TempOffset': 'ofst', 'TempCoeff': 'coeff', 'TempBase': 'base' }
-	let obj	= {};
+	let obj		= {};
 	
 	for ( let key in fields ) {
 		let value	= document.getElementById( key ).value - 0;
@@ -96,7 +96,8 @@ function updateTempSetting() {
 		
 		obj[ fields[ key ] ]	= value;
 	}
-	
+
+	obj.scales	= [ {}, {} ];
 	obj.scales[ 0 ].max		= document.getElementById( 'Ch0max' ).value - 0;
 	obj.scales[ 0 ].min		= document.getElementById( 'Ch0min' ).value - 0;
 	obj.scales[ 0 ].text	= document.getElementById( 'Ch0text' ).value;
