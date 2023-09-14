@@ -29,7 +29,7 @@ function hide_setting_panel() {
 
 function zero_setting() {
 	let url		= REQ_HEADER + "weight_zero";
-	ajaxUpdate( url );
+	ajaxUpdate( url, timeout = 5000 );
 }
 
 function load_default_setting() {
@@ -75,7 +75,7 @@ function scale_calibration() {
 		obj[ fields[ key ] ]	= value;
 	}
 
-	ajaxUpdate( REQ_HEADER + "cal_weight_scale=" + JSON.stringify( obj ) );
+	ajaxUpdate( REQ_HEADER + "cal_weight_scale=" + JSON.stringify( obj ), timeout = 5000 );
 }
 
 function updateTempSetting() {

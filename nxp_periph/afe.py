@@ -160,6 +160,14 @@ class NAFE13388( AFE_base, SPI_target ):
 		w	= self.ch[ 1 ]
 		return (w - self.setting[ "weight" ][ "ofst" ]) * self.setting[ "weight" ][ "coeff" ]
 
+	def weight_zero( self ):
+		w	= self.ch[ 1 ]
+		self.setting[ "weight" ][ "ofst" ]	= w
+
+	def weight_cal( self, ref ):
+		w	= self.ch[ 1 ]
+		self.setting[ "weight" ][ "coeff" ]	= ref / (w - self.setting[ "weight" ][ "ofst" ])
+
 	def logical_ch_config( self, logical_channel, list ):
 		self.write_r16( 0x0000 + logical_channel )
 

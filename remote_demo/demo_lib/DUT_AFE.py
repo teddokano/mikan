@@ -161,8 +161,8 @@ class DUT_AFE( DUT_base.DUT_base ):
 			m	= self.regex_cal_weigt_scale.match( req )
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
-				
 				print( f"cal value = {obj[ 'cal' ]}" )
+				self.dev.weight_cal( obj[ 'cal' ] )
 				
 				return
 			
@@ -184,6 +184,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 				
 			if "weight_zero" in req:
 				print( "weight_zero" )
+				self.dev.weight_zero()
 				
 				return
 				
