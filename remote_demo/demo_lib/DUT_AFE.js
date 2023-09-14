@@ -111,8 +111,12 @@ function getDataAndShow() {
 window.addEventListener( 'load', function () {
 	set_gauge();
 	initial_data_loading();
+	document.getElementById( 'dialog' ).showModal();
 	
-	setTimeout( () => { setInterval( getDataAndShow, 200 ); }, 3000 );
+	setTimeout( () => { 
+		document.getElementById( 'dialog' ).close();
+		setInterval( getDataAndShow, 200 ); 
+	}, 3000 );
 });
 
 let graph	= [];
