@@ -3,7 +3,7 @@ import	ure
 import	ujson
 import	micropython
 
-from	nxp_periph	import	PCT2075, LM75B, P3T1085
+from	nxp_periph	import	PCT2075, LM75B, P3T1755, P3T1085
 from	nxp_periph	import	temp_sensor_base
 from	demo_lib	import	DUT_base
 
@@ -20,6 +20,7 @@ class DUT_TEMP( DUT_base.DUT_base ):
 	DS_URL		= { "PCT2075": "https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf",
 					"LM75B"  : "https://www.nxp.com/docs/en/data-sheet/LM75B.pdf",
 					"P3T1085": "https://www.nxp.com.cn/docs/en/data-sheet/P3T1085UKDS.pdf",
+					"P3T1755": "https://www.nxp.com/docs/en/product-brief/PB_P3T1755.pdf",
 					}
 
 	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )

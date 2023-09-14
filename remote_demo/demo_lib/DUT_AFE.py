@@ -4,6 +4,7 @@ import	ujson
 import	micropython
 
 from	nxp_periph	import	NAFE13388
+#from	nxp_periph	import	P3T1755
 from	nxp_periph	import	LM75B
 from	nxp_periph	import	AFE_base
 from	demo_lib	import	DUT_base
@@ -72,6 +73,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 		self.dev.periodic_measurement_start()
 
 	def set_external_sensor( self ):
+#		self.temp_sense	= P3T1755( machine.I2C( 0, 400_000 ), self.dev.setting[ "temperature" ][ "target" ] >> 1 )
 		self.temp_sense	= LM75B( machine.I2C( 0, 400_000 ), self.dev.setting[ "temperature" ][ "target" ] >> 1 )
 		
 		rtn	= self.temp_sense.ping()
