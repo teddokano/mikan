@@ -111,21 +111,30 @@ function getDataAndShow() {
 window.addEventListener( 'load', function () {
 	set_gauge();
 	initial_data_loading();
-	setInterval( getDataAndShow, 200 );
+	
+	setTimeout( () => { setInterval( getDataAndShow, 200 ); }, 3000 );
 });
 
 let graph	= [];
 let gauge	= [];
 
 function set_gauge() {
+	ajaxUpdate( REQ_HEADER + "start_setting", data => {
+		let obj = JSON.parse( data );
+
+		set_gauge_params( obj.scales );
+	} );
+}
+
+function set_gauge_params( os ) {
 	let setting	= [
 		{
 		id: 'gaugeX', 
 		label: 'Temperature',
 		color: '#ff0000',
 		value: 0,
-		min: 20,
-		max: 35,
+		min: os[ 0 ].min,
+		max: os[ 0 ].max,
 		decimals: 1,
 		symbol: '℃',
 		pointer: true,
@@ -152,8 +161,8 @@ function set_gauge() {
 		label: 'Weight',
 		color: '#00ff00',
 		value: 0,
-		min: -10,
-		max: 1200,
+		min: os[ 1 ].min,
+		max: os[ 1 ].max,
 		decimals: 1,
 		symbol: 'g',
 		pointer: true,
