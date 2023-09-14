@@ -86,7 +86,7 @@ def demo( ip = "dhcp" ):
 						]
 	
 	lcd_panel	= AE_AQM0802( i2c )
-	lcd_panel.print( [ "Hello", "AFE demo" ] )
+	lcd_panel.print( [ "AFE demo", "    DHCP" if ip == "dhcp" else "Fixed IP" ] )
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
 
