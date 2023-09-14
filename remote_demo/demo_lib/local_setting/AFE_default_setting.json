@@ -11,5 +11,18 @@
 		"select":	0,
 		"target":	144
 	},
+	"scales": 
+	[
+		{
+		"max":	50, 
+		"min":	10,
+		"text":	"temperature",
+		},
+		{
+			"max":	1500, 
+			"min":	-20,
+			"text":	"weight [g]"
+		}
+	],
 	"remark": "AFE demo default setting file"
 }
