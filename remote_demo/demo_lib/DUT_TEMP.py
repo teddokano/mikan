@@ -78,9 +78,15 @@ class DUT_TEMP( DUT_base.DUT_base ):
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 		d[ "tos"    ]	= self.tos
 		d[ "thyst"  ]	= self.thyst
-		d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
-		d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
-	
+		
+		if self.int_pin:
+			d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
+			d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
+		else:
+			d[ "os"     ]	= 20
+			d[ "heater" ]	= 20
+			
+		
 		return d
 
 	def tim_cb( self, _ ):

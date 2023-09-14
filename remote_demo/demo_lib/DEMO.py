@@ -12,7 +12,7 @@ from utime import ticks_ms
 from utime import sleep
 
 from	nxp_periph	import	PCA9956B, PCA9955B, PCA9632, PCA9957, LED
-from	nxp_periph	import	PCT2075, LM75B, P3T1085
+from	nxp_periph	import	PCT2075, LM75B, P3T1755, P3T1085
 from	nxp_periph	import	PCF2131, PCF85063
 from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
 from	nxp_periph	import	FXOS8700, FXLS8974
@@ -71,8 +71,9 @@ def demo( ip = "dhcp" ):
 #						PCF85063( i2c ),
 #						P3T1085( si2c ),
 #						FXLS8974( i2c, address = 0x18 ),
-						FXOS8700( i2c ),
 						NAFE13388( spi ),
+						FXOS8700( i2c ),
+						P3T1755( i2c ),
 						General_call( i2c ),
 						]
 	
