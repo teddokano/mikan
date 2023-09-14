@@ -97,6 +97,13 @@ function updateTempSetting() {
 		obj[ fields[ key ] ]	= value;
 	}
 	
+	obj.scales[ 0 ].max		= document.getElementById( 'Ch0max' ).value - 0;
+	obj.scales[ 0 ].min		= document.getElementById( 'Ch0min' ).value - 0;
+	obj.scales[ 0 ].text	= document.getElementById( 'Ch0text' ).value;
+	obj.scales[ 1 ].max		= document.getElementById( 'Ch1max' ).value - 0;
+	obj.scales[ 1 ].min		= document.getElementById( 'Ch1min' ).value - 0;
+	obj.scales[ 1 ].text	= document.getElementById( 'Ch0text' ).value;
+
 	let value	= parseInt( document.getElementById( 'TempAddress' ).value, 16 );
 
 	if ( isNaN( value ) ) {
