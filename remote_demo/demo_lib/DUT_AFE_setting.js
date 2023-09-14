@@ -53,10 +53,8 @@ function set_fields( data ) {
 
 	document.getElementById( 'Ch0max'  ).value	= obj.scales[ 0 ].max;
 	document.getElementById( 'Ch0min'  ).value	= obj.scales[ 0 ].min;
-	document.getElementById( 'Ch0text' ).value	= obj.scales[ 0 ].text;
 	document.getElementById( 'Ch1max'  ).value	= obj.scales[ 1 ].max;
 	document.getElementById( 'Ch1min'  ).value	= obj.scales[ 1 ].min;
-	document.getElementById( 'Ch1text' ).value	= obj.scales[ 1 ].text;
 }
 
 function updateTempRadio( select ) {
@@ -100,11 +98,15 @@ function updateTempSetting() {
 	obj.scales	= [ {}, {} ];
 	obj.scales[ 0 ].max		= document.getElementById( 'Ch0max' ).value - 0;
 	obj.scales[ 0 ].min		= document.getElementById( 'Ch0min' ).value - 0;
-	obj.scales[ 0 ].text	= document.getElementById( 'Ch0text' ).value;
 	obj.scales[ 1 ].max		= document.getElementById( 'Ch1max' ).value - 0;
 	obj.scales[ 1 ].min		= document.getElementById( 'Ch1min' ).value - 0;
-	obj.scales[ 1 ].text	= document.getElementById( 'Ch0text' ).value;
 
+	let num_check	= [ obj.scales[ 0 ].max, obj.scales[ 0 ].min, obj.scales[ 1 ].max, obj.scales[ 1 ].min ];
+	let	err	= false;
+	num_check.forEach( ( n ) => { console.log(n);if ( isNaN( n ) ) err = true; } )
+	if ( err )
+		return;
+	
 	let value	= parseInt( document.getElementById( 'TempAddress' ).value, 16 );
 
 	if ( isNaN( value ) ) {

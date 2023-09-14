@@ -178,10 +178,8 @@ class DUT_AFE( DUT_base.DUT_base ):
 				
 				self.dev.setting[ "scales" ][ 0 ][ "max"  ]	= obj[ "scales" ][ 0 ][ "max"  ]
 				self.dev.setting[ "scales" ][ 0 ][ "min"  ]	= obj[ "scales" ][ 0 ][ "min"  ]
-				self.dev.setting[ "scales" ][ 0 ][ "text" ]	= obj[ "scales" ][ 0 ][ "text" ]
 				self.dev.setting[ "scales" ][ 1 ][ "max"  ]	= obj[ "scales" ][ 1 ][ "max"  ]
 				self.dev.setting[ "scales" ][ 1 ][ "min"  ]	= obj[ "scales" ][ 1 ][ "min"  ]
-				self.dev.setting[ "scales" ][ 1 ][ "text" ]	= obj[ "scales" ][ 1 ][ "text" ]
 				
 				self.save_setting_file( UPDATED_SETTING_FILE )
 

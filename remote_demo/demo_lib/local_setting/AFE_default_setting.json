@@ -21,7 +21,7 @@
 		{
 			"max":	1200, 
 			"min":	-10,
-			"text":	"weight [g]"
+			"text":	"weight"
 		}
 	],
 	"remark": "AFE demo default setting file"
