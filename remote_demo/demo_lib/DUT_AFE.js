@@ -134,7 +134,7 @@ function set_gauge_params( os ) {
 	let setting	= [
 		{
 		id: 'gaugeX', 
-		label: 'Temperature',
+		label: os[ 0 ].text,
 		color: '#ff0000',
 		value: 0,
 		min: os[ 0 ].min,
@@ -162,7 +162,7 @@ function set_gauge_params( os ) {
 	},
 	{
 		id: 'gaugeY', 
-		label: 'Weight',
+		label: os[ 1 ].text,
 		color: '#00ff00',
 		value: 0,
 		min: os[ 1 ].min,
