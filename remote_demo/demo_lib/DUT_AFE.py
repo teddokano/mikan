@@ -53,7 +53,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 																			title	= 'temperature', 
 																			xlabel	= 'time',
 																			ylabel	= 'temperature [℃]',
-																			minmax	= ( 20, 35 )
+																			minmax	= ( self.dev.setting[ "scales" ][ 0 ][ "min" ], self.dev.setting[ "scales" ][ 0 ][ "max" ] )
 																			),
 										}, 
 										{ 
@@ -65,7 +65,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 																			 title	= 'weight', 
 																			 xlabel	= 'time',
 																			 ylabel	= 'weight [g]',
-																			 minmax	= ( -10, 1200 )
+																			 minmax	= ( self.dev.setting[ "scales" ][ 1 ][ "min" ], self.dev.setting[ "scales" ][ 1 ][ "max" ] )
 																			 ),
 										}, )
 	
@@ -191,7 +191,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 			if "start_setting" in req:
 				print( "start_setting" )
 				print( self.dev.setting )
-				
+								
 				return ujson.dumps( self.dev.setting )
 
 			if "load_default_setting" in req:
