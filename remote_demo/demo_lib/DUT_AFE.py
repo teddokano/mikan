@@ -41,7 +41,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 		self.data		= []
 		self.rtc		= machine.RTC()	#	for timestamping on samples
 		self.info		= [ "AFE", "" ]
-		self.symbol		= '〰'
+		self.symbol		= '🌊'
 
 		self.set_external_sensor()
 
