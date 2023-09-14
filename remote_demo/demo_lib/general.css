@@ -12,11 +12,11 @@ body {
 	font-color: #000000;
 	vertical-align: middle;
 	
-	background-image: url(img/mikan.jpg);
-	background-position: bottom -10% right -10%;
+	background-image: url(img/nxp.png);
+	background-position: bottom 0% right 0%;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
-	background-size: 33%;
+	background-size: 45%;
 	background-color: var(--main-bg-color);;
 	opacity: 0.95;
 }
