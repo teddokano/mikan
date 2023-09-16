@@ -4,44 +4,6 @@ import	machine
 
 BAT_SWOVR	= True
 
-def main():
-	intf	= I2C( 0, freq = (400 * 1000) )
-#	intf	= SPI( 0, 500 * 1000, cs = 0 )
-	rtc		= PCF2131( intf )
-
-	print( rtc.info() )
-	print( "=== operation start ===" )
-	
-	osf	= rtc.oscillator_stopped()
-	print( "rtc.oscillator_stopped()\n  --> ", end = "" )
-	print( osf )
-
-	rtc.battery_switchover( BAT_SWOVR )
-
-	machine_rtc	= machine.RTC()
-	
-	print( "== now ==" )
-	print( "machine.rtc = {}".format( machine_rtc.now() ) )
-	print( "PCF2131     = {}".format( rtc.now() ) )
-	
-	print( "== datetime ==" )
-	print( "machine.rtc = {}".format( machine_rtc.datetime() ) )
-	print( "PCF2131     = {}".format( rtc.datetime() ) )
-
-	if osf:
-		source, target, msg	= machine_rtc, rtc, "stop is detected"
-		feature_test( rtc )
-	else:
-		source, target, msg	= rtc, machine_rtc,  "was kept running"
-
-	target.datetime( source.datetime() )
-	print( "since RTC device oscillator {}, Date&Time symchronized : {} --> {}".format( msg, source, target ) )
-
-	print( "rtc.now()\n --> ", end = "" )
-	print( rtc.now() )
-
-	demo( rtc )
-
 def feature_test( rtc ):
 	print( "\nDate&Time register operation test:" )
 
@@ -110,7 +72,42 @@ def demo( rtc ):
 
 			if not dt[ 6 ] % 30:
 				rtc.dump_reg()
-	
-if __name__ == "__main__":
-	main()
+
+
+intf	= I2C( 0, freq = (400 * 1000) )
+#intf	= SPI( 0, 500 * 1000, cs = 0 )
+rtc		= PCF2131( intf )
+
+print( rtc.info() )
+print( "=== operation start ===" )
+
+osf	= rtc.oscillator_stopped()
+print( "rtc.oscillator_stopped()\n  --> ", end = "" )
+print( osf )
+
+rtc.battery_switchover( BAT_SWOVR )
+
+machine_rtc	= machine.RTC()
+
+print( "== now ==" )
+print( "machine.rtc = {}".format( machine_rtc.now() ) )
+print( "PCF2131     = {}".format( rtc.now() ) )
+
+print( "== datetime ==" )
+print( "machine.rtc = {}".format( machine_rtc.datetime() ) )
+print( "PCF2131     = {}".format( rtc.datetime() ) )
+
+if osf:
+	source, target, msg	= machine_rtc, rtc, "stop is detected"
+	feature_test( rtc )
+else:
+	source, target, msg	= rtc, machine_rtc,  "was kept running"
+
+target.datetime( source.datetime() )
+print( "since RTC device oscillator {}, Date&Time symchronized : {} --> {}".format( msg, source, target ) )
+
+print( "rtc.now()\n --> ", end = "" )
+print( rtc.now() )
+
+demo( rtc )
 
