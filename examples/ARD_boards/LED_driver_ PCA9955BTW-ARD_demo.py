@@ -1,55 +1,9 @@
 import	os
 import	math
-from	machine		import	Pin, I2C, SPI, SoftSPI, Timer
-from	nxp_periph	import	PCA9955B, PCA9956B, PCA9957, PCA9632, LED
+from	machine		import	Pin, I2C, Timer
+from	nxp_periph	import	PCA9955B, LED
 
-IREF_INIT	= 0x10
-
-def main():
-	print( "Demo is running on {}".format( os.uname().machine ) )
-
-	i2c		= I2C( 0, freq = (400 * 1000) )
-	led_c	= PCA9956B( i2c, 0x02 >>1, iref = IREF_INIT )
-#	led_c	= PCA9955B( i2c, 0x06 >>1, iref = IREF_INIT )
-#	led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT, setup_EVB = True )
-#	led_c	= PCA9632( i2c )
-
-	"""
-	spi		= SPI( 0, 1000 * 1000, cs = 0 )
-	led_c	= PCA9957( spi, setup_EVB = True, iref = IREF_INIT )
-	"""
-
-	print( led_c.info() )
-	led_c.dump_reg()
-	
-	leds	= [ LED( led_c, i ) for i in range( led_c.CHANNELS ) ]
-
-	###	Evaluation board LED assignments
-	if "PCA9957" in led_c.info():
-		color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ), ( 9, 10, 11 ) )
-		white_led_idx	= ( range( 12, 24 ) )
-	elif "PCA9956B" in led_c.info():
-		color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ), ( 9, 10, 11 ), ( 12, 13, 14 ), ( 15, 16, 17 ), ( 18, 19, 20 ), ( 21, 22, 23 ) )
-		white_led_idx	= ()
-	elif "PCA9955B" in led_c.info():
-		color_led_idx	= ( ( 1, 2, 3 ), ( 5, 6, 7 ), ( 9, 10, 11 ), ( 13, 14, 15 ) )
-		white_led_idx	= ( 0, 4, 8, 12 )
-		
-		#### followings are LED configurations for PCA9955BTW-ARD
-		#	color_led_idx	= ( ( 0, 1, 2 ), ( 3, 4, 5 ), ( 6, 7, 8 ) )
-		#	white_led_idx	= ( 9, 10, 11, 12, 13, 14 )
-	elif "PCA9632" in led_c.info():
-		color_led_idx	= ( ( 0, 1, 2 ), )
-		white_led_idx	= ( 3, )
-
-	c_demo	= Color_demo( [ [leds[ i ] for i in u] for u in color_led_idx ] )
-	w_demo	= White_demo( [ leds[ i ] for i in white_led_idx ] )
-
-	while True:
-		a	= input( "hit [return] key to see register dump >>" )
-		led_c.dump_reg()
-		pass
-
+IREF_INIT	= 0xFF
 
 class White_demo:
 	def __init__( self, leds, sample_length = 30, miliseconds = 20 ):
@@ -59,11 +13,6 @@ class White_demo:
 		self.u_idx		= 0
 		self.steps		= 0
 
-		"""
-		self.pattern	= [ i / (self.length // 2) for i in range( self.length // 2 ) ]
-		self.pattern   += [ 1.0 - i for i in self.pattern ]
-		self.pattern.reverse()
-		"""
 		self.pattern	= [ 2 ** -((8.0 * i) / self.length) for i in range( self.length ) ]
 		
 		if 0 != self.units:
@@ -100,5 +49,23 @@ class Color_demo:
 
 		self.count	= (self.count + 1) % self.length
 
-if __name__ == "__main__":
-	main()
+print( "Demo is running on {}".format( os.uname().machine ) )
+
+i2c		= I2C( 0, freq = (400 * 1000) )
+led_c	= PCA9955B( i2c, 0xBC >>1, iref = IREF_INIT, setup_EVB = True )
+
+print( led_c.info() )
+led_c.dump_reg()
+
+leds	= [ LED( led_c, i ) for i in range( led_c.CHANNELS ) ]
+
+color_led_idx	= ( (0, 1, 2), (3, 4, 5), (6, 7, 8) )
+white_led_idx	= ( 9, 10, 11, 12, 13, 14, 15 )
+
+c_demo	= Color_demo( [ [leds[ i ] for i in u] for u in color_led_idx ] )
+w_demo	= White_demo( [ leds[ i ] for i in white_led_idx ] )
+
+while True:
+	a	= input( "hit [return] key to see register dump >>" )
+	led_c.dump_reg()
+	pass
