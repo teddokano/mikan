@@ -7,7 +7,6 @@ def main():
 
 	def callback( pin_obj ):
 		nonlocal	int_flag
-#		temp_sensor.reg_access( "Conf" )	#	to clear INT
 		int_flag	= True
 		
 	def tim_cb( tim_obj ):
@@ -31,7 +30,7 @@ def main():
 	temp_sensor.dump_reg()
 
 	tim0 = Timer(0)
-	tim0.init( period= 1000, callback = tim_cb)
+	tim0.init( period = 1000, callback = tim_cb)
 
 	while True:
 		if int_flag:
@@ -42,7 +41,7 @@ def main():
 		if tim_flag:
 			tim_flag	= False
 			value	= temp_sensor.temp
-			print( "{:.3f} deg-C   Tots/Thys setting: {:.1f}/{:.1f}".format( value, t_ots, t_hys ) )
+			print( f"{value:.3f} deg-C   Tots/Thys setting: {t_ots:.1f}/{t_hys:.1f}" )
 	
 if __name__ == "__main__":
 	main()
