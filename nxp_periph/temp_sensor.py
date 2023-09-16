@@ -208,6 +208,17 @@ class P3T1755( LM75B ):
 		"""
 		super().__init__( i2c, address )
 
+	def __value_setting( self, lst ):
+		lst.sort()
+	
+		sv	= []
+		for r, v in zip( ( "T_LOW", "T_HIGH" ), lst ):
+			v	= int(v * 256.0) & 0xFFF0
+			self.reg_access( r, v )
+			sv	+= [ v ]
+		
+		return [ v / 256.0 for v in sv ]
+
 
 class P3T1085( LM75B ):
 	"""
