@@ -1,26 +1,5 @@
 from nxp_periph.interface	import	I2C_target
 
-def main():
-	from	machine		import	Pin, I2C
-	from utime import sleep
-	i2c			= I2C( 0, freq = (400 * 1000) )
-	temp_sensor	= PCT2075( i2c, setup_EVB = True )
-	temp_sensor	= P3T1085( i2c )
-	print( temp_sensor.info() )
-
-	temp_sensor.heater	= 0
-
-	count=0
-	while True:
-		value	= temp_sensor.temp
-		print( "%f, heater:%s" % ( value, "ON" if temp_sensor.heater else "OFF" ) )
-
-		temp_sensor.heater = (count // 20) & 0x1
-		count	+= 1
-
-		sleep( 1 )
-
-
 class temp_sensor_base():
 	"""
 	An abstraction class to make user interface.
@@ -207,6 +186,29 @@ class PCT2075( LM75B ):
 		self.heater_pin( v )
 
 
+class P3T1755( LM75B ):
+	"""
+	P3T1755 class
+	"""
+	DEFAULT_ADDR		= 0x98 >> 1
+
+	REG_NAME	= ( "Temp", "Conf", "T_LOW", "T_HIGH" )
+	REG_LEN		= (      2,      1,       2,        2 )
+	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		P3T1755 initializer
+	
+		Parameters
+		----------
+		i2c     : machine.I2C instance
+		address : int, option
+
+		"""
+		super().__init__( i2c, address )
+
+
 class P3T1085( LM75B ):
 	"""
 	P3T1085 class
@@ -255,6 +257,30 @@ class P3T1085( LM75B ):
 	@property
 	def alert( self ):
 		return self.alert
+
+
+def main():
+	from	machine		import	Pin, I2C, SoftI2C
+	from utime import sleep
+	
+	"""
+	i2c			= I2C( 0, freq = (400 * 1000) )
+	#temp_sensor	= PCT2075( i2c, setup_EVB = True )
+	#temp_sensor	= P3T1085( i2c )
+	"""
+	
+	i2c			= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+	temp_sensor	= P3T1755( i2c )
+	print( temp_sensor.info() )
+
+	count=0
+	while True:
+		value	= temp_sensor.temp
+		print( f"{value}" )
+		count	+= 1
+
+		sleep( 1 )
+
 
 if __name__ == "__main__":
 	main()
