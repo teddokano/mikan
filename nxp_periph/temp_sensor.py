@@ -276,7 +276,7 @@ def main():
 	count=0
 	while True:
 		value	= temp_sensor.temp
-		print( f"{value}" )
+		print( value )
 		count	+= 1
 
 		sleep( 1 )
