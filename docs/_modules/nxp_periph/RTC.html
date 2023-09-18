@@ -10,6 +10,8 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
@@ -575,7 +577,8 @@
 		
 		<span class="k">if</span> <span class="n">int_pin</span><span class="p">:</span>
 			<span class="n">select</span>	<span class="o">=</span> <span class="s2">&quot;A&quot;</span> <span class="k">if</span> <span class="s2">&quot;A&quot;</span> <span class="ow">in</span> <span class="n">int_pin</span> <span class="k">else</span> <span class="s2">&quot;B&quot;</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="n">select</span> <span class="p">][</span> <span class="mi">1</span> <span class="p">],</span> <span class="mh">0x0F</span><span class="p">,</span> <span class="o">~</span><span class="p">(</span><span class="mh">0x01</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">num</span><span class="p">))</span> <span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="n">select</span> <span class="p">][</span> <span class="mi">1</span> <span class="p">],</span> <span class="p">(</span><span class="mh">0x01</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">num</span><span class="p">)),</span> <span class="o">~</span><span class="p">(</span><span class="mh">0x01</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">3</span> <span class="o">-</span> <span class="n">num</span><span class="p">))</span> <span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_5&quot;</span><span class="p">,</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">7</span> <span class="o">-</span> <span class="n">num</span><span class="p">),</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">7</span> <span class="o">-</span> <span class="n">num</span><span class="p">)</span> <span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">__get_timestamp_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">num</span> <span class="p">):</span>
 		<span class="n">dt</span>		<span class="o">=</span> <span class="p">{}</span>

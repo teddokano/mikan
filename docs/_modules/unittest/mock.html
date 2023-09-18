@@ -10,6 +10,8 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
@@ -164,6 +166,12 @@
         <span class="n">func</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="fm">__init__</span>
         <span class="c1"># Skip the `self` argument in __init__</span>
         <span class="n">eat_self</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">(</span><span class="nb">classmethod</span><span class="p">,</span> <span class="nb">staticmethod</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">classmethod</span><span class="p">):</span>
+            <span class="c1"># Skip the `cls` argument of a class method</span>
+            <span class="n">eat_self</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Use the original decorated method to extract the correct function signature</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__func__</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">FunctionTypes</span><span class="p">):</span>
         <span class="c1"># If we really want to model an instance of the passed type,</span>
         <span class="c1"># __call__ should be looked up, not __init__.</span>
@@ -636,7 +644,7 @@
         <span class="k">if</span> <span class="n">delegated</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mock_side_effect</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">delegated</span><span class="o">.</span><span class="n">side_effect</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">sf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
                 <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">_MockIter</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_is_exception</span><span class="p">(</span><span class="n">sf</span><span class="p">)):</span>
             <span class="n">sf</span> <span class="o">=</span> <span class="n">_MockIter</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
             <span class="n">delegated</span><span class="o">.</span><span class="n">side_effect</span> <span class="o">=</span> <span class="n">sf</span>
@@ -1537,7 +1545,7 @@
                 <span class="k">if</span> <span class="n">_is_list</span><span class="p">(</span><span class="n">this_spec</span><span class="p">):</span>
                     <span class="n">not_callable</span> <span class="o">=</span> <span class="s1">&#39;__call__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">this_spec</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">not_callable</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">this_spec</span><span class="p">)</span>
+                    <span class="n">not_callable</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">this_spec</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">_is_async_obj</span><span class="p">(</span><span class="n">this_spec</span><span class="p">):</span>
                     <span class="n">Klass</span> <span class="o">=</span> <span class="n">AsyncMock</span>
                 <span class="k">elif</span> <span class="n">not_callable</span><span class="p">:</span>
@@ -2267,7 +2275,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;_mock_await_args&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;_mock_await_args_list&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_CallList</span><span class="p">()</span>
         <span class="n">code_mock</span> <span class="o">=</span> <span class="n">NonCallableMock</span><span class="p">(</span><span class="n">spec_set</span><span class="o">=</span><span class="n">CodeType</span><span class="p">)</span>
-        <span class="n">code_mock</span><span class="o">.</span><span class="n">co_flags</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">CO_COROUTINE</span>
+        <span class="n">code_mock</span><span class="o">.</span><span class="n">co_flags</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">inspect</span><span class="o">.</span><span class="n">CO_COROUTINE</span>
+            <span class="o">+</span> <span class="n">inspect</span><span class="o">.</span><span class="n">CO_VARARGS</span>
+            <span class="o">+</span> <span class="n">inspect</span><span class="o">.</span><span class="n">CO_VARKEYWORDS</span>
+        <span class="p">)</span>
+        <span class="n">code_mock</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">code_mock</span><span class="o">.</span><span class="n">co_varnames</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="s1">&#39;kwargs&#39;</span><span class="p">)</span>
+        <span class="n">code_mock</span><span class="o">.</span><span class="n">co_posonlyargcount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">code_mock</span><span class="o">.</span><span class="n">co_kwonlyargcount</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;__code__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">code_mock</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;__name__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;AsyncMock&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;__defaults__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>

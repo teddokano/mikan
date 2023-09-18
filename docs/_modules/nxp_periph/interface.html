@@ -10,6 +10,8 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
@@ -90,14 +92,22 @@
 <span class="sd">		int : register value after modifying</span>
 
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">reg</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span> <span class="k">else</span> <span class="n">reg</span>
-		<span class="n">rv</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
-		<span class="n">wv</span>	<span class="o">=</span> <span class="n">rv</span>
-		
-		<span class="n">wv</span>	<span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">target_bits</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">value</span><span class="p">)</span>
-		<span class="n">wv</span>	<span class="o">|=</span>  <span class="p">(</span><span class="n">target_bits</span> <span class="o">&amp;</span>  <span class="n">value</span><span class="p">)</span>
 
-		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="n">wv</span> <span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">live</span><span class="p">:</span>
+			<span class="k">return</span>
+
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">reg</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span> <span class="k">else</span> <span class="n">reg</span>
+			<span class="n">rv</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+			<span class="n">wv</span>	<span class="o">=</span> <span class="n">rv</span>
+			
+			<span class="n">wv</span>	<span class="o">&amp;=</span> <span class="o">~</span><span class="p">(</span><span class="n">target_bits</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">value</span><span class="p">)</span>
+			<span class="n">wv</span>	<span class="o">|=</span>  <span class="p">(</span><span class="n">target_bits</span> <span class="o">&amp;</span>  <span class="n">value</span><span class="p">)</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="n">wv</span> <span class="p">)</span>
+		<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">live</span>	<span class="o">=</span> <span class="kc">False</span>
+			<span class="n">rv</span><span class="p">,</span> <span class="n">wv</span>		<span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 		
 		<span class="k">return</span> <span class="n">rv</span><span class="p">,</span> <span class="n">wv</span></div>
 
@@ -425,7 +435,8 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__cs</span>	<span class="o">=</span> <span class="n">cs</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__if</span>	<span class="o">=</span> <span class="n">spi</span>
-
+		<span class="bp">self</span><span class="o">.</span><span class="n">live</span>	<span class="o">=</span> <span class="kc">True</span>
+		
 		<span class="bp">self</span><span class="o">.</span><span class="n">chip_select</span>	<span class="o">=</span> <span class="mi">1</span>
 
 <div class="viewcode-block" id="SPI_target.send"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.interface.SPI_target.send">[docs]</a>	<span class="k">def</span> <span class="nf">send</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>

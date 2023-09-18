@@ -10,6 +10,8 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
@@ -162,7 +164,7 @@
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Initializer for PCA8561 class instance</span>
+<span class="sd">		Initializer for FXOS8700 class instance</span>
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
@@ -260,7 +262,7 @@
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Initializer for PCA8561 class instance</span>
+<span class="sd">		Initializer for FXLS8974 class instance</span>
 
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
@@ -269,8 +271,6 @@
 
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span>
-
-		<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;FXLS8974 </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="nb">hex</span><span class="p">(</span> <span class="n">address</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">fs_range</span>	<span class="o">=</span> <span class="mi">2</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">fullscale</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs_range</span> <span class="p">)</span>

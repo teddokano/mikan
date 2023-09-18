@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>nxp_periph package &mdash; mikan 1.10 documentation</title>
@@ -11,6 +11,8 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
@@ -425,6 +427,13 @@
 <li><a class="reference internal" href="#nxp_periph.temp_sensor.P3T1085.alert"><code class="docutils literal notranslate"><span class="pre">P3T1085.alert</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#nxp_periph.temp_sensor.P3T1755"><code class="docutils literal notranslate"><span class="pre">P3T1755</span></code></a><ul>
+<li><a class="reference internal" href="#nxp_periph.temp_sensor.P3T1755.DEFAULT_ADDR"><code class="docutils literal notranslate"><span class="pre">P3T1755.DEFAULT_ADDR</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.temp_sensor.P3T1755.REG_ACC"><code class="docutils literal notranslate"><span class="pre">P3T1755.REG_ACC</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.temp_sensor.P3T1755.REG_LEN"><code class="docutils literal notranslate"><span class="pre">P3T1755.REG_LEN</span></code></a></li>
+<li><a class="reference internal" href="#nxp_periph.temp_sensor.P3T1755.REG_NAME"><code class="docutils literal notranslate"><span class="pre">P3T1755.REG_NAME</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#nxp_periph.temp_sensor.PCT2075"><code class="docutils literal notranslate"><span class="pre">PCT2075</span></code></a><ul>
 <li><a class="reference internal" href="#nxp_periph.temp_sensor.PCT2075.DEFAULT_ADDR"><code class="docutils literal notranslate"><span class="pre">PCT2075.DEFAULT_ADDR</span></code></a></li>
 <li><a class="reference internal" href="#nxp_periph.temp_sensor.PCT2075.REG_ACC"><code class="docutils literal notranslate"><span class="pre">PCT2075.REG_ACC</span></code></a></li>
@@ -647,17 +656,17 @@ This class can operate its family devices of</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6408">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6408</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">33</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6408"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6408" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6408</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6408"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6408" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.GPIO.PCAL6xxx_base" title="nxp_periph.GPIO.PCAL6xxx_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCAL6xxx_base</span></code></a></p>
 <p>PCAL6408: 8 bit GPIO expander</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6408.ADDR_BIT">
-<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6408.ADDR_BIT" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6408.ADDR_BIT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6408.DEFAULT_ADDR">
-<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6408.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6408.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -689,17 +698,17 @@ This class can operate its family devices of</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6416">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6416</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">33</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6416"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6416" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6416</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6416"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6416" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.GPIO.PCAL6xxx_base" title="nxp_periph.GPIO.PCAL6xxx_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCAL6xxx_base</span></code></a></p>
 <p>PCAL6416: 16 bit GPIO expander</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6416.ADDR_BIT">
-<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6416.ADDR_BIT" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6416.ADDR_BIT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6416.DEFAULT_ADDR">
-<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6416.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6416.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -731,17 +740,17 @@ This class can operate its family devices of</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6524">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6524</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6524"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6524" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6524</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6524"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6524" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.GPIO.PCAL65xx_base" title="nxp_periph.GPIO.PCAL65xx_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCAL65xx_base</span></code></a></p>
 <p>PCAL6524: 24 bit GPIO expander</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6524.ADDR_BIT">
-<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6524.ADDR_BIT" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6524.ADDR_BIT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6524.DEFAULT_ADDR">
-<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6524.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">34</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6524.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -773,17 +782,17 @@ This class can operate its family devices of</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6534">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6534</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6534"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6534" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.GPIO.</span></span><span class="sig-name descname"><span class="pre">PCAL6534</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_EVB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/GPIO.html#PCAL6534"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.GPIO.PCAL6534" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.GPIO.PCAL65xx_base" title="nxp_periph.GPIO.PCAL65xx_base"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCAL65xx_base</span></code></a></p>
 <p>PCAL6534: 34 bit GPIO expander</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6534.ADDR_BIT">
-<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6534.ADDR_BIT" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ADDR_BIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6534.ADDR_BIT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.GPIO.PCAL6534.DEFAULT_ADDR">
-<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6534.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">34</span></em><a class="headerlink" href="#nxp_periph.GPIO.PCAL6534.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1561,7 +1570,7 @@ returns PCF2131_SPI when interface == SPI</p>
 The PCF2131 class can be composed with one of interface class: I2C_target or SPI_target</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.RTC.PCF2131_base.EVENTS">
-<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[{'periodic':</span> <span class="pre">0,</span> <span class="pre">'watchdog':</span> <span class="pre">16,</span> <span class="pre">'alarm':</span> <span class="pre">64,</span> <span class="pre">'xx':</span> <span class="pre">128},</span> <span class="pre">{'battery</span> <span class="pre">switch</span> <span class="pre">over':</span> <span class="pre">8,</span> <span class="pre">'battery</span> <span class="pre">low':</span> <span class="pre">4},</span> <span class="pre">{'ts1':</span> <span class="pre">16,</span> <span class="pre">'ts2':</span> <span class="pre">32,</span> <span class="pre">'ts3':</span> <span class="pre">64,</span> <span class="pre">'ts4':</span> <span class="pre">128}]</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF2131_base.EVENTS" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[{'periodic':</span> <span class="pre">128,</span> <span class="pre">'watchdog':</span> <span class="pre">16,</span> <span class="pre">'alarm':</span> <span class="pre">64,</span> <span class="pre">'xx':</span> <span class="pre">0},</span> <span class="pre">{'battery</span> <span class="pre">switch</span> <span class="pre">over':</span> <span class="pre">8,</span> <span class="pre">'battery</span> <span class="pre">low':</span> <span class="pre">4},</span> <span class="pre">{'ts1':</span> <span class="pre">128,</span> <span class="pre">'ts2':</span> <span class="pre">16,</span> <span class="pre">'ts3':</span> <span class="pre">32,</span> <span class="pre">'ts4':</span> <span class="pre">64}]</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF2131_base.EVENTS" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2721,7 +2730,7 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC18IS606</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address=40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4356762448'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC18IS606</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address=40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4386235664'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.interface.I2C_target" title="nxp_periph.interface.I2C_target"><code class="xref py py-class docutils literal notranslate"><span class="pre">I2C_target</span></code></a></p>
 <blockquote>
 <div><p>SC18IS606 class</p>
@@ -2793,12 +2802,12 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.LSB">
-<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.LSB'</span> <span class="pre">id='4341867280'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.LSB" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.LSB'</span> <span class="pre">id='4386233616'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.LSB" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.MSB">
-<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4356762448'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.MSB" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4386235664'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.MSB" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2820,7 +2829,7 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.init">
-<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4356762448'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.init" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4386235664'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.init" title="Permalink to this definition"></a></dt>
 <dd><p>setting SPI parameters</p>
 </dd></dl>
 
@@ -3069,6 +3078,33 @@ If no 2nd argument given, the method returns register read value.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="nxp_periph.temp_sensor.P3T1085.alert">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alert</span></span><a class="headerlink" href="#nxp_periph.temp_sensor.P3T1085.alert" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nxp_periph.temp_sensor.P3T1755">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.temp_sensor.</span></span><span class="sig-name descname"><span class="pre">P3T1755</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">76</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/temp_sensor.html#P3T1755"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.temp_sensor.P3T1755" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nxp_periph.temp_sensor.LM75B" title="nxp_periph.temp_sensor.LM75B"><code class="xref py py-class docutils literal notranslate"><span class="pre">LM75B</span></code></a></p>
+<p>P3T1755 class</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.temp_sensor.P3T1755.DEFAULT_ADDR">
+<span class="sig-name descname"><span class="pre">DEFAULT_ADDR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">76</span></em><a class="headerlink" href="#nxp_periph.temp_sensor.P3T1755.DEFAULT_ADDR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.temp_sensor.P3T1755.REG_ACC">
+<span class="sig-name descname"><span class="pre">REG_ACC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Conf':</span> <span class="pre">1,</span> <span class="pre">'T_HIGH':</span> <span class="pre">2,</span> <span class="pre">'T_LOW':</span> <span class="pre">2,</span> <span class="pre">'Temp':</span> <span class="pre">2}</span></em><a class="headerlink" href="#nxp_periph.temp_sensor.P3T1755.REG_ACC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.temp_sensor.P3T1755.REG_LEN">
+<span class="sig-name descname"><span class="pre">REG_LEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(2,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">2)</span></em><a class="headerlink" href="#nxp_periph.temp_sensor.P3T1755.REG_LEN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nxp_periph.temp_sensor.P3T1755.REG_NAME">
+<span class="sig-name descname"><span class="pre">REG_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('Temp',</span> <span class="pre">'Conf',</span> <span class="pre">'T_LOW',</span> <span class="pre">'T_HIGH')</span></em><a class="headerlink" href="#nxp_periph.temp_sensor.P3T1755.REG_NAME" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

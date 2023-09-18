@@ -10,6 +10,8 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
@@ -768,9 +770,6 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">__pwm_base</span>		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;IREF0&quot;</span> <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="s2">&quot;PWM0&quot;</span> <span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__iref_base</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;PWM0&quot;</span>  <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="s2">&quot;IREF0&quot;</span> <span class="p">)</span>
 
-		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">{</span> <span class="mh">0xFF</span><span class="p">:</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xFE</span><span class="p">:</span> <span class="mh">0xFE</span><span class="p">,</span> <span class="mh">0xFD</span><span class="p">:</span> <span class="mh">0xFD</span> <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
-		
 		<span class="n">init</span>	<span class="o">=</span>	<span class="p">{</span>
 						<span class="s2">&quot;MODE2&quot;</span>		<span class="p">:</span> <span class="mh">0x18</span><span class="p">,</span>		<span class="c1">#	to forth the channel working when wrror happened</span>
 						<span class="s2">&quot;LEDOUT0&quot;</span>	<span class="p">:</span> <span class="p">[</span> <span class="mh">0xAA</span> <span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span>
@@ -780,7 +779,7 @@
 					
 		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>	<span class="c1">#	don&#39;t care: register access order</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
-	
+
 <div class="viewcode-block" id="PCA9957_base.iref"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9957_base.iref">[docs]</a>	<span class="k">def</span> <span class="nf">iref</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		output current setting</span>
