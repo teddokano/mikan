@@ -199,5 +199,7 @@ To fix this, confirm the Wi-Fi indicator LED (center LED) is ON then turn-ON MCU
 On Windows10, click "Start" menu and follow steps below.  
 
 ![fixed_IP_setup_0](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/fixed_IP_setup_0.png)  
+
 ![fixed_IP_setup_1](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/fixed_IP_setup_1.png)  
+
 ![fixed_IP_setup_2](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/fixed_IP_setup_2.png)  
