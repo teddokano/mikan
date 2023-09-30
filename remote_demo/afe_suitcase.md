@@ -44,6 +44,7 @@ For PC, user can use wireless and wired connection.
 # Getting started
 [Video operation manual (https://youtu.be/PLzNbjkXu8Y)](https://youtu.be/PLzNbjkXu8Y) is available.  
 This video explains whole operations of this demo.  
+
 [![](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/video.png)](https://youtu.be/PLzNbjkXu8Y)
 
 ## Procedure of turning-ON (Wi-Fi operation)
@@ -127,8 +128,11 @@ The measurement of the thermo-couple and the load-cell are done by voltage on ch
 The measured voltages are converted by calculation in software using an offset cancelling and coefficient values.  
 
 To show "Settings" panel, click on "show" button on "Settings:" section on the demo page.  
+![setting_button](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/setting_button.png)
+
 It will show "AFE measurement settings:" table.  
 The table has two sections of "Ch0: Thermocouple" and "Ch1: Load-cell".  
+![setting_panel](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/setting_panel.png)
 
 Those settings are stored on MCU board strage. The setting will be reloaded into system at demo start (after system reset).  
 
@@ -158,6 +162,9 @@ Those values will be kept refreshing while network commmunication is healthy.
 Load-cell measurement calibration can be done in two steps.  
 - Unload the load-cell and press "Zero setting" button
 - Put known weight objet on the load-cell stage. Put the weight in Calibration field then press "Scale calibration" button.  
+
+### Revert to default setting
+In the bottom of the setting panel, "Load Default Setting" button is available. Pushing this button reverts all setting to default values.  
 
 ## Limitations
 ### Simultaneous access from multiple remote device
