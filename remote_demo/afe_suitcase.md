@@ -42,6 +42,10 @@ As far as the web-browser works, user can use any hardware devices. It can be PC
 For PC, user can use wireless and wired connection. 
 
 # Getting started
+[Video operation manual (https://youtu.be/PLzNbjkXu8Y)](https://youtu.be/PLzNbjkXu8Y) is available.  
+This video explains whole operations of this demo.  
+[![](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/video.png)](https://youtu.be/PLzNbjkXu8Y)
+
 ## Procedure of turning-ON (Wi-Fi operation)
 #### (1) Secure connections of boards and cables
 After open the box, please make sure the boards and cables securely connected.  
@@ -55,9 +59,9 @@ The demo suite case has two AC adapters. Those need to be connected to 100V AC s
 
 #### (4) Start Wi-Fi access point
 Turn-ON the left most switch on the USB hub. It start to provide power into Wi-Fi access point.  
-Wait a while the access point is ready. When the access point bocome available, a center LED on the access point will be ON.  
+![sw1](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/sw1.png)  
 
-![sw1](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/sw1.png)
+Wait a while the access point is ready. When the access point bocome available, a center LED on the access point will be ON.  
 ![ap_led](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/ap_led.png)
 
 #### (5) Turn-ON MCU board
