@@ -8,6 +8,9 @@ The software runs on an interpreter called MicroPython on the i.MX RT1050. The M
 The software performs control and data read form the AFE and web-server to provide data to a remote device.  
 This demo code is available as open source distributed with MIT license. 
 
+![overview](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/overview.jpeg)
+
+
 ## Ingredients (hardware/software blocks)
 ### Hardware
 This demo is including following boards and devices. 
@@ -22,9 +25,15 @@ This demo is including following boards and devices.
 - 24V AC adapter (for NAFE13388-EVB power supply)
 - 5V AC adapter (for MIMXRT1050-EVKB power supply)
 
+![top_view](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/top_view.png)  
+
+![hardware_blocks](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/hardware_blocks.png)
+
 ### Software
 'mikan' class-libraries and demo code for AFE demo.  
 Code is available on https://github.com/teddokano/mikan/tree/afe ('afe' branch on 'mikan' repository)
+
+![software_blocks](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/software_blocks.png)
 
 ## Remote device requirements
 For the access to the demo suitecase, a web-browser is required. User can use any modern web-browsers like Chrome, FireFox and Safari.  
@@ -48,9 +57,14 @@ The demo suite case has two AC adapters. Those need to be connected to 100V AC s
 Turn-ON the left most switch on the USB hub. It start to provide power into Wi-Fi access point.  
 Wait a while the access point is ready. When the access point bocome available, a center LED on the access point will be ON.  
 
+![sw1](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/sw1.png)
+![ap_led](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/ap_led.png)
+
 #### (5) Turn-ON MCU board
 Turn-ON second-left switch on the USB hub. 
 MCU will start to work and show start message of "AFE demo / DHCP". When the system is ready, the LCD will show an IP address. 
+
+![sw2](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/sw2.png)
 
 #### (6) Conect iPad/Smartphone/PC to Wi-Fi
 The Wi-Fi is available on access point. The SSID will be "NAFEdemo" and "NAFEdemo5G".  
@@ -182,3 +196,8 @@ To fix this, confirm the Wi-Fi indicator LED (center LED) is ON then turn-ON MCU
 
 # Appendix
 ## How to set fixed-IP on a PC (for Peer-to-peer LAN cable operation)
+On Windows10, click "Start" menu and follow steps below.  
+
+![fixed_IP_setup_0](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/fixed_IP_setup_0.png)  
+![fixed_IP_setup_1](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/fixed_IP_setup_1.png)  
+![fixed_IP_setup_2](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/fixed_IP_setup_2.png)  
