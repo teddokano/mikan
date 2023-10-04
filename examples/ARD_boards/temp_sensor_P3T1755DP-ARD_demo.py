@@ -1,4 +1,9 @@
-from machine import Pin, SoftI2C, Timer
+### Un-comment next line for MIMXRT1050-EVKB Rev.A&A1 
+#from machine import Pin, SoftI2C, Timer
+
+### Un-comment next line for MIMXRT1050-EVKB Rev.B&B1 
+from machine import Pin, I2C, Timer
+
 from nxp_periph import P3T1755
 
 
@@ -17,7 +22,12 @@ def main():
     int = Pin("D9", Pin.IN)
     int.irq(trigger=Pin.IRQ_FALLING, handler=callback)
 
-    i2c = SoftI2C(sda="D14", scl="D15", freq=(400_000))
+    ### Un-comment next line for MIMXRT1050-EVKB Rev.A&A1 
+    #i2c = SoftI2C(sda="D14", scl="D15", freq=(400_000))
+
+    ### Un-comment next line for MIMXRT1050-EVKB Rev.B&B1 
+    i2c = I2C(0, freq=(400 * 1000))
+    
     temp_sensor = P3T1755(i2c)
 
     print(temp_sensor.info())
