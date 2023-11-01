@@ -2,7 +2,7 @@ from	machine		import	Pin, I2C, SoftI2C, SPI, SoftSPI
 import	machine
 
 if "i.MX RT1010 EVK" in os.uname().machine:
-	from	nxp_periph.RTC	import	PCF2131
+	from	nxp_periph.RTC	import	PCF2131, RTC_base
 else:
 	from	nxp_periph	import	PCF2131, RTC_base
 
@@ -12,6 +12,7 @@ BAT_SWOVR	= True
 def main():
 	if "i.MX RT1010 EVK" in os.uname().machine:
 		intf		= SoftI2C( sda = "A4", scl = "A5", freq = (400 * 1000) )
+		print( "target MCU board = i.MX RT1010 EVK" )
 	else:
 		intf		= I2C( 0, freq = (400 * 1000) )
 		

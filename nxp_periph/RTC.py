@@ -1,4 +1,4 @@
-from	machine				import	I2C, SPI
+from	machine				import	I2C, SoftI2C, SPI
 from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 
 class RTC_base():
@@ -639,7 +639,7 @@ def PCF2131( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 		>>> rtc  = PCF2131( intf )
 	
 	"""
-	if isinstance( interface, I2C ):
+	if isinstance( interface, I2C ) or isinstance( interface, SoftI2C ) :
 		return PCF2131_I2C( interface, address )
 
 	if isinstance( interface, SPI ):
