@@ -121,7 +121,13 @@ def demo( ip = "dhcp" ):
 		print( "Client address: ", client_addr, end = "" )
 		print( " / socket: ", client_stream )
 
-		req = client_stream.readline()	#### ECONNABORTED ??
+		try:
+			req = client_stream.readline()
+		except:
+			print( "ECONNABORTED ??" )
+			client_stream.close()
+			continue
+
 		e_time.show( "readline done" ) ###
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 
@@ -351,8 +357,8 @@ ext_content	= {	"css" : "text/css",
 				}
 
 def main():
-#	demo( ip = "dhcp" )
-	demo( ip = ( "10.0.0.99", "255.255.255.0", "10.0.0.1", "8.8.8.8" ) )
+	demo( ip = "dhcp" )
+#	demo( ip = ( "10.0.0.99", "255.255.255.0", "10.0.0.1", "8.8.8.8" ) )
 
 if __name__ == "__main__":
 	main()
