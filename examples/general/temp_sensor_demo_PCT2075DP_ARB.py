@@ -35,7 +35,7 @@ def main():
 	temp_sensor.dump_reg()
 	temp_sensor.heater	= True
 
-	tim0 = Timer(0)
+	tim0 = Timer( -1 )
 	tim0.init( period= 1000, callback = tim_cb)
 
 	while True:

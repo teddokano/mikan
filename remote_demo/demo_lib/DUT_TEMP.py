@@ -27,7 +27,7 @@ class DUT_TEMP( DUT_base.DUT_base ):
 	regex_mode		= ure.compile( r".*os_polarity=(\d+)&os_mode=(\d+)" )
 	regex_update	= ure.compile( r".*update=(\d+)" )
 
-	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
+	def __init__( self, dev, timer = -1, sampling_interval = 1.0 ):
 		super().__init__( dev )
 		
 		self.read_ref	= self.__read

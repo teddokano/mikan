@@ -38,7 +38,7 @@ def main():
 	gpio.mask		= [ ~v for v in io_config_and_pull_up ]
 	gpio.pull_en	= [ 0xFF ] * gpio.__np
 
-	tim0 = Timer(0)
+	tim0 = Timer( -1 )
 	tim0.init( period= 10, callback = tim_cb)
 
 	count	= 0

@@ -633,7 +633,7 @@ def main():
 	gpio.mask		= int_mask_config
 	gpio.pull_en	= [ 0xFF ] * gpio.__np
 
-	tim0 = Timer(0)
+	tim0 = Timer( -1 )
 	tim0.init( period= 10, callback = tim_cb)
 
 	count	= 0

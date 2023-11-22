@@ -17,7 +17,7 @@ class White_demo:
         self.pattern = [2 ** -((8.0 * i) / self.length) for i in range(self.length)]
 
         if 0 != self.units:
-            self.t = Timer(1)
+            self.t = Timer(-1)
             self.t.init(period=miliseconds, mode=Timer.PERIODIC, callback=self.change)
 
     def change(self, x):
@@ -42,7 +42,7 @@ class Color_demo:
         self.count = 0
 
         if 0 != self.units:
-            self.t = Timer(0)
+            self.t = Timer(-1)
             self.t.init(period=miliseconds, mode=Timer.PERIODIC, callback=self.change)
 
     def change(self, x):

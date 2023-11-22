@@ -50,7 +50,7 @@ class Color_demo:
 				self.dev_list	+= [ led.__dev ]
 		
 		if 0 != self.units:
-			self.t	= Timer( 0 )
+			self.t	= Timer( -1 )
 			self.t.init( period = miliseconds, mode = Timer.PERIODIC, callback = self.change_buffered if buffered else self.change_indivisual )
 		
 	def change_indivisual( self, x ):

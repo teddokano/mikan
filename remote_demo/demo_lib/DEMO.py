@@ -26,7 +26,7 @@ from	demo_lib.I2C_Character_LCD	import	AE_AQM0802
 
 
 MEM_MONITORING	= False
-#MEM_MONITORING	= True	###
+# MEM_MONITORING	= True	###
 
 def demo( ip = "dhcp" ):
 	print( "remote device demo" )
@@ -106,11 +106,13 @@ def demo( ip = "dhcp" ):
 
 	lcd_panel.print( f"{ip_info[0]}" )
 	
+	count	= 0
+	
 	while True:
 		res = s.accept()
 		
 		e_time	= elapsed_time( ticks_ms() ) ###
-		#e_time.enable	= True
+		# e_time.enable	= True
 		
 		lcd_panel.backlight( False )
 		
@@ -119,7 +121,7 @@ def demo( ip = "dhcp" ):
 		print( "Client address: ", client_addr, end = "" )
 		print( " / socket: ", client_stream )
 
-		req = client_stream.readline()
+		req = client_stream.readline()	#### ECONNABORTED ??
 		e_time.show( "readline done" ) ###
 		print( "Request: \"{}\"".format( req.decode()[:-2] ) )
 

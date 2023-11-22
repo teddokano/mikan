@@ -32,7 +32,7 @@ def main():
 	temp_sensor.reg_access( "Conf", conf | 0x0400 )
 	temp_sensor.dump_reg()
 
-	tim0 = Timer(0)
+	tim0 = Timer( -1 )
 	tim0.init( period= 1000, callback = tim_cb)
 
 	while True:
