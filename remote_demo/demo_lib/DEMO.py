@@ -95,7 +95,7 @@ def demo( ip = "dhcp" ):
 #	print( ip_info )
 
 	s = socket.socket()
-
+	s.settimeout( 1 )
 	ai = socket.getaddrinfo( "0.0.0.0", 80 )
 	addr = ai[0][-1]
 
@@ -109,7 +109,14 @@ def demo( ip = "dhcp" ):
 	count	= 0
 	
 	while True:
-		res = s.accept()
+
+		try:
+			res = s.accept()
+		except:
+			print( "*", end = "" )
+#			client_stream.close()
+			continue
+
 		
 		e_time	= elapsed_time( ticks_ms() ) ###
 		# e_time.enable	= True
