@@ -32,19 +32,24 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.boot()
 		
 		self.logical_channel	= [
-									self.logical_ch_config( 0, [ 0x1150, 0x00AC, 0x1400, 0x0000 ] ),
-									self.logical_ch_config( 1, [ 0x3350, 0x00A4, 0x1400, 0x3060 ] ),
+									# self.logical_ch_config( 0, [ 0x1150, 0x00AC, 0x1400, 0x0000 ] ),
+									# self.logical_ch_config( 1, [ 0x3350, 0x00A4, 0x1400, 0x3060 ] ),
+									self.logical_ch_config( 0, [ 0x22F0, 0x70AC, 0x5800, 0x0000 ] ),
+									self.logical_ch_config( 1, [ 0x33F0, 0x70B1, 0x5800, 0x3860 ] ),
 									]
 
 		self.setting	= { "weight": {}, "temperature": {}, "remark": "AFE demo updated setting file" }
 
 		self.setting[ "weight"      ][ "ofst"  ]	= -38
 		self.setting[ "weight"      ][ "coeff" ]	= 1044 / (354 - self.setting[ "weight" ][ "ofst" ])
+		# self.setting[ "weight"      ][ "ofst"  ]	= -24
+		# self.setting[ "weight"      ][ "coeff" ]	= 2
 		self.setting[ "temperature" ][ "ofst"  ]	= -70
 		self.setting[ "temperature" ][ "coeff" ]	= 1 / 40
 		self.setting[ "temperature" ][ "base"  ]	= 25
 
-		self.coeff_microvolt	= ((10 / (2 ** 24)) / 0.8) * 1e6
+		# self.coeff_microvolt	= ((10 / (2 ** 24)) / 0.8) * 1e6
+		self.coeff_microvolt	= ((10 / (2 ** 24)) / 16) * 1e6
 
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
