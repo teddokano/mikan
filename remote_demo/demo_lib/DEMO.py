@@ -80,7 +80,6 @@ def demo( ip = "dhcp" ):
 						]
 	
 	lcd_panel	= AE_AQM0802( si2c )
-	print( "******************" )
 	lcd_panel.print( [ "Hello", "mikan" ] )
 	
 	dut_list	= get_dut_list( devices, demo_harnesses )
@@ -111,27 +110,23 @@ def demo( ip = "dhcp" ):
 	while True:
 
 		try:
-			res = s.accept()
+			client_stream, client_addr = s.accept()
 		except:
-			print( "*", end = "" )
-#			client_stream.close()
+			# print( "*", end = "" )
 			continue
 
-		
 		e_time	= elapsed_time( ticks_ms() ) ###
 		# e_time.enable	= True
 		
 		lcd_panel.backlight( False )
 		
-		client_stream	= res[0]
-		client_addr		= res[1]
-		print( "Client address: ", client_addr, end = "" )
-		print( " / socket: ", client_stream )
+		print( f"[{count}] : client address: {client_addr} / socket: {client_stream}" )
+		count	+= 1
 
 		try:
 			req = client_stream.readline()
 		except:
-			print( "ECONNABORTED ??" )
+			print( "ECONNABORTED" )
 			client_stream.close()
 			continue
 
