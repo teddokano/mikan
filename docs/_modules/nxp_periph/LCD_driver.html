@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.LCD_driver &mdash; mikan 1.10 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>nxp_periph.LCD_driver &mdash; mikan 1.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2d52a127"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -68,7 +70,9 @@
   <h1>Source code for nxp_periph.LCD_driver</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">nxp_periph.interface</span>	<span class="kn">import</span>	<span class="n">I2C_target</span>
 
-<div class="viewcode-block" id="PCA8561"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561">[docs]</a><span class="k">class</span> <span class="nc">PCA8561</span><span class="p">(</span> <span class="n">I2C_target</span> <span class="p">):</span>
+<div class="viewcode-block" id="PCA8561">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA8561</span><span class="p">(</span> <span class="n">I2C_target</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	PCA8561: LCD driver</span>
 <span class="sd">	</span>
@@ -108,7 +112,9 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_buffer</span>	<span class="o">=</span> <span class="p">[</span> <span class="mh">0x00</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">12</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">str_buffer</span>	<span class="o">=</span> <span class="p">[]</span>
 	
-<div class="viewcode-block" id="PCA8561.com_seg"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.com_seg">[docs]</a>	<span class="k">def</span> <span class="nf">com_seg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">seg</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
+<div class="viewcode-block" id="PCA8561.com_seg">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.com_seg">[docs]</a>
+	<span class="k">def</span> <span class="nf">com_seg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">com</span><span class="p">,</span> <span class="n">seg</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
 		<span class="n">reg</span>	<span class="o">=</span> <span class="p">[</span>	<span class="p">[</span> <span class="s2">&quot;COM0_07_00&quot;</span><span class="p">,</span> <span class="s2">&quot;COM0_15_08&quot;</span><span class="p">,</span> <span class="s2">&quot;COM0_17_16&quot;</span> <span class="p">],</span>
 				<span class="p">[</span> <span class="s2">&quot;COM1_07_00&quot;</span><span class="p">,</span> <span class="s2">&quot;COM1_15_08&quot;</span><span class="p">,</span> <span class="s2">&quot;COM1_17_16&quot;</span> <span class="p">],</span>
 				<span class="p">[</span> <span class="s2">&quot;COM2_07_00&quot;</span><span class="p">,</span> <span class="s2">&quot;COM2_15_08&quot;</span><span class="p">,</span> <span class="s2">&quot;COM2_17_16&quot;</span> <span class="p">],</span>
@@ -116,7 +122,10 @@
 				<span class="p">]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="n">reg</span><span class="p">[</span> <span class="n">com</span> <span class="p">][</span> <span class="n">seg</span> <span class="o">//</span> <span class="mi">8</span> <span class="p">],</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">seg</span> <span class="o">%</span> <span class="mi">8</span><span class="p">),</span> <span class="n">v</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">seg</span> <span class="o">%</span> <span class="mi">8</span><span class="p">)</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="PCA8561.puts"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.puts">[docs]</a>	<span class="k">def</span> <span class="nf">puts</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">char_per_sec</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCA8561.puts">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.puts">[docs]</a>
+	<span class="k">def</span> <span class="nf">puts</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">char_per_sec</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Print a string on LCD</span>
 <span class="sd">		</span>
@@ -141,7 +150,10 @@
 		<span class="k">if</span> <span class="n">char_per_sec</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PCA8561.putchar"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.putchar">[docs]</a>	<span class="k">def</span> <span class="nf">putchar</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">buffer_update_only</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCA8561.putchar">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.putchar">[docs]</a>
+	<span class="k">def</span> <span class="nf">putchar</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">buffer_update_only</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Print a character on LCD</span>
 <span class="sd">		</span>
@@ -168,7 +180,10 @@
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">buffer_update_only</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PCA8561.clear"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.clear">[docs]</a>	<span class="k">def</span> <span class="nf">clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCA8561.clear">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.clear">[docs]</a>
+	<span class="k">def</span> <span class="nf">clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Clear LCD</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -176,13 +191,19 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">str_buffer</span>	<span class="o">=</span> <span class="p">[]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PCA8561.flush"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.flush">[docs]</a>	<span class="k">def</span> <span class="nf">flush</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCA8561.flush">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.flush">[docs]</a>
+	<span class="k">def</span> <span class="nf">flush</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Flash register buffer contents to LCD</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;COM0_07_00&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_buffer</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="PCA8561.char2seg"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.char2seg">[docs]</a>	<span class="k">def</span> <span class="nf">char2seg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">c</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCA8561.char2seg">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.PCA8561.char2seg">[docs]</a>
+	<span class="k">def</span> <span class="nf">char2seg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">c</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Character converted to segment pattern.</span>
 <span class="sd">		</span>
@@ -217,6 +238,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_buffer</span><span class="p">[</span> <span class="n">pos</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="p">]</span>	<span class="o">|=</span> <span class="n">c1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">pos</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_buffer</span><span class="p">[</span> <span class="n">pos</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">6</span> <span class="p">]</span>	<span class="o">|=</span> <span class="n">c2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">pos</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">reg_buffer</span><span class="p">[</span> <span class="n">pos</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">9</span> <span class="p">]</span>	<span class="o">|=</span> <span class="n">c3</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">pos</span> <span class="o">%</span> <span class="mi">2</span><span class="p">))</span></div>
+
 <span class="w">	</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Character pattern for PCA8561AHN-ARD</span>
@@ -270,6 +292,7 @@
 						<span class="s2">&quot;/&quot;</span><span class="p">:</span> <span class="mb">0b_0000_1000_0010_0000</span><span class="p">,</span>
 						<span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">:</span> <span class="mb">0b_0010_0000_0000_1000</span><span class="p">,</span>
 						<span class="p">}</span></div>
+
 		
 
 
@@ -277,7 +300,9 @@
 <span class="c1">#from	nxp_periph	import	PCA8561</span>
 <span class="kn">from</span>	<span class="nn">utime</span>		<span class="kn">import</span>	<span class="n">sleep</span>	
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LCD_driver.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 	<span class="n">i2c</span>		<span class="o">=</span> <span class="n">I2C</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">freq</span> <span class="o">=</span> <span class="p">(</span><span class="mi">400</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">)</span>
 	<span class="nb">print</span><span class="p">(</span> <span class="n">i2c</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span> <span class="p">)</span>
 	
@@ -321,6 +346,7 @@
 
 		<span class="n">sleep</span><span class="p">(</span> <span class="mf">0.5</span> <span class="p">)</span>
 		<span class="n">lcd</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
 		
 	
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.stepper_motor &mdash; mikan 1.10 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>nxp_periph.stepper_motor &mdash; mikan 1.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2d52a127"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -67,12 +71,16 @@
 <span></span><span class="kn">from</span>	<span class="nn">nxp_periph.interface</span>	<span class="kn">import</span>	<span class="n">I2C_target</span>
 <span class="kn">from</span>	<span class="nn">utime</span>					<span class="kn">import</span>	<span class="n">sleep</span>
 
-<div class="viewcode-block" id="StepperMotor_base"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base">[docs]</a><span class="k">class</span> <span class="nc">StepperMotor_base</span><span class="p">():</span>
+<div class="viewcode-block" id="StepperMotor_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base">[docs]</a>
+<span class="k">class</span> <span class="nc">StepperMotor_base</span><span class="p">():</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	An abstraction class to make user interface.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="StepperMotor_base.start"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.start">[docs]</a>	<span class="k">def</span> <span class="nf">start</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+<div class="viewcode-block" id="StepperMotor_base.start">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.start">[docs]</a>
+	<span class="k">def</span> <span class="nf">start</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Start motor</span>
 <span class="sd">			</span>
@@ -84,13 +92,19 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__start</span><span class="p">(</span> <span class="n">start</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.stop"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.stop">[docs]</a>	<span class="k">def</span> <span class="nf">stop</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.stop">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.stop">[docs]</a>
+	<span class="k">def</span> <span class="nf">stop</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Stop motor</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__start</span><span class="p">(</span> <span class="n">start</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.steps"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.steps">[docs]</a>	<span class="k">def</span> <span class="nf">steps</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.steps">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.steps">[docs]</a>
+	<span class="k">def</span> <span class="nf">steps</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Set steps</span>
 <span class="sd">			</span>
@@ -104,7 +118,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__steps</span><span class="p">(</span> <span class="n">step</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.pps"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.pps">[docs]</a>	<span class="k">def</span> <span class="nf">pps</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pps</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.pps">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.pps">[docs]</a>
+	<span class="k">def</span> <span class="nf">pps</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pps</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Set pulse per second (pps)</span>
 <span class="sd">			</span>
@@ -118,7 +135,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__pps</span><span class="p">(</span> <span class="n">pps</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.drv_phase"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.drv_phase">[docs]</a>	<span class="k">def</span> <span class="nf">drv_phase</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.drv_phase">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.drv_phase">[docs]</a>
+	<span class="k">def</span> <span class="nf">drv_phase</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Setting drive phase mode</span>
 <span class="sd">			</span>
@@ -131,7 +151,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__drv_phase</span><span class="p">(</span> <span class="n">v</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.home"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.home">[docs]</a>	<span class="k">def</span> <span class="nf">home</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pps</span> <span class="o">=</span> <span class="mi">96</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">extrasteps</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.home">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.home">[docs]</a>
+	<span class="k">def</span> <span class="nf">home</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pps</span> <span class="o">=</span> <span class="mi">96</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">extrasteps</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Go to home position</span>
 <span class="sd">			</span>
@@ -147,27 +170,40 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 	
 		<span class="bp">self</span><span class="o">.</span><span class="n">__home</span><span class="p">(</span> <span class="n">pps</span> <span class="o">=</span> <span class="n">pps</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">,</span> <span class="n">extrasteps</span> <span class="o">=</span> <span class="n">extrasteps</span> <span class="p">)</span></div>
+
 	
-<div class="viewcode-block" id="StepperMotor_base.init"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.init">[docs]</a>	<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+<div class="viewcode-block" id="StepperMotor_base.init">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.init">[docs]</a>
+	<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Initialize registers</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">__init_reg</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.w16"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.w16">[docs]</a>	<span class="k">def</span> <span class="nf">w16</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">val</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.w16">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.w16">[docs]</a>
+	<span class="k">def</span> <span class="nf">w16</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">val</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Register write with 16 bit width</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="p">[</span> <span class="n">val</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="n">val</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span> <span class="p">]</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="StepperMotor_base.r16"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.r16">[docs]</a>	<span class="k">def</span> <span class="nf">r16</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="StepperMotor_base.r16">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.StepperMotor_base.r16">[docs]</a>
+	<span class="k">def</span> <span class="nf">r16</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Register read with 16 bit width</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">r</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="mi">2</span> <span class="p">)</span>
-		<span class="k">return</span> <span class="n">r</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">|</span> <span class="p">(</span> <span class="n">r</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="p">)</span></div></div>
+		<span class="k">return</span> <span class="n">r</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">|</span> <span class="p">(</span> <span class="n">r</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span> <span class="p">)</span></div>
+</div>
 
-<div class="viewcode-block" id="PCA9629A"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.PCA9629A">[docs]</a><span class="k">class</span> <span class="nc">PCA9629A</span><span class="p">(</span> <span class="n">StepperMotor_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCA9629A">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.stepper_motor.PCA9629A">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA9629A</span><span class="p">(</span> <span class="n">StepperMotor_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
 	<span class="n">STEP_RESOLUTION</span>	<span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mf">3e-6</span><span class="p">)</span>
 	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="mh">0x40</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
 	<span class="n">AUTO_INCREMENT</span>	<span class="o">=</span> <span class="mh">0x80</span>
@@ -271,6 +307,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;MODE&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">pps</span><span class="p">(</span> <span class="n">pps</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">(</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">reverse</span> <span class="p">)</span></div>
+
 </pre></div>
 
            </div>

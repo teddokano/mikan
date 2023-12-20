@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.RTC &mdash; mikan 1.10 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>nxp_periph.RTC &mdash; mikan 1.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=2d52a127"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -69,7 +71,9 @@
 <span></span><span class="kn">from</span>	<span class="nn">machine</span>				<span class="kn">import</span>	<span class="n">I2C</span><span class="p">,</span> <span class="n">SPI</span>
 <span class="kn">from</span> <span class="nn">nxp_periph.interface</span>	<span class="kn">import</span>	<span class="n">Interface</span><span class="p">,</span> <span class="n">I2C_target</span><span class="p">,</span> <span class="n">SPI_target</span>
 
-<div class="viewcode-block" id="RTC_base"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base">[docs]</a><span class="k">class</span> <span class="nc">RTC_base</span><span class="p">():</span>
+<div class="viewcode-block" id="RTC_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base">[docs]</a>
+<span class="k">class</span> <span class="nc">RTC_base</span><span class="p">():</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	An abstraction class to make RTC user interface.</span>
 <span class="sd">	</span>
@@ -89,9 +93,11 @@
 				<span class="s2">&quot;Thursday&quot;</span><span class="p">,</span> <span class="s2">&quot;Friday&quot;</span><span class="p">,</span> <span class="s2">&quot;Saturday&quot;</span><span class="p">,</span> <span class="s2">&quot;Sunday&quot;</span> <span class="p">)</span>
 	<span class="n">MNTH</span>	<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;January&quot;</span><span class="p">,</span> <span class="s2">&quot;February&quot;</span><span class="p">,</span> <span class="s2">&quot;March&quot;</span><span class="p">,</span>
 				<span class="s2">&quot;April&quot;</span><span class="p">,</span> <span class="s2">&quot;May&quot;</span><span class="p">,</span> <span class="s2">&quot;June&quot;</span><span class="p">,</span> <span class="s2">&quot;July&quot;</span><span class="p">,</span> <span class="s2">&quot;August&quot;</span><span class="p">,</span>
-				<span class="s2">&quot;September&quot;</span><span class="p">,</span> <span class="s2">&quot;October&quot;</span><span class="p">,</span> <span class="s2">&quot;Nobemver&quot;</span><span class="p">,</span> <span class="s2">&quot;Decemver&quot;</span> <span class="p">)</span>
+				<span class="s2">&quot;September&quot;</span><span class="p">,</span> <span class="s2">&quot;October&quot;</span><span class="p">,</span> <span class="s2">&quot;November&quot;</span><span class="p">,</span> <span class="s2">&quot;December&quot;</span> <span class="p">)</span>
 
-<div class="viewcode-block" id="RTC_base.datetime"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.datetime">[docs]</a>	<span class="k">def</span> <span class="nf">datetime</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
+<div class="viewcode-block" id="RTC_base.datetime">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.datetime">[docs]</a>
+	<span class="k">def</span> <span class="nf">datetime</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		get/set date&amp;time</span>
 <span class="sd">		</span>
@@ -127,7 +133,10 @@
 
 		<span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span> <span class="n">dt</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">DATETIME_TUPPLE_FORM</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.now"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.now">[docs]</a>	<span class="k">def</span> <span class="nf">now</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.now">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.now">[docs]</a>
+	<span class="k">def</span> <span class="nf">now</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		get current date&amp;time</span>
 <span class="sd">	</span>
@@ -143,7 +152,10 @@
 		
 		<span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span> <span class="n">dt</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">NOW_TUPPLE_FORM</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.init"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.init">[docs]</a>	<span class="k">def</span> <span class="nf">init</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">form</span> <span class="o">=</span> <span class="n">NOW_TUPPLE_FORM</span><span class="p">,</span> <span class="n">weekday</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.init">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.init">[docs]</a>
+	<span class="k">def</span> <span class="nf">init</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">form</span> <span class="o">=</span> <span class="n">NOW_TUPPLE_FORM</span><span class="p">,</span> <span class="n">weekday</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		set date&amp;time</span>
 <span class="sd">	</span>
@@ -163,7 +175,10 @@
 		<span class="n">dt</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">tuple2dt</span><span class="p">(</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">weekday</span> <span class="o">=</span> <span class="n">weekday</span> <span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__set_datetime_reg</span><span class="p">(</span> <span class="n">dt</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.deinit"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.deinit">[docs]</a>	<span class="k">def</span> <span class="nf">deinit</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.deinit">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.deinit">[docs]</a>
+	<span class="k">def</span> <span class="nf">deinit</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		de-initialize</span>
 <span class="sd">		</span>
@@ -173,7 +188,10 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">__software_reset</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEINIT_VAL</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.alarm_int"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.alarm_int">[docs]</a>	<span class="k">def</span> <span class="nf">alarm_int</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pin_select</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.alarm_int">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.alarm_int">[docs]</a>
+	<span class="k">def</span> <span class="nf">alarm_int</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pin_select</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		set alarm interrupt</span>
 <span class="sd">	</span>
@@ -203,8 +221,11 @@
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">__set_alarm</span><span class="p">(</span> <span class="n">pin_select</span><span class="p">,</span> <span class="n">dt</span> <span class="p">)</span>
 		<span class="k">return</span> <span class="n">s</span></div>
+
 		
-<div class="viewcode-block" id="RTC_base.timer_alarm"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.timer_alarm">[docs]</a>	<span class="k">def</span> <span class="nf">timer_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">hours</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">minutes</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pin_select</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span> <span class="p">):</span>
+<div class="viewcode-block" id="RTC_base.timer_alarm">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.timer_alarm">[docs]</a>
+	<span class="k">def</span> <span class="nf">timer_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">hours</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">minutes</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pin_select</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		set timer</span>
 <span class="sd">	</span>
@@ -233,20 +254,29 @@
 					  <span class="p">}</span>
 		<span class="n">alm</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alarm_int</span><span class="p">(</span> <span class="n">pin_select</span><span class="p">,</span> <span class="o">**</span><span class="n">alarm_time</span> <span class="p">)</span>
 		<span class="k">return</span>	<span class="n">alm</span></div>
+
 	
-<div class="viewcode-block" id="RTC_base.clear_alarm"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.clear_alarm">[docs]</a>	<span class="k">def</span> <span class="nf">clear_alarm</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="RTC_base.clear_alarm">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.clear_alarm">[docs]</a>
+	<span class="k">def</span> <span class="nf">clear_alarm</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		disabling alarm interrupt</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__clear_alarm</span><span class="p">()</span></div>
+
 	
-<div class="viewcode-block" id="RTC_base.cancel"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.cancel">[docs]</a>	<span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="RTC_base.cancel">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.cancel">[docs]</a>
+	<span class="k">def</span> <span class="nf">cancel</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		cancel alarm</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__cancel_alarm</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="RTC_base.periodic_interrupt"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.periodic_interrupt">[docs]</a>	<span class="k">def</span> <span class="nf">periodic_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pin_select</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">period</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.periodic_interrupt">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.periodic_interrupt">[docs]</a>
+	<span class="k">def</span> <span class="nf">periodic_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pin_select</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">period</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		set periodic (every minutes or seconds) interrupt</span>
 <span class="sd">	</span>
@@ -263,7 +293,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__set_periodic_interrupt</span><span class="p">(</span> <span class="n">pin_select</span><span class="p">,</span> <span class="n">period</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.set_timestamp_interrupt"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.set_timestamp_interrupt">[docs]</a>	<span class="k">def</span> <span class="nf">set_timestamp_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">pin_select</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">last_event</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.set_timestamp_interrupt">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.set_timestamp_interrupt">[docs]</a>
+	<span class="k">def</span> <span class="nf">set_timestamp_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">pin_select</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">last_event</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		set timestamp interrupt</span>
 <span class="sd">	</span>
@@ -283,7 +316,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__set_timestamp_interrupt</span><span class="p">(</span> <span class="n">pin_select</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">last_event</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.timestamp"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.timestamp">[docs]</a>	<span class="k">def</span> <span class="nf">timestamp</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.timestamp">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.timestamp">[docs]</a>
+	<span class="k">def</span> <span class="nf">timestamp</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		get timestamp</span>
 <span class="sd">	</span>
@@ -315,7 +351,10 @@
 		
 		<span class="k">return</span> <span class="n">ts_list</span></div>
 
-<div class="viewcode-block" id="RTC_base.timestamp2str"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.timestamp2str">[docs]</a>	<span class="k">def</span> <span class="nf">timestamp2str</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ts_list</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.timestamp2str">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.timestamp2str">[docs]</a>
+	<span class="k">def</span> <span class="nf">timestamp2str</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ts_list</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		timestamp converted to a str</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -325,7 +364,10 @@
 
 		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">s</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.oscillator_stopped"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.oscillator_stopped">[docs]</a>	<span class="k">def</span> <span class="nf">oscillator_stopped</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.oscillator_stopped">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.oscillator_stopped">[docs]</a>
+	<span class="k">def</span> <span class="nf">oscillator_stopped</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		detects the RTC was beeing reset</span>
 <span class="sd">	</span>
@@ -338,7 +380,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__oscillator_stopped</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="RTC_base.battery_switchover"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.battery_switchover">[docs]</a>	<span class="k">def</span> <span class="nf">battery_switchover</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">switch</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.battery_switchover">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.battery_switchover">[docs]</a>
+	<span class="k">def</span> <span class="nf">battery_switchover</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">switch</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		enabling battery switch over</span>
 <span class="sd">	</span>
@@ -350,7 +395,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">__battery_switchover</span><span class="p">(</span> <span class="n">switch</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.interrupt_clear"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.interrupt_clear">[docs]</a>	<span class="k">def</span> <span class="nf">interrupt_clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.interrupt_clear">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.interrupt_clear">[docs]</a>
+	<span class="k">def</span> <span class="nf">interrupt_clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		interrupt clear</span>
 <span class="sd">	</span>
@@ -361,7 +409,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__interrupt_clear</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="RTC_base.check_events"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.check_events">[docs]</a>	<span class="k">def</span> <span class="nf">check_events</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">events</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="RTC_base.check_events">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.check_events">[docs]</a>
+	<span class="k">def</span> <span class="nf">check_events</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">events</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		translate events from flags to names</span>
 <span class="sd">	</span>
@@ -376,7 +427,10 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_events</span><span class="p">(</span> <span class="n">events</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.tuple2dt"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.tuple2dt">[docs]</a>	<span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="RTC_base.tuple2dt">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.tuple2dt">[docs]</a>
+	<span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">tuple2dt</span><span class="p">(</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">weekday</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		converts a tuple format data into a dict</span>
@@ -403,7 +457,10 @@
 
 		<span class="k">return</span> <span class="n">dt</span></div>
 
-<div class="viewcode-block" id="RTC_base.tuple2str"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.tuple2str">[docs]</a>	<span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="RTC_base.tuple2str">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.tuple2str">[docs]</a>
+	<span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">tuple2str</span><span class="p">(</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">tpl</span><span class="p">,</span> <span class="n">form</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		converts a tuple format data into a string</span>
@@ -433,7 +490,10 @@
 		
 		<span class="k">return</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="RTC_base.bin2bcd"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.bin2bcd">[docs]</a>	<span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="RTC_base.bin2bcd">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.bin2bcd">[docs]</a>
+	<span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">bin2bcd</span><span class="p">(</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		converts normal int to binary-coded-decimal (BCD)</span>
@@ -451,7 +511,10 @@
 
 		<span class="k">return</span> <span class="p">((</span><span class="n">value</span> <span class="o">//</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RTC_base.bcd2bin"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.bcd2bin">[docs]</a>	<span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="RTC_base.bcd2bin">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.RTC_base.bcd2bin">[docs]</a>
+	<span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">bcd2bin</span><span class="p">(</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		converts binary-coded-decimal (BCD) to normal int</span>
@@ -467,13 +530,17 @@
 
 <span class="sd">		&quot;&quot;&quot;</span>
 
-		<span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span></div></div>
+		<span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="c1">##	@class		PCF2131_base</span>
 <span class="c1">#	@brief		A class to manage PCF2131 (RTC)</span>
 <span class="c1">#</span>
-<div class="viewcode-block" id="PCF2131_base"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131_base">[docs]</a><span class="k">class</span> <span class="nc">PCF2131_base</span><span class="p">(</span> <span class="n">RTC_base</span> <span class="p">):</span>
+<div class="viewcode-block" id="PCF2131_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131_base">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF2131_base</span><span class="p">(</span> <span class="n">RTC_base</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	An abstraction class for PCF2131</span>
 <span class="sd">	The PCF2131 class can be composed with one of interface class: I2C_target or SPI_target</span>
@@ -646,19 +713,26 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_5&quot;</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">,</span> <span class="mh">0xF0</span> <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="PCF2131_I2C"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131_I2C">[docs]</a><span class="k">class</span> <span class="nc">PCF2131_I2C</span><span class="p">(</span> <span class="n">PCF2131_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCF2131_I2C">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131_I2C">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF2131_I2C</span><span class="p">(</span> <span class="n">PCF2131_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	PCF2131 class with I2C interface</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="p">):</span>
 		<span class="n">I2C_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="PCF2131_SPI"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131_SPI">[docs]</a><span class="k">class</span> <span class="nc">PCF2131_SPI</span><span class="p">(</span> <span class="n">PCF2131_base</span><span class="p">,</span> <span class="n">SPI_target</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCF2131_SPI">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131_SPI">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF2131_SPI</span><span class="p">(</span> <span class="n">PCF2131_base</span><span class="p">,</span> <span class="n">SPI_target</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	PCF2131 class with SPI interface</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="p">):</span>
 		<span class="n">SPI_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span></div>
+
 
 <span class="k">class</span> <span class="nc">__PCF2131__doesnt_work</span><span class="p">():</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
@@ -679,7 +753,9 @@
 <span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="p">(</span><span class="mh">0xA6</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">DEFAULT_CS</span>		<span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="PCF2131"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131">[docs]</a><span class="k">def</span> <span class="nf">PCF2131</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span>  <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="n">DEFAULT_CS</span> <span class="p">):</span>
+<div class="viewcode-block" id="PCF2131">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF2131">[docs]</a>
+<span class="k">def</span> <span class="nf">PCF2131</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span>  <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="n">DEFAULT_CS</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	A constructor interface for PCF2131</span>
 
@@ -713,7 +789,10 @@
 	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">SPI</span> <span class="p">):</span>
 		<span class="k">return</span> <span class="n">PCF2131_SPI</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="PCF85063"><a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF85063">[docs]</a><span class="k">class</span> <span class="nc">PCF85063</span><span class="p">(</span> <span class="n">RTC_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCF85063">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF85063">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF85063</span><span class="p">(</span> <span class="n">RTC_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	PCF85063 class</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -833,6 +912,7 @@
 
 	<span class="k">def</span> <span class="nf">__test</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;RAM_byte&quot;</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">,</span> <span class="mh">0xF0</span> <span class="p">)</span></div>
+
 
 
 </pre></div>

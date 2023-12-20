@@ -18,7 +18,7 @@ sys.modules['utime'] = MagicMock()
 project = 'mikan'
 copyright = '2023, Tedd OKANO'
 author = 'Tedd OKANO'
-release = '1.10'
+release = '1.12'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
