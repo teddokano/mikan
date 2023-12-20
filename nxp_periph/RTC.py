@@ -21,7 +21,7 @@ class RTC_base():
 				"Thursday", "Friday", "Saturday", "Sunday" )
 	MNTH	= ( "None", "January", "February", "March",
 				"April", "May", "June", "July", "August",
-				"September", "October", "Nobemver", "Decemver" )
+				"September", "October", "November", "December" )
 
 	def datetime( self, *args ):
 		"""
