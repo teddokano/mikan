@@ -1,6 +1,9 @@
 # "mikan" 💡⏰🌡️↕🔠🔄💁🍎
-Peripheral device driver for collection for MicroPython.  
+I²C/SPI peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
+
+> **Note**  
+> **mikan v1.12** is released. This version is compatible to latest vresion of MicroPython v1.21.0 (as of 2023 Dec 21).
 
 > **Warning**  
 > As of 2023 May 04, **MicroPython v1.20.0** is available. Use this 1.20.0 for **MIMXRT1170-EVK**. It's a stable version for the MIMXRT1170-EVK.  
@@ -58,11 +61,6 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 
 # Getting started
 
-> **Note**  
-> Install can be done with a package management tool called: [`mip`](https://docs.micropython.org/en/latest/reference/packages.html#installing-packages-with-mpremote).  
-> It can be done with command of `mpremote mip install github:teddokano/mikan`.  
-> Using `mpremote` is easy way to install the library. However it needs to setup the tool on your PC. So in this document, manual install steps described to do it in simple way. 
-
 ## The steps
 
 The instllation can be completed in 2 steps as follows.  
@@ -102,6 +100,12 @@ Follow this video to install MicroPython into the MCU board. This is an example 
 Need to copy 'mikan' class driver into the MCU board storage. The guide video shows how to copy using Thonny. 
 [https://youtu.be/rG8MwNkk9xs](https://youtu.be/rG8MwNkk9xs)  
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step2.png)](https://youtu.be/rG8MwNkk9xs)
+
+> **Note**  
+> Install can be done with a package management tool called: [`mip`](https://docs.micropython.org/en/latest/reference/packages.html#installing-packages-with-mpremote).  
+> It can be done with command of `mpremote mip install github:teddokano/mikan`.  
+> Using `mpremote` is easy way to install the library. However it needs to setup the tool on your PC. So in this document, manual install steps described to do it in simple way. 
+
 
 
 # What is inside?
@@ -188,7 +192,7 @@ The demo code is avaiable in `remote_demo/`.
 `remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
 This demonstration works with a network connection. The microcontroller performs a HTTP server to provide user interface on web browsers.  
 
-For more information, refer to `remote_demo/README.md`.
+For more information, refer to [`remote_demo/README.md`](https://github.com/teddokano/mikan/blob/main/remote_demo/README.md).
 
 Video is available --> [https://youtu.be/usPzhs_2IsI](https://youtu.be/usPzhs_2IsI)   
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/remo_demo_perform.png)](https://youtu.be/usPzhs_2IsI)
