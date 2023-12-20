@@ -3,12 +3,17 @@
 ### The Software I2C is used because hardware I2C is available on A4&A5 and D0&D1
 ### pins on IMXRT1050-EVKB
 
-from	machine		import	Pin, SoftI2C
+from	machine		import	I2C, SoftI2C
 from	utime		import	sleep
 from	nxp_periph	import	P3T1085
+import	os
 
 def main():
-	i2c			= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+	if "i.MX RT1050 EVKB-A" in os.uname().machine:
+		i2c = SoftI2C(sda="D14", scl="D15", freq=(400_000))
+	else:
+		i2c = I2C(0, freq=(400 * 1000))
+
 	temp_sensor	= P3T1085( i2c )
 
 	print( temp_sensor.info() )

@@ -1,5 +1,6 @@
-from	machine		import	Pin, SoftI2C, Timer
+from	machine		import	Pin, I2C, SoftI2C, Timer
 from	nxp_periph	import	P3T1085
+import	os
 
 def main():
 	int_flag	= False
@@ -17,7 +18,11 @@ def main():
 	int	= Pin( "D8", Pin.IN )
 	int.irq( trigger = Pin.IRQ_FALLING, handler = callback )
 
-	i2c	= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+	if "i.MX RT1050 EVKB-A" in os.uname().machine:
+		i2c = SoftI2C(sda="D14", scl="D15", freq=(400_000))
+	else:
+		i2c = I2C(0, freq=(400 * 1000))
+
 	temp_sensor	= P3T1085( i2c )
 
 	print( temp_sensor.info() )
