@@ -24,7 +24,6 @@ from	demo_lib	import	DUT_base
 
 from	demo_lib.I2C_Character_LCD	import	AE_AQM0802
 
-
 MEM_MONITORING	= False
 # MEM_MONITORING	= True	###
 
@@ -62,7 +61,7 @@ def demo( ip = "dhcp" ):
 #						PCAL6408( i2c, 0x21, setup_EVB = True ),
 						PCAL6416( i2c, 0x20, setup_EVB = True ),
 #						PCAL6524( i2c, 0x22, setup_EVB = True ),
-#						PCAL6534( i2c, 0x22, setup_EVB = True ),
+						PCAL6534( i2c, 0x22, setup_EVB = True ),
 #						PCF2131( spi ),
 #						PCF85063( i2c ),
 						P3T1085( si2c ),
@@ -94,7 +93,7 @@ def demo( ip = "dhcp" ):
 #	print( ip_info )
 
 	s = socket.socket()
-	s.settimeout( 1 )
+	s.settimeout( 1000 )
 	ai = socket.getaddrinfo( "0.0.0.0", 80 )
 	addr = ai[0][-1]
 
@@ -108,7 +107,6 @@ def demo( ip = "dhcp" ):
 	count	= 0
 	
 	while True:
-
 		try:
 			client_stream, client_addr = s.accept()
 		except:
