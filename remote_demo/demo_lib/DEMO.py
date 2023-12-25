@@ -24,6 +24,7 @@ from	demo_lib	import	DUT_base
 
 from	demo_lib.I2C_Character_LCD	import	AE_AQM0802
 
+NETWORK_TIMEOUT	= False
 MEM_MONITORING	= False
 # MEM_MONITORING	= True	###
 
@@ -93,7 +94,10 @@ def demo( ip = "dhcp" ):
 #	print( ip_info )
 
 	s = socket.socket()
-	s.settimeout( 1000 )
+	
+	if NETWORK_TIMEOUT:
+		s.settimeout( 1000 )
+		
 	ai = socket.getaddrinfo( "0.0.0.0", 80 )
 	addr = ai[0][-1]
 
@@ -107,11 +111,14 @@ def demo( ip = "dhcp" ):
 	count	= 0
 	
 	while True:
-		try:
+		if NETWORK_TIMEOUT:
+			try:
+				client_stream, client_addr = s.accept()
+			except:
+				# print( "*", end = "" )
+				continue
+		else:
 			client_stream, client_addr = s.accept()
-		except:
-			# print( "*", end = "" )
-			continue
 
 		e_time	= elapsed_time( ticks_ms() ) ###
 		# e_time.enable	= True
