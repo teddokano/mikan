@@ -33,8 +33,9 @@
 		["../demo_lib/jslib/three.min.js", 		"github:teddokano/mikan/remote_demo/demo_lib/jslib/three.min.js"	],
 		["../demo_lib/img/mikan.jpg", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan.jpg"	],
 		["../demo_lib/img/mikan0.png", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan0.png"	],
-		["../demo_lib/img/mikan1.png", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan1.png"	]
+		["../demo_lib/img/mikan1.png", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan1.png"	],
+		["../demo_lib/I2C_Character_LCD.py", 	"github:teddokano/mikan/remote_demo/demo_lib/I2C_Character_LCD.py"	]
 	],
 	"deps": [],
-	"version": "1.10.7"
+	"version": "1.12.2"
 	}
