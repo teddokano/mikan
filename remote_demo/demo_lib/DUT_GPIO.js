@@ -1,4 +1,4 @@
-let initAllRegReloadInterval	= 10;
+let initAllRegReloadInterval	= 5;
 let	allRegReloadInterval		= initAllRegReloadInterval;
 
 function updateRegField( idx ) {
