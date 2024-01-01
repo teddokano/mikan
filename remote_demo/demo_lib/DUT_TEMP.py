@@ -3,7 +3,7 @@ import	ure
 import	ujson
 import	micropython
 
-from	nxp_periph	import	PCT2075, LM75B, P3T1085
+from	nxp_periph	import	PCT2075, LM75B, P3T1755, P3T1085
 from	nxp_periph	import	temp_sensor_base
 from	demo_lib	import	DUT_base
 
@@ -20,6 +20,7 @@ class DUT_TEMP( DUT_base.DUT_base ):
 	DS_URL		= { "PCT2075": "https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf",
 					"LM75B"  : "https://www.nxp.com/docs/en/data-sheet/LM75B.pdf",
 					"P3T1085": "https://www.nxp.com.cn/docs/en/data-sheet/P3T1085UKDS.pdf",
+					"P3T1755": "https://www.nxp.com/docs/en/product-brief/PB_P3T1755.pdf",
 					}
 
 	regex_thresh	= ure.compile( r".*tos=(\d+\.\d+)&thyst=(\d+\.\d+)" )
@@ -77,9 +78,15 @@ class DUT_TEMP( DUT_base.DUT_base ):
 		d[ "time"   ]	= "%02d:%02d:%02d" % (tm[3], tm[4], tm[5])
 		d[ "tos"    ]	= self.tos
 		d[ "thyst"  ]	= self.thyst
-		d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
-		d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
-	
+		
+		if self.int_pin:
+			d[ "os"     ]	= self.GRAPH_HIGH if self.int_pin.value() else self.GRAPH_LOW
+			d[ "heater" ]	= self.GRAPH_HIGH if self.dev.heater      else self.GRAPH_LOW
+		else:
+			d[ "os"     ]	= 20
+			d[ "heater" ]	= 20
+			
+		
 		return d
 
 	def tim_cb( self, _ ):

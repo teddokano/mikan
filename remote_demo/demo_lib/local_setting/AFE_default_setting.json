@@ -1,0 +1,28 @@
+{	"weight": 
+	{
+		"ofst":		-38, 
+		"coeff":	2.663265306122449
+	}, 
+	"temperature": 
+	{
+		"ofst":		-70, 
+		"coeff":	0.025,
+		"base":		25,
+		"select":	0,
+		"target":	144
+	},
+	"scales": 
+	[
+		{
+			"max":	35, 
+			"min":	20,
+			"text":	"temperature",
+		},
+		{
+			"max":	1200, 
+			"min":	-10,
+			"text":	"weight"
+		}
+	],
+	"remark": "AFE demo default setting file"
+}

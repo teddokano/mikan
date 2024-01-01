@@ -7,3 +7,4 @@ from	nxp_periph.interface		import	*
 from	nxp_periph.protocol_bridge	import	*
 from	nxp_periph.LCD_driver		import	*
 from	nxp_periph.accelerometer	import	*
+from	nxp_periph.afe				import	*

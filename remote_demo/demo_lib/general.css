@@ -12,11 +12,11 @@ body {
 	font-color: #000000;
 	vertical-align: middle;
 	
-	background-image: url(img/mikan.jpg);
-	background-position: bottom -10% right -10%;
+	background-image: url(img/nxp.png);
+	background-position: bottom 0% right 0%;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
-	background-size: 33%;
+	background-size: 45%;
 	background-color: var(--main-bg-color);;
 	opacity: 0.95;
 }
@@ -70,6 +70,11 @@ div {
 }
 .foot_note {
 	text-align: center;
+	font-size: 1rem;
+	padding: 0.5rem;
+}
+.afe_setting {
+	text-align: left;
 	font-size: 1rem;
 	padding: 0.5rem;
 }
@@ -175,6 +180,12 @@ input[type="text"] {
 }
 .alarm_dialog {
 	background-color: #FF0000;
+	color: #FFFFFF;
+	text-align: center;
+	font-size: 2.0rem
+}
+.init_dialog {
+	background-color: #008000;
 	color: #FFFFFF;
 	text-align: center;
 	font-size: 2.0rem
