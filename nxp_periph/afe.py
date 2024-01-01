@@ -38,23 +38,11 @@ class NAFE13388( AFE_base, SPI_target ):
 									self.logical_ch_config( 1, [ 0x33F0, 0x70B1, 0x5800, 0x3860 ] ),
 									]
 
-		self.setting	= { "weight": {}, "temperature": {}, "remark": "AFE demo updated setting file" }
-
-		self.setting[ "weight"      ][ "ofst"  ]	= -38
-		self.setting[ "weight"      ][ "coeff" ]	= 1044 / (354 - self.setting[ "weight" ][ "ofst" ])
-		# self.setting[ "weight"      ][ "ofst"  ]	= -24
-		# self.setting[ "weight"      ][ "coeff" ]	= 2
-		self.setting[ "temperature" ][ "ofst"  ]	= -70
-		self.setting[ "temperature" ][ "coeff" ]	= 1 / 40
-		self.setting[ "temperature" ][ "base"  ]	= 25
-
 		# self.coeff_microvolt	= ((10 / (2 ** 24)) / 0.8) * 1e6
 		self.coeff_microvolt	= ((10 / (2 ** 24)) / 16) * 1e6
 
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
-		
-		print( self.setting )
 		
 	def periodic_measurement_start( self ):
 		tim0 = Timer(0)
@@ -145,33 +133,6 @@ class NAFE13388( AFE_base, SPI_target ):
 				print( "0x{:04X} = {:04X}".format( r, self.read_r16( r ) ) )
 			else:
 				print( "" )
-
-	def temperature( self ):
-		t	= self.ch[ 0 ]
-		
-		if self.setting[ "temperature" ][ "select" ] == 0:
-			base	= self.setting[ "temperature" ][ "base" ]
-		elif self.setting[ "temperature" ][ "select" ] == 1:
-			if self.setting[ "temperature" ][ "measured" ] is None:
-				base	= self.setting[ "temperature" ][ "base" ]
-			else:
-				base	= self.setting[ "temperature" ][ "measured" ]
-		else:
-			base	= self.die_temp()
-			
-		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + base
-		
-	def weight( self ):
-		w	= self.ch[ 1 ]
-		return (w - self.setting[ "weight" ][ "ofst" ]) * self.setting[ "weight" ][ "coeff" ]
-
-	def weight_zero( self ):
-		w	= self.ch[ 1 ]
-		self.setting[ "weight" ][ "ofst" ]	= w
-
-	def weight_cal( self, ref ):
-		w	= self.ch[ 1 ]
-		self.setting[ "weight" ][ "coeff" ]	= ref / (w - self.setting[ "weight" ][ "ofst" ])
 
 	def logical_ch_config( self, logical_channel, list ):
 		self.write_r16( 0x0000 + logical_channel )

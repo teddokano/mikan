@@ -32,10 +32,23 @@ class DUT_AFE( DUT_base.DUT_base ):
 	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
 		
+		
+		self.setting	= { "weight": {}, "temperature": {}, "remark": "AFE demo updated setting file" }
+
+		self.setting[ "weight"      ][ "ofst"  ]	= -38
+		self.setting[ "weight"      ][ "coeff" ]	= 1044 / (354 - self.setting[ "weight" ][ "ofst" ])
+		# self.setting[ "weight"      ][ "ofst"  ]	= -24
+		# self.setting[ "weight"      ][ "coeff" ]	= 2
+		self.setting[ "temperature" ][ "ofst"  ]	= -70
+		self.setting[ "temperature" ][ "coeff" ]	= 1 / 40
+		self.setting[ "temperature" ][ "base"  ]	= 25
+
 		if not self.load_setting_file( UPDATED_SETTING_FILE ):
 			self.load_setting_file( DEFAULT_SETTING_FILE )
 		
 		self.save_setting_file( UPDATED_SETTING_FILE )
+		
+		print( self.setting )
 		
 		self.read_ref	= self.__read
 		self.data		= []
@@ -48,39 +61,67 @@ class DUT_AFE( DUT_base.DUT_base ):
 		if ( isinstance( self.dev, NAFE13388 ) ):
 			self.split	= splits	= ( {	"id"	 	: "acc", 
 											"unit"	 	: "g",
-											"get_data"	: self.dev.temperature,
+											"get_data"	: self.temperature,
 											"setting"	: graph_setting( 	[	{ "label": "temperature", "color": "rgba( 0, 128,   0, 1 )"},
 																			], 
 																			title	= 'temperature', 
 																			xlabel	= 'time',
 																			ylabel	= 'temperature [℃]',
-																			minmax	= ( self.dev.setting[ "scales" ][ 0 ][ "min" ], self.dev.setting[ "scales" ][ 0 ][ "max" ] )
+																			minmax	= ( self.setting[ "scales" ][ 0 ][ "min" ], self.setting[ "scales" ][ 0 ][ "max" ] )
 																			),
 										}, 
 										{ 
 											"id"	 	: "mag", 
 											"unit"	 	: "nT",
-											"get_data"	: self.dev.weight,
+											"get_data"	: self.weight,
 											"setting"	: graph_setting( 	[	{ "label": "weight", "color": "rgba( 0,   0, 255, 1 )"},
 																			 ], 
 																			 title	= 'weight', 
 																			 xlabel	= 'time',
 																			 ylabel	= 'weight [g]',
-																			 minmax	= ( self.dev.setting[ "scales" ][ 1 ][ "min" ], self.dev.setting[ "scales" ][ 1 ][ "max" ] )
+																			 minmax	= ( self.setting[ "scales" ][ 1 ][ "min" ], self.setting[ "scales" ][ 1 ][ "max" ] )
 																			 ),
 										}, )
 	
 		self.dev.periodic_measurement_start()
 
 	def set_external_sensor( self ):
-#		self.temp_sense	= P3T1755( machine.I2C( 0, 400_000 ), self.dev.setting[ "temperature" ][ "target" ] >> 1 )
-		self.temp_sense	= LM75B( machine.I2C( 0, 400_000 ), self.dev.setting[ "temperature" ][ "target" ] >> 1 )
+#		self.temp_sense	= P3T1755( machine.I2C( 0, 400_000 ), self.setting[ "temperature" ][ "target" ] >> 1 )
+		self.temp_sense	= LM75B( machine.I2C( 0, 400_000 ), self.setting[ "temperature" ][ "target" ] >> 1 )
 		
 		rtn	= self.temp_sense.ping()
-		print( f"* self.temp_sense.live = {self.temp_sense.live} (address = 0x{self.dev.setting[ 'temperature' ][ 'target' ]:02X})" )
+		print( f"* self.temp_sense.live = {self.temp_sense.live} (address = 0x{self.setting[ 'temperature' ][ 'target' ]:02X})" )
 		print( f"* self.get_temp() = {self.get_temp()}" )
 
 		return rtn
+
+	def temperature( self ):
+		t	= self.ch[ 0 ]
+		
+		if self.setting[ "temperature" ][ "select" ] == 0:
+			base	= self.setting[ "temperature" ][ "base" ]
+		elif self.setting[ "temperature" ][ "select" ] == 1:
+			if self.setting[ "temperature" ][ "measured" ] is None:
+				base	= self.setting[ "temperature" ][ "base" ]
+			else:
+				base	= self.setting[ "temperature" ][ "measured" ]
+		else:
+			base	= self.die_temp()
+			
+		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + base
+		
+	def weight( self ):
+		w	= self.ch[ 1 ]
+		return (w - self.setting[ "weight" ][ "ofst" ]) * self.setting[ "weight" ][ "coeff" ]
+
+	def weight_zero( self ):
+		w	= self.ch[ 1 ]
+		self.setting[ "weight" ][ "ofst" ]	= w
+
+	def weight_cal( self, ref ):
+		w	= self.ch[ 1 ]
+		self.setting[ "weight" ][ "coeff" ]	= ref / (w - self.setting[ "weight" ][ "ofst" ])
+
 
 	def get_temp( self ):
 		if self.temp_sense.live:
@@ -90,12 +131,12 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 	def save_setting_file( self, path ):
 		with open( path, mode = "w" ) as f:
-			ujson.dump( self.dev.setting, f )
+			ujson.dump( self.setting, f )
 
 	def load_setting_file( self, path ):
 		try:
 			with open( path ) as f:
-				self.dev.setting	= ujson.loads( f.read() )
+				self.setting	= ujson.loads( f.read() )
 				print( f'setting file loaded: "{path}"' )
 		except ValueError:
 			print( f'setting file load fail: "{path}". Syntax error in JSON' )
@@ -142,8 +183,8 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 			m	= self.regex_update.match( req )
 			if m:
-				if 1 == self.dev.setting[ "temperature" ][ "select" ]:
-					self.dev.setting[ "temperature" ][ "measured" ]	= self.get_temp()
+				if 1 == self.setting[ "temperature" ][ "select" ]:
+					self.setting[ "temperature" ][ "measured" ]	= self.get_temp()
 			
 				self.__read( 0 )	# argument is dummy
 				return self.sending_data( int( m.group( 1 ) ) )
@@ -164,7 +205,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
 				print( f"cal value = {obj[ 'cal' ]}" )
-				self.dev.weight_cal( obj[ 'cal' ] )
+				self.weight_cal( obj[ 'cal' ] )
 				
 				return
 			
@@ -172,16 +213,16 @@ class DUT_AFE( DUT_base.DUT_base ):
 			if m:
 				obj	= ujson.loads( bytearray( m.group( 1 ).decode().replace( '%22', '"' ), "utf-8" ) )
 				
-				self.dev.setting[ "temperature" ][ "ofst"   ]	= obj[ "ofst"   ]
-				self.dev.setting[ "temperature" ][ "coeff"  ]	= obj[ "coeff"  ]
-				self.dev.setting[ "temperature" ][ "base"   ]	= obj[ "base"   ]
-				self.dev.setting[ "temperature" ][ "target" ]	= obj[ "target" ]
-				self.dev.setting[ "temperature" ][ "select" ]	= obj[ "select" ]
+				self.setting[ "temperature" ][ "ofst"   ]	= obj[ "ofst"   ]
+				self.setting[ "temperature" ][ "coeff"  ]	= obj[ "coeff"  ]
+				self.setting[ "temperature" ][ "base"   ]	= obj[ "base"   ]
+				self.setting[ "temperature" ][ "target" ]	= obj[ "target" ]
+				self.setting[ "temperature" ][ "select" ]	= obj[ "select" ]
 				
-				self.dev.setting[ "scales" ][ 0 ][ "max"  ]	= obj[ "scales" ][ 0 ][ "max"  ]
-				self.dev.setting[ "scales" ][ 0 ][ "min"  ]	= obj[ "scales" ][ 0 ][ "min"  ]
-				self.dev.setting[ "scales" ][ 1 ][ "max"  ]	= obj[ "scales" ][ 1 ][ "max"  ]
-				self.dev.setting[ "scales" ][ 1 ][ "min"  ]	= obj[ "scales" ][ 1 ][ "min"  ]
+				self.setting[ "scales" ][ 0 ][ "max"  ]	= obj[ "scales" ][ 0 ][ "max"  ]
+				self.setting[ "scales" ][ 0 ][ "min"  ]	= obj[ "scales" ][ 0 ][ "min"  ]
+				self.setting[ "scales" ][ 1 ][ "max"  ]	= obj[ "scales" ][ 1 ][ "max"  ]
+				self.setting[ "scales" ][ 1 ][ "min"  ]	= obj[ "scales" ][ 1 ][ "min"  ]
 				
 				self.save_setting_file( UPDATED_SETTING_FILE )
 
@@ -193,21 +234,21 @@ class DUT_AFE( DUT_base.DUT_base ):
 				
 			if "weight_zero" in req:
 				print( "weight_zero" )
-				self.dev.weight_zero()
+				self.weight_zero()
 				
 				return
 				
 			if "start_setting" in req:
 				print( "start_setting" )
-				print( self.dev.setting )
+				print( self.setting )
 								
-				return ujson.dumps( self.dev.setting )
+				return ujson.dumps( self.setting )
 
 			if "load_default_setting" in req:
 				print( "load_default_setting" )
 				self.load_setting_file( DEFAULT_SETTING_FILE )
 				
-				return ujson.dumps( self.dev.setting )
+				return ujson.dumps( self.setting )
 
 			if "get_temp_message" in req:
 				die_temp	= self.dev.die_temp()
@@ -281,6 +322,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 		return "\n".join( s )
 
+
 class graph_setting:
 	def __init__( self, datasets, type = "line", title = "title", xlabel = "", ylabel = "", minmax = () ):
 		self.type		= type, 
@@ -325,3 +367,4 @@ class graph_setting:
 		if len( minmax ) == 2:
 			self.options[ "scales" ][ "y" ][ "suggestedMax" ]	= minmax[ 0 ] if minmax[ 1 ] < minmax[ 0 ] else minmax[ 1 ]
 			self.options[ "scales" ][ "y" ][ "suggestedMin" ]	= minmax[ 0 ] if minmax[ 0 ] < minmax[ 1 ] else minmax[ 1 ]
+
