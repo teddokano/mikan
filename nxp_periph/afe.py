@@ -45,7 +45,7 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.done	= False
 		
 	def periodic_measurement_start( self ):
-		tim0 = Timer(0)
+		tim0 = Timer( -1 )
 		tim0.init( period= 100, callback = self.tim_cb )
 
 	def sch_cb( self, _ ):

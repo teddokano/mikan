@@ -96,7 +96,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 		return rtn
 
 	def temperature( self ):
-		t	= self.ch[ 0 ]
+		t	= self.dev.ch[ 0 ]
 		
 		if self.setting[ "temperature" ][ "select" ] == 0:
 			base	= self.setting[ "temperature" ][ "base" ]
@@ -106,20 +106,20 @@ class DUT_AFE( DUT_base.DUT_base ):
 			else:
 				base	= self.setting[ "temperature" ][ "measured" ]
 		else:
-			base	= self.die_temp()
+			base	= self.dev.die_temp()
 			
 		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + base
 		
 	def weight( self ):
-		w	= self.ch[ 1 ]
+		w	= self.dev.ch[ 1 ]
 		return (w - self.setting[ "weight" ][ "ofst" ]) * self.setting[ "weight" ][ "coeff" ]
 
 	def weight_zero( self ):
-		w	= self.ch[ 1 ]
+		w	= self.dev.ch[ 1 ]
 		self.setting[ "weight" ][ "ofst" ]	= w
 
 	def weight_cal( self, ref ):
-		w	= self.ch[ 1 ]
+		w	= self.dev.ch[ 1 ]
 		self.setting[ "weight" ][ "coeff" ]	= ref / (w - self.setting[ "weight" ][ "ofst" ])
 
 
