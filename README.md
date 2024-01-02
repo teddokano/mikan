@@ -3,12 +3,7 @@ I²C/SPI peripheral device driver for collection for MicroPython.
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
 > **Note**  
-> **mikan v1.12** is released. This version is compatible to latest vresion of MicroPython v1.21.0 (as of 2023 Dec 21).
-
-> **Warning**  
-> As of 2023 May 04, **MicroPython v1.20.0** is available. Use this 1.20.0 for **MIMXRT1170-EVK**. It's a stable version for the MIMXRT1170-EVK.  
-> For **MIMXRT1050-EVKB**, you may face a problem when you install the files. It seems the v1.20.0 is not stable to access from PC to flash storage. Use **v1.19.1** for proper operation.  
-> It seems the storage operation problem is fixed in latest v1.20 nightly build **MIMXRT1050_EVK-20230503-unstable-v1.20.0-39-g61b8e1b2d.bin**. This could be an option to play 'mikan' on the MIMXRT1050-EVKB. 
+> **mikan v1.12** and later versions are compatible to latest vresion of MicroPython v1.22.0 (as of 2024 Jan 02).
 
 # What is this?
 NXP peripheral device drivers (SDK) for [MicroPython](https://micropython.org) and its usage examples and demo.  
@@ -94,7 +89,8 @@ Video guide is available which was explained above.
 Take following step1 and step2 to complete the installation. 
 
 #### Step 1: Install MicroPython on the MCU board
-Follow this video to install MicroPython into the MCU board. This is an example of i.MXRT1050-EVK. 
+Follow this video to install MicroPython into the MCU board. This is an example of i.MXRT1050-EVK.  
+Use latest version of MicroPython: [**v1.22.0**](https://micropython.org/resources/firmware/MIMXRT1050_EVK-20231227-v1.22.0.bin).   
 [https://youtu.be/L2AVKoXI4vI](https://youtu.be/L2AVKoXI4vI)  
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/L2AVKoXI4vI)
 
