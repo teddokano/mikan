@@ -46,10 +46,10 @@ def demo( ip = "dhcp" ):
 		ep_num	= 1	# Ethernet port selection. 1 for 1G port, 0 for 100M port
 	else:
 		i2c		= machine.I2C( 0, freq = (400_000) )
-		#spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		spi		= machine.SPI( 0, 1000_000, cs = 0 )
 		
 		# for NAFE13388
-		spi		= machine.SPI( 0, 1000_000, cs = 0, phase = 1 )
+		#spi		= machine.SPI( 0, 1000_000, cs = 0, phase = 1 )
 		
 		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
 		ep_num	= 0
