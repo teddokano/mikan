@@ -6,6 +6,8 @@ sys.path.insert(0, os.path.abspath('../'))
 #sys.path.insert(0, os.path.abspath('./'))
 sys.modules['machine'] = MagicMock()
 sys.modules['utime'] = MagicMock()
+sys.modules['micropython'] = MagicMock()
+
 
 # Configuration file for the Sphinx documentation builder.
 #
