@@ -33,14 +33,14 @@
 		["../demo_lib/I2C_Character_LCD.py", 	"github:teddokano/mikan/remote_demo/demo_lib/I2C_Character_LCD.py"	],
 		["../demo_lib/img/mikan.jpg", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan.jpg"	],
 		["../demo_lib/img/mikan0.png", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan0.png"	],
-		["../demo_lib/img/mikan1.png", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan1.png"	]
+		["../demo_lib/img/mikan1.png", 			"github:teddokano/mikan/remote_demo/demo_lib/img/mikan1.png"	],
 		["../demo_lib/jslib/chart.umd.js", 		"github:teddokano/mikan/remote_demo/demo_lib/jslib/chart.umd.js"	],
 		["../demo_lib/jslib/justgage.js", 		"github:teddokano/mikan/remote_demo/demo_lib/jslib/justgage.js"	],
 		["../demo_lib/jslib/OrbitControls.js", 	"github:teddokano/mikan/remote_demo/demo_lib/jslib/OrbitControls.js"	],
 		["../demo_lib/jslib/raphael-2.1.4.min.js", 		"github:teddokano/mikan/remote_demo/demo_lib/jslib/raphael-2.1.4.min.js"	],
 		["../demo_lib/jslib/three.min.js", 		"github:teddokano/mikan/remote_demo/demo_lib/jslib/three.min.js"	],
 		["../demo_lib/LEDC_gradation_control.js", 	"github:teddokano/mikan/remote_demo/demo_lib/LEDC_gradation_control.js"	],
-		["../demo_lib/local_setting/AFE_default_setting.json", 	"github:teddokano/mikan/remote_demo/demo_lib/local_setting/AFE_default_setting.json"	],
+		["../demo_lib/local_setting/AFE_default_setting.json", 	"github:teddokano/mikan/remote_demo/demo_lib/local_setting/AFE_default_setting.json"	]
 	],
 	"deps": [],
 	"version": "1.13.0"
