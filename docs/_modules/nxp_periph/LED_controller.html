@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nxp_periph.LED_controller &mdash; mikan 1.13 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=892a253e"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            mikan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mikan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nxp_periph.LED_controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nxp_periph.LED_controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">nxp_periph.interface</span>	<span class="kn">import</span>	<span class="n">I2C_target</span><span class="p">,</span> <span class="n">SPI_target</span>
+
+<div class="viewcode-block" id="LED">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.LED">[docs]</a>
+<span class="k">class</span> <span class="nc">LED</span><span class="p">():</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	A class for abstructing LEDs in the system</span>
+<span class="sd">	</span>
+<span class="sd">	Using this class, every LED output channels in all LED controllers </span>
+<span class="sd">	can be managed as single list. </span>
+<span class="sd">	See examples in &quot;examples/LED_demo.py&quot; and &quot;LED_demo_dual_om13321.py&quot;.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="n">channel</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		LED initializer</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		controller	: instance</span>
+<span class="sd">			based on LED_controller_base</span>
+<span class="sd">		channel		: int</span>
+<span class="sd">			Output channel</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__dev</span>	<span class="o">=</span> <span class="n">controller</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__ch</span>	<span class="o">=</span> <span class="n">channel</span>
+	
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">v</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="nd">@v</span><span class="o">.</span><span class="n">setter</span>
+	<span class="k">def</span> <span class="nf">v</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Change PWM setting</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		v : int or float</span>
+<span class="sd">			PWM value</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__dev</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ch</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">i</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="nd">@i</span><span class="o">.</span><span class="n">setter</span>
+	<span class="k">def</span> <span class="nf">i</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Change output current setting</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		v : int or float</span>
+<span class="sd">			Current value</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__dev</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ch</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">b</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="nd">@v</span><span class="o">.</span><span class="n">setter</span>
+	<span class="k">def</span> <span class="nf">b</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">b</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Writing PWM setting value into buffer</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		b : int or float</span>
+<span class="sd">			PWM value stored in buffer</span>
+<span class="sd">			Need to flush to refrect device behavior.</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__dev</span><span class="o">.</span><span class="n">buf</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ch</span><span class="p">,</span> <span class="n">b</span> <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LED_controller_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.LED_controller_base">[docs]</a>
+<span class="k">class</span> <span class="nc">LED_controller_base</span><span class="p">:</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	An abstraction class to make user interface.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">init_val</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">buffer</span>	<span class="o">=</span> <span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span>
+		
+<div class="viewcode-block" id="LED_controller_base.pwm">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.LED_controller_base.pwm">[docs]</a>
+	<span class="k">def</span> <span class="nf">pwm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		PWM setting</span>
+
+<span class="sd">		Takes 1 or 2 arguments.</span>
+<span class="sd">		</span>
+<span class="sd">		If 2 arguments are geven, it takes as register-name/address</span>
+<span class="sd">		and PWM setting value.</span>
+<span class="sd">		</span>
+<span class="sd">		If only 1 argument is geven, it takes the agrgument as list.</span>
+<span class="sd">		The list may need to contain the number of LED controller</span>
+<span class="sd">		channels (self.CHANNELS) elements.</span>
+<span class="sd">		</span>
+<span class="sd">		I2C transfer will be done each time of this method call. </span>
+<span class="sd">		So pwm() method call will change brightness of LED immediately. </span>
+<span class="sd">		However, the I2C bandwidth will be wasted if there are too many calls </span>
+<span class="sd">		for single output channel operations. </span>
+<span class="sd">		To improve bandwidth efficiency, buffer&amp;flash operation can be done. </span>
+<span class="sd">		See buf() method description. </span>
+
+<span class="sd">		Parameters (if 2 arguments given)</span>
+<span class="sd">		----------</span>
+<span class="sd">		args[0] : int</span>
+<span class="sd">			Channel number</span>
+<span class="sd">		args[1] : int or float</span>
+<span class="sd">			PWM ratio in range of 0~255 or 0.0~1.0</span>
+<span class="sd">			</span>
+<span class="sd">		Parameters (if 1 argument given)</span>
+<span class="sd">		----------</span>
+<span class="sd">		args[0] : list</span>
+<span class="sd">			The list may need to contain the number of LED</span>
+<span class="sd">			controller channels (self.CHANNELS) elements.</span>
+<span class="sd">			Values are PWM ratio should be in range of</span>
+<span class="sd">			0~255 or 0.0~1.0</span>
+<span class="sd">			</span>
+<span class="sd">		Examples</span>
+<span class="sd">		--------</span>
+<span class="sd">		self.pwm( 2, 0x80 )	# set PWM output channel 2 to 0x80</span>
+<span class="sd">		self.pwm( 2, 0.5 )	# set PWM output channel 2 to 50%</span>
+<span class="sd">		self.pwm( [0.2, 0.4, 0.6, 0.8] ) # set PWM output channels (from channel 0)</span>
+
+<span class="sd">		See Also</span>
+<span class="sd">		--------</span>
+<span class="sd">		buff	: Writing PWM setting value into buffer</span>
+<span class="sd">		flash	: Flash buffer contents into the LED controller</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">reg</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iref_base</span> <span class="k">if</span> <span class="n">alt</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pwm_base</span>
+
+		<span class="k">if</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span> <span class="n">args</span> <span class="p">):</span>
+			<span class="n">r</span>	<span class="o">=</span> <span class="n">reg</span> <span class="o">+</span> <span class="n">args</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+			<span class="n">v</span>	<span class="o">=</span> <span class="n">args</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">args</span><span class="p">[</span> <span class="mi">1</span> <span class="p">],</span> <span class="nb">int</span> <span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span> <span class="n">args</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">*</span> <span class="mf">255.0</span> <span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
+		<span class="k">elif</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span> <span class="n">args</span> <span class="p">):</span>
+			<span class="n">l</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">v</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">v</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="n">l</span> <span class="p">)</span></div>
+
+	
+<div class="viewcode-block" id="LED_controller_base.buf">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.LED_controller_base.buf">[docs]</a>
+	<span class="k">def</span> <span class="nf">buf</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ch</span><span class="p">,</span> <span class="n">val</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Writing PWM setting value into buffer</span>
+<span class="sd">		</span>
+<span class="sd">		To improve I2C bandwidth efficiency, buffer&amp;flash operation provided. </span>
+<span class="sd">		The buf() method has same interface as pwm() but it doesn&#39;t initiate</span>
+<span class="sd">		I2C transfer. It just keeps the setting value in a buffer.</span>
+<span class="sd">		The flash() method can be called to initiate I2C transfer </span>
+<span class="sd">		when the LED controller need to be updated. </span>
+<span class="sd">		</span>
+<span class="sd">		Examples</span>
+<span class="sd">		--------</span>
+<span class="sd">		for i in range( 24 ):</span>
+<span class="sd">			self.buf( i, i / 24 )	# LED brightness doesn&#39;t change</span>
+<span class="sd">		self.flash()				# LED controller updated in this timing</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		ch : int</span>
+<span class="sd">			Channel number</span>
+<span class="sd">		val : int or float</span>
+<span class="sd">			PWM value stored in buffer</span>
+<span class="sd">			Need to flush to refrect device behavior.</span>
+<span class="sd">			</span>
+<span class="sd">		See Also</span>
+<span class="sd">		--------</span>
+<span class="sd">		pwm		: PWM setting</span>
+<span class="sd">		flash	: Flash buffer contents into the LED controller</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">[</span> <span class="n">ch</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">val</span></div>
+
+		
+<div class="viewcode-block" id="LED_controller_base.flush">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.LED_controller_base.flush">[docs]</a>
+	<span class="k">def</span> <span class="nf">flush</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Flash buffer contents into the LED controller</span>
+
+<span class="sd">		See Also</span>
+<span class="sd">		--------</span>
+<span class="sd">		buff	: Writing PWM setting value into buffer</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">l</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">v</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">v</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pwm_base</span><span class="p">,</span> <span class="n">l</span> <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="gradation_control">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control">[docs]</a>
+<span class="k">class</span> <span class="nc">gradation_control</span><span class="p">():</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Gradation control class for PCA9955B and PCA9957</span>
+<span class="sd">	</span>
+<span class="sd">	The PCA9955B and the PCA9957 has &quot;gradation control&quot; hardware. </span>
+<span class="sd">	This class provides interface to control this feature.</span>
+<span class="sd">	</span>
+<span class="sd">	A sample code is available: &quot;example/LED_gradation_ctrl.py&quot;</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">HOLDTIME</span>	<span class="o">=</span> <span class="p">[</span>	<span class="p">[</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span>    <span class="mi">7</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>    <span class="mi">6</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>    <span class="mi">5</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>    <span class="mi">4</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;0.75&quot;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;0.50&quot;</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;0.25&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span>
+					<span class="p">[</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>    <span class="mi">0</span> <span class="p">]</span> 
+					<span class="p">]</span>	<span class="c1">#	using list instead of dict to keep order of items</span>
+	
+<div class="viewcode-block" id="gradation_control.set_gradation">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control.set_gradation">[docs]</a>
+	<span class="k">def</span> <span class="nf">set_gradation</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">group_num</span><span class="p">,</span> <span class="n">max_iref</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">up</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">down</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">off</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Calculate and set gradation</span>
+<span class="sd">		</span>
+<span class="sd">		Register settings are calculated from given parameters.</span>
+<span class="sd">		The calculation done to make finest ramp-up/down steps and closest </span>
+<span class="sd">		hold-on/off time</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		group_num : int</span>
+<span class="sd">			Group number</span>
+<span class="sd">		max_iref : float</span>
+<span class="sd">			Peak output current setting in range of 0.0 - 1.0</span>
+<span class="sd">		time : float</span>
+<span class="sd">			ramp-up/down time [second]</span>
+<span class="sd">		up : bool, default True</span>
+<span class="sd">			ramp-up enable</span>
+<span class="sd">		down : bool</span>
+<span class="sd">			ramp-down enable</span>
+<span class="sd">		on : float, default 0.0</span>
+<span class="sd">			Hold-ON time</span>
+<span class="sd">		off : float, default 0.0</span>
+<span class="sd">			Hold-OFF time</span>
+<span class="sd">			</span>
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		float</span>
+<span class="sd">			total cycle time</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">reg_i</span>	<span class="o">=</span> <span class="s2">&quot;RAMP_RATE_GRP</span><span class="si">%01d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">group_num</span>
+
+		<span class="n">iref</span>	 <span class="o">=</span> <span class="n">max_iref</span> <span class="o">*</span> <span class="mf">255.0</span>
+		<span class="n">time</span>	<span class="o">*=</span> <span class="mi">1000</span>
+	
+		<span class="k">if</span> <span class="n">time</span><span class="p">:</span>
+			<span class="n">step_duration</span>	<span class="o">=</span> <span class="n">time</span> <span class="o">/</span> <span class="n">iref</span>
+			<span class="k">if</span> <span class="mi">32</span> <span class="o">&lt;</span> <span class="n">step_duration</span><span class="p">:</span>
+				<span class="n">cycle_time</span>		<span class="o">=</span> <span class="mf">8.0</span>
+				<span class="n">cycle_time_i</span>	<span class="o">=</span> <span class="mi">1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">cycle_time</span>		<span class="o">=</span> <span class="mf">0.5</span>
+				<span class="n">cycle_time_i</span>	<span class="o">=</span> <span class="mi">0</span>
+			
+			<span class="n">multi_fctr</span>	<span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">step_duration</span> <span class="o">/</span> <span class="n">cycle_time</span> <span class="p">)</span>
+			<span class="n">multi_fctr</span>	<span class="o">=</span>  <span class="mi">1</span> <span class="k">if</span> <span class="n">multi_fctr</span> <span class="o">&lt;</span>  <span class="mi">1</span> <span class="k">else</span> <span class="n">multi_fctr</span>
+			<span class="n">multi_fctr</span>	<span class="o">=</span> <span class="mi">64</span> <span class="k">if</span> <span class="mi">64</span> <span class="o">&lt;</span> <span class="n">multi_fctr</span> <span class="k">else</span> <span class="n">multi_fctr</span>
+			
+			<span class="k">if</span> <span class="n">multi_fctr</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">iref_inc</span>	<span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">iref</span> <span class="o">/</span> <span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="n">cycle_time</span><span class="p">)</span> <span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">iref_inc</span>	<span class="o">=</span> <span class="mi">1</span>
+			
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">cycle_time</span>	<span class="o">=</span> <span class="mi">0</span>
+			<span class="n">step_count</span>	<span class="o">=</span> <span class="mi">0</span>
+		
+		<span class="k">if</span> <span class="n">on</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">:</span>	
+			<span class="n">on</span>		<span class="o">=</span> <span class="mi">0</span>
+			<span class="n">on_i</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLDTIME</span><span class="p">:</span>
+				<span class="n">f</span>	<span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">item</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">)</span>
+				<span class="k">if</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="n">on</span><span class="p">:</span>
+					<span class="n">on</span>		<span class="o">=</span> <span class="n">f</span>
+					<span class="n">on_i</span>	<span class="o">=</span> <span class="n">item</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+					<span class="k">break</span>
+
+		<span class="k">if</span> <span class="n">off</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">:</span>	
+			<span class="n">off</span>		<span class="o">=</span> <span class="mi">0</span>
+			<span class="n">off_i</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLDTIME</span><span class="p">:</span>
+				<span class="n">f</span>	<span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="n">item</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="p">)</span>
+				<span class="k">if</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="n">off</span><span class="p">:</span>
+					<span class="n">off</span>		<span class="o">=</span> <span class="n">f</span>
+					<span class="n">off_i</span>	<span class="o">=</span> <span class="n">item</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>
+					<span class="k">break</span>
+		
+		<span class="n">reg_v</span>	<span class="o">=</span> <span class="p">[</span>	<span class="p">(</span> <span class="n">up</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span> <span class="p">)</span> <span class="o">|</span> <span class="p">(</span> <span class="n">down</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span> <span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">iref_inc</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>									<span class="c1"># for RAMP_RATE_GRPn</span>
+					<span class="p">(</span> <span class="n">cycle_time_i</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span> <span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">multi_fctr</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> 										<span class="c1"># for STEP_TIME_GRPn</span>
+					<span class="mh">0xC0</span> <span class="o">|</span> <span class="p">(</span> <span class="n">on_i</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="n">off_i</span><span class="p">,</span>	<span class="c1"># for HOLD_CNTL_GRPn</span>
+					<span class="nb">int</span><span class="p">(</span> <span class="n">iref</span> <span class="p">)</span>																		<span class="c1"># for IREF_GRPn</span>
+					<span class="p">]</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">reg_i</span><span class="p">,</span> <span class="n">reg_v</span> <span class="p">)</span>
+		
+		<span class="n">ramp_time</span>	<span class="o">=</span> <span class="p">((</span><span class="n">multi_fctr</span> <span class="o">*</span> <span class="n">cycle_time</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">iref</span> <span class="o">/</span> <span class="n">iref_inc</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
+<span class="w">		</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		print( &quot;# = {}, max_iref = {}, time = {}, up = {}, down = {}, on = {}, off = {}&quot;.format( group_num, max_iref, time, up, down, on, off ) )</span>
+<span class="sd">		print( &quot;iref          = {}&quot;.format( iref ) )</span>
+<span class="sd">		print( &quot;step_duration = {}&quot;.format( step_duration ) )</span>
+<span class="sd">		print( &quot;cycle_time    = {}&quot;.format( cycle_time ) )</span>
+<span class="sd">		print( &quot;iref_inc      = {}&quot;.format( iref_inc ) )</span>
+<span class="sd">		print( &quot;multi_fctr    = {}&quot;.format( multi_fctr ) )</span>
+<span class="sd">		print( &quot;on            = {}&quot;.format( on ) )</span>
+<span class="sd">		print( &quot;off           = {}&quot;.format( off ) )</span>
+<span class="sd">		print( &quot;iref          = {}&quot;.format( iref ) )</span>
+<span class="sd">		print( &quot;reg_i         = {}&quot;.format( reg_i ) )</span>
+<span class="sd">		print( &quot;reg_v         = {}&quot;.format( reg_v ) )</span>
+<span class="sd">		print( &quot;calc_time     = {}&quot;.format( ramp_time ) )</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		
+		<span class="n">cycle_time</span>	 <span class="o">=</span> <span class="n">on</span> <span class="o">+</span> <span class="n">off</span>
+		<span class="n">cycle_time</span>	<span class="o">+=</span> <span class="n">ramp_time</span> <span class="k">if</span> <span class="n">up</span>   <span class="k">else</span> <span class="mi">0</span>
+		<span class="n">cycle_time</span>	<span class="o">+=</span> <span class="n">ramp_time</span> <span class="k">if</span> <span class="n">down</span> <span class="k">else</span> <span class="mi">0</span>
+
+		<span class="k">return</span> <span class="n">cycle_time</span></div>
+
+
+<div class="viewcode-block" id="gradation_control.gradation_channel_enable">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control.gradation_channel_enable">[docs]</a>
+	<span class="k">def</span> <span class="nf">gradation_channel_enable</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">exponential</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Specifying channels for gradation control</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		list : int or list</span>
+<span class="sd">			A channel number or a list of channel numbers</span>
+<span class="sd">		exponential : bool, default False</span>
+<span class="sd">			Enables exponential adjustment for gradation control</span>
+<span class="sd">					</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="nb">list</span> <span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+			<span class="nb">list</span>	<span class="o">=</span> <span class="p">[</span> <span class="nb">list</span> <span class="p">]</span>
+		
+		<span class="n">bn</span>	<span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+			<span class="n">bn</span>	<span class="o">|=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="n">ch</span>
+		
+		<span class="n">v</span>	<span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mh">0xFF</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">bn</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">i</span><span class="p">)))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span> <span class="o">//</span> <span class="mi">8</span> <span class="p">)</span> <span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;GRAD_MODE_SEL0&quot;</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>		
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;MODE2&quot;</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="n">exponential</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gradation_control.gradation_group_assign">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control.gradation_group_assign">[docs]</a>
+	<span class="k">def</span> <span class="nf">gradation_group_assign</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">lists</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Assigns channels into groups</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		lists : list of list</span>
+<span class="sd">			Lists of channel list. </span>
+<span class="sd">			First list is for group 0, second list is for group 1 ...</span>
+<span class="sd">					</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">gr_list</span>	<span class="o">=</span> <span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>	<span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span>
+		<span class="k">for</span> <span class="n">gn</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">lists</span> <span class="p">):</span>
+			<span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+				<span class="n">gr_list</span><span class="p">[</span> <span class="n">ch</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">gn</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">__gradation_groups</span><span class="p">(</span> <span class="n">gr_list</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gradation_control.gradation_start">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control.gradation_start">[docs]</a>
+	<span class="k">def</span> <span class="nf">gradation_start</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">continuous</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		gradation start for a group</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		group : int or list</span>
+<span class="sd">			A group number or a list of group numbers</span>
+<span class="sd">		continuous : bool, default True</span>
+<span class="sd">			False for single-shot</span>
+<span class="sd">					</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">gradation_ctrl</span><span class="p">(</span> <span class="n">group</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">continuous</span> <span class="o">=</span> <span class="n">continuous</span> <span class="p">)</span></div>
+
+		
+<div class="viewcode-block" id="gradation_control.gradation_stop">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control.gradation_stop">[docs]</a>
+	<span class="k">def</span> <span class="nf">gradation_stop</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">group</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		gradation start for a group</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		group : int or list</span>
+<span class="sd">			A group number or a list of group numbers</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">gradation_ctrl</span><span class="p">(</span> <span class="n">group</span><span class="p">,</span> <span class="kc">False</span> <span class="p">)</span></div>
+
+		
+<div class="viewcode-block" id="gradation_control.gradation_ctrl">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.gradation_control.gradation_ctrl">[docs]</a>
+	<span class="k">def</span> <span class="nf">gradation_ctrl</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">continuous</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		gradation start/stop</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		group : int or list</span>
+<span class="sd">			A group number or a list of group numbers</span>
+<span class="sd">		start : bool</span>
+<span class="sd">			True for start, False for stop</span>
+<span class="sd">		continuous : bool, default True</span>
+<span class="sd">			False for single-shot			</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">group</span> <span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+			<span class="n">group</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">group</span> <span class="p">]</span>
+		
+		<span class="n">bit_pattern</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="n">bit_mask</span>	<span class="o">=</span> <span class="mi">0</span>
+		
+		<span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+			<span class="n">bit_pattern</span>	<span class="o">|=</span> <span class="p">((</span><span class="mh">0x2</span> <span class="k">if</span> <span class="n">start</span> <span class="k">else</span> <span class="mh">0x0</span><span class="p">)</span> <span class="o">|</span> <span class="n">continuous</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">ch</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+			<span class="n">bit_mask</span>	<span class="o">|=</span> <span class="mh">0x3</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">ch</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__gradation_ctrl</span><span class="p">(</span> <span class="n">bit_pattern</span><span class="p">,</span> <span class="n">bit_mask</span> <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="PCA995xB_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA995xB_base">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA995xB_base</span><span class="p">(</span> <span class="n">LED_controller_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	An abstraction class for PCA995xB (I2C interface) family</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">DEFAULT_ADDR</span>		<span class="o">=</span> <span class="mh">0xE0</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+
+	<span class="n">AUTO_INCREMENT</span>		<span class="o">=</span> <span class="mh">0x80</span>
+	<span class="n">PWM_INIT</span>			<span class="o">=</span> <span class="mh">0x00</span>
+	<span class="n">IREF_INIT</span>			<span class="o">=</span> <span class="mh">0x10</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM_INIT</span><span class="p">,</span> <span class="n">iref</span> <span class="o">=</span> <span class="n">IREF_INIT</span><span class="p">,</span> <span class="n">current_control</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">setup_EVB</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		PCA995xB_base initializer</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c		: machine.I2C instance</span>
+<span class="sd">		address	: int</span>
+<span class="sd">			I2C target (device) address</span>
+<span class="sd">		pwm		: int, option</span>
+<span class="sd">			Initial PWM value</span>
+<span class="sd">		iref	: int, option</span>
+<span class="sd">			Initial IREF (current setting) value</span>
+<span class="sd">		current_control : bool, default False</span>
+<span class="sd">			Brightness control switch PWM or current.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">I2C_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">auto_increment_flag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AUTO_INCREMENT</span> <span class="p">)</span>
+		<span class="n">LED_controller_base</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">init_val</span> <span class="o">=</span> <span class="n">iref</span> <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="n">pwm</span> <span class="p">)</span>
+		
+		<span class="k">if</span> <span class="n">setup_EVB</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__setup_EVB</span><span class="p">()</span>
+			
+		<span class="bp">self</span><span class="o">.</span><span class="n">__pwm_base</span>		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;IREF0&quot;</span> <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="s2">&quot;PWM0&quot;</span>  <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__iref_base</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;PWM0&quot;</span>  <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="s2">&quot;IREF0&quot;</span> <span class="p">)</span>
+		
+		<span class="n">init</span>	<span class="o">=</span>	<span class="p">{</span>
+						<span class="s2">&quot;LEDOUT0&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mh">0xAA</span> <span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span>
+						<span class="s2">&quot;PWMALL&quot;</span> <span class="p">:</span> <span class="n">pwm</span><span class="p">,</span>
+						<span class="s2">&quot;IREFALL&quot;</span><span class="p">:</span> <span class="n">iref</span>
+					<span class="p">}</span>
+					
+		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>	<span class="c1">#	don&#39;t care: register access order</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__setup_EVB</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		setting up RESET and OE pins on PCA9957HN_ARD evaluation board</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="kn">from</span> <span class="nn">machine</span> <span class="kn">import</span> <span class="n">Pin</span>
+		<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;PCA995xBTW_ARD setting done.&quot;</span> <span class="p">)</span>
+		
+		<span class="c1">#### Be careful. A bug in schematic. RESET and OE pin are swapped at U2 (PCA9955BTW)</span>
+		<span class="c1">#### The &quot;oe&quot; and &quot;rst&quot; are intentionally swapped in this code</span>
+		<span class="n">oe</span>	<span class="o">=</span> <span class="n">Pin</span><span class="p">(</span> <span class="s2">&quot;D8&quot;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT</span> <span class="p">)</span>
+		<span class="n">rst</span>	<span class="o">=</span> <span class="n">Pin</span><span class="p">(</span> <span class="s2">&quot;D9&quot;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT</span> <span class="p">)</span>
+		<span class="n">rst</span><span class="o">.</span><span class="n">value</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+		<span class="n">oe</span><span class="o">.</span><span class="n">value</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="PCA995xB_base.iref">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA995xB_base.iref">[docs]</a>
+	<span class="k">def</span> <span class="nf">iref</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		output current setting</span>
+<span class="sd">	</span>
+<span class="sd">		Arguments are same as pwm()</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCA995xB_base.dump">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA995xB_base.dump">[docs]</a>
+	<span class="k">def</span> <span class="nf">dump</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">data</span>	<span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+		<span class="n">start</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;PWMALL&quot;</span> <span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">start</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span> <span class="p">)</span> <span class="p">):</span>
+			<span class="n">data</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+			
+		<span class="k">return</span> <span class="n">data</span></div>
+</div>
+
+
+<div class="viewcode-block" id="PCA9955B">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9955B">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA9955B</span><span class="p">(</span> <span class="n">PCA995xB_base</span><span class="p">,</span> <span class="n">gradation_control</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCA9955B class</span>
+
+<span class="sd">	For constructing an instance, following parameters can be used. </span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	i2c		: machine.I2C instance</span>
+<span class="sd">	address	: int</span>
+<span class="sd">		I2C target (device) address</span>
+<span class="sd">	pwm		: int, option</span>
+<span class="sd">		Initial PWM value</span>
+<span class="sd">	iref	: int, option</span>
+<span class="sd">		Initial IREF (current setting) value</span>
+<span class="sd">	current_control : bool, default False</span>
+<span class="sd">		Brightness control switch PWM or current.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	&gt;&gt;&gt; i2c   = I2C( 0, freq = (400 * 1000) ) # I2C with 400kHz setting</span>
+<span class="sd">	&gt;&gt;&gt; led_c = PCA9955B( i2c )	              # PCA9955B is connected the I2C</span>
+<span class="sd">	&gt;&gt;&gt; led_c.pwm( 0, 0.5 )	                  # set PWM = 50% for output channel 0</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">CHANNELS</span>		<span class="o">=</span> <span class="mi">16</span>
+	<span class="n">GRAD_GRPS</span>		<span class="o">=</span>  <span class="mi">4</span>
+	<span class="n">REG_NAME</span>		<span class="o">=</span>	<span class="p">(</span>
+							<span class="s2">&quot;MODE1&quot;</span><span class="p">,</span> <span class="s2">&quot;MODE2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;LEDOUT0&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT1&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT2&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT3&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRPPWM&quot;</span><span class="p">,</span> <span class="s2">&quot;GRPFREQ&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM0&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM1&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM2&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM3&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM4&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM5&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM6&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM7&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM8&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM9&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM10&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM11&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM12&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM13&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM14&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM15&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF0&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF1&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF2&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF3&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF4&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF5&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF6&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF7&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF8&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF9&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF10&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF11&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF12&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF13&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF14&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF15&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP0&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP0&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP0&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP0&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP1&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP1&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP1&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP1&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP3&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP3&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP3&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP3&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_MODE_SEL0&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_MODE_SEL1&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_GRP_SEL0&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_GRP_SEL1&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_GRP_SEL2&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_GRP_SEL3&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_CNTL&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;OFFSET&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;SUBADR1&quot;</span><span class="p">,</span> <span class="s2">&quot;SUBADR2&quot;</span><span class="p">,</span> <span class="s2">&quot;SUBADR3&quot;</span><span class="p">,</span> <span class="s2">&quot;ALLCALLADR&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWMALL&quot;</span><span class="p">,</span> <span class="s2">&quot;IREFALL&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;EFLAG0&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG1&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG2&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG3&quot;</span>
+						<span class="p">)</span>
+						
+	<span class="k">def</span> <span class="nf">__gradation_groups</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+		<span class="n">bn</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="nb">list</span> <span class="p">):</span>
+			<span class="n">bn</span>	<span class="o">|=</span> <span class="n">ch</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+		
+		<span class="n">v</span>	<span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mh">0xFF</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">bn</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">i</span><span class="p">)))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">GRAD_GRPS</span> <span class="p">)</span> <span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;GRAD_GRP_SEL0&quot;</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
+	
+	<span class="k">def</span> <span class="nf">__gradation_ctrl</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">mask</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;GRAD_CNTL&quot;</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">pattern</span> <span class="p">)</span></div>
+
+	
+<div class="viewcode-block" id="PCA9956B">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9956B">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA9956B</span><span class="p">(</span> <span class="n">PCA995xB_base</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCA9956B class</span>
+
+<span class="sd">	For constructing an instance, following parameters can be used. </span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	i2c		: machine.I2C instance</span>
+<span class="sd">	address	: int</span>
+<span class="sd">		I2C target (device) address</span>
+<span class="sd">	pwm		: int, option</span>
+<span class="sd">		Initial PWM value</span>
+<span class="sd">	iref	: int, option</span>
+<span class="sd">		Initial IREF (current setting) value</span>
+<span class="sd">	current_control : bool, default False</span>
+<span class="sd">		Brightness control switch PWM or current.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	&gt;&gt;&gt; i2c   = I2C( 0, freq = (400 * 1000) ) # I2C with 400kHz setting</span>
+<span class="sd">	&gt;&gt;&gt; led_c = PCA9956B( i2c )	              # PCA9956B is connected the I2C</span>
+<span class="sd">	&gt;&gt;&gt; led_c.pwm( 0, 0.5 )	                  # set PWM = 50% for output channel 0</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">CHANNELS</span>		<span class="o">=</span> <span class="mi">16</span>
+	<span class="n">CHANNELS</span>		<span class="o">=</span> <span class="mi">24</span>
+	<span class="n">REG_NAME</span>		<span class="o">=</span>	<span class="p">(</span>
+							<span class="s2">&quot;MODE1&quot;</span><span class="p">,</span> <span class="s2">&quot;MODE2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;LEDOUT0&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT1&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT2&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT3&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT4&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRPPWM&quot;</span><span class="p">,</span> <span class="s2">&quot;GRPFREQ&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM0&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM1&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM2&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM3&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM4&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM6&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM7&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM8&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM9&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM10&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM11&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM12&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM13&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM14&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM15&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM16&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM17&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM18&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM19&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM20&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM21&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM22&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM23&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF0&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF1&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF2&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF3&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF4&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF6&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF7&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF8&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF9&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF10&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF11&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF12&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF13&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF14&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF15&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF16&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF17&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF18&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF19&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF20&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF21&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF22&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF23&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;OFFSET&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;SUBADR1&quot;</span><span class="p">,</span> <span class="s2">&quot;SUBADR2&quot;</span><span class="p">,</span> <span class="s2">&quot;SUBADR3&quot;</span><span class="p">,</span> <span class="s2">&quot;ALLCALLADR&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWMALL&quot;</span><span class="p">,</span> <span class="s2">&quot;IREFALL&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;EFLAG0&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG1&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG2&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG3&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG4&quot;</span><span class="p">,</span> <span class="s2">&quot;EFLAG5&quot;</span>
+						<span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCA96xx_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA96xx_base">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA96xx_base</span><span class="p">(</span> <span class="n">LED_controller_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	An abstraction class for PCA995x family</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">DEFAULT_ADDR</span>		<span class="o">=</span> <span class="mh">0xC4</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+
+	<span class="n">AUTO_INCREMENT</span>		<span class="o">=</span> <span class="mh">0x80</span>
+	<span class="n">PWM_INIT</span>			<span class="o">=</span> <span class="mh">0x00</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM_INIT</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		PCA995xB_base initializer</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c		: machine.I2C instance</span>
+<span class="sd">		address	: int</span>
+<span class="sd">			I2C target (device) address</span>
+<span class="sd">		pwm		: int, option</span>
+<span class="sd">			Initial PWM value</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">I2C_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">auto_increment_flag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AUTO_INCREMENT</span> <span class="p">)</span>
+		<span class="n">LED_controller_base</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">init_val</span> <span class="o">=</span> <span class="n">pwm</span> <span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">__pwm_base</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;PWM0&quot;</span> <span class="p">)</span></div>
+
+		
+
+
+<div class="viewcode-block" id="PCA9632">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9632">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA9632</span><span class="p">(</span> <span class="n">PCA96xx_base</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCA9632 class</span>
+
+<span class="sd">	For constructing an instance, following parameters can be used. </span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	i2c		: machine.I2C instance</span>
+<span class="sd">	address	: int</span>
+<span class="sd">		I2C target (device) address</span>
+<span class="sd">	pwm		: int, option</span>
+<span class="sd">		Initial PWM value</span>
+<span class="sd">	iref	: int, option</span>
+<span class="sd">		Initial IREF (current setting) value</span>
+<span class="sd">	current_control : bool, default False</span>
+<span class="sd">		Brightness control switch PWM or current.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	&gt;&gt;&gt; i2c   = I2C( 0, freq = (400 * 1000) ) # I2C with 400kHz setting</span>
+<span class="sd">	&gt;&gt;&gt; led_c = PCA9632( i2c )	              # PCA9632 is connected the I2C</span>
+<span class="sd">	&gt;&gt;&gt; led_c.pwm( 0, 0.5 )	                  # set PWM = 50% for output channel 0</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">CHANNELS</span>		<span class="o">=</span> <span class="mi">4</span>
+	<span class="n">REG_NAME</span>		<span class="o">=</span>	<span class="p">(</span>
+							<span class="s2">&quot;MODE1&quot;</span><span class="p">,</span> <span class="s2">&quot;MODE2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM0&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM1&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM2&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM3&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRPPWM&quot;</span><span class="p">,</span> <span class="s2">&quot;GRPFREQ&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;LEDOUT&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;SUBADR1&quot;</span><span class="p">,</span> <span class="s2">&quot;SUBADR2&quot;</span><span class="p">,</span> <span class="s2">&quot;SUBADR3&quot;</span><span class="p">,</span> <span class="s2">&quot;ALLCALLADR&quot;</span><span class="p">,</span>
+						<span class="p">)</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="mh">0xC4</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+	<span class="n">PWM_INIT</span>		<span class="o">=</span> <span class="mh">0x00</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM_INIT</span> <span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">address</span><span class="p">,</span> <span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span> <span class="p">)</span>
+		<span class="n">init</span>	<span class="o">=</span>	<span class="p">{</span>
+						<span class="s2">&quot;MODE1&quot;</span><span class="p">:</span> <span class="mh">0x81</span><span class="p">,</span>
+						<span class="s2">&quot;MODE2&quot;</span><span class="p">:</span> <span class="mh">0x01</span><span class="p">,</span>
+						<span class="s2">&quot;LEDOUT&quot;</span><span class="p">:</span> <span class="mh">0xAA</span><span class="p">,</span>
+						<span class="s2">&quot;PWM0&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="n">pwm</span> <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span>
+					<span class="p">}</span>
+					
+		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>	<span class="c1">#	don&#39;t care: register access order</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PCA9957_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9957_base">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA9957_base</span><span class="p">(</span> <span class="n">LED_controller_base</span><span class="p">,</span> <span class="n">gradation_control</span><span class="p">,</span> <span class="n">SPI_target</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	An abstraction class for PCA9957 family (SPI interface with gradation control)</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">PWM_INIT</span>			<span class="o">=</span> <span class="mh">0x00</span>
+	<span class="n">IREF_INIT</span>			<span class="o">=</span> <span class="mh">0x10</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">spi</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM_INIT</span><span class="p">,</span> <span class="n">iref</span> <span class="o">=</span> <span class="n">IREF_INIT</span><span class="p">,</span> <span class="n">current_control</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">setup_EVB</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		PCA9957_base initializer</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		spi		: machine.SPI instance</span>
+<span class="sd">		cs		: machine.Pin instance</span>
+<span class="sd">		pwm		: int, option</span>
+<span class="sd">			Initial PWM value</span>
+<span class="sd">		iref	: int, option</span>
+<span class="sd">			Initial IREF (current setting) value</span>
+<span class="sd">		current_control : bool, default False</span>
+<span class="sd">			Brightness control switch PWM or current.</span>
+<span class="sd">		setup_EVB : bool, default False</span>
+<span class="sd">			Board (PCA9957HN-ARD) specific setting</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">SPI_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">spi</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span>
+		
+		<span class="k">if</span> <span class="n">setup_EVB</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__setup_EVB</span><span class="p">()</span>
+			
+		<span class="n">LED_controller_base</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">init_val</span> <span class="o">=</span> <span class="n">iref</span> <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="n">pwm</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__pwm_base</span>		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;IREF0&quot;</span> <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="s2">&quot;PWM0&quot;</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__iref_base</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;PWM0&quot;</span>  <span class="k">if</span> <span class="n">current_control</span> <span class="k">else</span> <span class="s2">&quot;IREF0&quot;</span> <span class="p">)</span>
+
+		<span class="n">init</span>	<span class="o">=</span>	<span class="p">{</span>
+						<span class="s2">&quot;MODE2&quot;</span>		<span class="p">:</span> <span class="mh">0x18</span><span class="p">,</span>		<span class="c1">#	to forth the channel working when wrror happened</span>
+						<span class="s2">&quot;LEDOUT0&quot;</span>	<span class="p">:</span> <span class="p">[</span> <span class="mh">0xAA</span> <span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span> <span class="o">//</span> <span class="mi">4</span><span class="p">),</span>
+						<span class="s2">&quot;PWMALL&quot;</span>	<span class="p">:</span> <span class="n">pwm</span><span class="p">,</span>
+						<span class="s2">&quot;IREFALL&quot;</span>	<span class="p">:</span> <span class="n">iref</span>
+					<span class="p">}</span>
+					
+		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">init</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>	<span class="c1">#	don&#39;t care: register access order</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="PCA9957_base.iref">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9957_base.iref">[docs]</a>
+	<span class="k">def</span> <span class="nf">iref</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		output current setting</span>
+<span class="sd">	</span>
+<span class="sd">		Arguments are same as pwm()</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCA9957_base.write_registers">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9957_base.write_registers">[docs]</a>
+	<span class="k">def</span> <span class="nf">write_registers</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		writing register</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		reg : string or int</span>
+<span class="sd">			Register name or register address/pointer.</span>
+<span class="sd">		data : list or int</span>
+<span class="sd">			Data for sending.</span>
+<span class="sd">			List for multibyte sending. List is converted to</span>
+<span class="sd">			bytearray before sending.</span>
+<span class="sd">			If the data is integer, single byte will be sent.</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1">#print( &quot;write_registers: {}, {}&quot;.format( reg, data ) )</span>
+		
+		<span class="n">data</span>		<span class="o">=</span> <span class="p">[</span> <span class="n">data</span> <span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="k">else</span> <span class="n">data</span>
+
+		<span class="n">reg</span>			<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span> <span class="k">else</span> <span class="n">reg</span>
+		<span class="n">reg_list</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="n">reg</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span> <span class="p">]</span>
+
+		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">reg_list</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span> <span class="p">[</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">]</span> <span class="p">)</span></div>
+
+			
+<div class="viewcode-block" id="PCA9957_base.read_registers">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9957_base.read_registers">[docs]</a>
+	<span class="k">def</span> <span class="nf">read_registers</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">,</span> <span class="n">length</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		reading register</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		reg : string or int</span>
+<span class="sd">			Register name or register address/pointer.</span>
+<span class="sd">		length : int</span>
+<span class="sd">			Number of bytes for receiveing.</span>
+<span class="sd">		repeated_start : bool, option</span>
+<span class="sd">			If True, a Repeated-START-condition generated between</span>
+<span class="sd">			write and read transactions.</span>
+<span class="sd">			If False, a STOP-condition and START-condition are</span>
+<span class="sd">			generated between write and read transactions.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">data</span>		<span class="o">=</span> <span class="p">[</span> <span class="mh">0xFF</span> <span class="p">]</span> <span class="o">*</span> <span class="n">length</span>
+		<span class="n">reg</span>			<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">reg</span> <span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span> <span class="k">else</span> <span class="n">reg</span>
+		<span class="n">reg_list</span>	<span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="mh">0x01</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="n">reg</span><span class="p">,</span> <span class="n">reg</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span> <span class="p">]</span>
+
+		<span class="n">pairs</span>	<span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">reg_list</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span> <span class="p">[</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="p">]</span> <span class="p">)</span>
+			<span class="n">pairs</span>	<span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="p">[</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xFF</span> <span class="p">]</span> <span class="p">)]</span>
+		
+		<span class="n">rtn</span>	<span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+			<span class="n">rtn</span>	<span class="o">+=</span> <span class="p">[</span> <span class="n">p</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">]</span>
+
+		<span class="k">return</span> <span class="n">rtn</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">length</span> <span class="k">else</span> <span class="n">rtn</span></div>
+
+
+	<span class="k">def</span> <span class="nf">__setup_EVB</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		setting up RESET and OE pins on PCA9957HN_ARD evaluation board</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="kn">from</span> <span class="nn">machine</span> <span class="kn">import</span> <span class="n">Pin</span>
+		<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;PCA9957HN_ARD setting done.&quot;</span> <span class="p">)</span>
+		<span class="n">rst</span>	<span class="o">=</span> <span class="n">Pin</span><span class="p">(</span> <span class="s2">&quot;D8&quot;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT</span> <span class="p">)</span>
+		<span class="n">oe</span>	<span class="o">=</span> <span class="n">Pin</span><span class="p">(</span> <span class="s2">&quot;D9&quot;</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT</span> <span class="p">)</span>
+		<span class="n">rst</span><span class="o">.</span><span class="n">value</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+		<span class="n">oe</span><span class="o">.</span><span class="n">value</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="PCA9957">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.LED_controller.PCA9957">[docs]</a>
+<span class="k">class</span> <span class="nc">PCA9957</span><span class="p">(</span> <span class="n">PCA9957_base</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCA9957 class</span>
+
+<span class="sd">	For constructing an instance, following parameters can be used. </span>
+<span class="sd">	</span>
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	i2c		: machine.I2C instance</span>
+<span class="sd">	address	: int</span>
+<span class="sd">		I2C target (device) address</span>
+<span class="sd">	pwm		: int, option</span>
+<span class="sd">		Initial PWM value</span>
+<span class="sd">	iref	: int, option</span>
+<span class="sd">		Initial IREF (current setting) value</span>
+<span class="sd">	current_control : bool, default False</span>
+<span class="sd">		Brightness control switch PWM or current.</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	&gt;&gt;&gt; spi		= SPI( 0, 1000 * 1000, cs = 0 )    # I2C with 1MHz setting</span>
+<span class="sd">	&gt;&gt;&gt; led_c	= PCA9957( spi, setup_EVB = True ) # PCA9957 is connected the SPI, PCA9957HN-ARD option used</span>
+<span class="sd">	&gt;&gt;&gt; led_c.pwm( 0, 0.5 )	                       # set PWM = 50% for output channel 0</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">CHANNELS</span>		<span class="o">=</span> <span class="mi">24</span>
+	<span class="n">GRAD_GRPS</span>		<span class="o">=</span>  <span class="mi">6</span>
+
+	<span class="n">REG_NAME</span>		<span class="o">=</span>	<span class="p">(</span>
+							<span class="s2">&quot;MODE1&quot;</span><span class="p">,</span> <span class="s2">&quot;MODE2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;EFLAG0&quot;</span><span class="p">,</span>  <span class="s2">&quot;EFLAG1&quot;</span><span class="p">,</span>  <span class="s2">&quot;EFLAG2&quot;</span><span class="p">,</span>  <span class="s2">&quot;EFLAG3&quot;</span><span class="p">,</span>  <span class="s2">&quot;EFLAG4&quot;</span><span class="p">,</span>  <span class="s2">&quot;EFLAG5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;LEDOUT0&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT1&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT2&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT3&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT4&quot;</span><span class="p">,</span> <span class="s2">&quot;LEDOUT5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRPPWM&quot;</span><span class="p">,</span> <span class="s2">&quot;GRPFREQ&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM0&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM1&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM2&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM3&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM4&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM6&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM7&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM8&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM9&quot;</span><span class="p">,</span>  <span class="s2">&quot;PWM10&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM11&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM12&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM13&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM14&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM15&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM16&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM17&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWM18&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM19&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM20&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM21&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM22&quot;</span><span class="p">,</span> <span class="s2">&quot;PWM23&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF0&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF1&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF2&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF3&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF4&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF6&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF7&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF8&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF9&quot;</span><span class="p">,</span>  <span class="s2">&quot;IREF10&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF11&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF12&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF13&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF14&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF15&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF16&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF17&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;IREF18&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF19&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF20&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF21&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF22&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF23&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP0&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP0&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP0&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP0&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP1&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP1&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP1&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP1&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP2&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP3&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP3&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP3&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP3&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP4&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP4&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP4&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP4&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;RAMP_RATE_GRP5&quot;</span><span class="p">,</span> <span class="s2">&quot;STEP_TIME_GRP5&quot;</span><span class="p">,</span> <span class="s2">&quot;HOLD_CNTL_GRP5&quot;</span><span class="p">,</span> <span class="s2">&quot;IREF_GRP5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_MODE_SEL0&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_MODE_SEL1&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_MODE_SEL2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_GRP_SEL0&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL1&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL2&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_GRP_SEL3&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL4&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL5&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_GRP_SEL6&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL7&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL8&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_GRP_SEL9&quot;</span><span class="p">,</span>  <span class="s2">&quot;GRAD_GRP_SEL10&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_GRP_SEL11&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;GRAD_CNTL0&quot;</span><span class="p">,</span> <span class="s2">&quot;GRAD_CNTL1&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;OFFSET&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;PWMALL&quot;</span><span class="p">,</span> <span class="s2">&quot;IREFALL&quot;</span>
+						<span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__gradation_groups</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+		<span class="n">bn</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">ch</span><span class="p">,</span> <span class="n">gr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="nb">list</span> <span class="p">):</span>
+			<span class="n">bn</span>	<span class="o">|=</span> <span class="n">gr</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">ch</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+		
+		<span class="n">v</span>	<span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="mh">0xFF</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">bn</span> <span class="o">&gt;&gt;</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">i</span><span class="p">)))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">CHANNELS</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">)</span> <span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;GRAD_GRP_SEL0&quot;</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
+		
+	<span class="k">def</span> <span class="nf">__gradation_ctrl</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">mask</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;GRAD_CNTL0&quot;</span><span class="p">,</span> <span class="n">mask</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="n">pattern</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;GRAD_CNTL1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">mask</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span> <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tedd OKANO.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
