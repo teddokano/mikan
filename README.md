@@ -1,4 +1,4 @@
-# "mikan" 💡⏰🌡️↕🔠🔄💁🍎
+# "mikan" 💡⏰🌡️↕🔠🔄💁🍎🌊
 I²C/SPI peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
@@ -188,7 +188,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
 🍎|accelerometer.py							|Simple 3 axis data capturing from FXOS8700 or FXLS8974																|FXOS8700, FXLS8974
 🍎|magnetometer.py							|Simple compass application using FXOS8700																			|FXOS8700
-🍎|afe.py									|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
+🌊|afe.py									|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
 `remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
@@ -206,4 +206,4 @@ How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)
 Refer to [How a new device can be added?](https://github.com/teddokano/mikan/blob/main/how_to_add_a_new_device.md)
 
 
-💡⏰🌡️↕🔠🔄💁🍎
+💡⏰🌡️↕🔠🔄💁🍎🌊
