@@ -204,22 +204,10 @@ def main():
 	afe.periodic_measurement_start()
 
 	while True:
-#		afe.measure( 0 )
-		
-		
-#		t, w	= afe.read()
-#		print( "{:.2f}  {:.2f}".format( t, w ) )
-#		print( f"{count},  {afe.measure( 1 )},  {afe.measure( 2 )},  {afe.measure( 3 )}" )
-#		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )},  {afe.measure( 2 )}" )
-#		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )}" )
-#		print( f"{count},  {afe.measure( 0 )},  {afe.measure( 1 )}" )
-
 		if afe.done:
 			afe.done	= False
-#			print( f"{count},  {afe.ch[ 0 ]},  {afe.ch[ 1 ]}" )
-			print( f"{afe.temperature()},  {afe.weight()}" )
-			
-		count	+= 1
+			print( f"{count},  {afe.ch[ 0 ]} μV,  {afe.ch[ 1 ]} μV" )
+			count	+= 1
 
 if __name__ == "__main__":
 	main()
