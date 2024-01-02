@@ -44,6 +44,14 @@ nxp\_periph.accelerometer module
    :undoc-members:
    :show-inheritance:
 
+nxp\_periph.afe module
+----------------------
+
+.. automodule:: nxp_periph.afe
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 nxp\_periph.interface module
 ----------------------------
 
