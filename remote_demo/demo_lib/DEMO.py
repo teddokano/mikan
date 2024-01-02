@@ -73,8 +73,9 @@ def demo( ip = "dhcp" ):
 #						P3T1085( si2c ),
 #						FXLS8974( i2c, address = 0x18 ),
 						NAFE13388( spi ),
+						FXLS8974( i2c, address = 0x18 ),
 						FXOS8700( i2c ),
-						P3T1755( i2c ),
+#						P3T1755( i2c ),
 						General_call( i2c ),
 						]
 	
