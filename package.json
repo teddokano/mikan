@@ -2,6 +2,7 @@
 	"urls": [
 		["nxp_periph/__init__.py", 			"github:teddokano/mikan/nxp_periph/__init__.py"			],
 		["nxp_periph/accelerometer.py", 	"github:teddokano/mikan/nxp_periph/accelerometer.py"	],
+		["nxp_periph/afe.py",			 	"github:teddokano/mikan/nxp_periph/afe.py"	],
 		["nxp_periph/GPIO.py",				"github:teddokano/mikan/nxp_periph/GPIO.py"				],
 		["nxp_periph/interface.py",			"github:teddokano/mikan/nxp_periph/interface.py"		],
 		["nxp_periph/LCD_driver.py",		"github:teddokano/mikan/nxp_periph/LCD_driver.py"		],
@@ -12,5 +13,5 @@
 		["nxp_periph/temp_sensor.py",		"github:teddokano/mikan/nxp_periph/temp_sensor.py"		]
 	],
 	"deps": [],
-	"version": "1.12.2"
+	"version": "1.13.0"
 	}
