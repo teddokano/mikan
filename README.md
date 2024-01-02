@@ -58,6 +58,8 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 - Accelerometer
 	- [FXOS8700](https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf)
 	- [FXLS8974](https://www.nxp.jp/docs/en/data-sheet/FXLS8974CF.pdf)
+- Analog Front-End
+	- [NAFE13388](https://www.nxp.com/products/analog-and-mixed-signal/analog-front-end/highly-configurable-8-channel-25-v-universal-input-analog-front-end-with-excitation-sources:NAFEx3388)
 
 # Getting started
 
@@ -155,7 +157,7 @@ while True:                    # Looping following part forever
 For more information of examples, please find next section of this document. 
 
 ## Examples
-The example code files are in `examples/` folder.  
+The example code files are in `examples/general/` folder.  
 It shows simple usage examples for the drivers and standalome demo for target devices.  
 
 > **Note**  
@@ -186,7 +188,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
 🍎|accelerometer.py							|Simple 3 axis data capturing from FXOS8700 or FXLS8974																|FXOS8700, FXLS8974
 🍎|magnetometer.py							|Simple compass application using FXOS8700																			|FXOS8700
-
+🍎|afe.py									|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
 `remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
