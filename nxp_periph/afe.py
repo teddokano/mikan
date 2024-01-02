@@ -9,12 +9,31 @@ WAIT	= 0.001
 CWAIT	= 0
 
 class AFE_base:
+	"""
+	An abstraction class to make user interface.
+	"""
 	pass
 
 class NAFE13388( AFE_base, SPI_target ):
+	"""
+	NAFE13388: Analog Front-End
+	
+	A device class for a 8 channel AFE
+	This class enables to get its measured voltage
+	
+	"""
 	ch_cnfg_reg	= [ 0x0020, 0x0021, 0x0022, 0x0023 ]
 
 	def __init__( self, spi, cs = None ):
+		"""
+		NAFE13388 initializer
+	
+		Parameters
+		----------
+		spi		: machine.SPI instance
+		cs		: machine.Pin instance
+
+		"""
 		self.tim_flag	= False
 		self.cb_count	= 0
 
@@ -45,10 +64,16 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.done	= False
 		
 	def periodic_measurement_start( self ):
+		"""
+		AFE periodic operation starter
+		"""
 		tim0 = Timer( -1 )
 		tim0.init( period= 100, callback = self.tim_cb )
 
 	def sch_cb( self, _ ):
+		"""
+		AFE periodic operation callback via tim_cb()
+		"""
 		ch_start	= (self.cb_count + 1) % 2
 		ch_read		= self.cb_count % 2
 
@@ -65,9 +90,23 @@ class NAFE13388( AFE_base, SPI_target ):
 			self.done	= True
 	
 	def tim_cb( self, tim_obj ):
+		"""
+		timer callback
+		"""
 		schedule( self.sch_cb, 0 )
 
 	def	write_r16( self, reg, val = None ):
+		"""
+		writing 16bit register
+	
+		Parameters
+		----------
+		reg : int
+			Register address/pointer.
+		val : int
+			16bit data
+			
+		"""
 		reg		<<= 1
 	
 		regH	= reg >> 8 & 0xFF
@@ -81,6 +120,21 @@ class NAFE13388( AFE_base, SPI_target ):
 			self.send( [ regH, regL, valH, valL ] )
 
 	def	read_r16( self, reg, signed = False ):
+		"""
+		reading 16bit register
+	
+		Parameters
+		----------
+		reg : int
+			Register address/pointer.
+		signed : bool
+			Switch to select the data in signed or unsigned (default: signed)
+			
+		Returns
+		-------
+		int : register value
+
+		"""
 		reg		<<= 1
 		reg		|= 0x4000
 		regH	= reg >> 8 & 0xFF
@@ -92,6 +146,19 @@ class NAFE13388( AFE_base, SPI_target ):
 		return unpack( ">h" if signed else ">H", data[2:] )[ 0 ]
 
 	def	read_r24( self, reg ):
+		"""
+		reading 24bit register
+	
+		Parameters
+		----------
+		reg : int
+			Register address/pointer.
+			
+		Returns
+		-------
+		int : register value
+
+		"""
 		reg		<<= 1
 		reg		|= 0x4000
 		regH	= reg >> 8 & 0xFF
@@ -106,6 +173,9 @@ class NAFE13388( AFE_base, SPI_target ):
 		return data
 
 	def boot( self ):
+		"""
+		Boot-up procedure
+		"""
 		reg_init	= [
 						{	0x0010: None, 
 							0x002A: 0x0000,
@@ -124,10 +194,21 @@ class NAFE13388( AFE_base, SPI_target ):
 			sleep( WAIT )
 
 	def reset( self ):
+		"""
+		Reset procedure
+		"""
 		self.write_r16( 0x0014 )
 		sleep( WAIT )
 
 	def dump( self, list ):
+		"""
+		Register dump
+
+		Parameters
+		----------
+		list : list
+			List of register address/pointer.
+		"""
 		for r in list:
 			if r:
 				print( "0x{:04X} = {:04X}".format( r, self.read_r16( r ) ) )
@@ -135,6 +216,20 @@ class NAFE13388( AFE_base, SPI_target ):
 				print( "" )
 
 	def logical_ch_config( self, logical_channel, list ):
+		"""
+		Logical channel configuration
+
+		Parameters
+		----------
+		list : list
+			List of register values for register 0x20, 0x21, 0x22 and 0x23
+			
+		"""
+		for r in list:
+			if r:
+				print( "0x{:04X} = {:04X}".format( r, self.read_r16( r ) ) )
+			else:
+				print( "" )
 		self.write_r16( 0x0000 + logical_channel )
 
 		for r, v in zip( self.ch_cnfg_reg, list ):
@@ -155,6 +250,20 @@ class NAFE13388( AFE_base, SPI_target ):
 		print( f"self.num_logcal_ch = {self.num_logcal_ch}" )
 		
 	def measure( self, ch = None ):
+		"""
+		Measure input voltage
+
+		Parameters
+		----------
+		ch : int
+			Logical input channel number or None
+			
+		Returns
+		-------
+		float in voltage (microvolt) if "ch" was given
+		list of raw measured values if "ch" was not given
+
+		"""
 		if ch is not None:
 			self.write_r16( 0x0000 + ch )
 			self.write_r16( 0x2000 )
@@ -181,6 +290,20 @@ class NAFE13388( AFE_base, SPI_target ):
 		return values
 		
 	def read( self, ch = None ):
+		"""
+		Read input value
+
+		Parameters
+		----------
+		ch : int
+			Logical input channel number or None
+			This part need to be implemented
+			
+		Returns
+		-------
+		list of raw measured values if "ch" was not given
+
+		"""
 		values	= []
 
 		for i in range( self.num_logcal_ch ):
@@ -191,6 +314,14 @@ class NAFE13388( AFE_base, SPI_target ):
 		return values
 	
 	def die_temp( self ):
+		"""
+		Die temperature
+		
+		Returns
+		-------
+		float : Die temperature in celcius
+
+		"""
 		return self.read_r16( 0x34, signed = True ) / 64
 		
 def main():
