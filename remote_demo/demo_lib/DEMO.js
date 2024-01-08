@@ -40,7 +40,7 @@ function measureResponse() {
 		.then( ( resp ) => { 
 			showResponseTimeResult( resp );		
 
-			str	= "sever response time: (samples = " + resp.raw.length + ")\n"
+			str	= "HTTP sever response time: (samples = " + resp.raw.length + ")\n"
 			str	+= "min = " + resp.min.toFixed() + " ms\n";
 			str	+= "max = " + resp.max.toFixed() + " ms\n";
 			str	+= "median = " + resp.median.toFixed() + " ms\n";
