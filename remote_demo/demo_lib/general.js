@@ -66,4 +66,17 @@ function showResponseTimeResult( resp ) {
 	console.log( resp );
 }
 
+function measureServerResponse( message, func ) {
+	let url	= REQ_HEADER + message;
+	let	resp;
+	
+	responseTime( url )
+		.then( ( resp ) => { 
+			showResponseTimeResult( resp );		
+
+			func && func( resp );
+	} );
+}
+
+
 const zip = ( a1, a2 ) => a1.map( ( _, i ) => [ a1[ i ], a2[ i ] ] );

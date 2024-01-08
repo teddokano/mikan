@@ -32,25 +32,15 @@ function allLinkOpen( list ) {
 	});
 }
 
-function measureResponse() {
-	let url	= REQ_HEADER + 'server_response_time_test';
-	let	resp;
-	
-	responseTime( url )
-		.then( ( resp ) => { 
-			showResponseTimeResult( resp );		
-
-			str	= "http sever response time: (samples = " + resp.raw.length + ")\n"
-			str	+= "min = " + resp.min.toFixed() + " ms\n";
-			str	+= "max = " + resp.max.toFixed() + " ms\n";
-			str	+= "median = " + resp.median.toFixed() + " ms\n";
-			str	+= "average = " + resp.avg.toFixed( 3 ) + " ms\n";
-	
-			let elem = document.getElementById( "serv_resp" );
-			elem.innerText = str;
-	} );
-}
-
 window.addEventListener( 'load', function () {
-	measureResponse();
+	measureServerResponse( 'server_response_time_test', ( resp ) => {
+		str	= "http sever response time: (samples = " + resp.raw.length + ")\n"
+		str	+= "min = " + resp.min.toFixed() + " ms\n";
+		str	+= "max = " + resp.max.toFixed() + " ms\n";
+		str	+= "median = " + resp.median.toFixed() + " ms\n";
+		str	+= "average = " + resp.avg.toFixed( 3 ) + " ms\n";
+
+		let elem = document.getElementById( "serv_resp" );
+		elem.innerText = str;
+	});
 });
