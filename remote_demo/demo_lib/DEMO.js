@@ -40,12 +40,12 @@ function measureResponse() {
 		.then( ( resp ) => { 
 			showResponseTimeResult( resp );		
 
-			str	= "sever response time:\n";
-			str	+= "min = " + resp.min + " ms\n";
-			str	+= "max = " + resp.max + " ms\n";
-			str	+= "median = " + resp.median + " ms\n";
-			str += "samples = " + resp.raw.length
-			
+			str	= "sever response time: (samples = " + resp.raw.length + ")\n"
+			str	+= "min = " + resp.min.toFixed() + " ms\n";
+			str	+= "max = " + resp.max.toFixed() + " ms\n";
+			str	+= "median = " + resp.median.toFixed() + " ms\n";
+			str	+= "average = " + resp.avg.toFixed( 3 ) + " ms\n";
+	
 			let elem = document.getElementById( "serv_resp" );
 			elem.innerText = str;
 	} );

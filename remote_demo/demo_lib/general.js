@@ -42,17 +42,21 @@ function highlight( elem, duration = 1000 ) {
 
 async function responseTime( url, n = 10 ) {
 	let	resp	= {	raw: [] };
+	resp.total	= 0;
 	
 	for ( let i = 0; i < n; i++ ) {
 		let start	= performance.now();
 		await new Promise( (resolve, reject) => { ajaxUpdate( url, () => resolve(), 1000 ) } )
-		resp.raw.push( performance.now() - start );
+		let e_time	= performance.now() - start;
+		resp.raw.push( e_time );
+		resp.total	+= e_time;
 	}
 	
 	resp.raw.sort( (a, b) => (a - b) );
 	resp.median	= resp.raw[ Math.trunc(n / 2) ];
 	resp.max	= Math.max( ...(resp.raw) );
 	resp.min	= Math.min( ...(resp.raw) );
+	resp.avg	= resp.total / resp.raw.length;
 	
 	return resp;
 }
