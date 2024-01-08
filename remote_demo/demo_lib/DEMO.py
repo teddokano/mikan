@@ -155,6 +155,9 @@ def demo( ip = "dhcp" ):
 			if html:
 				break
 
+		if (not html) and ("server_response_time_test" in req):
+			html	= "response for server_response_time_test"
+
 		if not html:
 			m	= regex_file.match( req )
 			if m and (fn	:= m.group( 1 ).decode()):
@@ -169,7 +172,7 @@ def demo( ip = "dhcp" ):
 						html 	= f.read()					
 				except OSError as e:
 					html = None
-			
+
 			elif "GET / " in req:
 				html	= page_setup( dut_list, i2c, live_only = True if "?live_only=True" in req else False )			
 			else:

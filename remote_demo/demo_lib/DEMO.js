@@ -31,3 +31,17 @@ function allLinkOpen( list ) {
 					);
 	});
 }
+
+function measureResponse() {
+	let url	= REQ_HEADER + 'server_response_time_test';
+	let	resp;
+	
+	responseTime( url )
+		.then( ( resp ) => { 
+			showResponseTimeResult( resp );		
+	} );
+}
+
+window.addEventListener( 'load', function () {
+	measureResponse();
+});
