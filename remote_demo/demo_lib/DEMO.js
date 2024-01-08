@@ -39,6 +39,15 @@ function measureResponse() {
 	responseTime( url )
 		.then( ( resp ) => { 
 			showResponseTimeResult( resp );		
+
+			str	= "sever response time:\n";
+			str	+= "min = " + resp.min + " ms\n";
+			str	+= "max = " + resp.max + " ms\n";
+			str	+= "median = " + resp.median + " ms\n";
+			str += "samples = " + resp.raw.length
+			
+			let elem = document.getElementById( "serv_resp" );
+			elem.innerText = str;
 	} );
 }
 
