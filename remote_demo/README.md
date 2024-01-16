@@ -25,16 +25,11 @@ So, after installation, the board will have folders like...
 
 ### Install by `mip` with `mpremote`
 
-If the `mpremote` is installed on PC, the install can be done by terminal command. 
-To install the _**remote_demo**_, type next command. 
+If the `mpremote` is installed on PC, the install can be done by terminal command.   
+To install the _**remote_demo**_, type next command. This command overwrites 'mikan' class driver under `/flash/nxp_periph/` if it have been already installed.  
 
 ```
 mpremote mip install github:teddokano/mikan/remote_demo
-```
-
-The 'mikan' class driver needed to be installed already. It can be done by..
-```
-mpremote mip install github:teddokano/mikan
 ```
 
 ## Give it a try!
