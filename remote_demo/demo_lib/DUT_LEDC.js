@@ -172,13 +172,9 @@ function resetMaxReqRate() {
 }
 
 function measureResponse() {
-	let url		= REQ_HEADER + 'value=' + 16 + '&idx=' + 199;
-	let	resp;
-	
-	responseTime( url )
-		.then( ( resp ) => { 
-			showResponseTimeResult( resp );		
-			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
+	measureServerResponse( 'value=' + 16 + '&idx=' + 199, ( resp ) => {
+		showResponseTimeResult( resp );		
+		setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
 	} );
 }
 

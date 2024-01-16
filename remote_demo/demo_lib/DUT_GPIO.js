@@ -108,11 +108,6 @@ function measureResponseGPIO() {
 			showResponseTimeResult( resp );		
 //			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
 	} );
-	responseTime( url )
-		.then( ( resp ) => { 
-			showResponseTimeResult( resp );		
-//			setMaxReqRate( reqRate = 1000 / (resp.median + 5) );
-	} );
 }
 
 let reg_list	= {};
