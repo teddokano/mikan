@@ -1,5 +1,16 @@
 {
 	"urls": [
+		["nxp_periph/__init__.py", 				"github:teddokano/mikan/nxp_periph/__init__.py"				],
+		["nxp_periph/accelerometer.py", 		"github:teddokano/mikan/nxp_periph/accelerometer.py"		],
+		["nxp_periph/afe.py",			 		"github:teddokano/mikan/nxp_periph/afe.py"					],
+		["nxp_periph/GPIO.py",					"github:teddokano/mikan/nxp_periph/GPIO.py"					],
+		["nxp_periph/interface.py",				"github:teddokano/mikan/nxp_periph/interface.py"			],
+		["nxp_periph/LCD_driver.py",			"github:teddokano/mikan/nxp_periph/LCD_driver.py"			],
+		["nxp_periph/LED_controller.py",		"github:teddokano/mikan/nxp_periph/LED_controller.py"		],
+		["nxp_periph/protocol_bridge.py",		"github:teddokano/mikan/nxp_periph/protocol_bridge.py"		],
+		["nxp_periph/RTC.py",					"github:teddokano/mikan/nxp_periph/RTC.py"					],
+		["nxp_periph/stepper_motor.py",			"github:teddokano/mikan/nxp_periph/stepper_motor.py"		],
+		["nxp_periph/temp_sensor.py",			"github:teddokano/mikan/nxp_periph/temp_sensor.py"			],
 		["../demo_lib/__init__.py", 			"github:teddokano/mikan/remote_demo/demo_lib/__init__.py"	],
 		["../demo_lib/DEMO.css", 				"github:teddokano/mikan/remote_demo/demo_lib/DEMO.css"		],
 		["../demo_lib/DEMO.html", 				"github:teddokano/mikan/remote_demo/demo_lib/DEMO.html"		],
