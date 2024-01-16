@@ -30,7 +30,7 @@ This demo is including following boards and devices.
 ![hardware_blocks](https://github.com/teddokano/mikan/blob/afe/remote_demo/references/pics/hardware_blocks.png)
 
 ### Software
-AFE class-libraries and demo code is available as a part of 'mikan'.  
+AFE class-libraries and demo code is available as a part of 'mikan'. 
 The `DEMO.py` should be modified to suite to the hardware configuration.  
 
 To simplify this step, pre-configured file `DEMO_afe_demo_version.py` is available. Rename the file from `DEMO_afe_demo_version.py` to `DEMO.py` and copy into MicroPython device storage (as `/flash/demo_lib/DEMO.py`).
