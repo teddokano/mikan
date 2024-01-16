@@ -2,8 +2,6 @@
 I²C/SPI peripheral device driver for collection for MicroPython.  
 _The name of this repository has been changed from "mp_driver" to "mikan" (2022 Nov 02)._
 
-> **Note**  
-> **mikan v1.12** and later versions are compatible to latest vresion of MicroPython v1.22.0 (as of 2024 Jan 02).
 
 # What is this?
 NXP peripheral device drivers (SDK) for [MicroPython](https://micropython.org) and its usage examples and demo.  
