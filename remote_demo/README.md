@@ -33,7 +33,7 @@ mpremote mip install github:teddokano/mikan/remote_demo
 ```
 
 ## Give it a try!
-`remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
+`remote_demo/start_w_auto_IP(DHCP).py`, `remote_demo/start_w_fixed_IP.py` and `remote_demo/start_w_A2_pin_detect.py` are start scripts to run the demo.  
 Choose one of them and run. 
 
 For network setup, user can choose both of these options: 
@@ -84,6 +84,7 @@ Can't get/set IP address. Tried to set dhcp. OSError:('timeout waiting for DHCP 
 ```
 
 ### To use fixed IP address like direct connection with an Ethernet cable
+
 `remote_demo/start_w_fixed_IP.py` is to run the demo with fixed IP address. 
 This can be used for network setting like direct microcontroller board and PC with an Ethernet cable. 
 When you use direct connection to the PC, please set the PC's Ethernet port properlly (IP address and subnet mask).  
@@ -105,6 +106,18 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+### IP address setting change by pin state
+
+`remote_demo/start_w_fixed_IP.py` is to run the demo with DHCP or fixed-IP. The DHCP or fixed-IP setting can be selected by `A2` pin state of MCU board's Arduino shueld socket.  
+If the `A2` pin is HIGH (pulled-up), the demo will be started as DHCP. If it is LOW (tied to GND), fixed-IP setting will be applied.  
+
+## Boot automatically
+
+To run the demo automatically after turn-on or reset, one of those start script files can be stored in root of the MCU-board storage as `main.py`.  
+With this setting, the demo works stand-alone. No start script run needed from PC.  
+![main_py.png](https://github.com/teddokano/additional_files/blob/main/mikan/img/main_py.png)   
+_The start script is copied in MCU-board storage root with remaning it as `main.py`_
 
 ## Video
 
