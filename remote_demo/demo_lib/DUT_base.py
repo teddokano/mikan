@@ -3,9 +3,8 @@ import	os
 
 class DUT_base():
 	SIG	= """\
-		<b><a href="https://github.com/teddokano/mikan" target="_blank" rel="noopener noreferrer">mikan: I²C/SPI peripheral device drivers and demo</a><br>
-		HTTP server on<br/>
-		{% mcu %}</b><br/>
+		<b><a href="https://github.com/teddokano/mikan" target="_blank" rel="noopener noreferrer">mikan: I²C/SPI peripheral device drivers and demo</a><br/>
+		{% mcu %}<br/>
 		0100111101101011011000010110111001101111
 		"""
 	def __init__( self, dev ):
@@ -42,7 +41,7 @@ class DUT_base():
 		return html
 	
 	def page_signature( self ):
-		return self.SIG.replace('{% mcu %}', os.uname().machine )
+		return self.SIG.replace('{% mcu %}', "HTTP server on " + os.uname().machine + " / MicroPython version: " + os.uname().release )
 		
 	def load_file( self, file_name ):
 		try:
