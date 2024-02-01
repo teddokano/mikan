@@ -33,6 +33,9 @@ def demo( ip = "dhcp" ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
+	print( "=== I2C and SPI device scan ===" )
+	print( "  * Following lines may display 'I2C error' but those can be ignored" )
+	print( "  * Just showing the I2C device availability, not fatal to demo operation" )
 	
 	src_dir			= "demo_lib/"
 	regex_file		= ure.compile( r"GET /(\S+)\sHTTP" )
@@ -98,6 +101,8 @@ def demo( ip = "dhcp" ):
 	
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
+
+	print( "===============================" )
 
 	ip_info	= start_network( port = ep_num, ifcnfg_param = ip, lcd = lcd_panel )
 #	print( ip_info )
