@@ -269,6 +269,44 @@ class P3T1085( LM75B ):
 		return self.alert
 
 
+class P3T1035( P3T1755 ):
+	"""
+	P3T1035 class
+	"""
+	DEFAULT_ADDR		= 0xE0 >> 1
+
+	REG_NAME	= ( "Temp", "Conf", "T_LOW", "T_HIGH", "MID" )
+	REG_LEN		= (      2,      1,       2,        2,     2 )
+	REG_ACC		= dict( zip( REG_NAME, REG_LEN ) )
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		P3T1035 initializer
+	
+		Parameters
+		----------
+		i2c     : machine.I2C instance
+		address : int, option
+
+		"""
+		super().__init__( i2c, address )
+
+	def __value_setting( self, lst ):
+		lst.sort()
+	
+		sv	= []
+		for r, v in zip( ( "T_LOW", "T_HIGH" ), lst ):
+			v	= int(v * 256.0) & 0xFFF0
+			self.reg_access( r, v )
+			sv	+= [ v ]
+		
+		return [ v / 256.0 for v in sv ]
+
+
+class P3T2030( P3T1035 ):
+	pass
+
+
 def main():
 	from	machine		import	Pin, I2C, SoftI2C
 	from utime import sleep
