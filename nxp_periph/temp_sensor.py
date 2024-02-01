@@ -186,9 +186,6 @@ class PCT2075( LM75B ):
 		self.heater_pin( v )
 
 class P3T1755( LM75B ):
-	pass
-
-class P3T1755( LM75B ):
 	"""
 	P3T1755 class
 	"""
