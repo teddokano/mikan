@@ -645,9 +645,10 @@ def PCF2131( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 	if isinstance( interface, SPI ):
 		return PCF2131_SPI( interface, cs )
 
-class PCF85063( RTC_base, I2C_target ):
+
+class PCF85063A( RTC_base, I2C_target ):
 	"""
-	PCF85063 class
+	PCF85063A class
 	"""
 	DEFAULT_ADDR	= (0xA2 >> 1)
 	REG_NAME		= (	"Control_1", "Control_2",
@@ -656,6 +657,132 @@ class PCF85063( RTC_base, I2C_target ):
 						"Seconds", "Minutes", "Hours", "Days", "Weekdays", "Months", "Years",
 						"Second_alarm", "Minute_alarm", "Hour_alarm", "Day_alarm", "Weekday_alarm",
 						"Timer_value", "Timer_mode"
+						)
+	INT_MASK		= { "A": ["INT_A_MASK1", "INT_A_MASK2"], "B": [ "INT_B_MASK1", "INT_B_MASK2" ] }
+	REG_ORDER_DT	= ( "seconds", "minutes", "hours", "day", "weekday", "month", "year" )
+	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Parameters
+		----------
+		i2c		: machine.I2C object
+		address	: int, option
+			If need to set I2C target address
+		
+		"""
+		super().__init__( i2c, address = address )
+
+	def __software_reset( self ):
+		self.bit_operation( "Control_1", 0x10, 0x10 )
+
+	def __get_datetime_reg( self ):
+		dt		= {}
+		length	= len( self.REG_ORDER_DT )
+		
+		data	= self.read_registers( "Seconds", length )
+		data[ 1 ]	&= ~0x80	#	mask OS flag
+
+		for i, k in zip( range( length ), self.REG_ORDER_DT ):
+			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
+
+		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
+		dt[ "subseconds" ]	 = 0	#	dummy
+		dt[ "tzinfo" ]		 = None
+			
+		return dt
+
+	def __set_datetime_reg( self, dt ):
+		dt[ "year" ]		-= 2000
+		dt[ "subseconds" ]	 = 0	#	dummy
+
+		data	= [ dt[ k ] for k in self.REG_ORDER_DT ]
+		data	= list( map( RTC_base.bin2bcd, data ) )
+
+		self.write_registers( "Seconds", data )
+
+	def __set_alarm( self, int_pin, dt ):
+		data	= [ dt[ k ] for k in self.REG_ORDER_ALRM ]
+		data	= list( map( RTC_base.bin2bcd, data ) )
+
+		self.write_registers( "Second_alarm", data )
+		self.bit_operation( "Control_2", 0x80, 0x80 )
+
+	def __clear_alarm( self ):
+		pass	# will be implemented later
+
+	def __cancel_alarm( self, int_pin, dt ):
+		self.bit_operation( "Control_2", 0x80, 0x00 )
+
+	def __set_periodic_interrupt( self, int_pin, period ):
+		self.bit_operation( "Timer_mode", 0x06, 0x00 )
+		if period == 0:
+			return 0
+	
+		timer_max	= [ r * 255 for r in ( (1 / 4096), (1 / 64), 1, 60 ) ]
+
+		res, tcf	= 60, 0x3
+		for m, i in zip( timer_max, range( len( timer_max ) ) ):
+			if period <= m:
+				res, tcf	= m / 255, i
+				break
+
+		tv	= int( period / res )
+		self.write_registers( "Timer_value", tv )
+		self.bit_operation( "Timer_mode", 0x1E, tcf << 3 | 0x06 )
+		
+		return tv * res
+
+	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
+		pass
+
+	def __get_timestamp_reg( self, num ):
+		pass
+
+	def __interrupt_clear( self ):
+		rv, wv	= self.bit_operation( "Control_2", 0x48, 0x00 )
+		return rv
+
+	def __oscillator_stopped( self ):
+		return True if 0x80 & self.read_registers( "Seconds", 1 ) else False
+	
+	def __battery_switchover( self, switch ):
+		pass
+
+	EVENT_NAME		= ( "periodic", "alarm" )
+	EVENT_FLAG		= { 0x08, 0x40 }
+	EVENTS			= dict( zip( EVENT_NAME, EVENT_FLAG ) )
+	
+	def __check_events( self, event ):
+		list	= []
+
+		for k, v in self.EVENTS.items():
+			if event & v:
+				list	+= [ k ]
+	
+		return list
+
+	def __test( self ):
+		self.bit_operation( "RAM_byte", 0xF0, 0xF0 )
+
+
+class PCF85053A( RTC_base, I2C_target ):
+	"""
+	PCF85053A class
+	"""
+	DEFAULT_ADDR	= (0xA2 >> 1)
+	REG_NAME		= (	
+						"Seconds", "Seconds_alarm", "Minutes", "Minutes_alarm", "Hours", "Hours_alarm", 
+						"Day_of_the_Week", "Day_of_the_Month", "Month", "Year",
+						"Control_Register", "Status_Register",
+						"CLKOUT_Control",
+						"2nd_Control_Register",
+						"Scratchpad", "Version_Register", 
+						"Vendor_ID_Register", "Model Register",
+						"Offset", "Oscillator", 
+						"Access_config", 
+						"Sec_timestp", "Min_timestp", "Hour_timestp", "DayWk_timestp", "DayMon_timestp", "Mon_timestp", "Year_timestp", 
+						"R_code1", "R_code1"
 						)
 	INT_MASK		= { "A": ["INT_A_MASK1", "INT_A_MASK2"], "B": [ "INT_B_MASK1", "INT_B_MASK2" ] }
 	REG_ORDER_DT	= ( "seconds", "minutes", "hours", "day", "weekday", "month", "year" )

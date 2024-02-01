@@ -1,11 +1,11 @@
 from machine import Pin, I2C
-from nxp_periph import PCF85063
+from nxp_periph import PCF85063A
 import machine
 
 
 def main():
     intf = I2C(0, freq=(400 * 1000))
-    rtc = PCF85063(intf)
+    rtc = PCF85063A(intf)
 
     print(rtc.info())
     print("=== operation start ===")
