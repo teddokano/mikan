@@ -803,6 +803,17 @@ class PCF86263A( RTC_base, I2C_target ):
 	def deinit( self ):
 		super().deinit()
 		self.pins_init()
+	
+	def timestamp2str( self, ts_list ):
+		"""
+		timestamp converted to a str
+		"""
+		s	= []
+
+		for i, ts in enumerate( ts_list, start = 1 ):
+			s	+= [ "timestamp{}: {}".format( i, RTC_base.tuple2str( ts[ "tuple" ], RTC_base.NOW_TUPPLE_FORM ) ) ]
+
+		return "\n".join( s )
 
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		"""
