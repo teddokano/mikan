@@ -22,6 +22,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 - Real Time Clock (RTC)
 	- [PCF2131](https://www.nxp.com/products/peripherals-and-logic/signal-chain/real-time-clocks/rtcs-with-temperature-compensation/nano-power-highly-accurate-rtc-with-integrated-quartz-crystal:PCF2131) (for both I²C and SPI interface can be used)
 	- [PCF85063A](https://www.nxp.com/products/peripherals-and-logic/signal-chain/real-time-clocks/rtcs-with-ic-bus/tiny-real-time-clock-calendar-with-alarm-function-and-ic-bus:PCF85063A)
+	- [PCF85053A](https://www.nxp.com/products/analog-and-mixed-signal/real-time-clocks/rtcs-with-ic-bus/bootable-cpu-rtc-with-two-ic-buses-128-byte-sram-and-alarm-function:PCF85053A)
 - Temperature sensor
 	- [LM75B](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/digital-temperature-sensor-and-thermal-watchdog:LM75B)
 	- [PCT2075](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/ic-bus-fm-plus-1-degree-c-accuracy-digital-temperature-sensor-and-thermal-watchdog:PCT2075)
@@ -168,7 +169,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 💡|LED_demo.py								|Showing idea to use ‘LED class’ to manage LED and white LED individually											|PCA9955B, PCA9956B, PCA9957, PCA9632
 💡|LED_demo_dual_om13321.py					|Showing idea to use ‘LED class’ to manage multiple LED controller devices											|PCA9956B
 ⏰|RTC_demo_PCF2131_ARD.py					|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines						|PCF2131
-⏰|RTC_demo_PCF85063AT_ARD.py				|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 												|PCF85063
+⏰|RTC_demo_PCF85063AT_ARD.py				|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 												|PCF85063A
+⏰|RTC_demo_PCF85053A_ARD.py				|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 												|PCF85053A
 🌡️|temp_sensor_simple.py					|Very simple sample to operate a temp sensor																		|LM75B, PCT2075
 🌡️|temp_sensor_demo_PCT2075DP_ARB.py		|Operate with interrupt and heater-resister on ARD board															|PCT2075
 🌡️|temp_sensor_P3T1085.py					|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1085
