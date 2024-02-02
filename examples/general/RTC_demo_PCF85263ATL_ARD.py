@@ -98,7 +98,7 @@ def demo( rtc ):
 			dt	= rtc.datetime()
 			
 			for e in event:
-				print( "event {} {}".format( e, dt ), end = "     \r" if e == "periodic" else "     \n" )
+				print( "== event: {} {}".format( e, dt ), end = "     \r" if e == "periodic" else "     \n" )
 	
 				if not dt[ 6 ] % 30:
 					rtc.dump_reg()
