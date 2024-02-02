@@ -790,7 +790,8 @@ class PCF86263A( RTC_base, I2C_target ):
 	REG_ORDER_ALRM1	= ( "seconds", "minutes", "hours" )
 	REG_ORDER_ALRM2	= ( "minutes", "hours", "weekday" )
 	REG_ORDER_TS	= ( "seconds", "minutes", "hours", "day", "month", "year" )
-	
+	ALARM_KEYS		= ( "day", "hours", "minutes", "seconds", "month" )
+
 	NUMBER_OF_TIMESTAMP	= 3
 
 	def pins_init( self ):
