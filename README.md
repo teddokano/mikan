@@ -173,7 +173,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 ⏰|RTC_demo_PCF85063AT_ARD.py				|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 												|PCF85063
 🌡️|temp_sensor_simple.py					|Very simple sample to operate a temp sensor																		|LM75B, PCT2075
 🌡️|temp_sensor_demo_PCT2075DP_ARB.py		|Operate with interrupt and heater-resister on ARD board															|PCT2075
-🌡️|temp_sensor_P3T1035_P3T2020.py			|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1035, P3T2020
+🌡️|temp_sensor_P3T1035_P3T2030.py			|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1035, P3T2020
 🌡️|temp_sensor_P3T1085.py					|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1085
 🌡️|temp_sensor_demo_P3T1085UK_ARB.py		|Similar to “temp_sensor_demo_PCT2075DP_ARB.py” but no heater operation												|P3T1085
 ↕|GPIO_demo.py								|Operation sample of a PCA9555 API																					|PCA9555
