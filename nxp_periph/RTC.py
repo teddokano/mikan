@@ -780,22 +780,14 @@ class PCF86263A( RTC_base, I2C_target ):
 							"TSR2_seconds", "TSR2_minutes", "TSR2_hours", "TSR2_days", "TSR2_months", "TSR2_years",	
 							"TSR3_seconds", "TSR3_minutes", "TSR3_hours", "TSR3_days", "TSR3_months", "TSR3_years",	
 							"TSR_mode", 
-							"Offset",
-							"Oscillator", 
-							"Battery_switch", 
-							"Pin_IO", 
-							"Function", 
-							"INTA_enable", 
-							"INTB_enable", 
-							"Flags", 
-							"RAM_byte", 
-							"WatchDog", 
-							"Stop_enable", 
-							"Resets"
+							"Offset", "Oscillator", "Battery_switch", 
+							"Pin_IO", "Function", "INTA_enable", "INTB_enable", "Flags", 
+							"RAM_byte", "WatchDog", "Stop_enable", "Resets"
 						)
 	INT_MASK		= { "A": ["INTA_enable"], "B": [ "INTB_enable" ] }
 	REG_ORDER_DT	= ( "subseconds", "seconds", "minutes", "hours", "day", "weekday", "month", "year" )
-	REG_ORDER_ALRM1	= ( "seconds", "minutes", "hours", "day", "month" )
+	#REG_ORDER_ALRM1	= ( "seconds", "minutes", "hours", "day", "month" )
+	REG_ORDER_ALRM1	= ( "seconds", "minutes", "hours" )
 	REG_ORDER_ALRM2	= ( "minutes", "hours", "weekday" )
 	REG_ORDER_TS	= ( "seconds", "minutes", "hours", "day", "month", "year" )
 	
@@ -833,6 +825,7 @@ class PCF86263A( RTC_base, I2C_target ):
 		
 		data	= self.read_registers( "100th_Seconds", length )
 		data[ 1 ]	&= ~0x80	#	mask OSF flag
+		data[ 2 ]	&= ~0x80	#	mask EMON flag
 
 		for i, k in enumerate( self.REG_ORDER_DT ):
 			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
@@ -856,17 +849,22 @@ class PCF86263A( RTC_base, I2C_target ):
 		self.write_registers( "Stop_enable",   0x00 )	#	clear STOP
 
 	def __set_alarm( self, int_pin, dt ):
+		ae	 = 0x00 if 80 == dt[ "seconds" ] else 0x01
+		ae	|= 0x00 if 80 == dt[ "minutes" ] else 0x02
+		ae	|= 0x00 if 80 == dt[ "hours" ]   else 0x04
+	
 		data	= [ dt[ k ] for k in self.REG_ORDER_ALRM1 ]
 		data	= list( map( RTC_base.bin2bcd, data ) )
 
 		self.write_registers( "Second_alarm1", data )
+		self.write_registers( "Alerm_enables", ae   )
 
 		if int_pin:
 			select	= "A" if "A" in int_pin else "B"
 			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x10, 0x10 )
 
 	def __clear_alarm( self ):
-		pass
+		self.write_registers( "Alerm_enables", 0x00 )
 
 	def __cancel_alarm( self, int_pin, dt ):
 		if int_pin:
@@ -920,7 +918,7 @@ class PCF86263A( RTC_base, I2C_target ):
 		for i, k in enumerate( self.REG_ORDER_TS ):
 			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
 
-		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
+		dt[ "year" ]		+= 2000
 		dt[ "subseconds" ]	*= 50	#	use 50 if Control_1.100TH_S_DIS == 0, else 62.5
 		dt[ "tzinfo" ]		 = None
 

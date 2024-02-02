@@ -84,10 +84,8 @@ def demo( rtc ):
 	
 	rtc.periodic_interrupt( pin_select = "A", period = 1 )
 
-#	alm	= rtc.timer_alarm( pin_select = "A", seconds = 5 )
-#	print( "alarm is set = {}".format( ", ".join( alm ) ) )
-
-#	rtc.set_timestamp_interrupt( 1, pin_select = "A" )
+	alm	= rtc.timer_alarm( pin_select = "A", seconds = 5 )
+	print( "alarm is set = {}".format( ", ".join( alm ) ) )
 
 	while True:
 		if int_flag:
@@ -99,17 +97,17 @@ def demo( rtc ):
 			dt	= rtc.datetime()
 			
 			for e in event:
-				print( "{} {}".format( e, dt ), end = "     \n" if e is "periodic" else "     \n" )
+				print( "{} {}".format( e, dt ), end = "     \r" if e == "periodic" else "     \n" )
 	
 				if not dt[ 6 ] % 30:
 					rtc.dump_reg()
 
-			if "alarm" in event:
+			if "alarm1" in event:
 				print( "!!!!!!! ALARM !!!!!!!" )
 				alm	= rtc.timer_alarm( seconds = 5 )
 				print( "new alarm seting = {}".format( ", ".join( alm ) ) )
 
-			if "ts1" in event:
+			if "timestamp1" in event:
 				tsl	= rtc.timestamp()
 				print( rtc.timestamp2str( tsl ) )
 
