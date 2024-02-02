@@ -9,19 +9,6 @@ def main():
 	intf	= I2C( 0, freq = (400 * 1000) )
 	rtc		= PCF86263A( intf )
 
-
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-	rtc.write_registers( "Pin_IO",   0x06 )
-
-
 	rtc.dump_reg()
 
 	print( rtc.info() )
@@ -113,6 +100,9 @@ def demo( rtc ):
 			
 			for e in event:
 				print( "{} {}".format( e, dt ), end = "     \n" if e is "periodic" else "     \n" )
+	
+				if not dt[ 6 ] % 30:
+					rtc.dump_reg()
 
 			if "alarm" in event:
 				print( "!!!!!!! ALARM !!!!!!!" )
@@ -123,8 +113,6 @@ def demo( rtc ):
 				tsl	= rtc.timestamp()
 				print( rtc.timestamp2str( tsl ) )
 
-			if not dt[ 6 ] % 30:
-				rtc.dump_reg()
 	
 if __name__ == "__main__":
 	main()

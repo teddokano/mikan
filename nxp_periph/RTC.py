@@ -801,6 +801,17 @@ class PCF86263A( RTC_base, I2C_target ):
 	
 	NUMBER_OF_TIMESTAMP	= 3
 
+	def pins_init( self ):
+		self.write_registers( "Pin_IO",   0x06 )
+		self.write_registers( "Function", 0x07 )
+
+		self.bit_operation( self.INT_MASK[ "A" ][ 0 ], 0x80, 0x80 )	#	Level sensitive interrupt
+		self.bit_operation( self.INT_MASK[ "B" ][ 0 ], 0x80, 0x80 )	#	Level sensitive interrupt
+
+	def deinit( self ):
+		super().deinit()
+		self.pins_init()
+
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		"""
 		Parameters
@@ -811,12 +822,7 @@ class PCF86263A( RTC_base, I2C_target ):
 		
 		"""
 		super().__init__( i2c, address = address )
-
-		self.write_registers( "Pin_IO",   0x06 )
-		self.write_registers( "Function", 0x07 )
-
-		self.bit_operation( self.INT_MASK[ "A" ][ 0 ], 0x80, 0x80 )	#	Level sensitive interrupt
-		self.bit_operation( self.INT_MASK[ "B" ][ 0 ], 0x80, 0x80 )	#	Level sensitive interrupt
+		self.pins_init()
 
 	def __software_reset( self ):
 		self.write_registers( "Resets", 0x2C )
