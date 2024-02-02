@@ -5,10 +5,12 @@
 
 from	machine		import	SoftI2C
 from	utime		import	sleep
-from	nxp_periph	import	P3T1035
+from	nxp_periph	import	P3T1035, P3T2030
 
 i2c			= SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+
 temp_sensor	= P3T1035( i2c )
+#temp_sensor	= P3T2030( i2c )
 
 print( temp_sensor.info() )
 
