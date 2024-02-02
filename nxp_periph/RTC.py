@@ -800,6 +800,7 @@ class PCF85053A( RTC_base, I2C_target ):
 						}
 	
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		###
 		"""
 		Parameters
 		----------
@@ -809,12 +810,15 @@ class PCF85053A( RTC_base, I2C_target ):
 		
 		"""
 		super().__init__( i2c, address = address )
+		
+		self.bit_operation( "Control_Register", 0x20, 0x20 )
 
 	def __software_reset( self ):
 		###
 		pass
 
 	def __get_datetime_reg( self ):
+		###
 		dt		= {}
 		length	= len( REG_ORDER_DT ) + len( REG_ORDER_ALRM )
 		
@@ -830,6 +834,9 @@ class PCF85053A( RTC_base, I2C_target ):
 		return dt
 
 	def __set_datetime_reg( self, dt ):
+		length	= len( REG_ORDER_DT ) + len( REG_ORDER_ALRM )
+		data	= self.read_registers( "Seconds", length )	# read once to prevent overwriting alarm field
+	
 		dt[ "year" ]		-= 2000
 		dt[ "subseconds" ]	 = 0	#	dummy
 
@@ -841,37 +848,28 @@ class PCF85053A( RTC_base, I2C_target ):
 		self.write_registers( "Seconds", data )
 
 	def __set_alarm( self, int_pin, dt ):
-		data	= [ dt[ k ] for k in self.REG_ORDER_ALRM ]
-		data	= list( map( RTC_base.bin2bcd, data ) )
+		print( "Caution: Setting alarm will disable interrupt in every second" )
+		
+		for k, v in self.REG_ORDER_ALRM.items():
+			self.write_registers( v, RTC_base.bin2bcd( dt[ k ] ) )
 
-		self.write_registers( "Second_alarm", data )
-		self.bit_operation( "Control_2", 0x80, 0x80 )
+		self.bit_operation( "Control_Register", 0x80, 0x80 )
 
 	def __clear_alarm( self ):
 		###
 		pass	# will be implemented later
 
 	def __cancel_alarm( self, int_pin, dt ):
-		self.bit_operation( "Control_2", 0x80, 0x00 )
+		self.bit_operation( "Control_Register", 0x80, 0x00 )
 
 	def __set_periodic_interrupt( self, int_pin, period ):
-		self.bit_operation( "Timer_mode", 0x06, 0x00 )
-		if period == 0:
-			return 0
-	
-		timer_max	= [ r * 255 for r in ( (1 / 4096), (1 / 64), 1, 60 ) ]
+		###
+		### This method supports to set interrupt in every second only
+		self.write_registers( "Seconds_alarm", 0xFF )
+		self.write_registers( "Minutes_alarm", 0xFF )
+		self.write_registers( "Hours_alarm", 0xFF )
 
-		res, tcf	= 60, 0x3
-		for i, m in enumerate( timer_max ):
-			if period <= m:
-				res, tcf	= m / 255, i
-				break
-
-		tv	= int( period / res )
-		self.write_registers( "Timer_value", tv )
-		self.bit_operation( "Timer_mode", 0x1E, tcf << 3 | 0x06 )
-		
-		return tv * res
+		self.bit_operation( "Control_Register", 0x80, 0x80 )
 
 	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
 		###
