@@ -767,6 +767,53 @@ class PCF85063A( RTC_base, I2C_target ):
 		self.bit_operation( "RAM_byte", 0xF0, 0xF0 )
 
 
+class PCF85063TP( PCF85063A ):
+	"""
+	PCF85063TP class
+	"""
+	DEFAULT_ADDR	= (0xA2 >> 1)
+	REG_NAME		= (	"Control_1", "Control_2",
+						"Offset",
+						"RAM_byte",
+						"Seconds", "Minutes", "Hours", "Days", "Weekdays", "Months", "Years"
+						)
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Parameters
+		----------
+		i2c		: machine.I2C object
+		address	: int, option
+			If need to set I2C target address
+		
+		"""
+		super().__init__( i2c, address = address )
+
+	def __set_alarm( self, int_pin, dt ):
+		pass
+
+	def __clear_alarm( self ):
+		pass
+
+	def __cancel_alarm( self, int_pin, dt ):
+		pass
+
+	def __set_periodic_interrupt( self, int_pin, period ):
+		pass
+
+	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
+		pass
+
+	def __get_timestamp_reg( self, num ):
+		pass
+
+	def __interrupt_clear( self ):
+		pass
+
+	def __battery_switchover( self, switch ):
+		pass
+
+
 class PCF86263A( RTC_base, I2C_target ):
 	"""
 	PCF86263A class
