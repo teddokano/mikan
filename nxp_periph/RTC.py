@@ -252,7 +252,7 @@ class RTC_base():
 		timestamp converted to a str
 		"""
 		s	= []
-#		for ts, i in zip( ts_list, range( 1, self.NUMBER_OF_TIMESTAMP + 1 ) ):
+
 		for i, ts in enumerate( ts_list, start = 1 ):
 			s	+= [ "timestamp{} ({}, {}): {}".format( i, ts[ "active" ], ts[ "last" ], RTC_base.tuple2str( ts[ "tuple" ], RTC_base.NOW_TUPPLE_FORM ) ) ]
 
