@@ -26,6 +26,8 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [LM75B](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/digital-temperature-sensor-and-thermal-watchdog:LM75B)
 	- [PCT2075](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/ic-bus-fm-plus-1-degree-c-accuracy-digital-temperature-sensor-and-thermal-watchdog:PCT2075)
 	- [P3T1085](https://www.nxp.com/products/sensors/ic-digital-temperature-sensors/i3c-ic-bus-0-5-c-accurate-digital-temperature-sensor:P3T1085UK) (I²C operation)
+	- [P3T1035](https://www.nxp.com/products/sensors/i3c-ic-digital-temp-sensors/i3c-ic-bus-0-5-c-accuracy-digital-temperature-sensor:P3T1035xUK) (I²C operation)
+	- [P3T2030](https://www.nxp.com/products/sensors/i3c-ic-digital-temp-sensors/i3c-ic-bus-2-0-c-accuracy-digital-temperature-sensor:P3T2030xUK) (I²C operation)
 - LED controller
 	- [PCA9632](https://www.nxp.com/products/power-management/lighting-driver-and-controller-ics/led-controllers/4-bit-fm-plus-ic-bus-low-power-led-driver:PCA9632) (PCA9633 compatible)
 	- [PCA9955B](https://www.nxp.com/products/power-management/lighting-driver-and-controller-ics/led-drivers/16-channel-fm-plus-ic-bus-57-ma-20-v-constant-current-led-driver:PCA9955BTW)
@@ -171,6 +173,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 ⏰|RTC_demo_PCF85063AT_ARD.py				|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 												|PCF85063
 🌡️|temp_sensor_simple.py					|Very simple sample to operate a temp sensor																		|LM75B, PCT2075
 🌡️|temp_sensor_demo_PCT2075DP_ARB.py		|Operate with interrupt and heater-resister on ARD board															|PCT2075
+🌡️|temp_sensor_P3T1035_P3T2020.py			|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1035, P3T2020
 🌡️|temp_sensor_P3T1085.py					|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1085
 🌡️|temp_sensor_demo_P3T1085UK_ARB.py		|Similar to “temp_sensor_demo_PCT2075DP_ARB.py” but no heater operation												|P3T1085
 ↕|GPIO_demo.py								|Operation sample of a PCA9555 API																					|PCA9555
