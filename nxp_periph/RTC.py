@@ -767,6 +767,188 @@ class PCF85063A( RTC_base, I2C_target ):
 		self.bit_operation( "RAM_byte", 0xF0, 0xF0 )
 
 
+class PCF86263A( RTC_base, I2C_target ):
+	"""
+	PCF86263A class
+	"""
+	DEFAULT_ADDR	= (0xA2 >> 1)
+	REG_NAME		= (		"100th_Seconds", "Seconds", "Minutes","Hours", "Days", "Weekdays", "Months", "Years",
+							"Second_alarm1", "Minute_alarm1", "Hour_alarm1", "Day_alarm1", "Month_alarm1",
+							"Minute_alarm2", "Hour_alarm2", "Weekday_alarm2", 
+							"Alerm_enables", 
+							"TSR1_seconds", "TSR1_minutes", "TSR1_hours", "TSR1_days", "TSR1_months", "TSR1_years", 
+							"TSR2_seconds", "TSR2_minutes", "TSR2_hours", "TSR2_days", "TSR2_months", "TSR2_years",	
+							"TSR3_seconds", "TSR3_minutes", "TSR3_hours", "TSR3_days", "TSR3_months", "TSR3_years",	
+							"TSR_mode", 
+							"Offset",
+							"Oscillator", 
+							"Battery_switch", 
+							"Pin_IO", 
+							"Function", 
+							"INTA_enable", 
+							"INTB_enable", 
+							"Flags", 
+							"RAM_byte", 
+							"WatchDog", 
+							"Stop_enable", 
+							"Resets"
+						)
+	INT_MASK		= { "A": ["INTA_enable"], "B": [ "INTB_enable" ] }
+	REG_ORDER_DT	= ( "subseconds", "seconds", "minutes", "hours", "day", "weekday", "month", "year" )
+	REG_ORDER_ALRM1	= ( "seconds", "minutes", "hours", "day", "month" )
+	REG_ORDER_ALRM2	= ( "minutes", "hours", "weekday" )
+	REG_ORDER_TS	= ( "seconds", "minutes", "hours", "day", "month", "year" )
+	
+	NUMBER_OF_TIMESTAMP	= 3
+
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		"""
+		Parameters
+		----------
+		i2c		: machine.I2C object
+		address	: int, option
+			If need to set I2C target address
+		
+		"""
+		super().__init__( i2c, address = address )
+
+		self.write_registers( "Pin_IO",   0x06 )
+		self.write_registers( "Function", 0x07 )
+
+		self.bit_operation( self.INT_MASK[ "A" ][ 0 ], 0x80, 0x80 )	#	Level sensitive interrupt
+		self.bit_operation( self.INT_MASK[ "B" ][ 0 ], 0x80, 0x80 )	#	Level sensitive interrupt
+
+	def __software_reset( self ):
+		self.write_registers( "Resets", 0x2C )
+
+	def __get_datetime_reg( self ):
+		dt		= {}
+		length	= len( self.REG_ORDER_DT )
+		
+		data	= self.read_registers( "100th_Seconds", length )
+		data[ 1 ]	&= ~0x80	#	mask OSF flag
+
+		for i, k in enumerate( self.REG_ORDER_DT ):
+			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
+
+		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
+		dt[ "subseconds" ]	*= 10	#	7th element of datetime tuple is defined as microsenonds. Need from convert 1/00 sec ticks
+		dt[ "tzinfo" ]		 = None
+			
+		return dt
+
+	def __set_datetime_reg( self, dt ):
+		dt[ "year" ]		-= 2000
+		dt[ "subseconds" ]	//= 10
+
+		data	= [ dt[ k ] for k in self.REG_ORDER_DT ]
+		data	= list( map( RTC_base.bin2bcd, data ) )
+
+		self.write_registers( "Stop_enable",   0x01 )	#	set STOP
+		self.write_registers( "Resets",        0xA4 )	#	clear prescaler		
+		self.write_registers( "100th_Seconds", data )	#	write date-time data
+		self.write_registers( "Stop_enable",   0x00 )	#	clear STOP
+
+	def __set_alarm( self, int_pin, dt ):
+		data	= [ dt[ k ] for k in self.REG_ORDER_ALRM1 ]
+		data	= list( map( RTC_base.bin2bcd, data ) )
+
+		self.write_registers( "Second_alarm1", data )
+
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x10, 0x10 )
+
+	def __clear_alarm( self ):
+		pass
+
+	def __cancel_alarm( self, int_pin, dt ):
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x10, 0x00 )
+
+	def __set_periodic_interrupt( self, int_pin, period ):
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
+		
+		if period < 1:
+			v	= 0
+		elif period < 60:
+			v	= 1
+		elif period < 3600:
+			v	= 2
+		else:
+			v	= 3
+					
+		self.bit_operation( "Function", 0x60, v << 5 )
+		
+		if int_pin:
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x40, 0x40 )
+
+		return v
+
+	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
+		if num == 1:
+			self.bit_operation( "TSR_mode", 2 if last_event else 1	)
+		else:
+			print( f"timestamp{num} setting is not supported in this version" )
+		
+		if int_pin:
+			select	= "A" if "A" in int_pin else "B"
+			self.bit_operation( self.INT_MASK[ select ][ 0 ], 0x04, 0x04 )
+
+	def __get_timestamp_reg( self, num ):
+		dt		= {}
+		num		-= 1
+		r_ofst	 = 6
+		length	= len( self.REG_ORDER_TS )
+		r	= self.REG_NAME.index( "TSR1_seconds" ) + (num * r_ofst)
+
+		data	= self.read_registers( r, length )
+		
+		dt[ "last" ]	= "first event" if data[ 0 ] & 0x80 else "last event"
+		dt[ "active" ]	= "disabled"    if data[ 0 ] & 0x40 else "active"
+
+		data[ 0 ]	&= 0x1F
+
+		for i, k in enumerate( self.REG_ORDER_TS ):
+			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
+
+		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
+		dt[ "subseconds" ]	*= 50	#	use 50 if Control_1.100TH_S_DIS == 0, else 62.5
+		dt[ "tzinfo" ]		 = None
+
+		return dt
+
+	def __interrupt_clear( self ):
+		rv	= self.read_registers( "Flags", 1 )
+		self.write_registers( "Flags", ~rv )	#	datasheet 7.11.5
+
+		return rv
+
+	def __oscillator_stopped( self ):
+		return True if 0x80 & self.read_registers( "Seconds", 1 ) else False
+	
+	def __battery_switchover( self, switch ):
+		pass
+			
+	EVENT_NAME		= ( "periodic", "alarm2", "alarm1", "watchdog", "battery switch", "timestamp3", "timestamp2", "timestamp1" )	#	"xx" is a dummy to avoid dict-zip bug
+	EVENT_FLAG		= { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 }
+	EVENTS			= dict( zip( EVENT_NAME, EVENT_FLAG ) )
+	
+	def __check_events( self, event ):
+		list	= []
+
+		for k, v in self.EVENTS.items():
+			if event & v:
+				list	+= [ k ]
+	
+		return list
+
+	def __test( self ):
+		pass
+		
+
 class PCF85053A( RTC_base, I2C_target ):
 	"""
 	PCF85053A class
