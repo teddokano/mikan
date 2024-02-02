@@ -893,7 +893,7 @@ class PCF86263A( RTC_base, I2C_target ):
 
 	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
 		if num == 1:
-			self.bit_operation( "TSR_mode", 2 if last_event else 1	)
+			self.bit_operation( "TSR_mode", 0x03, 2 if last_event else 1	)
 		else:
 			print( f"timestamp{num} setting is not supported in this version" )
 		
@@ -919,7 +919,7 @@ class PCF86263A( RTC_base, I2C_target ):
 			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
 
 		dt[ "year" ]		+= 2000
-		dt[ "subseconds" ]	*= 50	#	use 50 if Control_1.100TH_S_DIS == 0, else 62.5
+		dt[ "subseconds" ]	 = 0
 		dt[ "tzinfo" ]		 = None
 
 		return dt

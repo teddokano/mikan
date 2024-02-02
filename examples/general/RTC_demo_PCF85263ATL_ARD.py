@@ -18,8 +18,6 @@ def main():
 	print( "rtc.oscillator_stopped()\n  --> ", end = "" )
 	print( osf )
 
-	rtc.battery_switchover( BAT_SWOVR )
-
 	machine_rtc	= machine.RTC()
 	
 	print( "== now ==" )
@@ -79,13 +77,16 @@ def demo( rtc ):
 	intA	= Pin( "D2", Pin.IN )
 	intA.irq( trigger = Pin.IRQ_FALLING, handler = callback )
 	
-	intB	= Pin( "D3", Pin.IN )
-	intB.irq( trigger = Pin.IRQ_FALLING, handler = callback )
+	#intB	= Pin( "D3", Pin.IN, Pin.PULL_UP )
+	#intB.irq( trigger = Pin.IRQ_FALLING, handler = callback )
 	
 	rtc.periodic_interrupt( pin_select = "A", period = 1 )
 
 	alm	= rtc.timer_alarm( pin_select = "A", seconds = 5 )
 	print( "alarm is set = {}".format( ", ".join( alm ) ) )
+
+	pin4_as_timestamp_input( rtc )
+	rtc.set_timestamp_interrupt( 1, pin_select = "B" )
 
 	while True:
 		if int_flag:
@@ -111,7 +112,11 @@ def demo( rtc ):
 				tsl	= rtc.timestamp()
 				print( rtc.timestamp2str( tsl ) )
 
-	
+
+def pin4_as_timestamp_input( rtc ):
+	intB	= Pin( "D3", Pin.IN, Pin.PULL_UP )	#	set pull-up at MCU side
+	rtc.bit_operation( "Pin_IO", 0x7C, 0x7C )	#	pin4 of PCF85263A as TS input
+
 if __name__ == "__main__":
 	main()
 
