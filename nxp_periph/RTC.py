@@ -252,7 +252,8 @@ class RTC_base():
 		timestamp converted to a str
 		"""
 		s	= []
-		for ts, i in zip( ts_list, range( 1, self.NUMBER_OF_TIMESTAMP + 1 ) ):
+#		for ts, i in zip( ts_list, range( 1, self.NUMBER_OF_TIMESTAMP + 1 ) ):
+		for i, ts in enumerate( ts_list, start = 1 ):
 			s	+= [ "timestamp{} ({}, {}): {}".format( i, ts[ "active" ], ts[ "last" ], RTC_base.tuple2str( ts[ "tuple" ], RTC_base.NOW_TUPPLE_FORM ) ) ]
 
 		return "\n".join( s )
@@ -440,7 +441,7 @@ class PCF2131_base( RTC_base ):
 		data	= self.read_registers( "100th_Seconds", length )
 		data[ 1 ]	&= ~0x80	#	mask OSF flag
 
-		for i, k in zip( range( length ), self.REG_ORDER_DT ):
+		for i, k in enumerate( self.REG_ORDER_DT ):
 			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
 
 		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
@@ -526,7 +527,7 @@ class PCF2131_base( RTC_base ):
 
 		data[ 0 ]	&= 0x1F
 
-		for i, k in zip( range( length ), self.REG_ORDER_TS ):
+		for i, k in enumerate( self.REG_ORDER_TS ):
 			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
 
 		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
@@ -683,9 +684,9 @@ class PCF85063A( RTC_base, I2C_target ):
 		data	= self.read_registers( "Seconds", length )
 		data[ 1 ]	&= ~0x80	#	mask OS flag
 
-		for i, k in zip( range( length ), self.REG_ORDER_DT ):
+		for i, k in enumerate( self.REG_ORDER_DT ):
 			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
-
+			
 		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
 		dt[ "subseconds" ]	 = 0	#	dummy
 		dt[ "tzinfo" ]		 = None
@@ -722,7 +723,7 @@ class PCF85063A( RTC_base, I2C_target ):
 		timer_max	= [ r * 255 for r in ( (1 / 4096), (1 / 64), 1, 60 ) ]
 
 		res, tcf	= 60, 0x3
-		for m, i in zip( timer_max, range( len( timer_max ) ) ):
+		for i, m in enumerate( timer_max ):
 			if period <= m:
 				res, tcf	= m / 255, i
 				break
@@ -785,8 +786,18 @@ class PCF85053A( RTC_base, I2C_target ):
 						"R_code1", "R_code1"
 						)
 	INT_MASK		= { "A": ["INT_A_MASK1", "INT_A_MASK2"], "B": [ "INT_B_MASK1", "INT_B_MASK2" ] }
-	REG_ORDER_DT	= ( "seconds", "minutes", "hours", "day", "weekday", "month", "year" )
-	REG_ORDER_ALRM	= ( "seconds", "minutes", "hours", "day", "weekday" )
+	REG_ORDER_DT	= { "seconds": 	"Seconds", 
+						"minutes":	"Minutes", 
+						"hours":	"Hours", 
+						"day":		"Day_of_the_Month", 
+						"weekday":	"Day_of_the_Week", 
+						"month":	"Month", 
+						"year":		"Year"
+						 }
+	REG_ORDER_ALRM	= { "seconds":	"Seconds_alarm", 
+						"minutes":	"Minutes_alarm", 
+						"hours":	"Hours_alarm"
+						}
 	
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
 		"""
@@ -800,17 +811,17 @@ class PCF85053A( RTC_base, I2C_target ):
 		super().__init__( i2c, address = address )
 
 	def __software_reset( self ):
-		self.bit_operation( "Control_1", 0x10, 0x10 )
+		###
+		pass
 
 	def __get_datetime_reg( self ):
 		dt		= {}
-		length	= len( self.REG_ORDER_DT )
+		length	= len( REG_ORDER_DT ) + len( REG_ORDER_ALRM )
 		
 		data	= self.read_registers( "Seconds", length )
-		data[ 1 ]	&= ~0x80	#	mask OS flag
 
-		for i, k in zip( range( length ), self.REG_ORDER_DT ):
-			dt[ k ]	= RTC_base.bcd2bin( data[ i ] )
+		for k, v in self.REG_ORDER_DT.items():
+			dt[ k ]	= RTC_base.bcd2bin( data[ REG_NAME.index( v ) ] )
 
 		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
 		dt[ "subseconds" ]	 = 0	#	dummy
@@ -822,12 +833,12 @@ class PCF85053A( RTC_base, I2C_target ):
 		dt[ "year" ]		-= 2000
 		dt[ "subseconds" ]	 = 0	#	dummy
 
-		data	= [ dt[ k ] for k in self.REG_ORDER_DT ]
+		for k, v in self.REG_ORDER_DT.items():
+			data[ REG_NAME.index( v ) ]	= dt[ k ]
+
 		data	= list( map( RTC_base.bin2bcd, data ) )
 
-		self.bit_operation( "Control_1", 0x20, 0x20 )	#	set STOP
 		self.write_registers( "Seconds", data )
-		self.bit_operation( "Control_1", 0x20, 0x00 )	#	clear STOP
 
 	def __set_alarm( self, int_pin, dt ):
 		data	= [ dt[ k ] for k in self.REG_ORDER_ALRM ]
@@ -837,6 +848,7 @@ class PCF85053A( RTC_base, I2C_target ):
 		self.bit_operation( "Control_2", 0x80, 0x80 )
 
 	def __clear_alarm( self ):
+		###
 		pass	# will be implemented later
 
 	def __cancel_alarm( self, int_pin, dt ):
@@ -850,7 +862,7 @@ class PCF85053A( RTC_base, I2C_target ):
 		timer_max	= [ r * 255 for r in ( (1 / 4096), (1 / 64), 1, 60 ) ]
 
 		res, tcf	= 60, 0x3
-		for m, i in zip( timer_max, range( len( timer_max ) ) ):
+		for i, m in enumerate( timer_max ):
 			if period <= m:
 				res, tcf	= m / 255, i
 				break
@@ -862,23 +874,28 @@ class PCF85053A( RTC_base, I2C_target ):
 		return tv * res
 
 	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
+		###
 		pass
 
 	def __get_timestamp_reg( self, num ):
+		###
 		pass
 
 	def __interrupt_clear( self ):
-		rv, wv	= self.bit_operation( "Control_2", 0x48, 0x00 )
+		rv, wv	= self.read_registers( "Status_Register", 0x00, 1 )
 		return rv
 
 	def __oscillator_stopped( self ):
-		return True if 0x80 & self.read_registers( "Seconds", 1 ) else False
+		###
+		rv	= True if 0x40 & self.read_registers( "Status_Register", 1 ) else False
+		self.bit_operation( "Status_Register", 0x40, 0x40 )
+		return rv
 	
 	def __battery_switchover( self, switch ):
 		pass
 
-	EVENT_NAME		= ( "periodic", "alarm" )
-	EVENT_FLAG		= { 0x08, 0x40 }
+	EVENT_NAME		= ( "alarm" )
+	EVENT_FLAG		= { 0x08 }
 	EVENTS			= dict( zip( EVENT_NAME, EVENT_FLAG ) )
 	
 	def __check_events( self, event ):
@@ -891,6 +908,7 @@ class PCF85053A( RTC_base, I2C_target ):
 		return list
 
 	def __test( self ):
-		self.bit_operation( "RAM_byte", 0xF0, 0xF0 )
+		###
+		self.bit_operation( "Scratchpad", 0xF0, 0xF0 )
 
 
