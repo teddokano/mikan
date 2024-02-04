@@ -171,13 +171,20 @@ It shows simple usage examples for the drivers and standalome demo for target de
 💡|LED_demo.py								|example/general/|Showing idea to use ‘LED class’ to manage LED and white LED individually											|PCA9955B, PCA9956B, PCA9957, PCA9632
 💡|LED_demo_dual_om13321.py					|example/general/|Showing idea to use ‘LED class’ to manage multiple LED controller devices											|PCA9956B
 ⏰|RTC_demo_PCF2131_ARD.py					|example/general/|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines						|PCF2131
-⏰|RTC_demo_PCF85063AT_ARD.py				|example/general/|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 											|PCF85063
+⏰|RTC_demo_PCF2131-ARD_demo(I2C).py		|example/ARD_boards/|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines (Similar to `RTC_demo_PCF2131_ARD.py`)	|PCF2131
+⏰|RTC_demo_PCF2131-ARD_demo(SPI).py		|example/ARD_boards/|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines (Similar to `RTC_demo_PCF2131_ARD.py`)	|PCF2131
+⏰|RTC_demo_PCF2131-ARD_simple(I2C).py		|example/ARD_boards/|Simple operation sample through MicroPython’s machine.RTC equivalent APIs. 									|PCF2131
+⏰|RTC_demo_PCF2131-ARD_simple(SPI).py		|example/ARD_boards/|Simple operation sample through MicroPython’s machine.RTC equivalent APIs. 									|PCF2131
+⏰|RTC_demo_PCF85063AT-ARD.py				|example/ARD_boards/|Operation sample through MicroPython’s machine.RTC equivalent APIs. Using alarm interrupt						|PCF85063A
+⏰|RTC_demo_PCF85263ATL-ARD.py				|example/ARD_boards/|Operation sample through MicroPython’s machine.RTC equivalent APIs. Using alarm and timestamp interrupts		|PCF85263A
+⏰|RTC_demo_PCF85063TP-ARD.py				|example/ARD_boards/|Operation sample through MicroPython’s machine.RTC equivalent APIs. 											|PCF85063TP
+⏰|RTC_demo_PCF85053A-ARD.py				|example/ARD_boards/|Operation sample through MicroPython’s machine.RTC equivalent APIs. Using alarm interrupt						|PCF85053A
 🌡️|temp_sensor_simple_PCT2075_LM75B.py							|example/general/	|Very simple sample to operate a temp sensor												|LM75B, PCT2075
 🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030.py		|example/general/	|Very simple sample to operate a temp sensor with different I2C pin assign. 				|P3T1085, P3T1755, P3T1035, P3T2030
 🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|Similar to “temp_sensor_simple.py” but different I2C pin assign. 							|P3T1085, P3T1755, P3T1035, P3T2030
-🌡️|temp_sensor_demo_PCT2075DP-ARD.py		|example/ARD_boards/|Operate with interrupt and heater-resister on ARD board															|PCT2075
-🌡️|temp_sensor_demo_P3T1085UK-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation												|P3T1085
-🌡️|temp_sensor_demo_P3T1755DP-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation												|P3T1755
+🌡️|temp_sensor_demo_PCT2075DP-ARD.py		|example/ARD_boards/|Operate with interrupt and heater-resister on ARD board														|PCT2075
+🌡️|temp_sensor_demo_P3T1085UK-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1085
+🌡️|temp_sensor_demo_P3T1755DP-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1755
 🌡️|temp_sensor_demo_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|All 8 sensors operated together												|P3T1035, P3T2030
 ↕|GPIO_demo.py								|example/general/|Operation sample of a PCA9555 API																					|PCA9555
 ↕|GPIO_demo_PCAL6xxxA-ARD.py				|example/general/|Operation sample of a PCAL6xxx ARD board. Using interrupt															|PCAL6408, PCAL6416, PCAL6524, PCAL6534
