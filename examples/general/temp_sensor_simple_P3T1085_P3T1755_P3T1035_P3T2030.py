@@ -15,14 +15,12 @@ if "i.MX RT1050 EVKB-A" in os.uname().machine:
 else:
 	i2c = I2C(0, freq=(400 * 1000))
 
-#temp_sensor	= P3T1085( i2c )
-temp_sensor	= P3T1755( i2c )
+temp_sensor	= P3T1085( i2c )
+#temp_sensor	= P3T1755( i2c )
 #temp_sensor	= P3T1035( i2c )
 #temp_sensor	= P3T2030( i2c )
 
 print( temp_sensor.info() )
-
-thresholds		= temp_sensor.temp_setting( [ 33.5, 10 ] )
 
 while True:
 	value	= temp_sensor.temp
