@@ -1,5 +1,5 @@
 from machine import Pin, I2C, SoftI2C, Timer
-from nxp_periph import P3T1755
+from nxp_periph import P3T1755, MikanUtil
 import os
 
 def main():
@@ -17,12 +17,12 @@ def main():
     int = Pin("D9", Pin.IN)
     int.irq(trigger=Pin.IRQ_FALLING, handler=callback)
 
-    if "i.MX RT1050 EVKB-A" in os.uname().machine:
+    if "i.MX RT1050" in os.uname().machine:
         i2c = SoftI2C(sda="D14", scl="D15", freq=(400_000))
     else:
         i2c = I2C(0, freq=(400 * 1000))
         
-    temp_sensor = P3T1755(i2c)
+    temp_sensor = P3T1755(i2c, 0x98>>1)
 
     print(temp_sensor.info())
     temp_sensor.dump_reg()
@@ -34,7 +34,7 @@ def main():
     temp_sensor.reg_access("Conf", conf | 0x0A)
     temp_sensor.dump_reg()
 
-    tim0 = Timer(-1)
+    tim0 = Timer(MikanUtil.get_timer_id(0))
     tim0.init(period=1000, callback=tim_cb)
 
     while True:
