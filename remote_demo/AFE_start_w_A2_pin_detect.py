@@ -6,14 +6,14 @@ def main():
 	setting_detect	= Pin( "A2", Pin.IN )
 	
 	if setting_detect.value():
-		demo( AFE_demo = True )
+		demo( config = "AFE" )
 	else:
 		demo( ip = (	"10.0.0.99", 		#	IP address
 						"255.255.255.0", 	#	Subnet mask
 						"10.0.0.1", 		#	Gateway
 						"0.0.0.0" 			#	DNS
 					), 
-					AFE_demo = True 
+					config = "AFE"
 			)
 
 if __name__ == "__main__":

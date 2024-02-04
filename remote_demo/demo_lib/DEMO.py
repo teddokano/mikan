@@ -29,7 +29,7 @@ NETWORK_TIMEOUT	= False
 MEM_MONITORING	= False
 # MEM_MONITORING	= True	###
 
-def demo( ip = "dhcp", AFE_demo = False ):
+def demo( ip = "dhcp", config = "Normal" ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
@@ -41,7 +41,7 @@ def demo( ip = "dhcp", AFE_demo = False ):
 	regex_file		= ure.compile( r"GET /(\S+)\sHTTP" )
 	regex_suffix	= ure.compile( r".*\.(.*)" )
 
-	if AFE_demo:
+	if "AFE" in config:
 		spi_phase	= 1
 	else:
 		spi_phase	= 0
@@ -62,7 +62,7 @@ def demo( ip = "dhcp", AFE_demo = False ):
 
 		ep_num	= 0
 	
-	if AFE_demo:
+	if "AFE" in config:
 		devices	= [
 					NAFE13388( spi ),
 					FXOS8700( i2c ),
