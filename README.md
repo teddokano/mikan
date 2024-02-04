@@ -163,32 +163,32 @@ It shows simple usage examples for the drivers and standalome demo for target de
 > Refer to pinout document for each platforms. For i.MXRT, the pinout information is available [here](https://docs.micropython.org/en/latest/mimxrt/pinout.html#mimxrt-i2c-pinout).
 
 
-?|File name|Description|Device type
----|---|---|---
-💡|LED_controller.py						|Simple sample: making an LED_controller instance and how PWM can be controlled										|PCA9955B, PCA9956B, PCA9957, PCA9632
-💡|LED_gradation_ctrl.py					|Gradation control (hardware) feature demo																			|PCA9955B, PCA9957
-💡|LED_instance.py							|Using another class to abstract LED controllers																	|PCA9955B, PCA9956B, PCA9957
-💡|LED_demo.py								|Showing idea to use ‘LED class’ to manage LED and white LED individually											|PCA9955B, PCA9956B, PCA9957, PCA9632
-💡|LED_demo_dual_om13321.py					|Showing idea to use ‘LED class’ to manage multiple LED controller devices											|PCA9956B
-⏰|RTC_demo_PCF2131_ARD.py					|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines						|PCF2131
-⏰|RTC_demo_PCF85263ATL_ARD.py				|Operate a PCF82063A through MicroPython’s machine.RTC equivalent APIs. 											|PCF85263A
-⏰|RTC_demo_PCF85063AT_ARD.py				|Operate a PCF85063A through MicroPython’s machine.RTC equivalent APIs. 											|PCF85063A
-⏰|RTC_demo_PCF85063TP_ARD.py				|Operate a PCF85063TP through MicroPython’s machine.RTC equivalent APIs. 											|PCF85063TP
-⏰|RTC_demo_PCF85053A_ARD.py				|Operate a PCF85053A through MicroPython’s machine.RTC equivalent APIs. 											|PCF85053A
-🌡️|temp_sensor_simple.py					|Very simple sample to operate a temp sensor																		|LM75B, PCT2075
-🌡️|temp_sensor_demo_PCT2075DP_ARB.py		|Operate with interrupt and heater-resister on ARD board															|PCT2075
-🌡️|temp_sensor_P3T1085.py					|Similar to “temp_sensor_simple.py” but different I2C pin assign. 													|P3T1085
-🌡️|temp_sensor_demo_P3T1085UK_ARB.py		|Similar to “temp_sensor_demo_PCT2075DP_ARB.py” but no heater operation												|P3T1085
-↕|GPIO_demo.py								|Operation sample of a PCA9555 API																					|PCA9555
-↕|GPIO_demo_PCAL6xxxA-ARD.py				|Operation sample of a PCAL6xxx ARD board. Using interrupt															|PCAL6408, PCAL6416, PCAL6524, PCAL6534
-🔠|LCD_demo_PCA8561AHN-ARD.py				|Shows direct ON/OFF of segments and using  putc(), puts() methods													|PCA8561
-💁|protocol_bridge_SC16IS7xx.py				|Operate an I²C/SPI to UART protocol bridge through MicroPython’s machine.UART equivalent APIs. 					|SC16IS7xx
-💁|protocol_bridge_SC18IS606_with_AT25010.py|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
-🔄|stepper_motor_simple.py					|Operating stepping motor with simple API																			|PCA9629A
-🔄|stepper_motor_5_motors.py				|Operating 5 instances of PCA9629A class																			|PCA9629A
-🍎|accelerometer.py							|Simple 3 axis data capturing from FXOS8700 or FXLS8974																|FXOS8700, FXLS8974
-🍎|magnetometer.py							|Simple compass application using FXOS8700																			|FXOS8700
-🌊|afe.py									|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
+?|File name|Folder|Description|Device type
+---|---|---|---|---
+💡|LED_controller.py						|example/general/|Simple sample: making an LED_controller instance and how PWM can be controlled										|PCA9955B, PCA9956B, PCA9957, PCA9632
+💡|LED_gradation_ctrl.py					|example/general/|Gradation control (hardware) feature demo																						|PCA9955B, PCA9957
+💡|LED_instance.py							|example/general/|Using another class to abstract LED controllers																	|PCA9955B, PCA9956B, PCA9957
+💡|LED_demo.py								|example/general/|Showing idea to use ‘LED class’ to manage LED and white LED individually											|PCA9955B, PCA9956B, PCA9957, PCA9632
+💡|LED_demo_dual_om13321.py					|example/general/|Showing idea to use ‘LED class’ to manage multiple LED controller devices											|PCA9956B
+⏰|RTC_demo_PCF2131_ARD.py					|example/general/|Operate a PCF2131 through MicroPython’s machine.RTC equivalent APIs. Using 2 interrupt lines						|PCF2131
+⏰|RTC_demo_PCF85063AT_ARD.py				|example/general/|Operate a PCF85063 through MicroPython’s machine.RTC equivalent APIs. 											|PCF85063
+🌡️|temp_sensor_simple_PCT2075_LM75B.py							|example/general/	|Very simple sample to operate a temp sensor												|LM75B, PCT2075
+🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030.py		|example/general/	|Very simple sample to operate a temp sensor with different I2C pin assign. 				|P3T1085, P3T1755, P3T1035, P3T2030
+🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|Similar to “temp_sensor_simple.py” but different I2C pin assign. 							|P3T1085, P3T1755, P3T1035, P3T2030
+🌡️|temp_sensor_demo_PCT2075DP-ARD.py		|example/ARD_boards/|Operate with interrupt and heater-resister on ARD board															|PCT2075
+🌡️|temp_sensor_demo_P3T1085UK-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation												|P3T1085
+🌡️|temp_sensor_demo_P3T1755DP-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation												|P3T1755
+🌡️|temp_sensor_demo_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|All 8 sensors operated together												|P3T1035, P3T2030
+↕|GPIO_demo.py								|example/general/|Operation sample of a PCA9555 API																					|PCA9555
+↕|GPIO_demo_PCAL6xxxA-ARD.py				|example/general/|Operation sample of a PCAL6xxx ARD board. Using interrupt															|PCAL6408, PCAL6416, PCAL6524, PCAL6534
+🔠|LCD_demo_PCA8561AHN-ARD.py				|example/general/|Shows direct ON/OFF of segments and using  putc(), puts() methods													|PCA8561
+💁|protocol_bridge_SC16IS7xx.py				|example/general/|Operate an I²C/SPI to UART protocol bridge through MicroPython’s machine.UART equivalent APIs. 					|SC16IS7xx
+💁|protocol_bridge_SC18IS606_with_AT25010.py|example/general/|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
+🔄|stepper_motor_simple.py					|example/general/|Operating stepping motor with simple API																			|PCA9629A
+🔄|stepper_motor_5_motors.py				|example/general/|Operating 5 instances of PCA9629A class																			|PCA9629A
+🍎|accelerometer.py							|example/general/|Simple 3 axis data capturing from FXOS8700 or FXLS8974																|FXOS8700, FXLS8974
+🍎|magnetometer.py							|example/general/|Simple compass application using FXOS8700																			|FXOS8700
+🌊|afe.py									|example/general/|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
 `remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  
