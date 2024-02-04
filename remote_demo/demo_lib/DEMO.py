@@ -29,7 +29,7 @@ NETWORK_TIMEOUT	= False
 MEM_MONITORING	= False
 # MEM_MONITORING	= True	###
 
-def demo( ip = "dhcp" ):
+def demo( ip = "dhcp", AFE_demo = False ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
