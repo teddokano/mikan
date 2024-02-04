@@ -2,7 +2,7 @@ import	machine
 import	ure
 import	ujson
 
-from	nxp_periph	import	PCF2131, PCF85063
+from	nxp_periph	import	PCF2131, PCF85063A
 from	nxp_periph	import	RTC_base
 from	demo_lib	import	DUT_base
 
@@ -17,7 +17,7 @@ class DUT_RTC( DUT_base.DUT_base ):
 
 	DS_URL		= { "PCF2131_I2C": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
 					"PCF2131_SPI": "https://www.nxp.com/docs/en/data-sheet/PCF2131DS.pdf",
-					"PCF85063": "https://www.nxp.com/docs/en/data-sheet/PCF85063A.pdf",
+					"PCF85063A": "https://www.nxp.com/docs/en/data-sheet/PCF85063A.pdf",
 					}
 
 	regex_reg	= ure.compile( r".*reg=(\d+)&val=(\d+)" )
