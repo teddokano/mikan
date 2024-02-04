@@ -5,6 +5,7 @@ import	micropython
 
 from	nxp_periph	import	PCT2075, LM75B, P3T1755, P3T1085
 from	nxp_periph	import	temp_sensor_base
+from	nxp_periph	import	MikanUtil
 from	demo_lib	import	DUT_base
 
 TEMP_SENSOR_REACTIVE_MODE	= True	# Default: To operate multiple I2C devices on same bus
@@ -28,7 +29,7 @@ class DUT_TEMP( DUT_base.DUT_base ):
 	regex_mode		= ure.compile( r".*os_polarity=(\d+)&os_mode=(\d+)" )
 	regex_update	= ure.compile( r".*update=(\d+)" )
 
-	def __init__( self, dev, timer = -1, sampling_interval = 1.0 ):
+	def __init__( self, dev, timer = 0, sampling_interval = 1.0 ):
 		super().__init__( dev )
 		
 		self.read_ref	= self.__read
@@ -67,7 +68,7 @@ class DUT_TEMP( DUT_base.DUT_base ):
 			self.dev.heater	= 0
 		
 		if self.dev.live and not self.reactive_mode:
-			tim0	= machine.Timer( timer )
+			tim0	= machine.Timer( MikanUtil.get_timer_id( timer ) )
 			tim0.init( period = int( sampling_interval * 1000.0 ), callback = self.tim_cb )
 
 	def tmp_data( self ):

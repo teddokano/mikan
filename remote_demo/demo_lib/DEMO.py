@@ -29,56 +29,72 @@ NETWORK_TIMEOUT	= False
 MEM_MONITORING	= False
 # MEM_MONITORING	= True	###
 
-def demo( ip = "dhcp" ):
+def demo( ip = "dhcp", config = "Normal" ):
 	print( "remote device demo" )
 	print( "  http server is started working on " + os.uname().machine )
 	print( "" )
+	print( "=== I2C and SPI device scan ===" )
+	print( "  * Following lines may display 'I2C error' but those can be ignored" )
+	print( "  * Just showing the I2C device availability, not fatal to demo operation" )
 	
 	src_dir			= "demo_lib/"
 	regex_file		= ure.compile( r"GET /(\S+)\sHTTP" )
 	regex_suffix	= ure.compile( r".*\.(.*)" )
 
-
+	if "AFE" in config:
+		spi_phase	= 1
+	else:
+		spi_phase	= 0
+		
 	if "i.MX RT1170 EVK" in os.uname().machine:
 		i2c		= machine.I2C( 2, freq = (400_000) )
-		spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		spi		= machine.SPI( 0, 1000_000, cs = 0, phase = spi_phase )
 		si2c	= machine.I2C( 0, freq = (400_000) )
 		ep_num	= 1	# Ethernet port selection. 1 for 1G port, 0 for 100M port
 	else:
 		i2c		= machine.I2C( 0, freq = (400_000) )
-		spi		= machine.SPI( 0, 1000_000, cs = 0 )
+		spi		= machine.SPI( 0, 1000_000, cs = 0, phase = spi_phase )
 		
-		# for NAFE13388
-		#spi		= machine.SPI( 0, 1000_000, cs = 0, phase = 1 )
-		
-		si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+		if "i.MX RT1050 EVKB-A" in os.uname().machine:
+			si2c	= machine.SoftI2C( sda = "D14", scl = "D15", freq = (400_000) )
+		else:
+			si2c	= i2c
+
 		ep_num	= 0
 	
-	devices			= [
-						PCA9956B( i2c, 0x02 >>1 ),
-						PCA9956B( i2c, 0x04 >>1 ),
-						PCA9955B( i2c, 0x06 >>1 ),
-						PCA9955B( i2c, 0x08 >>1 ),
-						PCA9955B( i2c, 0xBC >>1 ),
-						PCA9632( i2c ),
-						PCA9957( spi, setup_EVB = True ),
-						PCT2075( i2c, setup_EVB = True  ),
-						PCF2131( i2c ),
-#						PCAL6408( i2c, 0x21, setup_EVB = True ),
-						PCAL6416( i2c, 0x20, setup_EVB = True ),
-#						PCAL6524( i2c, 0x22, setup_EVB = True ),
-#						PCAL6534( i2c, 0x22, setup_EVB = True ),
-#						PCF2131( spi ),
-#						PCF85063( i2c ),
-#						P3T1085( si2c ),
-#						FXLS8974( i2c, address = 0x18 ),
-#						NAFE13388( spi ),
-						FXLS8974( i2c, address = 0x18 ),
-						FXOS8700( i2c ),
-#						P3T1755( i2c ),
-						General_call( i2c ),
-						]
-	
+	if "AFE" in config:
+		devices	= [
+					NAFE13388( spi ),
+					FXOS8700( i2c ),
+					P3T1755( i2c ),
+					General_call( i2c ),
+					]
+	else:
+		devices	= [
+					PCA9956B( i2c, 0x02 >>1 ),
+					PCA9956B( i2c, 0x04 >>1 ),
+					PCA9955B( i2c, 0x06 >>1 ),
+					PCA9955B( i2c, 0x08 >>1 ),
+					PCA9955B( i2c, 0xBC >>1 ),
+					PCA9632( i2c ),
+					PCA9957( spi, setup_EVB = True ),
+					PCT2075( i2c, setup_EVB = True  ),
+					PCF2131( i2c ),
+#					PCAL6408( i2c, 0x21, setup_EVB = True ),
+					PCAL6416( i2c, 0x20, setup_EVB = True ),
+#					PCAL6524( i2c, 0x22, setup_EVB = True ),
+#					PCAL6534( i2c, 0x22, setup_EVB = True ),
+#					PCF2131( spi ),
+#					PCF85063A( i2c ),
+#					P3T1085( si2c ),
+#					FXLS8974( i2c, address = 0x18 ),
+#					NAFE13388( spi ),
+					FXLS8974( i2c, address = 0x18 ),
+					FXOS8700( i2c ),
+#					P3T1755( i2c ),
+					General_call( i2c ),
+					]
+
 	demo_harnesses	= [	DUT_LEDC,
 						DUT_TEMP,
 						DUT_RTC,
@@ -98,6 +114,8 @@ def demo( ip = "dhcp" ):
 	
 #	for i in i2c_fullscan( i2c ):
 #		print( "0x%02X (0x%02X)" % ( i, i << 1 ) )
+
+	print( "===============================" )
 
 	ip_info	= start_network( port = ep_num, ifcnfg_param = ip, lcd = lcd_panel )
 #	print( ip_info )

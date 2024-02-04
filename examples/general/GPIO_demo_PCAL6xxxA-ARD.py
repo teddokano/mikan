@@ -1,5 +1,5 @@
 from	machine		import	Pin, I2C, Timer
-from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534
+from	nxp_periph	import	PCAL6408, PCAL6416, PCAL6524, PCAL6534, MikanUtil
 import	utime
 
 def main():
@@ -38,7 +38,7 @@ def main():
 	gpio.mask		= [ ~v for v in io_config_and_pull_up ]
 	gpio.pull_en	= [ 0xFF ] * gpio.__np
 
-	tim0 = Timer( -1 )
+	tim0 = Timer( MikanUtil.get_timer_id( 0 ) )
 	tim0.init( period= 10, callback = tim_cb)
 
 	count	= 0

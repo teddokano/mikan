@@ -589,6 +589,8 @@ from	machine		import	Pin, I2C, Timer
 import	utime
 
 def main():
+	from nxp_periph.MikanUtil	import	MikanUtil
+
 	int_flag	= False
 	tim_flag	= False
 
@@ -608,9 +610,9 @@ def main():
 	print( [ hex( v ) for v in i2c.scan() ] )
 
 #	gpio	= PCAL6408( i2c, setup_EVB = True )
-	gpio	= PCAL6416( i2c, 0x20, setup_EVB = True )
+#	gpio	= PCAL6416( i2c, 0x20, setup_EVB = True )
 #	gpio	= PCAL6524( i2c, setup_EVB = True )
-#	gpio	= PCAL6534( i2c, setup_EVB = True )
+	gpio	= PCAL6534( i2c, setup_EVB = True )
 #	gpio	= PCA9554( i2c, 0x20 )
 
 	gpio.dump_reg()
@@ -633,7 +635,7 @@ def main():
 	gpio.mask		= int_mask_config
 	gpio.pull_en	= [ 0xFF ] * gpio.__np
 
-	tim0 = Timer( -1 )
+	tim0 = Timer( MikanUtil.get_timer_id( 0 ) )
 	tim0.init( period= 10, callback = tim_cb)
 
 	count	= 0
