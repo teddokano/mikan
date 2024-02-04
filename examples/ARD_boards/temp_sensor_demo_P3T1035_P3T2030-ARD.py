@@ -1,6 +1,6 @@
 from machine import I2C, SoftI2C
 from utime import sleep
-from nxp_periph import P3T1035
+from nxp_periph import P3T1035, P3T2030
 import os
 
 if "i.MX RT1050 EVKB-A" in os.uname().machine:
@@ -15,6 +15,7 @@ temp_sensors	= []
 
 for addr in range( 0xE0, 0xF0, 2 ):
 	temp_sensors	+= [ P3T1035( i2c, 0x98 >> 1 ) ]
+#	temp_sensors	+= [ P3T2030( i2c, 0x98 >> 1 ) ]
 
 for ts in temp_sensors:
     print(ts.info())
