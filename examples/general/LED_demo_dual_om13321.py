@@ -1,7 +1,7 @@
 import	os
 import	math
 from	machine		import	I2C, Timer
-from	nxp_periph	import	PCA9956B, LED
+from	nxp_periph	import	PCA9956B, LED, MikanUtil
 
 IREF_INIT	= 0x10
 
@@ -50,7 +50,7 @@ class Color_demo:
 				self.dev_list	+= [ led.__dev ]
 		
 		if 0 != self.units:
-			self.t	= Timer( -1 )
+			self.t	= Timer( MikanUtil.get_timer_id( 0 ) )
 			self.t.init( period = miliseconds, mode = Timer.PERIODIC, callback = self.change_buffered if buffered else self.change_indivisual )
 		
 	def change_indivisual( self, x ):

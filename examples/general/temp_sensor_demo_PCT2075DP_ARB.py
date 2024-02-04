@@ -1,5 +1,5 @@
 from	machine		import	Pin, I2C, Timer
-from	nxp_periph	import	PCT2075
+from	nxp_periph	import	PCT2075, MikanUtil
 
 def main():
 	int_flag	= False
@@ -35,7 +35,7 @@ def main():
 	temp_sensor.dump_reg()
 	temp_sensor.heater	= True
 
-	tim0 = Timer( -1 )
+	tim0 = Timer( MikanUtil.get_timer_id( 0 ) )
 	tim0.init( period= 1000, callback = tim_cb)
 
 	while True:

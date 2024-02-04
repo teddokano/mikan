@@ -3,6 +3,7 @@ from	utime		import	sleep, sleep_ms, sleep_us
 from	struct		import	unpack
 from	micropython	import	schedule
 from nxp_periph.interface	import	SPI_target
+from nxp_periph.MikanUtil	import	MikanUtil
 
 WAIT	= 0.001
 #WAIT	= 0
@@ -60,6 +61,8 @@ class NAFE13388( AFE_base, SPI_target ):
 		# self.coeff_microvolt	= ((10 / (2 ** 24)) / 0.8) * 1e6
 		self.coeff_microvolt	= ((10 / (2 ** 24)) / 16) * 1e6
 
+		print( f"================ self.num_logcal_ch = {self.num_logcal_ch}" )
+
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
 		
@@ -67,7 +70,7 @@ class NAFE13388( AFE_base, SPI_target ):
 		"""
 		AFE periodic operation starter
 		"""
-		tim0 = Timer( -1 )
+		tim0 = Timer( MikanUtil.get_timer_id( 0 ) )
 		tim0.init( period= 100, callback = self.tim_cb )
 
 	def sch_cb( self, _ ):
@@ -241,6 +244,9 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.write_r16( 0x24, bits )
 		
 		print( f"bits = {bits}" )
+		print( f"self.read_r16( 0x24 ) = {self.read_r16( 0x24 )}" )
+		
+		
 		
 		self.num_logcal_ch	= 0
 		for i in range( 16 ):

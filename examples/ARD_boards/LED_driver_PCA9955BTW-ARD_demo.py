@@ -1,7 +1,7 @@
 import os
 import math
 from machine import Pin, I2C, Timer
-from nxp_periph import PCA9955B, LED
+from nxp_periph import PCA9955B, LED, MikanUtil
 
 IREF_INIT = 0xFF
 
@@ -17,7 +17,7 @@ class White_demo:
         self.pattern = [2 ** -((8.0 * i) / self.length) for i in range(self.length)]
 
         if 0 != self.units:
-            self.t = Timer(-1)
+            self.t = Timer(MikanUtil.get_timer_id(0))
             self.t.init(period=miliseconds, mode=Timer.PERIODIC, callback=self.change)
 
     def change(self, x):
@@ -42,7 +42,7 @@ class Color_demo:
         self.count = 0
 
         if 0 != self.units:
-            self.t = Timer(-1)
+            self.t = Timer(MikanUtil.get_timer_id(1))
             self.t.init(period=miliseconds, mode=Timer.PERIODIC, callback=self.change)
 
     def change(self, x):

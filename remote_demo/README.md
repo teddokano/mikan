@@ -130,9 +130,8 @@ How to setup? --> [https://youtu.be/fkHqdnd4t1s](https://youtu.be/fkHqdnd4t1s)
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/remo_demo_install.png)](https://youtu.be/fkHqdnd4t1s)
 
 # AFE demo
-**AFE demo** is a derivative version of the **remote_demo**. 
-It needs a setting in `demo_lib/DEMO.py`. To make easy setup, a file is prepared and saved as `demo_lib/DEMO_afe_demo_version.py`.  
-To try the AFE demo, replace `demo_lib/DEMO.py` by `demo_lib/DEMO_afe_demo_version.py` using same name (`demo_lib/DEMO.py`).  
-
+**AFE demo** is an option setting of the **remote_demo**. 
+A demo start script sample is available as `remote_demo/AFE_start_w_A2_pin_detect.py`.  
+The script calls `demo()` finction with an option parameter of `config = "AFE"`. It starts the demo in AFE demo congiguration. 
 
 💡⏰🌡️↕🔠🔄💁🍎🌊
