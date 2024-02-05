@@ -23,7 +23,7 @@ def main():
 	else:
 		i2c = I2C(0, freq=(400 * 1000))
 
-	temp_sensor	= P3T1085( i2c, 0x4A )
+	temp_sensor	= P3T1085( i2c )
 
 	print( temp_sensor.info() )
 	temp_sensor.dump_reg()
