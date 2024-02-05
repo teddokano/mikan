@@ -2,6 +2,7 @@ from machine import Pin, I2C, SoftI2C, Timer
 from nxp_periph import P3T1755, MikanUtil
 import os
 
+
 def main():
     int_flag = False
     tim_flag = False
@@ -21,7 +22,7 @@ def main():
         i2c = SoftI2C(sda="D14", scl="D15", freq=(400_000))
     else:
         i2c = I2C(0, freq=(400 * 1000))
-        
+
     temp_sensor = P3T1755(i2c)
 
     print(temp_sensor.info())

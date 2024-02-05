@@ -2,6 +2,7 @@ from machine import Pin, I2C, Timer
 from nxp_periph import PCAL6408, PCAL6416, PCAL6524, PCAL6534, MikanUtil
 import utime
 
+
 def main():
     int_flag = False
     tim_flag = False

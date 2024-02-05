@@ -4,8 +4,8 @@ import utime
 
 i2c = I2C(0, freq=(400 * 1000))
 
-#gpio = PCAL6524(i2c, setup_EVB=True)
-gpio	= PCAL6534( i2c, setup_EVB = True )
+# gpio = PCAL6524(i2c, setup_EVB=True)
+gpio = PCAL6534(i2c, setup_EVB=True)
 
 if gpio.N_PORTS is 3:
     io_config_and_pull_up = [0x00, 0x00, 0xF0]
