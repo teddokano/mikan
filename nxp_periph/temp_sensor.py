@@ -207,6 +207,10 @@ class P3T1755( LM75B ):
 		"""
 		super().__init__( i2c, address )
 
+	def __read( self ):
+		temp	= self.reg_access( "Temp" )
+		return (temp & 0xFFF0) / 256.0
+
 	def __value_setting( self, lst ):
 		lst.sort()
 	
@@ -273,7 +277,7 @@ class P3T1035( P3T1755 ):
 	"""
 	P3T1035 class
 	"""
-	DEFAULT_ADDR		= 0xE0 >> 1
+	DEFAULT_ADDR		= 0xE4 >> 1
 
 	REG_NAME	= ( "Temp", "Conf", "T_LOW", "T_HIGH", "MID" )
 	REG_LEN		= (      2,      1,       2,        2,     2 )
@@ -290,17 +294,6 @@ class P3T1035( P3T1755 ):
 
 		"""
 		super().__init__( i2c, address )
-
-	def __value_setting( self, lst ):
-		lst.sort()
-	
-		sv	= []
-		for r, v in zip( ( "T_LOW", "T_HIGH" ), lst ):
-			v	= int(v * 256.0) & 0xFFF0
-			self.reg_access( r, v )
-			sv	+= [ v ]
-		
-		return [ v / 256.0 for v in sv ]
 
 
 class P3T2030( P3T1035 ):
