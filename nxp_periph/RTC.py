@@ -1045,7 +1045,6 @@ class PCF85053A( RTC_base, I2C_target ):
 						}
 	
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
-		###
 		"""
 		Parameters
 		----------
@@ -1059,11 +1058,9 @@ class PCF85053A( RTC_base, I2C_target ):
 		self.bit_operation( "Control_Register", 0x20, 0x20 )
 
 	def __software_reset( self ):
-		###
 		pass
 
 	def __get_datetime_reg( self ):
-		###
 		dt		= {}
 		length	= len( self.REG_ORDER_DT ) + len( self.REG_ORDER_ALRM )
 		
@@ -1093,30 +1090,27 @@ class PCF85053A( RTC_base, I2C_target ):
 		self.write_registers( "Seconds", data )
 
 	def __set_alarm( self, int_pin, dt ):
-		print( "Caution: Setting alarm will disable interrupt in every second" )
-		
 		for k, v in self.REG_ORDER_ALRM.items():
 			self.write_registers( v, RTC_base.bin2bcd( dt[ k ] ) )
 
 		self.bit_operation( "Control_Register", 0x08, 0x08 )
 
 	def __clear_alarm( self ):
-		###
 		pass	# will be implemented later
 
 	def __cancel_alarm( self, int_pin, dt ):
-		self.bit_operation( "Control_Register", 0x80, 0x00 )
+		self.bit_operation( "Control_Register", 0x08, 0x00 )
 
 	def __set_periodic_interrupt( self, int_pin, period ):
 		### this device doesn't have periodic interrupt feature
 		pass
 
 	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
-		###
+		### this device doesn't have timestamp interrupt feature
 		pass
 
 	def __get_timestamp_reg( self, num ):
-		###
+		### this device doesn't have timestamp interrupt feature
 		pass
 
 	def __interrupt_clear( self ):
@@ -1125,7 +1119,6 @@ class PCF85053A( RTC_base, I2C_target ):
 		return rv
 
 	def __oscillator_stopped( self ):
-		###
 		rv	= True if 0x40 & self.read_registers( "Status_Register", 1 ) else False
 		self.bit_operation( "Status_Register", 0x40, 0x40 )
 		return rv
@@ -1147,7 +1140,6 @@ class PCF85053A( RTC_base, I2C_target ):
 		return list
 
 	def __test( self ):
-		###
 		self.bit_operation( "Scratchpad", 0xF0, 0xF0 )
 
 

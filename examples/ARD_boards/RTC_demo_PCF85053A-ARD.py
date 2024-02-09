@@ -82,10 +82,13 @@ def demo(rtc):
     t0 = Timer(MikanUtil.get_timer_id(0))
     t0.init(freq=1, mode=Timer.PERIODIC, callback=timer_callback)
 
+    rtc.timer_alarm( seconds = 5 )
+
     while True:
         if alarm_flag:
             alarm_flag	= False
-            print( "INT" )
+            rtc.timer_alarm(seconds=5)
+            print("!!!!!!! ALARM !!!!!!!  alarm is set 5 seconds later")
 		
         if timer_flag:
             timer_flag	= False
