@@ -1016,7 +1016,7 @@ class PCF85053A( RTC_base, I2C_target ):
 	"""
 	PCF85053A class
 	"""
-	DEFAULT_ADDR	= (0xA2 >> 1)
+	DEFAULT_ADDR	= (0xDE >> 1)
 	REG_NAME		= (	
 						"Seconds", "Seconds_alarm", "Minutes", "Minutes_alarm", "Hours", "Hours_alarm", 
 						"Day_of_the_Week", "Day_of_the_Month", "Month", "Year",
@@ -1065,12 +1065,12 @@ class PCF85053A( RTC_base, I2C_target ):
 	def __get_datetime_reg( self ):
 		###
 		dt		= {}
-		length	= len( REG_ORDER_DT ) + len( REG_ORDER_ALRM )
+		length	= len( self.REG_ORDER_DT ) + len( self.REG_ORDER_ALRM )
 		
 		data	= self.read_registers( "Seconds", length )
 
 		for k, v in self.REG_ORDER_DT.items():
-			dt[ k ]	= RTC_base.bcd2bin( data[ REG_NAME.index( v ) ] )
+			dt[ k ]	= RTC_base.bcd2bin( data[ self.REG_NAME.index( v ) ] )
 
 		dt[ "year" ]		+= 2000	#	PCF2131 can only store lower 2 digit of year
 		dt[ "subseconds" ]	 = 0	#	dummy
@@ -1079,14 +1079,14 @@ class PCF85053A( RTC_base, I2C_target ):
 		return dt
 
 	def __set_datetime_reg( self, dt ):
-		length	= len( REG_ORDER_DT ) + len( REG_ORDER_ALRM )
+		length	= len( self.REG_ORDER_DT ) + len( self.REG_ORDER_ALRM )
 		data	= self.read_registers( "Seconds", length )	# read once to prevent overwriting alarm field
 	
 		dt[ "year" ]		-= 2000
 		dt[ "subseconds" ]	 = 0	#	dummy
 
 		for k, v in self.REG_ORDER_DT.items():
-			data[ REG_NAME.index( v ) ]	= dt[ k ]
+			data[ self.REG_NAME.index( v ) ]	= dt[ k ]
 
 		data	= list( map( RTC_base.bin2bcd, data ) )
 
@@ -1098,7 +1098,7 @@ class PCF85053A( RTC_base, I2C_target ):
 		for k, v in self.REG_ORDER_ALRM.items():
 			self.write_registers( v, RTC_base.bin2bcd( dt[ k ] ) )
 
-		self.bit_operation( "Control_Register", 0x80, 0x80 )
+		self.bit_operation( "Control_Register", 0x08, 0x08 )
 
 	def __clear_alarm( self ):
 		###
@@ -1108,13 +1108,8 @@ class PCF85053A( RTC_base, I2C_target ):
 		self.bit_operation( "Control_Register", 0x80, 0x00 )
 
 	def __set_periodic_interrupt( self, int_pin, period ):
-		###
-		### This method supports to set interrupt in every second only
-		self.write_registers( "Seconds_alarm", 0xFF )
-		self.write_registers( "Minutes_alarm", 0xFF )
-		self.write_registers( "Hours_alarm", 0xFF )
-
-		self.bit_operation( "Control_Register", 0x80, 0x80 )
+		### this device doesn't have periodic interrupt feature
+		pass
 
 	def __set_timestamp_interrupt( self, int_pin, num, last_event ):
 		###
@@ -1125,7 +1120,8 @@ class PCF85053A( RTC_base, I2C_target ):
 		pass
 
 	def __interrupt_clear( self ):
-		rv, wv	= self.read_registers( "Status_Register", 0x00, 1 )
+		rv	= self.read_registers( "Status_Register", 1 )
+		self.write_registers( "Status_Register", ~(rv & 0xF0) )
 		return rv
 
 	def __oscillator_stopped( self ):

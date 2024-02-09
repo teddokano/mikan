@@ -1,14 +1,17 @@
-from machine import Pin, I2C, SoftI2C
-from nxp_periph import PCF85053A
+from machine import Pin, I2C, Timer
+from nxp_periph import PCF85053A, MikanUtil
 import machine
-
+from utime import sleep
 
 def main():
-    intf = SoftI2C(sda="D14", scl="D15", freq=(400_000))
+    intf = I2C(0, freq=(400 * 1000))
     rtc = PCF85053A(intf)
 
     print(rtc.info())
     print("=== operation start ===")
+
+    #   Set read/write access right to primary I2C bus
+    rtc.bit_operation( "Control_Register", 0x01, 0x01 )
 
     osf = rtc.oscillator_stopped()
     print("rtc.oscillator_stopped()\n  --> ", end="")
@@ -59,42 +62,35 @@ def feature_test(rtc):
 
 
 def demo(rtc):
-    int_flag = False
+    alarm_flag = False
+    timer_flag = False
 
-    def callback(pin_obj):
-        nonlocal int_flag
-        int_flag = True
+    def alarm_callback(pin_obj):
+        nonlocal alarm_flag
+        rtc.interrupt_clear()
+        alarm_flag	= True
+
+    def timer_callback(_):
+        nonlocal timer_flag
+        timer_flag	= True
 
     rtc.interrupt_clear()
 
     intr = Pin("D2", Pin.IN)
-    intr.irq(trigger=Pin.IRQ_FALLING, handler=callback)
+    intr.irq(trigger=Pin.IRQ_FALLING, handler=alarm_callback)
 
-    rtc.periodic_interrupt(period=1)
-
-    # 	alm	= rtc.timer_alarm( seconds = 5 )
-    # 	print( "alarm is set = {}".format( ", ".join( alm ) ) )
+    t0 = Timer(MikanUtil.get_timer_id(0))
+    t0.init(freq=1, mode=Timer.PERIODIC, callback=timer_callback)
 
     while True:
-        if int_flag:
-            event = rtc.interrupt_clear()
-            int_flag = False
-
-            event = rtc.check_events(event)
-
-            dt = rtc.datetime()
-
-            for e in event:
-                print("{} {}".format(e, dt), end="\r" if e is "periodic" else "\n")
-
-            if "alarm" in event:
-                print("!!!!!!! ALARM !!!!!!!")
-                alm = rtc.timer_alarm(seconds=5)
-                print("new alarm seting = {}".format(", ".join(alm)))
-
-            if not dt[6] % 30:
-                rtc.dump_reg()
-
-
+        if alarm_flag:
+            alarm_flag	= False
+            print( "INT" )
+		
+        if timer_flag:
+            timer_flag	= False
+            dt	= rtc.datetime()
+            print( dt )
+		
 if __name__ == "__main__":
     main()
