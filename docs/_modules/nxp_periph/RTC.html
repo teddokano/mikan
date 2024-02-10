@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.RTC &mdash; mikan 1.13 documentation</title>
+  <title>nxp_periph.RTC &mdash; mikan 1.14 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=892a253e"></script>
+        <script src="../../_static/documentation_options.js?v=42a3b5f3"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -359,7 +359,8 @@
 <span class="sd">		timestamp converted to a str</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">s</span>	<span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">ts</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">ts_list</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">NUMBER_OF_TIMESTAMP</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">):</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ts</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">ts_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
 			<span class="n">s</span>	<span class="o">+=</span> <span class="p">[</span> <span class="s2">&quot;timestamp</span><span class="si">{}</span><span class="s2"> (</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">ts</span><span class="p">[</span> <span class="s2">&quot;active&quot;</span> <span class="p">],</span> <span class="n">ts</span><span class="p">[</span> <span class="s2">&quot;last&quot;</span> <span class="p">],</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">tuple2str</span><span class="p">(</span> <span class="n">ts</span><span class="p">[</span> <span class="s2">&quot;tuple&quot;</span> <span class="p">],</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">NOW_TUPPLE_FORM</span> <span class="p">)</span> <span class="p">)</span> <span class="p">]</span>
 
 		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">s</span> <span class="p">)</span></div>
@@ -575,7 +576,7 @@
 		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;100th_Seconds&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
 		<span class="n">data</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>	<span class="o">&amp;=</span> <span class="o">~</span><span class="mh">0x80</span>	<span class="c1">#	mask OSF flag</span>
 
-		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="n">length</span> <span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">):</span>
 			<span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bcd2bin</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span> <span class="p">)</span>
 
 		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">+=</span> <span class="mi">2000</span>	<span class="c1">#	PCF2131 can only store lower 2 digit of year</span>
@@ -661,7 +662,7 @@
 
 		<span class="n">data</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>	<span class="o">&amp;=</span> <span class="mh">0x1F</span>
 
-		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="n">length</span> <span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_TS</span> <span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_TS</span> <span class="p">):</span>
 			<span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bcd2bin</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span> <span class="p">)</span>
 
 		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">+=</span> <span class="mi">2000</span>	<span class="c1">#	PCF2131 can only store lower 2 digit of year</span>
@@ -790,11 +791,12 @@
 		<span class="k">return</span> <span class="n">PCF2131_SPI</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="PCF85063">
-<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF85063">[docs]</a>
-<span class="k">class</span> <span class="nc">PCF85063</span><span class="p">(</span> <span class="n">RTC_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="PCF85063A">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF85063A">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF85063A</span><span class="p">(</span> <span class="n">RTC_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
 <span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	PCF85063 class</span>
+<span class="sd">	PCF85063A class</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="p">(</span><span class="mh">0xA2</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
 	<span class="n">REG_NAME</span>		<span class="o">=</span> <span class="p">(</span>	<span class="s2">&quot;Control_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Control_2&quot;</span><span class="p">,</span>
@@ -829,9 +831,9 @@
 		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
 		<span class="n">data</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>	<span class="o">&amp;=</span> <span class="o">~</span><span class="mh">0x80</span>	<span class="c1">#	mask OS flag</span>
 
-		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="nb">range</span><span class="p">(</span> <span class="n">length</span> <span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">):</span>
 			<span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bcd2bin</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span> <span class="p">)</span>
-
+			
 		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">+=</span> <span class="mi">2000</span>	<span class="c1">#	PCF2131 can only store lower 2 digit of year</span>
 		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;subseconds&quot;</span> <span class="p">]</span>	 <span class="o">=</span> <span class="mi">0</span>	<span class="c1">#	dummy</span>
 		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;tzinfo&quot;</span> <span class="p">]</span>		 <span class="o">=</span> <span class="kc">None</span>
@@ -845,9 +847,7 @@
 		<span class="n">data</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">]</span>
 		<span class="n">data</span>	<span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bin2bcd</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span>
 
-		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_1&quot;</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x20</span> <span class="p">)</span>	<span class="c1">#	set STOP</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_1&quot;</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span> <span class="p">)</span>	<span class="c1">#	clear STOP</span>
 
 	<span class="k">def</span> <span class="nf">__set_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
 		<span class="n">data</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_ALRM</span> <span class="p">]</span>
@@ -870,7 +870,7 @@
 		<span class="n">timer_max</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">255</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">4096</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">64</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">60</span> <span class="p">)</span> <span class="p">]</span>
 
 		<span class="n">res</span><span class="p">,</span> <span class="n">tcf</span>	<span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="mh">0x3</span>
-		<span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">timer_max</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">timer_max</span> <span class="p">)</span> <span class="p">)</span> <span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">timer_max</span> <span class="p">):</span>
 			<span class="k">if</span> <span class="n">period</span> <span class="o">&lt;=</span> <span class="n">m</span><span class="p">:</span>
 				<span class="n">res</span><span class="p">,</span> <span class="n">tcf</span>	<span class="o">=</span> <span class="n">m</span> <span class="o">/</span> <span class="mi">255</span><span class="p">,</span> <span class="n">i</span>
 				<span class="k">break</span>
@@ -912,6 +912,400 @@
 
 	<span class="k">def</span> <span class="nf">__test</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;RAM_byte&quot;</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">,</span> <span class="mh">0xF0</span> <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PCF85063TP">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF85063TP">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF85063TP</span><span class="p">(</span> <span class="n">PCF85063A</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCF85063TP class</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="p">(</span><span class="mh">0xA2</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="n">REG_NAME</span>		<span class="o">=</span> <span class="p">(</span>	<span class="s2">&quot;Control_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Control_2&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;Offset&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;RAM_byte&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;Minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;Hours&quot;</span><span class="p">,</span> <span class="s2">&quot;Days&quot;</span><span class="p">,</span> <span class="s2">&quot;Weekdays&quot;</span><span class="p">,</span> <span class="s2">&quot;Months&quot;</span><span class="p">,</span> <span class="s2">&quot;Years&quot;</span>
+						<span class="p">)</span>
+	
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c		: machine.I2C object</span>
+<span class="sd">		address	: int, option</span>
+<span class="sd">			If need to set I2C target address</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">address</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__set_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__clear_alarm</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__cancel_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__set_periodic_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">period</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__set_timestamp_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">last_event</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__get_timestamp_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">num</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__interrupt_clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__battery_switchover</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">switch</span> <span class="p">):</span>
+		<span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="PCF86263A">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF86263A">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF86263A</span><span class="p">(</span> <span class="n">RTC_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCF86263A class</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="p">(</span><span class="mh">0xA2</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="n">REG_NAME</span>		<span class="o">=</span> <span class="p">(</span>		<span class="s2">&quot;100th_Seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;Minutes&quot;</span><span class="p">,</span><span class="s2">&quot;Hours&quot;</span><span class="p">,</span> <span class="s2">&quot;Days&quot;</span><span class="p">,</span> <span class="s2">&quot;Weekdays&quot;</span><span class="p">,</span> <span class="s2">&quot;Months&quot;</span><span class="p">,</span> <span class="s2">&quot;Years&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;Second_alarm1&quot;</span><span class="p">,</span> <span class="s2">&quot;Minute_alarm1&quot;</span><span class="p">,</span> <span class="s2">&quot;Hour_alarm1&quot;</span><span class="p">,</span> <span class="s2">&quot;Day_alarm1&quot;</span><span class="p">,</span> <span class="s2">&quot;Month_alarm1&quot;</span><span class="p">,</span>
+							<span class="s2">&quot;Minute_alarm2&quot;</span><span class="p">,</span> <span class="s2">&quot;Hour_alarm2&quot;</span><span class="p">,</span> <span class="s2">&quot;Weekday_alarm2&quot;</span><span class="p">,</span> 
+							<span class="s2">&quot;Alerm_enables&quot;</span><span class="p">,</span> 
+							<span class="s2">&quot;TSR1_seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR1_minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR1_hours&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR1_days&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR1_months&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR1_years&quot;</span><span class="p">,</span> 
+							<span class="s2">&quot;TSR2_seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR2_minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR2_hours&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR2_days&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR2_months&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR2_years&quot;</span><span class="p">,</span>	
+							<span class="s2">&quot;TSR3_seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR3_minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR3_hours&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR3_days&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR3_months&quot;</span><span class="p">,</span> <span class="s2">&quot;TSR3_years&quot;</span><span class="p">,</span>	
+							<span class="s2">&quot;TSR_mode&quot;</span><span class="p">,</span> 
+							<span class="s2">&quot;Offset&quot;</span><span class="p">,</span> <span class="s2">&quot;Oscillator&quot;</span><span class="p">,</span> <span class="s2">&quot;Battery_switch&quot;</span><span class="p">,</span> 
+							<span class="s2">&quot;Pin_IO&quot;</span><span class="p">,</span> <span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="s2">&quot;INTA_enable&quot;</span><span class="p">,</span> <span class="s2">&quot;INTB_enable&quot;</span><span class="p">,</span> <span class="s2">&quot;Flags&quot;</span><span class="p">,</span> 
+							<span class="s2">&quot;RAM_byte&quot;</span><span class="p">,</span> <span class="s2">&quot;WatchDog&quot;</span><span class="p">,</span> <span class="s2">&quot;Stop_enable&quot;</span><span class="p">,</span> <span class="s2">&quot;Resets&quot;</span>
+						<span class="p">)</span>
+	<span class="n">INT_MASK</span>		<span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;INTA_enable&quot;</span><span class="p">],</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;INTB_enable&quot;</span> <span class="p">]</span> <span class="p">}</span>
+	<span class="n">REG_ORDER_DT</span>	<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;subseconds&quot;</span><span class="p">,</span> <span class="s2">&quot;seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span> <span class="p">)</span>
+	<span class="c1">#REG_ORDER_ALRM1	= ( &quot;seconds&quot;, &quot;minutes&quot;, &quot;hours&quot;, &quot;day&quot;, &quot;month&quot; )</span>
+	<span class="n">REG_ORDER_ALRM1</span>	<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span> <span class="p">)</span>
+	<span class="n">REG_ORDER_ALRM2</span>	<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="s2">&quot;weekday&quot;</span> <span class="p">)</span>
+	<span class="n">REG_ORDER_TS</span>	<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span> <span class="p">)</span>
+	<span class="n">ALARM_KEYS</span>		<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;hours&quot;</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span> <span class="p">)</span>
+
+	<span class="n">NUMBER_OF_TIMESTAMP</span>	<span class="o">=</span> <span class="mi">3</span>
+
+<div class="viewcode-block" id="PCF86263A.pins_init">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF86263A.pins_init">[docs]</a>
+	<span class="k">def</span> <span class="nf">pins_init</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Pin_IO&quot;</span><span class="p">,</span>   <span class="mh">0x06</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="mh">0x07</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="s2">&quot;A&quot;</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">],</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x80</span> <span class="p">)</span>	<span class="c1">#	Level sensitive interrupt</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="s2">&quot;B&quot;</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">],</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x80</span> <span class="p">)</span>	<span class="c1">#	Level sensitive interrupt</span></div>
+
+
+<div class="viewcode-block" id="PCF86263A.deinit">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF86263A.deinit">[docs]</a>
+	<span class="k">def</span> <span class="nf">deinit</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deinit</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pins_init</span><span class="p">()</span></div>
+
+	
+<div class="viewcode-block" id="PCF86263A.timestamp2str">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF86263A.timestamp2str">[docs]</a>
+	<span class="k">def</span> <span class="nf">timestamp2str</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ts_list</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		timestamp converted to a str</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">s</span>	<span class="o">=</span> <span class="p">[]</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ts</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">ts_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">):</span>
+			<span class="n">s</span>	<span class="o">+=</span> <span class="p">[</span> <span class="s2">&quot;timestamp</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">tuple2str</span><span class="p">(</span> <span class="n">ts</span><span class="p">[</span> <span class="s2">&quot;tuple&quot;</span> <span class="p">],</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">NOW_TUPPLE_FORM</span> <span class="p">)</span> <span class="p">)</span> <span class="p">]</span>
+
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">s</span> <span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c		: machine.I2C object</span>
+<span class="sd">		address	: int, option</span>
+<span class="sd">			If need to set I2C target address</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">address</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pins_init</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">__software_reset</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Resets&quot;</span><span class="p">,</span> <span class="mh">0x2C</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__get_datetime_reg</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">dt</span>		<span class="o">=</span> <span class="p">{}</span>
+		<span class="n">length</span>	<span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">)</span>
+		
+		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;100th_Seconds&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
+		<span class="n">data</span><span class="p">[</span> <span class="mi">1</span> <span class="p">]</span>	<span class="o">&amp;=</span> <span class="o">~</span><span class="mh">0x80</span>	<span class="c1">#	mask OSF flag</span>
+		<span class="n">data</span><span class="p">[</span> <span class="mi">2</span> <span class="p">]</span>	<span class="o">&amp;=</span> <span class="o">~</span><span class="mh">0x80</span>	<span class="c1">#	mask EMON flag</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">):</span>
+			<span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bcd2bin</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span> <span class="p">)</span>
+
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">+=</span> <span class="mi">2000</span>	<span class="c1">#	PCF2131 can only store lower 2 digit of year</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;subseconds&quot;</span> <span class="p">]</span>	<span class="o">*=</span> <span class="mi">10</span>	<span class="c1">#	7th element of datetime tuple is defined as microsenonds. Need from convert 1/00 sec ticks</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;tzinfo&quot;</span> <span class="p">]</span>		 <span class="o">=</span> <span class="kc">None</span>
+			
+		<span class="k">return</span> <span class="n">dt</span>
+
+	<span class="k">def</span> <span class="nf">__set_datetime_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">-=</span> <span class="mi">2000</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;subseconds&quot;</span> <span class="p">]</span>	<span class="o">//=</span> <span class="mi">10</span>
+
+		<span class="n">data</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">]</span>
+		<span class="n">data</span>	<span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bin2bcd</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Stop_enable&quot;</span><span class="p">,</span>   <span class="mh">0x01</span> <span class="p">)</span>	<span class="c1">#	set STOP</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Resets&quot;</span><span class="p">,</span>        <span class="mh">0xA4</span> <span class="p">)</span>	<span class="c1">#	clear prescaler		</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;100th_Seconds&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>	<span class="c1">#	write date-time data</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Stop_enable&quot;</span><span class="p">,</span>   <span class="mh">0x00</span> <span class="p">)</span>	<span class="c1">#	clear STOP</span>
+
+	<span class="k">def</span> <span class="nf">__set_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="n">ae</span>	 <span class="o">=</span> <span class="mh">0x00</span> <span class="k">if</span> <span class="mi">80</span> <span class="o">==</span> <span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;seconds&quot;</span> <span class="p">]</span> <span class="k">else</span> <span class="mh">0x01</span>
+		<span class="n">ae</span>	<span class="o">|=</span> <span class="mh">0x00</span> <span class="k">if</span> <span class="mi">80</span> <span class="o">==</span> <span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;minutes&quot;</span> <span class="p">]</span> <span class="k">else</span> <span class="mh">0x02</span>
+		<span class="n">ae</span>	<span class="o">|=</span> <span class="mh">0x00</span> <span class="k">if</span> <span class="mi">80</span> <span class="o">==</span> <span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;hours&quot;</span> <span class="p">]</span>   <span class="k">else</span> <span class="mh">0x04</span>
+	
+		<span class="n">data</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_ALRM1</span> <span class="p">]</span>
+		<span class="n">data</span>	<span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bin2bcd</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Second_alarm1&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Alerm_enables&quot;</span><span class="p">,</span> <span class="n">ae</span>   <span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">int_pin</span><span class="p">:</span>
+			<span class="n">select</span>	<span class="o">=</span> <span class="s2">&quot;A&quot;</span> <span class="k">if</span> <span class="s2">&quot;A&quot;</span> <span class="ow">in</span> <span class="n">int_pin</span> <span class="k">else</span> <span class="s2">&quot;B&quot;</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="n">select</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">],</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x10</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__clear_alarm</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Alerm_enables&quot;</span><span class="p">,</span> <span class="mh">0x00</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__cancel_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="k">if</span> <span class="n">int_pin</span><span class="p">:</span>
+			<span class="n">select</span>	<span class="o">=</span> <span class="s2">&quot;A&quot;</span> <span class="k">if</span> <span class="s2">&quot;A&quot;</span> <span class="ow">in</span> <span class="n">int_pin</span> <span class="k">else</span> <span class="s2">&quot;B&quot;</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="n">select</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">],</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x00</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__set_periodic_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">period</span> <span class="p">):</span>
+		<span class="k">if</span> <span class="n">int_pin</span><span class="p">:</span>
+			<span class="n">select</span>	<span class="o">=</span> <span class="s2">&quot;A&quot;</span> <span class="k">if</span> <span class="s2">&quot;A&quot;</span> <span class="ow">in</span> <span class="n">int_pin</span> <span class="k">else</span> <span class="s2">&quot;B&quot;</span>
+		
+		<span class="k">if</span> <span class="n">period</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">v</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="k">elif</span> <span class="n">period</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+			<span class="n">v</span>	<span class="o">=</span> <span class="mi">1</span>
+		<span class="k">elif</span> <span class="n">period</span> <span class="o">&lt;</span> <span class="mi">3600</span><span class="p">:</span>
+			<span class="n">v</span>	<span class="o">=</span> <span class="mi">2</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">v</span>	<span class="o">=</span> <span class="mi">3</span>
+					
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Function&quot;</span><span class="p">,</span> <span class="mh">0x60</span><span class="p">,</span> <span class="n">v</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span> <span class="p">)</span>
+		
+		<span class="k">if</span> <span class="n">int_pin</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="n">select</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">],</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x40</span> <span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">v</span>
+
+	<span class="k">def</span> <span class="nf">__set_timestamp_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">last_event</span> <span class="p">):</span>
+		<span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;TSR_mode&quot;</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">last_event</span> <span class="k">else</span> <span class="mi">1</span>	<span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s2">&quot;timestamp</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2"> setting is not supported in this version&quot;</span> <span class="p">)</span>
+		
+		<span class="k">if</span> <span class="n">int_pin</span><span class="p">:</span>
+			<span class="n">select</span>	<span class="o">=</span> <span class="s2">&quot;A&quot;</span> <span class="k">if</span> <span class="s2">&quot;A&quot;</span> <span class="ow">in</span> <span class="n">int_pin</span> <span class="k">else</span> <span class="s2">&quot;B&quot;</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">INT_MASK</span><span class="p">[</span> <span class="n">select</span> <span class="p">][</span> <span class="mi">0</span> <span class="p">],</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0x04</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__get_timestamp_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">num</span> <span class="p">):</span>
+		<span class="n">dt</span>		<span class="o">=</span> <span class="p">{}</span>
+		<span class="n">num</span>		<span class="o">-=</span> <span class="mi">1</span>
+		<span class="n">r_ofst</span>	 <span class="o">=</span> <span class="mi">6</span>
+		<span class="n">length</span>	<span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_TS</span> <span class="p">)</span>
+		<span class="n">r</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s2">&quot;TSR1_seconds&quot;</span> <span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span> <span class="o">*</span> <span class="n">r_ofst</span><span class="p">)</span>
+
+		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="n">r</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
+		
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;last&quot;</span> <span class="p">]</span>	<span class="o">=</span> <span class="s2">&quot;first event&quot;</span> <span class="k">if</span> <span class="n">data</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0x80</span> <span class="k">else</span> <span class="s2">&quot;last event&quot;</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;active&quot;</span> <span class="p">]</span>	<span class="o">=</span> <span class="s2">&quot;disabled&quot;</span>    <span class="k">if</span> <span class="n">data</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">&amp;</span> <span class="mh">0x40</span> <span class="k">else</span> <span class="s2">&quot;active&quot;</span>
+
+		<span class="n">data</span><span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>	<span class="o">&amp;=</span> <span class="mh">0x1F</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_TS</span> <span class="p">):</span>
+			<span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bcd2bin</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="n">i</span> <span class="p">]</span> <span class="p">)</span>
+
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">+=</span> <span class="mi">2000</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;subseconds&quot;</span> <span class="p">]</span>	 <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;tzinfo&quot;</span> <span class="p">]</span>		 <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="k">return</span> <span class="n">dt</span>
+
+	<span class="k">def</span> <span class="nf">__interrupt_clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">rv</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Flags&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Flags&quot;</span><span class="p">,</span> <span class="o">~</span><span class="n">rv</span> <span class="p">)</span>	<span class="c1">#	datasheet 7.11.5</span>
+
+		<span class="k">return</span> <span class="n">rv</span>
+
+	<span class="k">def</span> <span class="nf">__oscillator_stopped</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="mh">0x80</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+	
+	<span class="k">def</span> <span class="nf">__battery_switchover</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">switch</span> <span class="p">):</span>
+		<span class="k">pass</span>
+			
+	<span class="n">EVENT_NAME</span>		<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;periodic&quot;</span><span class="p">,</span> <span class="s2">&quot;alarm2&quot;</span><span class="p">,</span> <span class="s2">&quot;alarm1&quot;</span><span class="p">,</span> <span class="s2">&quot;watchdog&quot;</span><span class="p">,</span> <span class="s2">&quot;battery switch&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp3&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp2&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp1&quot;</span> <span class="p">)</span>	<span class="c1">#	&quot;xx&quot; is a dummy to avoid dict-zip bug</span>
+	<span class="n">EVENT_FLAG</span>		<span class="o">=</span> <span class="p">{</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x01</span> <span class="p">}</span>
+	<span class="n">EVENTS</span>			<span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">EVENT_NAME</span><span class="p">,</span> <span class="n">EVENT_FLAG</span> <span class="p">)</span> <span class="p">)</span>
+	
+	<span class="k">def</span> <span class="nf">__check_events</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">event</span> <span class="p">):</span>
+		<span class="nb">list</span>	<span class="o">=</span> <span class="p">[]</span>
+
+		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">EVENTS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">event</span> <span class="o">&amp;</span> <span class="n">v</span><span class="p">:</span>
+				<span class="nb">list</span>	<span class="o">+=</span> <span class="p">[</span> <span class="n">k</span> <span class="p">]</span>
+	
+		<span class="k">return</span> <span class="nb">list</span>
+
+	<span class="k">def</span> <span class="nf">__test</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span></div>
+
+		
+
+<div class="viewcode-block" id="PCF85053A">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.RTC.PCF85053A">[docs]</a>
+<span class="k">class</span> <span class="nc">PCF85053A</span><span class="p">(</span> <span class="n">RTC_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	PCF85053A class</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="p">(</span><span class="mh">0xDE</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="n">REG_NAME</span>		<span class="o">=</span> <span class="p">(</span>	
+						<span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="s2">&quot;Seconds_alarm&quot;</span><span class="p">,</span> <span class="s2">&quot;Minutes&quot;</span><span class="p">,</span> <span class="s2">&quot;Minutes_alarm&quot;</span><span class="p">,</span> <span class="s2">&quot;Hours&quot;</span><span class="p">,</span> <span class="s2">&quot;Hours_alarm&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;Day_of_the_Week&quot;</span><span class="p">,</span> <span class="s2">&quot;Day_of_the_Month&quot;</span><span class="p">,</span> <span class="s2">&quot;Month&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;Control_Register&quot;</span><span class="p">,</span> <span class="s2">&quot;Status_Register&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;CLKOUT_Control&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;2nd_Control_Register&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;Scratchpad&quot;</span><span class="p">,</span> <span class="s2">&quot;Version_Register&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;Vendor_ID_Register&quot;</span><span class="p">,</span> <span class="s2">&quot;Model Register&quot;</span><span class="p">,</span>
+						<span class="s2">&quot;Offset&quot;</span><span class="p">,</span> <span class="s2">&quot;Oscillator&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;Access_config&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;Sec_timestp&quot;</span><span class="p">,</span> <span class="s2">&quot;Min_timestp&quot;</span><span class="p">,</span> <span class="s2">&quot;Hour_timestp&quot;</span><span class="p">,</span> <span class="s2">&quot;DayWk_timestp&quot;</span><span class="p">,</span> <span class="s2">&quot;DayMon_timestp&quot;</span><span class="p">,</span> <span class="s2">&quot;Mon_timestp&quot;</span><span class="p">,</span> <span class="s2">&quot;Year_timestp&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;R_code1&quot;</span><span class="p">,</span> <span class="s2">&quot;R_code1&quot;</span>
+						<span class="p">)</span>
+	<span class="n">INT_MASK</span>		<span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;INT_A_MASK1&quot;</span><span class="p">,</span> <span class="s2">&quot;INT_A_MASK2&quot;</span><span class="p">],</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;INT_B_MASK1&quot;</span><span class="p">,</span> <span class="s2">&quot;INT_B_MASK2&quot;</span> <span class="p">]</span> <span class="p">}</span>
+	<span class="n">REG_ORDER_DT</span>	<span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;seconds&quot;</span><span class="p">:</span> 	<span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;minutes&quot;</span><span class="p">:</span>	<span class="s2">&quot;Minutes&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;hours&quot;</span><span class="p">:</span>	<span class="s2">&quot;Hours&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;day&quot;</span><span class="p">:</span>		<span class="s2">&quot;Day_of_the_Month&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;weekday&quot;</span><span class="p">:</span>	<span class="s2">&quot;Day_of_the_Week&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;month&quot;</span><span class="p">:</span>	<span class="s2">&quot;Month&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;year&quot;</span><span class="p">:</span>		<span class="s2">&quot;Year&quot;</span>
+						 <span class="p">}</span>
+	<span class="n">REG_ORDER_ALRM</span>	<span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;seconds&quot;</span><span class="p">:</span>	<span class="s2">&quot;Seconds_alarm&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;minutes&quot;</span><span class="p">:</span>	<span class="s2">&quot;Minutes_alarm&quot;</span><span class="p">,</span> 
+						<span class="s2">&quot;hours&quot;</span><span class="p">:</span>	<span class="s2">&quot;Hours_alarm&quot;</span>
+						<span class="p">}</span>
+	
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c		: machine.I2C object</span>
+<span class="sd">		address	: int, option</span>
+<span class="sd">			If need to set I2C target address</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">address</span> <span class="p">)</span>
+		
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_Register&quot;</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x20</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__software_reset</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__get_datetime_reg</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">dt</span>		<span class="o">=</span> <span class="p">{}</span>
+		<span class="n">length</span>	<span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_ALRM</span> <span class="p">)</span>
+		
+		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bcd2bin</span><span class="p">(</span> <span class="n">data</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">v</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
+
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">+=</span> <span class="mi">2000</span>	<span class="c1">#	PCF2131 can only store lower 2 digit of year</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;subseconds&quot;</span> <span class="p">]</span>	 <span class="o">=</span> <span class="mi">0</span>	<span class="c1">#	dummy</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;tzinfo&quot;</span> <span class="p">]</span>		 <span class="o">=</span> <span class="kc">None</span>
+			
+		<span class="k">return</span> <span class="n">dt</span>
+
+	<span class="k">def</span> <span class="nf">__set_datetime_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="n">length</span>	<span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_ALRM</span> <span class="p">)</span>
+		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>	<span class="c1"># read once to prevent overwriting alarm field</span>
+	
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;year&quot;</span> <span class="p">]</span>		<span class="o">-=</span> <span class="mi">2000</span>
+		<span class="n">dt</span><span class="p">[</span> <span class="s2">&quot;subseconds&quot;</span> <span class="p">]</span>	 <span class="o">=</span> <span class="mi">0</span>	<span class="c1">#	dummy</span>
+
+		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_DT</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="n">data</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_NAME</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">v</span> <span class="p">)</span> <span class="p">]</span>	<span class="o">=</span> <span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span>
+
+		<span class="n">data</span>	<span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bin2bcd</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Seconds&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__set_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">REG_ORDER_ALRM</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">v</span><span class="p">,</span> <span class="n">RTC_base</span><span class="o">.</span><span class="n">bin2bcd</span><span class="p">(</span> <span class="n">dt</span><span class="p">[</span> <span class="n">k</span> <span class="p">]</span> <span class="p">)</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_Register&quot;</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x08</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__clear_alarm</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="k">pass</span>	<span class="c1"># will be implemented later</span>
+
+	<span class="k">def</span> <span class="nf">__cancel_alarm</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">dt</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Control_Register&quot;</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x00</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__set_periodic_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">period</span> <span class="p">):</span>
+		<span class="c1">### this device doesn&#39;t have periodic interrupt feature</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__set_timestamp_interrupt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">int_pin</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">last_event</span> <span class="p">):</span>
+		<span class="c1">### this device doesn&#39;t have timestamp interrupt feature</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__get_timestamp_reg</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">num</span> <span class="p">):</span>
+		<span class="c1">### this device doesn&#39;t have timestamp interrupt feature</span>
+		<span class="k">pass</span>
+
+	<span class="k">def</span> <span class="nf">__interrupt_clear</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">rv</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Status_Register&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="s2">&quot;Status_Register&quot;</span><span class="p">,</span> <span class="o">~</span><span class="p">(</span><span class="n">rv</span> <span class="o">&amp;</span> <span class="mh">0xF0</span><span class="p">)</span> <span class="p">)</span>
+		<span class="k">return</span> <span class="n">rv</span>
+
+	<span class="k">def</span> <span class="nf">__oscillator_stopped</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">rv</span>	<span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="mh">0x40</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="s2">&quot;Status_Register&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Status_Register&quot;</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span> <span class="mh">0x40</span> <span class="p">)</span>
+		<span class="k">return</span> <span class="n">rv</span>
+	
+	<span class="k">def</span> <span class="nf">__battery_switchover</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">switch</span> <span class="p">):</span>
+		<span class="k">pass</span>
+
+	<span class="n">EVENT_NAME</span>		<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;alarm&quot;</span> <span class="p">)</span>
+	<span class="n">EVENT_FLAG</span>		<span class="o">=</span> <span class="p">{</span> <span class="mh">0x08</span> <span class="p">}</span>
+	<span class="n">EVENTS</span>			<span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">EVENT_NAME</span><span class="p">,</span> <span class="n">EVENT_FLAG</span> <span class="p">)</span> <span class="p">)</span>
+	
+	<span class="k">def</span> <span class="nf">__check_events</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">event</span> <span class="p">):</span>
+		<span class="nb">list</span>	<span class="o">=</span> <span class="p">[]</span>
+
+		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">EVENTS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">event</span> <span class="o">&amp;</span> <span class="n">v</span><span class="p">:</span>
+				<span class="nb">list</span>	<span class="o">+=</span> <span class="p">[</span> <span class="n">k</span> <span class="p">]</span>
+	
+		<span class="k">return</span> <span class="nb">list</span>
+
+	<span class="k">def</span> <span class="nf">__test</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bit_operation</span><span class="p">(</span> <span class="s2">&quot;Scratchpad&quot;</span><span class="p">,</span> <span class="mh">0xF0</span><span class="p">,</span> <span class="mh">0xF0</span> <span class="p">)</span></div>
 
 
 

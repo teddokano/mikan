@@ -20,7 +20,7 @@ sys.modules['micropython'] = MagicMock()
 project = 'mikan'
 copyright = '2024, Tedd OKANO'
 author = 'Tedd OKANO'
-release = '1.13'
+release = '1.14'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

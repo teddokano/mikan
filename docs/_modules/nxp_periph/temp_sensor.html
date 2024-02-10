@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.temp_sensor &mdash; mikan 1.13 documentation</title>
+  <title>nxp_periph.temp_sensor &mdash; mikan 1.14 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=892a253e"></script>
+        <script src="../../_static/documentation_options.js?v=42a3b5f3"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -279,9 +279,6 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">heater_pin</span><span class="p">(</span> <span class="n">v</span> <span class="p">)</span></div>
 
 
-<span class="k">class</span> <span class="nc">P3T1755</span><span class="p">(</span> <span class="n">LM75B</span> <span class="p">):</span>
-	<span class="k">pass</span>
-
 <div class="viewcode-block" id="P3T1755">
 <a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.temp_sensor.P3T1755">[docs]</a>
 <span class="k">class</span> <span class="nc">P3T1755</span><span class="p">(</span> <span class="n">LM75B</span> <span class="p">):</span>
@@ -305,6 +302,10 @@
 
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__read</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+		<span class="n">temp</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_access</span><span class="p">(</span> <span class="s2">&quot;Temp&quot;</span> <span class="p">)</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">temp</span> <span class="o">&amp;</span> <span class="mh">0xFFF0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">256.0</span>
 
 	<span class="k">def</span> <span class="nf">__value_setting</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">lst</span> <span class="p">):</span>
 		<span class="n">lst</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -369,6 +370,39 @@
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">alert</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alert</span></div>
+
+
+
+<div class="viewcode-block" id="P3T1035">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.temp_sensor.P3T1035">[docs]</a>
+<span class="k">class</span> <span class="nc">P3T1035</span><span class="p">(</span> <span class="n">P3T1755</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	P3T1035 class</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">DEFAULT_ADDR</span>		<span class="o">=</span> <span class="mh">0xE4</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+
+	<span class="n">REG_NAME</span>	<span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;Temp&quot;</span><span class="p">,</span> <span class="s2">&quot;Conf&quot;</span><span class="p">,</span> <span class="s2">&quot;T_LOW&quot;</span><span class="p">,</span> <span class="s2">&quot;T_HIGH&quot;</span><span class="p">,</span> <span class="s2">&quot;MID&quot;</span> <span class="p">)</span>
+	<span class="n">REG_LEN</span>		<span class="o">=</span> <span class="p">(</span>      <span class="mi">2</span><span class="p">,</span>      <span class="mi">1</span><span class="p">,</span>       <span class="mi">2</span><span class="p">,</span>        <span class="mi">2</span><span class="p">,</span>     <span class="mi">2</span> <span class="p">)</span>
+	<span class="n">REG_ACC</span>		<span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span> <span class="n">REG_NAME</span><span class="p">,</span> <span class="n">REG_LEN</span> <span class="p">)</span> <span class="p">)</span>
+	
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		P3T1035 initializer</span>
+<span class="sd">	</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c     : machine.I2C instance</span>
+<span class="sd">		address : int, option</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="P3T2030">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.temp_sensor.P3T2030">[docs]</a>
+<span class="k">class</span> <span class="nc">P3T2030</span><span class="p">(</span> <span class="n">P3T1035</span> <span class="p">):</span>
+	<span class="k">pass</span></div>
 
 
 

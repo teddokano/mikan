@@ -28,6 +28,14 @@ nxp\_periph.LED\_controller module
    :undoc-members:
    :show-inheritance:
 
+nxp\_periph.MikanUtil module
+----------------------------
+
+.. automodule:: nxp_periph.MikanUtil
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 nxp\_periph.RTC module
 ----------------------
 
