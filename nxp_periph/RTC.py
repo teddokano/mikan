@@ -1028,7 +1028,7 @@ class PCF85053A( RTC_base, I2C_target ):
 						"Offset", "Oscillator", 
 						"Access_config", 
 						"Sec_timestp", "Min_timestp", "Hour_timestp", "DayWk_timestp", "DayMon_timestp", "Mon_timestp", "Year_timestp", 
-						"R_code1", "R_code1"
+						"R_code1", "R_code2"
 						)
 	INT_MASK		= { "A": ["INT_A_MASK1", "INT_A_MASK2"], "B": [ "INT_B_MASK1", "INT_B_MASK2" ] }
 	REG_ORDER_DT	= { "seconds": 	"Seconds", 
