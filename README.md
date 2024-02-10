@@ -93,7 +93,6 @@ Take following step1 and step2 to complete the installation.
 
 #### Step 1: Install MicroPython on the MCU board
 Follow this video to install MicroPython into the MCU board. This is an example of i.MXRT1050-EVK.  
-Use latest version of MicroPython: [**v1.22.0**](https://micropython.org/resources/firmware/MIMXRT1050_EVK-20231227-v1.22.0.bin).   
 [https://youtu.be/L2AVKoXI4vI](https://youtu.be/L2AVKoXI4vI)  
 [![](https://github.com/teddokano/additional_files/blob/main/mikan/img/mikan_install_step_1.png)](https://youtu.be/L2AVKoXI4vI)
 
