@@ -1024,7 +1024,7 @@ class PCF85053A( RTC_base, I2C_target ):
 						"CLKOUT_Control",
 						"2nd_Control_Register",
 						"Scratchpad", "Version_Register", 
-						"Vendor_ID_Register", "Model Register",
+						"Vendor_ID_Register", "Model_Register",
 						"Offset", "Oscillator", 
 						"Access_config", 
 						"Sec_timestp", "Min_timestp", "Hour_timestp", "DayWk_timestp", "DayMon_timestp", "Mon_timestp", "Year_timestp", 
