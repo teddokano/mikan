@@ -32,6 +32,9 @@ class DUT_LEDC( DUT_base.DUT_base ):
 			#self.dev.write_registers( "IREFALL", self.IREF_INIT )
 		else:
 			self.IREF_ID_OFFSET	= 0
+			
+		if "PCA9957" in self.dev.info():
+			self.dev.bit_operation( "MODE2", 0x18, 0x18 )
 
 	def parse( self, req ):
 		#print( "!!!! %s: <--- request ---- \"%s\"" % ( self.dev_name, req.decode() ) )

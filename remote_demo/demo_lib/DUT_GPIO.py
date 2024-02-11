@@ -24,6 +24,9 @@ class DUT_GPIO( DUT_base.DUT_base ):
 		self.info		= [ "General Purpose IO expander", "{}bits".format( self.dev.N_BITS ) ]
 		self.symbol		= '↕'
 		
+		if "PCAL6416" in self.dev.info():
+			self.dev.write_registers( "Configuration port 0", 					0x00 )
+			self.dev.write_registers( "Pull-up/pull-down enable register 1", 	0xFF )
 
 	def parse( self, req ):
 		if self.dev_name not in req:
