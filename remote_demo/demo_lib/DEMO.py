@@ -242,25 +242,50 @@ def get_dut_list( devices, demo_harnesses ):
 
 	return list + [ last_dut ]
 
+def printLCD( lcd, list ):
+	if lcd is not None:
+		lcd.print( list )
+
 def start_network( *, port = 0, ifcnfg_param = "dhcp", lcd = None ):
 	print( "starting network" )
+	
+	retry	= 5
+	
+	while retry:
+		retry	-= 1
 
-	try:
-		lan = network.LAN( port )
-	except OSError as e:
-		if lcd is not None:
-			lcd.print( [ "No LAN", " cable?" ] )
-		error_loop( 2, "Check LAN cable connection. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
-		
+		try:
+			lan = network.LAN( port )
+			retry	= 0
+		except OSError as e:
+			if not retry:	
+				printLCD( lcd, [ "No LAN", " cable?" ] )
+				error_loop( 2, "Check LAN cable connection. OSError:{}".format( e.args ) )	# infinite loop inside of this finction
+			else:
+				printLCD( lcd, [ "No LAN", f" retry={retry}" ] )
+				print( f"start_network retry (PORT connection): {retry}" )
+				sleep( 2 )
+			
 	lan.active( True )
 	print( "ethernet port %d is activated" % port )
+	printLCD( lcd, [ "Ehrtnet", "port: OK" ] )
 
-	try:
-		lan.ifconfig( ifcnfg_param )
-	except OSError as e:
-		if lcd is not None:
-			lcd.print( [ "DHCP", " fail :(" ] )
-		error_loop( 3, "Can't get/set IP address. Tried to set {}. OSError:{}".format( ifcnfg_param, e.args ) )	# infinite loop inside of this finction
+	retry	= 7
+
+	while retry:
+		retry	-= 1
+		
+		try:
+			lan.ifconfig( ifcnfg_param )
+			retry	= 0
+		except OSError as e:
+			if not retry:	
+				printLCD( lcd, [ "DHCP", " fail :(" ] )
+				error_loop( 3, "Can't get/set IP address. Tried to set {}. OSError:{}".format( ifcnfg_param, e.args ) )	# infinite loop inside of this finction
+			else:
+				printLCD( lcd, [ "DHCP", f" retry={retry}" ] )
+				print( f"start_network retry (DHCP): {retry}" )
+				sleep( 2 )
 
 	return lan.ifconfig()
 
