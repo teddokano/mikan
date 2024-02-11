@@ -703,7 +703,7 @@ class PCA9957_base( LED_controller_base, gradation_control, SPI_target ):
 		self.__iref_base	= self.REG_NAME.index( "PWM0"  if current_control else "IREF0" )
 
 		init	=	{
-						"MODE2"		: 0x18,		#	to forth the channel working when wrror happened
+						"MODE2"		: 0x18,		#	to forth output channels working when error happened
 						"LEDOUT0"	: [ 0xAA ] * (self.CHANNELS // 4),
 						"PWMALL"	: pwm,
 						"IREFALL"	: iref
