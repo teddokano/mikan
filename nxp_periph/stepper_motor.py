@@ -128,13 +128,8 @@ class PCA9629A( StepperMotor_base, I2C_target ):
 		"""
 		Initializer for PCA9629A
 		
-		SC16IS7xx is not having register structure like LED controllers (PCA995x).
+		PCA9629A is not having register structure like LED controllers (PCA995x).
 		Use this method to access the registers. 
-	
-		This method can take two arguments. 
-		1st argument is a register address or name.
-		2nd argument can be a value for register writing.
-		If no 2nd argument given, the method returns register read value. 
 	
 		Parameters
 		----------
