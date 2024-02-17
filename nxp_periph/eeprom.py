@@ -48,9 +48,6 @@ class M24C02( EEPROM_base, I2C_target ):
 		
 		while length:
 			w_size	= page_size if page_size < length else length
-			
-			print( data[ written : written + w_size ] )
-
 			self.write_registers( byte_addr + written, data[ written : written + w_size ] )
 			written	+= w_size
 			length	-= w_size
@@ -106,12 +103,15 @@ def main():
 	
 	print( eeprom.info() )
 
-	test_str0	= [ i for i in range( ord( 'A' ), ord( 'z' ) + 1 )]
-	test_str1	= test_str0[::-1 ]
+	test_list	= [ i for i in range( ord( 'A' ), ord( 'z' ) + 1 )]
 
 	while True:
-		eeprom.write( 0, test_str0 )
-		read_data	= eeprom.read( 0, len( test_str0 ) )
+		eeprom.write( 0, test_list )
+		read_data	= eeprom.read( 0, len( test_list ) )
+		print( f'read result = "{"".join(map(chr, read_data))}"' )
+
+		eeprom.write( 0, test_list[::-1] )
+		read_data	= eeprom.read( 0, len( test_list ) )
 		print( f'read result = "{"".join(map(chr, read_data))}"' )
 		
 		sleep( 1 )
