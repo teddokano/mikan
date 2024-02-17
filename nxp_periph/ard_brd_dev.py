@@ -93,9 +93,9 @@ class M24C02( EEPROM_base, I2C_target ):
 			raise EEPROM_Error( "EEPROM write couldn't be complete" )
 		
 		return times
-		
-def main():
-	from	machine		import	Pin, I2C
+
+def test_M24C02():
+	from	machine		import	I2C
 	from	utime		import	sleep
 	
 	i2c		= I2C( 0, freq = (400 * 1000) )
@@ -116,5 +116,9 @@ def main():
 		
 		sleep( 1 )
 
+			
+def main():
+	test_M24C02()
+	
 if __name__ == "__main__":
 	main()
