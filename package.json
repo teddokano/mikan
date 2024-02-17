@@ -12,7 +12,7 @@
 		["nxp_periph/stepper_motor.py",		"github:teddokano/mikan/nxp_periph/stepper_motor.py"	],
 		["nxp_periph/temp_sensor.py",		"github:teddokano/mikan/nxp_periph/temp_sensor.py"		],
 		["nxp_periph/MikanUtil.py",			"github:teddokano/mikan/nxp_periph/MikanUtil.py"		],
-		["nxp_periph/eeprom.py",			"github:teddokano/mikan/nxp_periph/eeprom.py"			]
+		["nxp_periph/ard_brd_dev.py",		"github:teddokano/mikan/nxp_periph/ard_brd_dev.py"		]
 	],
 	"deps": [],
 	"version": "1.15.0"
