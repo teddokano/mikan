@@ -149,6 +149,50 @@ class M24C02( EEPROM_base, I2C_target ):
 		
 		return times
 
+
+class AD5161_base():
+	pass
+
+class AD5161_I2C( I2C_target ):
+	DEFAULT_ADDR	= 0x5A >> 1
+	
+	def __init__( self, i2c, address = DEFAULT_ADDR ):
+		I2C_target.__init__( self, i2c, address )
+		
+	def value( self, v = None ):
+		if v is None:
+			return self.receive( 1 )[ 0 ]
+		else:
+			self.write_registers( 0x00, v )
+			
+
+def test_AD5161_I2C():
+	from	machine		import	Pin, I2C, ADC
+	from	utime		import	sleep
+	
+	interface_select	= Pin( "A2", Pin.OUT )
+	analogout_select	= Pin( "A3", Pin.OUT )
+	interface_select.value( True )
+	analogout_select.value( False )
+
+	mux_vcca_en			= Pin( "D4", Pin.OUT )
+	mux_vcca_en.value( False )
+	
+	i2c	= I2C( 0, freq = (400 * 1000) )
+	pot	= AD5161_I2C( i2c )
+	
+	adc		= ADC( Pin( "A0" ) )
+			
+	while True:
+		for i in range( 256 ):
+			pot.value( i )
+			print( f"{i:3}  {adc.read_u16()/65536}" )
+			sleep( 0.01 )
+	
+
+
+
+
 def test_M24C02():
 	from	machine		import	I2C
 	from	utime		import	sleep
@@ -173,7 +217,8 @@ def test_M24C02():
 
 			
 def main():
-	test_M24C02()
+	#test_M24C02()
+	test_AD5161_I2C()
 	
 if __name__ == "__main__":
 	main()
