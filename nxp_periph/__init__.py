@@ -10,3 +10,4 @@ from	nxp_periph.accelerometer	import	*
 from	nxp_periph.afe				import	*
 from	nxp_periph.MikanUtil		import	*
 from	nxp_periph.ard_brd_dev		import	*
+from	nxp_periph.bus_mux_switch	import	*
