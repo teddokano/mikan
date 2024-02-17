@@ -3,6 +3,7 @@ from nxp_periph import PCF85053A, MikanUtil
 import machine
 from utime import sleep
 
+
 def main():
     intf = I2C(0, freq=(400 * 1000))
     rtc = PCF85053A(intf)
@@ -11,7 +12,7 @@ def main():
     print("=== operation start ===")
 
     #   Set read/write access right to primary I2C bus
-    rtc.bit_operation( "Control_Register", 0x01, 0x01 )
+    rtc.bit_operation("Control_Register", 0x01, 0x01)
 
     osf = rtc.oscillator_stopped()
     print("rtc.oscillator_stopped()\n  --> ", end="")
@@ -68,11 +69,11 @@ def demo(rtc):
     def alarm_callback(pin_obj):
         nonlocal alarm_flag
         rtc.interrupt_clear()
-        alarm_flag	= True
+        alarm_flag = True
 
     def timer_callback(_):
         nonlocal timer_flag
-        timer_flag	= True
+        timer_flag = True
 
     rtc.interrupt_clear()
 
@@ -82,18 +83,19 @@ def demo(rtc):
     t0 = Timer(MikanUtil.get_timer_id(0))
     t0.init(freq=1, mode=Timer.PERIODIC, callback=timer_callback)
 
-    rtc.timer_alarm( seconds = 5 )
+    rtc.timer_alarm(seconds=5)
 
     while True:
         if alarm_flag:
-            alarm_flag	= False
+            alarm_flag = False
             rtc.timer_alarm(seconds=5)
             print("!!!!!!! ALARM !!!!!!!  alarm is set 5 seconds later")
-		
+
         if timer_flag:
-            timer_flag	= False
-            dt	= rtc.datetime()
-            print( dt )
-		
+            timer_flag = False
+            dt = rtc.datetime()
+            print(dt)
+
+
 if __name__ == "__main__":
     main()

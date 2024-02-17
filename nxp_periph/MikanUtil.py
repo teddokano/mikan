@@ -44,9 +44,9 @@ class MikanUtil:
 		else:
 			return -1
 
-class BusInOut():
-	from	machine		import	Pin
-	
+from	machine		import	Pin
+
+class BusInOut():	
 	def __init__( self, pin_labels ):
 		self.pins	= []
 		
@@ -56,8 +56,6 @@ class BusInOut():
 		self.pins	= self.pins[::-1]
 
 	def config( self, mode = Pin.IN, pull = None ):
-		print( "CONFIG" )
-
 		for pin in self.pins:
 			if pin:
 				pin.init( mode = mode, pull = pull )

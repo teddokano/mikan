@@ -7,6 +7,9 @@ class EEPROM_base():
 	"""
 
 	def write( self, byte_addr, data ):
+		if isinstance( data, str ):
+			data	= [ ord( i ) for i in data ]
+			
 		self.__write( byte_addr, data )
 		
 	def wait_write_complete( self, times ):
