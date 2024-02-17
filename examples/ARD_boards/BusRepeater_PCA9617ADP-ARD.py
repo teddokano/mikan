@@ -38,10 +38,8 @@ while True:
             sleep(1)
 
             eeprom.write(0, str0)
-            read_data = eeprom.read(0, len(str0))
-            print("".join(map(chr, read_data)))
+            print(eeprom.read(0, len(str0),format="str"))
 
             eeprom.write(0, str1)
-            read_data = eeprom.read(0, len(str1))
-            print("".join(map(chr, read_data)))
+            print(eeprom.read(0, len(str1),format="str"))
             print("")
