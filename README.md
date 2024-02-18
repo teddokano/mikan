@@ -45,7 +45,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCAL6534](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/ultra-low-voltage-level-translating-34-bit-ic-bus-smbus-i-o-expander:PCAL6534)
 - LCD driver
 	- [PCA8561](https://www.nxp.com/products/peripherals-and-logic/lcd-drivers/lcd-segment-drivers/automotive-18-x-4-lcd-segment-driver:PCA8561)
-- I2C bus multiplexer/switch
+- I²C bus multiplexer/switch
 	- [PCA9846](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-multiplexers-switches/four-channel-ultra-low-voltage-fm-plus-ic-bus-switch-with-reset:PCA9846)
 - Protocol bridge
 	- SC16IS7xx (
@@ -60,7 +60,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [FXLS8974](https://www.nxp.com/docs/en/data-sheet/FXLS8974CF.pdf)
 - Analog Front-End
 	- [NAFE13388](https://www.nxp.com/products/analog-and-mixed-signal/analog-front-end/highly-configurable-8-channel-25-v-universal-input-analog-front-end-with-excitation-sources:NAFEx3388)
-- Bus repeater (I2C buffer) 
+- Bus repeater (I²C buffer) 
 	- [PCA9617A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-repeaters-hubs-extenders/level-translating-fm-plus-ic-bus-repeater:PCA9617A)
 	**:No class driver available since this device doesn't need software control. Evaluation board demo code only**
 - Level shifter (Voltage translator)
@@ -168,7 +168,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 
 > **Note**  
 > These examples should work on any MicroPython platform but need to absorb hardware difference.  
-> All these examples runs as it is on MIMXRT1050-EVK. If you try on MIMXRT1170-EVK, the hardware I2C has different ID for A4/A5 pins. The ID must be changed from 0 to 2.  
+> All these examples runs as it is on MIMXRT1050-EVK. If you try on MIMXRT1170-EVK, the hardware I²C has different ID for A4/A5 pins. The ID must be changed from 0 to 2.  
 > Refer to pinout document for each platforms. For i.MXRT, the pinout information is available [here](https://docs.micropython.org/en/latest/mimxrt/pinout.html#mimxrt-i2c-pinout).
 
 
@@ -189,8 +189,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 ⏰|RTC_demo_PCF85063TP-ARD.py				|example/ARD_boards/|Operation sample through MicroPython’s machine.RTC equivalent APIs. 											|PCF85063TP
 ⏰|RTC_demo_PCF85053A-ARD.py				|example/ARD_boards/|Operation sample through MicroPython’s machine.RTC equivalent APIs. Using alarm interrupt						|PCF85053A
 🌡️|temp_sensor_simple_PCT2075_LM75B.py							|example/general/	|Very simple sample to operate a temp sensor												|LM75B, PCT2075
-🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030.py		|example/general/	|Very simple sample to operate a temp sensor with different I2C pin assign. 				|P3T1085, P3T1755, P3T1035, P3T2030
-🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|Similar to “temp_sensor_simple.py” but different I2C pin assign. 							|P3T1085, P3T1755, P3T1035, P3T2030
+🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030.py		|example/general/	|Very simple sample to operate a temp sensor with different I²C pin assign. 				|P3T1085, P3T1755, P3T1035, P3T2030
+🌡️|temp_sensor_simple_P3T1085_P3T1755_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|Similar to “temp_sensor_simple.py” but different I²C pin assign. 							|P3T1085, P3T1755, P3T1035, P3T2030
 🌡️|temp_sensor_demo_PCT2075DP-ARD.py		|example/ARD_boards/|Operate with interrupt and heater-resister on ARD board														|PCT2075
 🌡️|temp_sensor_demo_P3T1085UK-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1085
 🌡️|temp_sensor_demo_P3T1755DP-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1755
@@ -205,8 +205,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🍎|accelerometer.py							|example/general/|Simple 3 axis data capturing from FXOS8700 or FXLS8974															|FXOS8700, FXLS8974
 🍎|magnetometer.py							|example/general/|Simple compass application using FXOS8700																			|FXOS8700
 🌊|afe.py									|example/general/|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
--|BusSwitch_PCA9846PW-ARD.py				|example/ARD_boards/|Demo to show I2C bus switch function with EEPROMs																|PCA9846
--|BusRepeater_PCA9617ADP-ARD.py				|example/ARD_boards/|Demo to show I2C bus repeater (buffer) function with several signal voltages combinations using an EEPROM		|PCA617A
+-|BusSwitch_PCA9846PW-ARD.py				|example/ARD_boards/|Demo to show I²C bus switch function with EEPROMs																|PCA9846
+-|BusRepeater_PCA9617ADP-ARD.py				|example/ARD_boards/|Demo to show I²C bus repeater (buffer) function with several signal voltages combinations using an EEPROM		|PCA617A
 -|LevelShifter_NTS0304EUK-ARD.py			|example/ARD_boards/|Demo to show level shifter (voltage translator) function with several signal voltages combinations using a digital potentiometer			|NTS0304E
 
 ## Demo (remote demo)
