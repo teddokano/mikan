@@ -38,8 +38,8 @@ while True:
             sleep(1)
 
             eeprom.write(0, str0)
-            print(eeprom.read(0, len(str0),format="str"))
+            print(eeprom.read(0, len(str0), format="str"))
 
             eeprom.write(0, str1)
-            print(eeprom.read(0, len(str1),format="str"))
+            print(eeprom.read(0, len(str1), format="str"))
             print("")
