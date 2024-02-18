@@ -274,6 +274,9 @@ def test_AD5161( sel_I2C = True ):
 			for v2 in range( 4 ):
 				ldo2.v	= v2
 				
+				if v1_values[ v1 ] > v2_values[ v2 ]:
+					continue
+					
 				print(
 					"New voltages are set: LDO1 = {}V, LDO2 = {}V".format(
 						v1_values[v1], v2_values[v2]
@@ -281,7 +284,7 @@ def test_AD5161( sel_I2C = True ):
 				)
 				sleep(1)
             
-				for i in range( 0, 256, 16 ):
+				for i in range( 256 ):
 					if sel_I2C:
 						pot.value( i )
 						rb	= pot.value()
@@ -290,13 +293,13 @@ def test_AD5161( sel_I2C = True ):
 						
 					ad	= 3.3 * adc.read_u16() / 65536
 					print( f"sent: {i:3}  read back{s0}: {rb:3}  output voltage: {ad:4.2f}V", end = "\r" )
-					sleep( 0.01 )
+					sleep( 0.005 )
 	
 				print( "" )
 			
 def main():
 	#test_M24C02()
-	test_AD5161( sel_I2C = False )
+	test_AD5161( sel_I2C = True )
 
 if __name__ == "__main__":
 	main()
