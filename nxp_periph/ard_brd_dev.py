@@ -149,6 +149,28 @@ class M24C02( EEPROM_base, I2C_target ):
 		
 		return times
 
+def test_M24C02():
+	from	machine		import	I2C
+	from	utime		import	sleep
+	
+	i2c		= I2C( 0, freq = (400 * 1000) )
+	eeprom	= M24C02( i2c )
+	
+	print( eeprom.info() )
+
+	test_list	= [ i for i in range( ord( 'A' ), ord( 'z' ) + 1 )]
+
+	while True:
+		eeprom.write( 0, test_list )
+		read_data	= eeprom.read( 0, len( test_list ) )
+		print( f'read result = "{"".join(map(chr, read_data))}"' )
+
+		eeprom.write( 0, test_list[::-1] )
+		read_data	= eeprom.read( 0, len( test_list ), format = "str" )
+		print( f'read result = "{read_data}"' )
+		
+		sleep( 1 )
+
 
 class Potentiometer_base():
 	pass
@@ -164,9 +186,6 @@ class AD5161_I2C( Potentiometer_base, I2C_target ):
 			return self.receive( 1 )[ 0 ]
 		else:
 			self.write_registers( 0x00, v )
-
-from	nxp_periph.MikanUtil	import	BusInOut
-
 
 class AD5161_SPI( Potentiometer_base, SPI_target ):
 	DEFAULT_ADDR	= 0x5A >> 1
@@ -220,10 +239,11 @@ def AD5161( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
 
 			
 
-def test_AD5161_I2C():
-	from	machine		import	Pin, I2C, ADC
-	from	utime		import	sleep
-	
+def test_AD5161( sel_I2C = True ):
+	from	machine		import		Pin, I2C, ADC
+	from	utime		import		sleep
+	from	nxp_periph.MikanUtil	import	BusInOut
+
 	"""
 	"A2": SPI = 0, I2C = 1
 	"A3": 0 to route op-amp output to "A1"
@@ -231,77 +251,52 @@ def test_AD5161_I2C():
 	"""
 	setting	= BusInOut( [ "A2", "A3", "D5" ], output = True )
 	ldo1	= BusInOut( [ "D4", "D1", "D0" ], output = True )
-	ldo2	= BusInOut( [ "D2", "D3" ], output = True )
+	ldo2	= BusInOut( [ "D3", "D2" ], output = True )
 	alt_spi	= BusInOut( [ "D6", "D7", "D8", "D9" ] )
-		
-	setting.v	= 0b100
-	ldo1.v	= 3
-	ldo2.v	= 1
-	intf	= I2C( 0, freq = (400 * 1000) )
-	pot		= AD5161( intf )
-	
 	adc		= ADC( Pin( "A0" ) )
-			
-	while True:
-		for i in range( 256 ):
-			pot.value( i )
-			rb	= pot.value()
-			ad	= 3.3 * adc.read_u16() / 65536
-			print( f"sent: {i:3}  read back: {rb:3}  output voltage: {ad:4.2f}V", end = "\r" )
-			sleep( 0.01 )
 	
-def test_AD5161_SPI():
-	from	machine		import	Pin, SPI, ADC
-	from	utime		import	sleep
-	
-	setting	= BusInOut( [ "A2", "A3", "D5" ], output = True )
-	ldo1	= BusInOut( [ "D4", "D1", "D0" ], output = True )
-	ldo2	= BusInOut( [ "D2", "D3" ], output = True )
-	alt_spi	= BusInOut( [ "D6", "D7", "D8", "D9" ] )
-	
-	setting.v	= 0b001
-	ldo1.v	= 3
-	ldo2.v	= 1
-	
-	intf	= SPI( 0, 1000 * 1000, cs = 0 )
-	pot		= AD5161( intf )
-	
-	adc		= ADC( Pin( "A0" ) )
-			
-	while True:
-		for i in range( 256 ):
-			rb	= pot.value( i )
-			ad	= 3.3 * adc.read_u16() / 65536
-			print( f"sent: {i:3}  read back (previous value): {rb:3}  output voltage: {ad:4.2f}V", end = "\r" )
-			sleep( 0.01 )
+	if sel_I2C:
+		setting.v	= 0b100
+		s0			= ""
+		pot			= AD5161( I2C( 0, freq = (400_000) ) )
+	else:
+		setting.v	= 0b001
+		s0			= "(previous value)"
+		pot			= AD5161( SPI( 0, 1000_000, cs = 0 ) )
 
-def test_M24C02():
-	from	machine		import	I2C
-	from	utime		import	sleep
-	
-	i2c		= I2C( 0, freq = (400 * 1000) )
-	eeprom	= M24C02( i2c )
-	
-	print( eeprom.info() )
 
-	test_list	= [ i for i in range( ord( 'A' ), ord( 'z' ) + 1 )]
+	v1_values = [ 1.2, 1.8, 2.5, 3.3, 0.95 ]
+	v2_values = [ 1.8, 2.5, 3.3, 4.96]
 
 	while True:
-		eeprom.write( 0, test_list )
-		read_data	= eeprom.read( 0, len( test_list ) )
-		print( f'read result = "{"".join(map(chr, read_data))}"' )
-
-		eeprom.write( 0, test_list[::-1] )
-		read_data	= eeprom.read( 0, len( test_list ), format = "str" )
-		print( f'read result = "{read_data}"' )
-		
-		sleep( 1 )
-
+		for v1 in range( 5 ):
+			ldo1.v	= v1
+			for v2 in range( 4 ):
+				ldo2.v	= v2
+				
+				print(
+					"New voltages are set: LDO1 = {}V, LDO2 = {}V".format(
+						v1_values[v1], v2_values[v2]
+					)
+				)
+				sleep(1)
+            
+				for i in range( 0, 256, 16 ):
+					if sel_I2C:
+						pot.value( i )
+						rb	= pot.value()
+					else:
+						rb	= pot.value( i )
+						
+					ad	= 3.3 * adc.read_u16() / 65536
+					print( f"sent: {i:3}  read back{s0}: {rb:3}  output voltage: {ad:4.2f}V", end = "\r" )
+					sleep( 0.01 )
+	
+				print( "" )
 			
 def main():
 	#test_M24C02()
-	test_AD5161_I2C()
-	#test_AD5161_SPI()
-	
+	test_AD5161( sel_I2C = False )
+
 if __name__ == "__main__":
 	main()
