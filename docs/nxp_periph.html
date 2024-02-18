@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph package &mdash; mikan 1.14.1 documentation</title>
+  <title>nxp_periph package &mdash; mikan 1.15.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=a5781ae5"></script>
+        <script src="_static/documentation_options.js?v=70d5d4a5"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -257,6 +257,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#nxp-periph-afe-module">nxp_periph.afe module</a></li>
+<li><a class="reference internal" href="#nxp-periph-ard-brd-dev-module">nxp_periph.ard_brd_dev module</a></li>
+<li><a class="reference internal" href="#nxp-periph-bus-mux-switch-module">nxp_periph.bus_mux_switch module</a></li>
 <li><a class="reference internal" href="#module-nxp_periph.interface">nxp_periph.interface module</a><ul>
 <li><a class="reference internal" href="#nxp_periph.interface.I2C_target"><code class="docutils literal notranslate"><span class="pre">I2C_target</span></code></a><ul>
 <li><a class="reference internal" href="#nxp_periph.interface.I2C_target.ping"><code class="docutils literal notranslate"><span class="pre">I2C_target.ping()</span></code></a></li>
@@ -1145,7 +1147,7 @@ returns PCF2131_SPI when interface == SPI</p>
 The PCF2131 class can be composed with one of interface class: I2C_target or SPI_target</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.RTC.PCF2131_base.EVENTS">
-<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[{'alarm':</span> <span class="pre">64,</span> <span class="pre">'periodic':</span> <span class="pre">128,</span> <span class="pre">'watchdog':</span> <span class="pre">16,</span> <span class="pre">'xx':</span> <span class="pre">0},</span> <span class="pre">{'battery</span> <span class="pre">low':</span> <span class="pre">4,</span> <span class="pre">'battery</span> <span class="pre">switch</span> <span class="pre">over':</span> <span class="pre">8},</span> <span class="pre">{'ts1':</span> <span class="pre">128,</span> <span class="pre">'ts2':</span> <span class="pre">16,</span> <span class="pre">'ts3':</span> <span class="pre">32,</span> <span class="pre">'ts4':</span> <span class="pre">64}]</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF2131_base.EVENTS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[{'alarm':</span> <span class="pre">64,</span> <span class="pre">'periodic':</span> <span class="pre">0,</span> <span class="pre">'watchdog':</span> <span class="pre">16,</span> <span class="pre">'xx':</span> <span class="pre">128},</span> <span class="pre">{'battery</span> <span class="pre">low':</span> <span class="pre">4,</span> <span class="pre">'battery</span> <span class="pre">switch</span> <span class="pre">over':</span> <span class="pre">8},</span> <span class="pre">{'ts1':</span> <span class="pre">16,</span> <span class="pre">'ts2':</span> <span class="pre">32,</span> <span class="pre">'ts3':</span> <span class="pre">64,</span> <span class="pre">'ts4':</span> <span class="pre">128}]</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF2131_base.EVENTS" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1338,7 +1340,7 @@ The PCF2131 class can be composed with one of interface class: I2C_target or SPI
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.RTC.PCF86263A.EVENTS">
-<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'alarm1':</span> <span class="pre">2,</span> <span class="pre">'alarm2':</span> <span class="pre">32,</span> <span class="pre">'battery</span> <span class="pre">switch':</span> <span class="pre">4,</span> <span class="pre">'periodic':</span> <span class="pre">128,</span> <span class="pre">'timestamp1':</span> <span class="pre">16,</span> <span class="pre">'timestamp2':</span> <span class="pre">8,</span> <span class="pre">'timestamp3':</span> <span class="pre">1,</span> <span class="pre">'watchdog':</span> <span class="pre">64}</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF86263A.EVENTS" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">EVENTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'alarm1':</span> <span class="pre">2,</span> <span class="pre">'alarm2':</span> <span class="pre">1,</span> <span class="pre">'battery</span> <span class="pre">switch':</span> <span class="pre">4,</span> <span class="pre">'periodic':</span> <span class="pre">32,</span> <span class="pre">'timestamp1':</span> <span class="pre">16,</span> <span class="pre">'timestamp2':</span> <span class="pre">8,</span> <span class="pre">'timestamp3':</span> <span class="pre">128,</span> <span class="pre">'watchdog':</span> <span class="pre">64}</span></em><a class="headerlink" href="#nxp_periph.RTC.PCF86263A.EVENTS" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1914,6 +1916,12 @@ This class enables to get its realtime data</p>
 <section id="nxp-periph-afe-module">
 <h2>nxp_periph.afe module<a class="headerlink" href="#nxp-periph-afe-module" title="Link to this heading"></a></h2>
 </section>
+<section id="nxp-periph-ard-brd-dev-module">
+<h2>nxp_periph.ard_brd_dev module<a class="headerlink" href="#nxp-periph-ard-brd-dev-module" title="Link to this heading"></a></h2>
+</section>
+<section id="nxp-periph-bus-mux-switch-module">
+<h2>nxp_periph.bus_mux_switch module<a class="headerlink" href="#nxp-periph-bus-mux-switch-module" title="Link to this heading"></a></h2>
+</section>
 <section id="module-nxp_periph.interface">
 <span id="nxp-periph-interface-module"></span><h2>nxp_periph.interface module<a class="headerlink" href="#module-nxp_periph.interface" title="Link to this heading"></a></h2>
 <dl class="py class">
@@ -2458,7 +2466,7 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC18IS606</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address=40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4360630544'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nxp_periph.protocol_bridge.</span></span><span class="sig-name descname"><span class="pre">SC18IS606</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i2c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address=40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4423767632'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nxp_periph.interface.I2C_target" title="nxp_periph.interface.I2C_target"><code class="xref py py-class docutils literal notranslate"><span class="pre">I2C_target</span></code></a></p>
 <blockquote>
 <div><p>SC18IS606 class</p>
@@ -2530,12 +2538,12 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.LSB">
-<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.LSB'</span> <span class="pre">id='4360630352'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.LSB" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.LSB'</span> <span class="pre">id='4423722320'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.LSB" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.MSB">
-<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4360630544'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.MSB" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4423767632'&gt;</span></em><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.MSB" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2557,7 +2565,7 @@ If no 2nd argument given, the method returns register read value.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nxp_periph.protocol_bridge.SC18IS606.init">
-<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4360630544'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.init" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baudrate=1875000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarity=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstbit=&lt;MagicMock</span> <span class="pre">name='mock.SPI.MSB'</span> <span class="pre">id='4423767632'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nxp_periph/protocol_bridge.html#SC18IS606.init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nxp_periph.protocol_bridge.SC18IS606.init" title="Link to this definition"></a></dt>
 <dd><p>setting SPI parameters</p>
 </dd></dl>
 

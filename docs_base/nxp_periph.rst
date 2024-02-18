@@ -60,6 +60,22 @@ nxp\_periph.afe module
    :undoc-members:
    :show-inheritance:
 
+nxp\_periph.ard\_brd\_dev module
+--------------------------------
+
+.. automodule:: nxp_periph.ard_brd_dev
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nxp\_periph.bus\_mux\_switch module
+-----------------------------------
+
+.. automodule:: nxp_periph.bus_mux_switch
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 nxp\_periph.interface module
 ----------------------------
 

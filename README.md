@@ -44,7 +44,9 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCAL6524](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/ultra-low-voltage-translating-24-bit-fm-plus-ic-bus-smbus-i-o-expander:PCAL6524)
 	- [PCAL6534](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/ultra-low-voltage-level-translating-34-bit-ic-bus-smbus-i-o-expander:PCAL6534)
 - LCD driver
-	- [PCA8561](https://www.nxp.jp/products/peripherals-and-logic/lcd-drivers/lcd-segment-drivers/automotive-18-x-4-lcd-segment-driver:PCA8561)
+	- [PCA8561](https://www.nxp.com/products/peripherals-and-logic/lcd-drivers/lcd-segment-drivers/automotive-18-x-4-lcd-segment-driver:PCA8561)
+- I2C bus multiplexer/switch
+	- [PCA9846](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-multiplexers-switches/four-channel-ultra-low-voltage-fm-plus-ic-bus-switch-with-reset:PCA9846)
 - Protocol bridge
 	- SC16IS7xx (
 		[Single UART](https://www.nxp.com/products/peripherals-and-logic/signal-chain/bridges/single-uart-with-ic-bus-spi-interface-64-bs-of-transmit-and-receive-fifos-irda-sir-built-in-support:SC16IS740_750_760),
@@ -55,10 +57,16 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCA9629A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/fm-plus-ic-bus-advanced-stepper-motor-controller:PCA9629APW)
 - Accelerometer
 	- [FXOS8700](https://www.nxp.com/docs/en/data-sheet/FXOS8700CQ.pdf)
-	- [FXLS8974](https://www.nxp.jp/docs/en/data-sheet/FXLS8974CF.pdf)
+	- [FXLS8974](https://www.nxp.com/docs/en/data-sheet/FXLS8974CF.pdf)
 - Analog Front-End
 	- [NAFE13388](https://www.nxp.com/products/analog-and-mixed-signal/analog-front-end/highly-configurable-8-channel-25-v-universal-input-analog-front-end-with-excitation-sources:NAFEx3388)
-
+- Bus repeater (I2C buffer) 
+	- [PCA9617A](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-repeaters-hubs-extenders/level-translating-fm-plus-ic-bus-repeater:PCA9617A)
+	**:No class driver available since this device doesn't need software control. Evaluation board demo code only**
+- Level shifter (Voltage translator)
+	- [NTS0304E](https://www.nxp.com/products/analog-and-mixed-signal/voltage-level-translators/4-bit-dual-supply-translating-transceiver-open-drain-auto-direction-sensing:NTS0304E)
+	**:No class driver available since this device doesn't need software control. Evaluation board demo code only**
+	
 # Getting started
 
 ## The steps
@@ -166,8 +174,8 @@ It shows simple usage examples for the drivers and standalome demo for target de
 
 ?|File name|Folder|Description|Device type
 ---|---|---|---|---
-💡|LED_controller.py						|example/general/|Simple sample: making an LED_controller instance and how PWM can be controlled										|PCA9955B, PCA9956B, PCA9957, PCA9632
-💡|LED_gradation_ctrl.py					|example/general/|Gradation control (hardware) feature demo																						|PCA9955B, PCA9957
+💡|LED_controller.py						|example/general/|Simple sample: making an LED_controller instance and how PWM can be controlled									|PCA9955B, PCA9956B, PCA9957, PCA9632
+💡|LED_gradation_ctrl.py					|example/general/|Gradation control (hardware) feature demo																			|PCA9955B, PCA9957
 💡|LED_instance.py							|example/general/|Using another class to abstract LED controllers																	|PCA9955B, PCA9956B, PCA9957
 💡|LED_demo.py								|example/general/|Showing idea to use ‘LED class’ to manage LED and white LED individually											|PCA9955B, PCA9956B, PCA9957, PCA9632
 💡|LED_demo_dual_om13321.py					|example/general/|Showing idea to use ‘LED class’ to manage multiple LED controller devices											|PCA9956B
@@ -186,7 +194,7 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🌡️|temp_sensor_demo_PCT2075DP-ARD.py		|example/ARD_boards/|Operate with interrupt and heater-resister on ARD board														|PCT2075
 🌡️|temp_sensor_demo_P3T1085UK-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1085
 🌡️|temp_sensor_demo_P3T1755DP-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1755
-🌡️|temp_sensor_demo_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|All 8 sensors operated together												|P3T1035, P3T2030
+🌡️|temp_sensor_demo_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|All 8 sensors operated together																				|P3T1035, P3T2030
 ↕|GPIO_demo.py								|example/general/|Operation sample of a PCA9555 API																					|PCA9555
 ↕|GPIO_demo_PCAL6xxxA-ARD.py				|example/general/|Operation sample of a PCAL6xxx ARD board. Using interrupt															|PCAL6408, PCAL6416, PCAL6524, PCAL6534
 🔠|LCD_demo_PCA8561AHN-ARD.py				|example/general/|Shows direct ON/OFF of segments and using  putc(), puts() methods													|PCA8561
@@ -194,9 +202,13 @@ It shows simple usage examples for the drivers and standalome demo for target de
 💁|protocol_bridge_SC18IS606_with_AT25010.py|example/general/|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
 🔄|stepper_motor_simple.py					|example/general/|Operating stepping motor with simple API																			|PCA9629A
 🔄|stepper_motor_5_motors.py				|example/general/|Operating 5 instances of PCA9629A class																			|PCA9629A
-🍎|accelerometer.py							|example/general/|Simple 3 axis data capturing from FXOS8700 or FXLS8974																|FXOS8700, FXLS8974
+🍎|accelerometer.py							|example/general/|Simple 3 axis data capturing from FXOS8700 or FXLS8974															|FXOS8700, FXLS8974
 🍎|magnetometer.py							|example/general/|Simple compass application using FXOS8700																			|FXOS8700
 🌊|afe.py									|example/general/|Simple AFE (NAFE13388) operation to show measured voltage on 2 input channels										|NAFE13388
+-|BusSwitch_PCA9846PW-ARD.py				|example/ARD_boards/|Demo to show I2C bus switch function with EEPROMs																|PCA9846
+-|BusRepeater_PCA9617ADP-ARD.py				|example/ARD_boards/|Demo to show I2C bus repeater (buffer) function with several signal voltages combinations using an EEPROM		|PCA617A
+-|LevelShifter_NTS0304EUK-ARD.py			|example/ARD_boards/|Demo to show level shifter (voltage translator) function with several signal voltages combinations using a digital potentiometer			|NTS0304E
+
 ## Demo (remote demo)
 The demo code is avaiable in `remote_demo/`.  
 `remote_demo/start_w_auto_IP(DHCP).py` and `remote_demo/start_w_fixed_IP.py` are start scripts to run the demo.  

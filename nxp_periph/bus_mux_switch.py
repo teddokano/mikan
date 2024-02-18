@@ -1,9 +1,19 @@
 from nxp_periph.interface	import	I2C_target
 
 class BusMuxSwitch_base():
+	"""
+	An abstraction class to make user interface.
+	"""
+
 	pass
 
 class PCA9846( BusMuxSwitch_base, I2C_target ):
+	"""
+	PCA9846: 4 channel I2C bus switch
+	
+	A device class for a 4 channel I2C bus switch : PCA9846
+	
+	"""
 	DEFAULT_ADDR	= 0xE2 >> 1
 	N_CH			= 4
 
