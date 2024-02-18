@@ -1,4 +1,4 @@
-from	nxp_periph.interface	import	I2C_target
+from	nxp_periph.interface	import	I2C_target, SPI_target
 from	utime					import	sleep_ms
 
 class EEPROM_base():
@@ -164,6 +164,63 @@ class AD5161_I2C( I2C_target ):
 			return self.receive( 1 )[ 0 ]
 		else:
 			self.write_registers( 0x00, v )
+
+from	nxp_periph.MikanUtil	import	BusInOut
+
+
+class AD5161_SPI( SPI_target ):
+	DEFAULT_ADDR	= 0x5A >> 1
+	
+	def __init__( self, spi, cs = None ):
+		print( f"cs = {cs}" )
+		SPI_target.__init__( self, spi, cs )
+				
+	def value( self, v = None ):
+		if v is None:
+			return self.receive( 1 )[ 0 ]
+		else:
+			self.send( [ v ] )
+
+
+from	machine		import	I2C, SPI
+
+DEFAULT_ADDR	= 0x5A >> 1
+DEFAULT_CS		= None
+
+def AD5161( interface, address =  DEFAULT_ADDR, cs = DEFAULT_CS ):
+	"""
+	A constructor interface for AD5161
+
+	Parameters
+	----------
+	interface	: machine.I2C or machine.SPI object
+	address		: int, option
+		If need to specify (for I2C interface)
+	cs			: machine.Pin object
+		If need to specify (for SPI interface)
+
+	Returns
+	-------
+	AD5161_I2C or AD5161_SPI object
+		returns AD5161_I2C when interface == I2C
+		returns AD5161_SPI when interface == SPI
+
+	Examples
+	--------
+	For using I2C
+		>>> intf = I2C( 0, freq = (400 * 1000) )
+		>>> rtc  = AD5161( intf )
+	For using SPI
+		>>> intf = SPI( 0, 500 * 1000, cs = 0 )
+		>>> rtc  = AD5161( intf )
+	
+	"""
+	if isinstance( interface, I2C ):
+		return AD5161_I2C( interface, address )
+
+	if isinstance( interface, SPI ):
+		return AD5161_SPI( interface, cs )
+
 			
 
 def test_AD5161_I2C():
@@ -172,14 +229,25 @@ def test_AD5161_I2C():
 	
 	interface_select	= Pin( "A2", Pin.OUT )
 	analogout_select	= Pin( "A3", Pin.OUT )
+	mux_vcca_en			= Pin( "D4", Pin.OUT )
+	pot_idle			= Pin( "D5", Pin.OUT )
 	interface_select.value( True )
 	analogout_select.value( False )
-
-	mux_vcca_en			= Pin( "D4", Pin.OUT )
 	mux_vcca_en.value( False )
+	pot_idle.value( False )
+
+	ldo1	= BusInOut( [ "D4", "D1", "D0" ] )
+	ldo2	= BusInOut( [ "D2", "D3" ] )
+	alt_spi	= BusInOut( [ "D6", "D7", "D8", "D9" ] )
 	
-	i2c	= I2C( 0, freq = (400 * 1000) )
-	pot	= AD5161_I2C( i2c )
+	ldo1.output()
+	ldo2.output()
+	alt_spi.input()
+	
+	ldo1.v	= 3
+	ldo2.v	= 1
+	intf	= I2C( 0, freq = (400 * 1000) )
+	pot		= AD5161( intf )
 	
 	adc		= ADC( Pin( "A0" ) )
 			
@@ -189,9 +257,40 @@ def test_AD5161_I2C():
 			print( f"{i:3}  {adc.read_u16()/65536}" )
 			sleep( 0.01 )
 	
-
-
-
+def test_AD5161_SPI():
+	from	machine		import	Pin, SPI, ADC
+	from	utime		import	sleep
+	
+	interface_select	= Pin( "A2", Pin.OUT )
+	analogout_select	= Pin( "A3", Pin.OUT )
+	mux_vcca_en			= Pin( "D4", Pin.OUT )
+	pot_idle			= Pin( "D5", Pin.OUT )
+	interface_select.value( False )
+	analogout_select.value( False )
+	mux_vcca_en.value( False )
+	pot_idle.value( True )
+	
+	ldo1	= BusInOut( [ "D4", "D1", "D0" ] )
+	ldo2	= BusInOut( [ "D2", "D3" ] )
+	alt_spi	= BusInOut( [ "D6", "D7", "D8", "D9" ] )
+	
+	ldo1.output()
+	ldo2.output()
+	alt_spi.input()
+	
+	ldo1.v	= 3
+	ldo2.v	= 1
+	
+	intf	= SPI( 0, 1000 * 1000, cs = 0 )
+	pot		= AD5161( intf )
+	
+	adc		= ADC( Pin( "A0" ) )
+			
+	while True:
+		for i in range( 256 ):
+			pot.value( i )
+			print( f"{i:3}  {adc.read_u16()/65536}" )
+			sleep( 0.01 )
 
 def test_M24C02():
 	from	machine		import	I2C
@@ -219,6 +318,7 @@ def test_M24C02():
 def main():
 	#test_M24C02()
 	test_AD5161_I2C()
+	#test_AD5161_SPI()
 	
 if __name__ == "__main__":
 	main()
