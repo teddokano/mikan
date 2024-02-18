@@ -150,10 +150,10 @@ class M24C02( EEPROM_base, I2C_target ):
 		return times
 
 
-class AD5161_base():
+class Potentiometer_base():
 	pass
 
-class AD5161_I2C( I2C_target ):
+class AD5161_I2C( Potentiometer_base, I2C_target ):
 	DEFAULT_ADDR	= 0x5A >> 1
 	
 	def __init__( self, i2c, address = DEFAULT_ADDR ):
@@ -168,18 +168,15 @@ class AD5161_I2C( I2C_target ):
 from	nxp_periph.MikanUtil	import	BusInOut
 
 
-class AD5161_SPI( SPI_target ):
+class AD5161_SPI( Potentiometer_base, SPI_target ):
 	DEFAULT_ADDR	= 0x5A >> 1
 	
 	def __init__( self, spi, cs = None ):
-		print( f"cs = {cs}" )
 		SPI_target.__init__( self, spi, cs )
 				
 	def value( self, v = None ):
-		if v is None:
-			return self.receive( 1 )[ 0 ]
-		else:
-			self.send( [ v ] )
+		# 2 bytes same values are sent to read back the first written byte
+		return self.receive( [ v ] )[ 0 ]
 
 
 from	machine		import	I2C, SPI
@@ -227,23 +224,17 @@ def test_AD5161_I2C():
 	from	machine		import	Pin, I2C, ADC
 	from	utime		import	sleep
 	
-	interface_select	= Pin( "A2", Pin.OUT )
-	analogout_select	= Pin( "A3", Pin.OUT )
-	mux_vcca_en			= Pin( "D4", Pin.OUT )
-	pot_idle			= Pin( "D5", Pin.OUT )
-	interface_select.value( True )
-	analogout_select.value( False )
-	mux_vcca_en.value( False )
-	pot_idle.value( False )
-
-	ldo1	= BusInOut( [ "D4", "D1", "D0" ] )
-	ldo2	= BusInOut( [ "D2", "D3" ] )
+	"""
+	"A2": SPI = 0, I2C = 1
+	"A3": 0 to route op-amp output to "A1"
+	"D5": 0 to Disconnect CS and set address 0x5A, 1 to connrct CS to AD5161
+	"""
+	setting	= BusInOut( [ "A2", "A3", "D5" ], output = True )
+	ldo1	= BusInOut( [ "D4", "D1", "D0" ], output = True )
+	ldo2	= BusInOut( [ "D2", "D3" ], output = True )
 	alt_spi	= BusInOut( [ "D6", "D7", "D8", "D9" ] )
-	
-	ldo1.output()
-	ldo2.output()
-	alt_spi.input()
-	
+		
+	setting.v	= 0b100
 	ldo1.v	= 3
 	ldo2.v	= 1
 	intf	= I2C( 0, freq = (400 * 1000) )
@@ -254,30 +245,21 @@ def test_AD5161_I2C():
 	while True:
 		for i in range( 256 ):
 			pot.value( i )
-			print( f"{i:3}  {adc.read_u16()/65536}" )
+			rb	= pot.value()
+			ad	= 3.3 * adc.read_u16() / 65536
+			print( f"sent: {i:3}  read back: {rb:3}  output voltage: {ad:4.2f}V", end = "\r" )
 			sleep( 0.01 )
 	
 def test_AD5161_SPI():
 	from	machine		import	Pin, SPI, ADC
 	from	utime		import	sleep
 	
-	interface_select	= Pin( "A2", Pin.OUT )
-	analogout_select	= Pin( "A3", Pin.OUT )
-	mux_vcca_en			= Pin( "D4", Pin.OUT )
-	pot_idle			= Pin( "D5", Pin.OUT )
-	interface_select.value( False )
-	analogout_select.value( False )
-	mux_vcca_en.value( False )
-	pot_idle.value( True )
-	
-	ldo1	= BusInOut( [ "D4", "D1", "D0" ] )
-	ldo2	= BusInOut( [ "D2", "D3" ] )
+	setting	= BusInOut( [ "A2", "A3", "D5" ], output = True )
+	ldo1	= BusInOut( [ "D4", "D1", "D0" ], output = True )
+	ldo2	= BusInOut( [ "D2", "D3" ], output = True )
 	alt_spi	= BusInOut( [ "D6", "D7", "D8", "D9" ] )
 	
-	ldo1.output()
-	ldo2.output()
-	alt_spi.input()
-	
+	setting.v	= 0b001
 	ldo1.v	= 3
 	ldo2.v	= 1
 	
@@ -288,8 +270,9 @@ def test_AD5161_SPI():
 			
 	while True:
 		for i in range( 256 ):
-			pot.value( i )
-			print( f"{i:3}  {adc.read_u16()/65536}" )
+			rb	= pot.value( i )
+			ad	= 3.3 * adc.read_u16() / 65536
+			print( f"sent: {i:3}  read back (previous value): {rb:3}  output voltage: {ad:4.2f}V", end = "\r" )
 			sleep( 0.01 )
 
 def test_M24C02():

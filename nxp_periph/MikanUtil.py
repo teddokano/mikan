@@ -47,13 +47,16 @@ class MikanUtil:
 from	machine		import	Pin
 
 class BusInOut():	
-	def __init__( self, pin_labels ):
+	def __init__( self, pin_labels, output = False ):
 		self.pins	= []
 		
 		for label in pin_labels:
 			self.pins	+= [ Pin( label, Pin.IN ) ] if label else None
 
 		self.pins	= self.pins[::-1]
+		
+		if output:
+			self.output()
 
 	def config( self, mode = Pin.IN, pull = None ):
 		for pin in self.pins:
