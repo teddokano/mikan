@@ -1,3 +1,6 @@
+import	sys
+sys.path	+= ['lib']
+
 from	machine				import	I2C, SPI
 from nxp_periph.interface	import	Interface, I2C_target, SPI_target
 
