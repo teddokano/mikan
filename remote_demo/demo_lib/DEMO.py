@@ -66,9 +66,10 @@ def demo( ip = "dhcp", config = "Normal" ):
 		devices	= [
 					NAFE13388( spi ),
 					FXOS8700( i2c ),
-					P3T1755( i2c ),
+					P3T1755( i2c, 0x90 >> 1 ),
 					General_call( i2c ),
 					]
+		si2c	= i2c
 	else:
 		devices	= [
 					PCA9956B( i2c, 0x02 >>1 ),
