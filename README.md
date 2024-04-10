@@ -43,6 +43,7 @@ _"[remote_demo](https://github.com/teddokano/mikan/tree/main/remote_demo)" runni
 	- [PCAL6416](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/low-voltage-translating-16-bit-ic-bus-smbus-i-o-expander:PCAL6416A)
 	- [PCAL6524](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/ic-bus-controller-and-bridge-ics/ultra-low-voltage-translating-24-bit-fm-plus-ic-bus-smbus-i-o-expander:PCAL6524)
 	- [PCAL6534](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/ultra-low-voltage-level-translating-34-bit-ic-bus-smbus-i-o-expander:PCAL6534)
+	- [PCAL9722](https://www.nxp.com/products/interfaces/ic-spi-i3c-interface-devices/general-purpose-i-o-gpio/22-bit-spi-i-o-expander-with-agile-i-o-features:PCAL9722)
 - LCD driver
 	- [PCA8561](https://www.nxp.com/products/peripherals-and-logic/lcd-drivers/lcd-segment-drivers/automotive-18-x-4-lcd-segment-driver:PCA8561)
 - I²C bus multiplexer/switch
@@ -196,7 +197,11 @@ It shows simple usage examples for the drivers and standalome demo for target de
 🌡️|temp_sensor_demo_P3T1755DP-ARD.py		|example/ARD_boards/|Similar to “temp_sensor_demo_PCT2075DP-ARD” but no heater operation											|P3T1755
 🌡️|temp_sensor_demo_P3T1035_P3T2030-ARD.py	|example/ARD_boards/|All 8 sensors operated together																				|P3T1035, P3T2030
 ↕|GPIO_demo.py								|example/general/|Operation sample of a PCA9555 API																					|PCA9555
-↕|GPIO_demo_PCAL6xxxA-ARD.py				|example/general/|Operation sample of a PCAL6xxx ARD board. Using interrupt															|PCAL6408, PCAL6416, PCAL6524, PCAL6534
+↕|GPIO_demo_PCAL6xxxA-ARD.py				|example/general/|Operation sample of a PCAL6xxx ARD board																			|PCAL6408, PCAL6416, PCAL6524, PCAL6534
+↕|GPIO_PCAL6534A-ARD_simple.py				|example/ARD_boards/|Operation sample of a PCAL6534 ARD board																			|PCAL6534
+↕|GPIO_PCAL6534A-ARD_demo.py				|example/ARD_boards/|Operation sample of a PCAL6534 ARD board. Using interrupt															|PCAL6534
+↕|GPIO_PCAL9722A-ARD_simple.py				|example/ARD_boards/|Operation sample of a PCAL9722 API																				|PCAL9722
+↕|GPIO_PCAL9722-ARD_demo.py					|example/ARD_boards/|Operation sample of a PCAL9722 ARD board. Using interrupt														|PCAL9722
 🔠|LCD_demo_PCA8561AHN-ARD.py				|example/general/|Shows direct ON/OFF of segments and using  putc(), puts() methods													|PCA8561
 💁|protocol_bridge_SC16IS7xx.py				|example/general/|Operate an I²C/SPI to UART protocol bridge through MicroPython’s machine.UART equivalent APIs. 					|SC16IS7xx
 💁|protocol_bridge_SC18IS606_with_AT25010.py|example/general/|Operate an I²C to SPI protocol bridge through MicroPython’s machine.SPI equivalent APIs. AT25010 as an SPI target	|SC18IS606
