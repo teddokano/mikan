@@ -28,13 +28,13 @@ class RTC_base():
 		get/set date&time
 		
 		IF NO ARGUMENT GIVEN, it returns tuple of
-		  ( "year", "month", "day", "weekday",
-		    "hours", "minutes", "seconds", "subseconds" )
+		( "year", "month", "day", "weekday",
+		"hours", "minutes", "seconds", "subseconds" )
 		IF 1 OR 2 ARGUMENT ARE GIVEN, it sets date&time
 		the 1st argument should be 8-tuple in format with
-		  ( "year", "month", "day", "hours", "minutes",
-		    "seconds", "subseconds", "tzinfo" )
-		  the tzinfo is a dummy and it will be ignored.
+		( "year", "month", "day", "hours", "minutes",
+		"seconds", "subseconds", "tzinfo" )
+		the tzinfo is a dummy and it will be ignored.
 
 		Parameters
 		----------
@@ -84,10 +84,9 @@ class RTC_base():
 		datetime : tuple, optional
 			date&time tuple.
 			( "year", "month", "day", "hours",
-			  "minutes", "seconds", "subseconds", "tzinfo" )
+			"minutes", "seconds", "subseconds", "tzinfo" )
 			Need to have first 3 elements at least: "year", "month" and "day".
-			Other elements are optional
-			tzinfo is not required (ignored)
+			Other elements are optional tzinfo is not required (ignored)
 		weekday : int, optional
 			weekday number : 0~6 (default=0)
 			

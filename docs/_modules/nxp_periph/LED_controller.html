@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nxp_periph.LED_controller &mdash; mikan 1.15.0 documentation</title>
+  <title>nxp_periph.LED_controller &mdash; mikan 1.16.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=70d5d4a5"></script>
+        <script src="../../_static/documentation_options.js?v=46d28e57"></script>
         <script src="../../_static/doctools.js?v=888ff710"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -182,14 +182,14 @@
 <span class="sd">		See buf() method description. </span>
 
 <span class="sd">		Parameters (if 2 arguments given)</span>
-<span class="sd">		----------</span>
+<span class="sd">		---------------------------------</span>
 <span class="sd">		args[0] : int</span>
 <span class="sd">			Channel number</span>
 <span class="sd">		args[1] : int or float</span>
 <span class="sd">			PWM ratio in range of 0~255 or 0.0~1.0</span>
 <span class="sd">			</span>
 <span class="sd">		Parameters (if 1 argument given)</span>
-<span class="sd">		----------</span>
+<span class="sd">		--------------------------------</span>
 <span class="sd">		args[0] : list</span>
 <span class="sd">			The list may need to contain the number of LED</span>
 <span class="sd">			controller channels (self.CHANNELS) elements.</span>
@@ -234,7 +234,7 @@
 <span class="sd">		Examples</span>
 <span class="sd">		--------</span>
 <span class="sd">		for i in range( 24 ):</span>
-<span class="sd">			self.buf( i, i / 24 )	# LED brightness doesn&#39;t change</span>
+<span class="sd">		self.buf( i, i / 24 )	# LED brightness doesn&#39;t change</span>
 <span class="sd">		self.flash()				# LED controller updated in this timing</span>
 <span class="sd">		</span>
 <span class="sd">		Parameters</span>
@@ -242,9 +242,8 @@
 <span class="sd">		ch : int</span>
 <span class="sd">			Channel number</span>
 <span class="sd">		val : int or float</span>
-<span class="sd">			PWM value stored in buffer</span>
-<span class="sd">			Need to flush to refrect device behavior.</span>
-<span class="sd">			</span>
+<span class="sd">			PWM value stored in buffer. Need to flush to refrect device behavior.</span>
+<span class="sd">		</span>
 <span class="sd">		See Also</span>
 <span class="sd">		--------</span>
 <span class="sd">		pwm		: PWM setting</span>

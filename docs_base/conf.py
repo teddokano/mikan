@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath('../'))
 sys.modules['machine'] = MagicMock()
 sys.modules['utime'] = MagicMock()
 sys.modules['micropython'] = MagicMock()
+sys.modules['ure'] = MagicMock()
 
 
 # Configuration file for the Sphinx documentation builder.
@@ -20,7 +21,7 @@ sys.modules['micropython'] = MagicMock()
 project = 'mikan'
 copyright = '2024, Tedd OKANO'
 author = 'Tedd OKANO'
-release = '1.15.0'
+release = '1.16.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -43,4 +44,4 @@ autodoc_mock_imports = ['ustruct']
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+# html_static_path = ['_static']

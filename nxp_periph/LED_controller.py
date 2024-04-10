@@ -105,14 +105,14 @@ class LED_controller_base:
 		See buf() method description. 
 
 		Parameters (if 2 arguments given)
-		----------
+		---------------------------------
 		args[0] : int
 			Channel number
 		args[1] : int or float
 			PWM ratio in range of 0~255 or 0.0~1.0
 			
 		Parameters (if 1 argument given)
-		----------
+		--------------------------------
 		args[0] : list
 			The list may need to contain the number of LED
 			controller channels (self.CHANNELS) elements.
@@ -154,7 +154,7 @@ class LED_controller_base:
 		Examples
 		--------
 		for i in range( 24 ):
-			self.buf( i, i / 24 )	# LED brightness doesn't change
+		self.buf( i, i / 24 )	# LED brightness doesn't change
 		self.flash()				# LED controller updated in this timing
 		
 		Parameters
@@ -162,9 +162,8 @@ class LED_controller_base:
 		ch : int
 			Channel number
 		val : int or float
-			PWM value stored in buffer
-			Need to flush to refrect device behavior.
-			
+			PWM value stored in buffer. Need to flush to refrect device behavior.
+		
 		See Also
 		--------
 		pwm		: PWM setting

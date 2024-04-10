@@ -114,7 +114,7 @@ class PCA9555( GPIO_base, I2C_target ):
 	
 	A device class for an industry standard 16 bit GPIO expander
 	This class can operate its family devices of
-	  PCA9555A and PCA9539
+	PCA9555A and PCA9539
 	
 	"""
 	DEFAULT_ADDR	= 0x40 >> 1
@@ -148,7 +148,7 @@ class PCA9554( GPIO_base, I2C_target ):
 	
 	A device class for an industry standard 8 bit GPIO expander
 	This class can operate its family devices of
-	  PCA9554A, PCA9554B, PCA954C and PCA9538
+	PCA9554A, PCA9554B, PCA954C and PCA9538
 	
 	"""
 	DEFAULT_ADDR	= 0x40 >> 1

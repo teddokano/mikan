@@ -329,14 +329,14 @@ class SC18IS606( I2C_target ):
 	The instance of SC18IS606 class will be machine.SPI compatible object.
 	
 	Examples
-    --------
+	--------
 	When an AT25010 is connected to an SPI...
-		>>> spi		= SPI( 0, 1000 * 1000, cs = 0 )
-		>>> eeprom	= AT25010( spi )
+	>>> spi		= SPI( 0, 1000 * 1000, cs = 0 )
+	>>> eeprom	= AT25010( spi )
 	When an AT25010 is connected through SC18IS606...
-		>>> i2c		= I2C( 0, 400 * 1000 )
-		>>> bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
-		>>> eeprom	= AT25010( bridge )		# Give SC18IS606 instance as an SPI
+	>>> i2c		= I2C( 0, 400 * 1000 )
+	>>> bridge	= SC18IS606( i2c, 1, int = Pin( "D2", Pin.IN, Pin.PULL_UP ) )
+	>>> eeprom	= AT25010( bridge )		# Give SC18IS606 instance as an SPI
 
 	"""
 	DEFAULT_ADDRESS	= 0x28
