@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nxp_periph.ard_brd_dev &mdash; mikan 1.16.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=46d28e57"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            mikan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">mikan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nxp_periph.ard_brd_dev</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nxp_periph.ard_brd_dev</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span>	<span class="nn">nxp_periph.interface</span>	<span class="kn">import</span>	<span class="n">I2C_target</span><span class="p">,</span> <span class="n">SPI_target</span>
+<span class="kn">from</span>	<span class="nn">utime</span>					<span class="kn">import</span>	<span class="n">sleep_ms</span>
+
+<div class="viewcode-block" id="EEPROM_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.EEPROM_base">[docs]</a>
+<span class="k">class</span> <span class="nc">EEPROM_base</span><span class="p">():</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	An abstraction class to make user interface.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EEPROM_base.write">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.EEPROM_base.write">[docs]</a>
+	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">byte_addr</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		write data</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		byte_addr : int</span>
+<span class="sd">			Start byte address for EEPROM data writing</span>
+<span class="sd">		data : list or str</span>
+<span class="sd">				</span>
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		int : Written data length</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="nb">str</span> <span class="p">):</span>
+			<span class="n">data</span>	<span class="o">=</span> <span class="p">[</span> <span class="nb">ord</span><span class="p">(</span> <span class="n">i</span> <span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span> <span class="p">]</span>
+			
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__write</span><span class="p">(</span> <span class="n">byte_addr</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span></div>
+
+		
+<div class="viewcode-block" id="EEPROM_base.wait_write_complete">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.EEPROM_base.wait_write_complete">[docs]</a>
+	<span class="k">def</span> <span class="nf">wait_write_complete</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		wait loop until write complete</span>
+<span class="sd">		</span>
+<span class="sd">		This will raise exception if write couldn;t be completed</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		times : int (option)</span>
+<span class="sd">			loop time setting</span>
+<span class="sd">				</span>
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		int : Written data length</span>
+
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__wait_write_complete</span><span class="p">(</span> <span class="n">times</span> <span class="p">)</span></div>
+
+		
+<div class="viewcode-block" id="EEPROM_base.read">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.EEPROM_base.read">[docs]</a>
+	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">byte_addr</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		read data</span>
+<span class="sd">		</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		byte_addr : int</span>
+<span class="sd">			Start byte address for EEPROM data writing</span>
+<span class="sd">		length : int</span>
+<span class="sd">			Data length to read</span>
+<span class="sd">		format : str (option)</span>
+<span class="sd">			If format is &quot;str&quot;, it will return data in string</span>
+<span class="sd">					</span>
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		int : Written data length</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">data</span>	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__read</span><span class="p">(</span> <span class="n">byte_addr</span><span class="p">,</span> <span class="n">length</span> <span class="p">)</span>
+		
+		<span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s2">&quot;str&quot;</span><span class="p">:</span>
+			<span class="n">data</span>	<span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="nb">chr</span><span class="p">,</span> <span class="n">data</span> <span class="p">)</span> <span class="p">)</span>
+			
+		<span class="k">return</span> <span class="n">data</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EEPROM_Error">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.EEPROM_Error">[docs]</a>
+<span class="k">class</span> <span class="nc">EEPROM_Error</span><span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Just a class for EEPROM exception handling</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="M24C02">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.M24C02">[docs]</a>
+<span class="k">class</span> <span class="nc">M24C02</span><span class="p">(</span> <span class="n">EEPROM_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="mh">0xA0</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Initializer for M24C02</span>
+<span class="sd">			</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		i2c		: machine.I2C instance</span>
+<span class="sd">		address	: int, option</span>
+<span class="sd">			</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">I2C_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">__write</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">byte_addr</span><span class="p">,</span> <span class="n">data</span> <span class="p">):</span>
+		<span class="n">page_size</span>	<span class="o">=</span> <span class="mi">16</span>
+		<span class="n">written</span>		<span class="o">=</span> <span class="mi">0</span>
+
+		<span class="n">length</span>	<span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">wait_write_complete</span><span class="p">()</span>
+		
+		<span class="k">while</span> <span class="n">length</span><span class="p">:</span>
+			<span class="n">w_size</span>	<span class="o">=</span> <span class="n">page_size</span> <span class="k">if</span> <span class="n">page_size</span> <span class="o">&lt;</span> <span class="n">length</span> <span class="k">else</span> <span class="n">length</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="n">byte_addr</span> <span class="o">+</span> <span class="n">written</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span> <span class="n">written</span> <span class="p">:</span> <span class="n">written</span> <span class="o">+</span> <span class="n">w_size</span> <span class="p">]</span> <span class="p">)</span>
+			<span class="n">written</span>	<span class="o">+=</span> <span class="n">w_size</span>
+			<span class="n">length</span>	<span class="o">-=</span> <span class="n">w_size</span>
+			
+			<span class="bp">self</span><span class="o">.</span><span class="n">wait_write_complete</span><span class="p">()</span>
+
+		<span class="k">return</span> <span class="n">written</span>
+		
+	<span class="k">def</span> <span class="nf">__wait_write_complete</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">times</span> <span class="p">):</span>
+		<span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ping</span><span class="p">())</span> <span class="ow">and</span> <span class="n">times</span><span class="p">:</span>
+			<span class="n">times</span>	<span class="o">-=</span> <span class="mi">1</span>
+			<span class="n">sleep_ms</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span>
+		
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="n">EEPROM_Error</span><span class="p">(</span> <span class="s2">&quot;EEPROM write couldn&#39;t be complete&quot;</span> <span class="p">)</span>
+		
+		<span class="k">return</span> <span class="n">times</span>
+		
+	<span class="k">def</span> <span class="nf">__read</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">byte_addr</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">read_registers</span><span class="p">(</span> <span class="n">byte_addr</span> <span class="p">)</span>
+		
+		<span class="n">page_size</span>	<span class="o">=</span> <span class="mi">32</span>
+		<span class="n">read_done</span>	<span class="o">=</span> <span class="mi">0</span>
+		<span class="n">data</span>		<span class="o">=</span> <span class="p">[]</span>
+		
+		<span class="k">while</span> <span class="n">length</span><span class="p">:</span>
+			<span class="n">r_size</span>		 <span class="o">=</span> <span class="n">page_size</span> <span class="k">if</span> <span class="n">page_size</span> <span class="o">&lt;</span> <span class="n">length</span> <span class="k">else</span> <span class="n">length</span>
+			<span class="n">data</span>		<span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_registers</span><span class="p">(</span> <span class="n">byte_addr</span> <span class="o">+</span> <span class="n">read_done</span><span class="p">,</span> <span class="n">r_size</span> <span class="p">)</span>
+			<span class="n">read_done</span>	<span class="o">+=</span> <span class="n">r_size</span>
+			<span class="n">length</span>		<span class="o">-=</span> <span class="n">r_size</span>
+			
+		<span class="k">return</span> <span class="n">data</span>
+
+	<span class="k">def</span> <span class="nf">__wait_write_complete</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">):</span>
+		<span class="k">while</span> <span class="n">times</span><span class="p">:</span>
+			<span class="n">sleep_ms</span><span class="p">(</span> <span class="mi">4</span> <span class="p">)</span>
+			<span class="n">times</span>	<span class="o">-=</span> <span class="mi">1</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ping</span><span class="p">():</span>
+				<span class="k">break</span>
+		
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">times</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="n">EEPROM_Error</span><span class="p">(</span> <span class="s2">&quot;EEPROM write couldn&#39;t be completed&quot;</span> <span class="p">)</span>
+		
+		<span class="k">return</span> <span class="n">times</span></div>
+
+
+<div class="viewcode-block" id="test_M24C02">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.test_M24C02">[docs]</a>
+<span class="k">def</span> <span class="nf">test_M24C02</span><span class="p">():</span>
+	<span class="kn">from</span>	<span class="nn">machine</span>		<span class="kn">import</span>	<span class="n">I2C</span>
+	<span class="kn">from</span>	<span class="nn">utime</span>		<span class="kn">import</span>	<span class="n">sleep</span>
+	
+	<span class="n">i2c</span>		<span class="o">=</span> <span class="n">I2C</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">freq</span> <span class="o">=</span> <span class="p">(</span><span class="mi">400</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">)</span>
+	<span class="n">eeprom</span>	<span class="o">=</span> <span class="n">M24C02</span><span class="p">(</span> <span class="n">i2c</span> <span class="p">)</span>
+	
+	<span class="nb">print</span><span class="p">(</span> <span class="n">eeprom</span><span class="o">.</span><span class="n">info</span><span class="p">()</span> <span class="p">)</span>
+
+	<span class="n">test_list</span>	<span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">ord</span><span class="p">(</span> <span class="s1">&#39;A&#39;</span> <span class="p">),</span> <span class="nb">ord</span><span class="p">(</span> <span class="s1">&#39;z&#39;</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)]</span>
+
+	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+		<span class="n">eeprom</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">test_list</span> <span class="p">)</span>
+		<span class="n">read_data</span>	<span class="o">=</span> <span class="n">eeprom</span><span class="o">.</span><span class="n">read</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span> <span class="n">test_list</span> <span class="p">)</span> <span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s1">&#39;read result = &quot;</span><span class="si">{</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">chr</span><span class="p">,</span><span class="w"> </span><span class="n">read_data</span><span class="p">))</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="p">)</span>
+
+		<span class="n">eeprom</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">test_list</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+		<span class="n">read_data</span>	<span class="o">=</span> <span class="n">eeprom</span><span class="o">.</span><span class="n">read</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span> <span class="n">test_list</span> <span class="p">),</span> <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;str&quot;</span> <span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s1">&#39;read result = &quot;</span><span class="si">{</span><span class="n">read_data</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="p">)</span>
+		
+		<span class="n">sleep</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Potentiometer_base">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.Potentiometer_base">[docs]</a>
+<span class="k">class</span> <span class="nc">Potentiometer_base</span><span class="p">():</span>
+	<span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AD5161_I2C">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.AD5161_I2C">[docs]</a>
+<span class="k">class</span> <span class="nc">AD5161_I2C</span><span class="p">(</span> <span class="n">Potentiometer_base</span><span class="p">,</span> <span class="n">I2C_target</span> <span class="p">):</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="mh">0x5A</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+	
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span> <span class="n">DEFAULT_ADDR</span> <span class="p">):</span>
+		<span class="n">I2C_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i2c</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span>
+		
+<div class="viewcode-block" id="AD5161_I2C.value">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.AD5161_I2C.value">[docs]</a>
+	<span class="k">def</span> <span class="nf">value</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
+		<span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)[</span> <span class="mi">0</span> <span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">write_registers</span><span class="p">(</span> <span class="mh">0x00</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="AD5161_SPI">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.AD5161_SPI">[docs]</a>
+<span class="k">class</span> <span class="nc">AD5161_SPI</span><span class="p">(</span> <span class="n">Potentiometer_base</span><span class="p">,</span> <span class="n">SPI_target</span> <span class="p">):</span>
+	<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="mh">0x5A</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+	
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">spi</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
+		<span class="n">SPI_target</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">spi</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span>
+				
+<div class="viewcode-block" id="AD5161_SPI.value">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.AD5161_SPI.value">[docs]</a>
+	<span class="k">def</span> <span class="nf">value</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="kc">None</span> <span class="p">):</span>
+		<span class="c1"># 2 bytes same values are sent to read back the first written byte</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">receive</span><span class="p">(</span> <span class="p">[</span> <span class="n">v</span> <span class="p">]</span> <span class="p">)[</span> <span class="mi">0</span> <span class="p">]</span></div>
+</div>
+
+
+
+<span class="kn">from</span>	<span class="nn">machine</span>		<span class="kn">import</span>	<span class="n">I2C</span><span class="p">,</span> <span class="n">SPI</span>
+
+<span class="n">DEFAULT_ADDR</span>	<span class="o">=</span> <span class="mh">0x5A</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+<span class="n">DEFAULT_CS</span>		<span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="AD5161">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.AD5161">[docs]</a>
+<span class="k">def</span> <span class="nf">AD5161</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="o">=</span>  <span class="n">DEFAULT_ADDR</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="n">DEFAULT_CS</span> <span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	A constructor interface for AD5161</span>
+
+<span class="sd">	Parameters</span>
+<span class="sd">	----------</span>
+<span class="sd">	interface	: machine.I2C or machine.SPI object</span>
+<span class="sd">	address		: int, option</span>
+<span class="sd">		If need to specify (for I2C interface)</span>
+<span class="sd">	cs			: machine.Pin object</span>
+<span class="sd">		If need to specify (for SPI interface)</span>
+
+<span class="sd">	Returns</span>
+<span class="sd">	-------</span>
+<span class="sd">	AD5161_I2C or AD5161_SPI object</span>
+<span class="sd">		returns AD5161_I2C when interface == I2C</span>
+<span class="sd">		returns AD5161_SPI when interface == SPI</span>
+
+<span class="sd">	Examples</span>
+<span class="sd">	--------</span>
+<span class="sd">	For using I2C</span>
+<span class="sd">		&gt;&gt;&gt; intf = I2C( 0, freq = (400 * 1000) )</span>
+<span class="sd">		&gt;&gt;&gt; rtc  = AD5161( intf )</span>
+<span class="sd">	For using SPI</span>
+<span class="sd">		&gt;&gt;&gt; intf = SPI( 0, 500 * 1000, cs = 0 )</span>
+<span class="sd">		&gt;&gt;&gt; rtc  = AD5161( intf )</span>
+<span class="sd">	</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">I2C</span> <span class="p">):</span>
+		<span class="k">return</span> <span class="n">AD5161_I2C</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">address</span> <span class="p">)</span>
+
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">SPI</span> <span class="p">):</span>
+		<span class="k">return</span> <span class="n">AD5161_SPI</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">cs</span> <span class="p">)</span></div>
+
+
+			
+
+<div class="viewcode-block" id="test_AD5161">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.test_AD5161">[docs]</a>
+<span class="k">def</span> <span class="nf">test_AD5161</span><span class="p">(</span> <span class="n">sel_I2C</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">):</span>
+	<span class="kn">from</span>	<span class="nn">machine</span>		<span class="kn">import</span>		<span class="n">Pin</span><span class="p">,</span> <span class="n">I2C</span><span class="p">,</span> <span class="n">ADC</span>
+	<span class="kn">from</span>	<span class="nn">utime</span>		<span class="kn">import</span>		<span class="n">sleep</span>
+	<span class="kn">from</span>	<span class="nn">nxp_periph.MikanUtil</span>	<span class="kn">import</span>	<span class="n">BusInOut</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	&quot;A2&quot;: SPI = 0, I2C = 1</span>
+<span class="sd">	&quot;A3&quot;: 0 to route op-amp output to &quot;A1&quot;</span>
+<span class="sd">	&quot;D5&quot;: 0 to Disconnect CS and set address 0x5A, 1 to connrct CS to AD5161</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">setting</span>	<span class="o">=</span> <span class="n">BusInOut</span><span class="p">(</span> <span class="p">[</span> <span class="s2">&quot;A2&quot;</span><span class="p">,</span> <span class="s2">&quot;A3&quot;</span><span class="p">,</span> <span class="s2">&quot;D5&quot;</span> <span class="p">],</span> <span class="n">output</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span>
+	<span class="n">ldo1</span>	<span class="o">=</span> <span class="n">BusInOut</span><span class="p">(</span> <span class="p">[</span> <span class="s2">&quot;D4&quot;</span><span class="p">,</span> <span class="s2">&quot;D1&quot;</span><span class="p">,</span> <span class="s2">&quot;D0&quot;</span> <span class="p">],</span> <span class="n">output</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span>
+	<span class="n">ldo2</span>	<span class="o">=</span> <span class="n">BusInOut</span><span class="p">(</span> <span class="p">[</span> <span class="s2">&quot;D3&quot;</span><span class="p">,</span> <span class="s2">&quot;D2&quot;</span> <span class="p">],</span> <span class="n">output</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span>
+	<span class="n">alt_spi</span>	<span class="o">=</span> <span class="n">BusInOut</span><span class="p">(</span> <span class="p">[</span> <span class="s2">&quot;D6&quot;</span><span class="p">,</span> <span class="s2">&quot;D7&quot;</span><span class="p">,</span> <span class="s2">&quot;D8&quot;</span><span class="p">,</span> <span class="s2">&quot;D9&quot;</span> <span class="p">]</span> <span class="p">)</span>
+	<span class="n">adc</span>		<span class="o">=</span> <span class="n">ADC</span><span class="p">(</span> <span class="n">Pin</span><span class="p">(</span> <span class="s2">&quot;A0&quot;</span> <span class="p">)</span> <span class="p">)</span>
+	
+	<span class="k">if</span> <span class="n">sel_I2C</span><span class="p">:</span>
+		<span class="n">setting</span><span class="o">.</span><span class="n">v</span>	<span class="o">=</span> <span class="mb">0b100</span>
+		<span class="n">s0</span>			<span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="n">pot</span>			<span class="o">=</span> <span class="n">AD5161</span><span class="p">(</span> <span class="n">I2C</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">freq</span> <span class="o">=</span> <span class="p">(</span><span class="mi">400_000</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">setting</span><span class="o">.</span><span class="n">v</span>	<span class="o">=</span> <span class="mb">0b001</span>
+		<span class="n">s0</span>			<span class="o">=</span> <span class="s2">&quot;(previous value)&quot;</span>
+		<span class="n">pot</span>			<span class="o">=</span> <span class="n">AD5161</span><span class="p">(</span> <span class="n">SPI</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1000_000</span><span class="p">,</span> <span class="n">cs</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">)</span>
+
+
+	<span class="n">v1_values</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">0.95</span> <span class="p">]</span>
+	<span class="n">v2_values</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">1.8</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">,</span> <span class="mf">4.96</span><span class="p">]</span>
+
+	<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">v1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">5</span> <span class="p">):</span>
+			<span class="n">ldo1</span><span class="o">.</span><span class="n">v</span>	<span class="o">=</span> <span class="n">v1</span>
+			<span class="k">for</span> <span class="n">v2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">4</span> <span class="p">):</span>
+				<span class="n">ldo2</span><span class="o">.</span><span class="n">v</span>	<span class="o">=</span> <span class="n">v2</span>
+				
+				<span class="k">if</span> <span class="n">v1_values</span><span class="p">[</span> <span class="n">v1</span> <span class="p">]</span> <span class="o">&gt;</span> <span class="n">v2_values</span><span class="p">[</span> <span class="n">v2</span> <span class="p">]:</span>
+					<span class="k">continue</span>
+					
+				<span class="nb">print</span><span class="p">(</span>
+					<span class="s2">&quot;New voltages are set: LDO1 = </span><span class="si">{}</span><span class="s2">V, LDO2 = </span><span class="si">{}</span><span class="s2">V&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+						<span class="n">v1_values</span><span class="p">[</span><span class="n">v1</span><span class="p">],</span> <span class="n">v2_values</span><span class="p">[</span><span class="n">v2</span><span class="p">]</span>
+					<span class="p">)</span>
+				<span class="p">)</span>
+				<span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            
+				<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">256</span> <span class="p">):</span>
+					<span class="k">if</span> <span class="n">sel_I2C</span><span class="p">:</span>
+						<span class="n">pot</span><span class="o">.</span><span class="n">value</span><span class="p">(</span> <span class="n">i</span> <span class="p">)</span>
+						<span class="n">rb</span>	<span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="n">rb</span>	<span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">value</span><span class="p">(</span> <span class="n">i</span> <span class="p">)</span>
+						
+					<span class="n">ad</span>	<span class="o">=</span> <span class="mf">3.3</span> <span class="o">*</span> <span class="n">adc</span><span class="o">.</span><span class="n">read_u16</span><span class="p">()</span> <span class="o">/</span> <span class="mi">65536</span>
+					<span class="nb">print</span><span class="p">(</span> <span class="sa">f</span><span class="s2">&quot;sent: </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">  read back</span><span class="si">{</span><span class="n">s0</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">rb</span><span class="si">:</span><span class="s2">3</span><span class="si">}</span><span class="s2">  output voltage: </span><span class="si">{</span><span class="n">ad</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">V&quot;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span> <span class="p">)</span>
+					<span class="n">sleep</span><span class="p">(</span> <span class="mf">0.005</span> <span class="p">)</span>
+	
+				<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;&quot;</span> <span class="p">)</span></div>
+
+			
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../nxp_periph.html#nxp_periph.ard_brd_dev.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+	<span class="c1">#test_M24C02()</span>
+	<span class="n">test_AD5161</span><span class="p">(</span> <span class="n">sel_I2C</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+	<span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tedd OKANO.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
