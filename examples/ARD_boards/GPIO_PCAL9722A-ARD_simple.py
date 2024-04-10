@@ -15,8 +15,8 @@ gpio.pull_en = [0xFF] * gpio.__np
 count = 0
 
 while True:
-    gpio.value = [count] * 2
-    count = (count + 1) & 0xFF
+    gpio.value = [(0xFF << count % 9)] + [~(0x1 << count % 6)]
+    count += 1
 
     r = gpio.value
     print("port read = {}".format(["0b{:08b}".format(i) for i in r]), end="\r")
