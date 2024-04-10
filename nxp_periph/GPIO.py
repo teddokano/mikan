@@ -1,4 +1,4 @@
-from nxp_periph.interface	import	I2C_target
+from nxp_periph.interface	import	I2C_target, SPI_target
 
 class GPIO_base():
 	"""
@@ -584,11 +584,218 @@ class PCAL6534( PCAL65xx_base ):
 		self.__ps	= "Pull-up/pull-down selection register port 0"
 		self.__np	= self.N_PORTS
 
-from	machine		import	Pin, I2C, Timer
-#from	nxp_periph	import	PCAL6416, PCAL6408
+
+class PCAL97xx_base( GPIO_base, SPI_target ):
+	def __init__( self, spi, cs, *, address = 0x20 ):
+		SPI_target.__init__( self, spi, cs )
+		self.REG_LIST	= [ { "idx": self.REG_NAME.index( rn ), "name": rn } for rn in self.REG_NAME if rn is not "reserved" ]
+		self.address	= address
+		
+	def __setup_EVB( self ):
+		"""
+		setting up RESET and OE pins on PCAL6408AEV-ARD evaluation board
+		"""
+		from machine import Pin
+		from utime import sleep
+		
+		print( "PCAL97xx-ARD setting done." )
+		rst	= Pin( "D6", Pin.OUT )
+		rst.value( 0 )
+		sleep( 0.001 )
+		rst.value( 1 )
+
+	@property
+	def mask( self ):
+		return self.read_registers( self.__im, self.__np )
+
+	@mask.setter
+	def mask( self, v ):
+		self.write_registers( self.__im, v )
+
+	@property
+	def pull_en( self ):
+		return self.read_registers( self.__pe, self.__np )
+
+	@pull_en.setter
+	def pull_en( self, v ):
+		self.write_registers( self.__pe, v )
+
+	@property
+	def pull_up( self ):
+		return self.read_registers( self.__ps, self.__np )
+
+	@pull_up.setter
+	def pull_up( self, v ):
+		self.write_registers( self.__ps, v )
+
+	@property
+	def status( self ):
+		return 	self.read_registers( self.__is, self.__np )
+
+	def write_registers( self, reg, data ):
+		"""
+		writing registers
+	
+		Parameters
+		----------
+		reg : string or int
+			Register name or register address/pointer.
+		data : list or int
+			Data for sending.
+			List for multibyte sending. List is converted to
+			bytearray before sending.
+			If the data is integer, single byte will be sent.
+			
+		"""
+		#print( "SPI write_registers: {}, {}".format( reg, data ) )
+		
+		reg		= self.REG_NAME.index( reg ) if type( reg ) != int else reg
+		
+		if type( data ) == int:
+			data	= [ data ]
+		
+		self.send( [ self.address << 1, reg | 0x80 ] + data )
+		
+	def read_registers( self, reg, length ):
+		"""
+		reading registers
+	
+		Parameters
+		----------
+		reg : string or int
+			Register name or register address/pointer.
+		length : int
+			Number of bytes for receiveing.
+
+		"""
+		#print( "SPI read_registers: {}, {}".format( reg, length ) )
+		
+		reg		 = self.REG_NAME.index( reg ) if type( reg ) != int else reg
+
+		r	= self.receive( [self.address << 1 | 0x1, reg | 0x80 ] + [ 0x00 ] * length )
+
+		return r[ 2 ] if 1 == length else r[ 2: ]
+
+class PCAL9722( PCAL97xx_base ):
+	"""
+	PCAL9722: 22 bit GPIO expander
+	
+	"""
+	ADDR_BIT		= 0
+	DEFAULT_ADDR	= (0x40 >> 1) + ADDR_BIT
+	N_PORTS			= 3
+	N_BITS			= 22
+	
+	REG_NAME_0x00	= [ "Input Port 0", "Input Port 1", "Input Port 2", "reserved", 
+						"Output Port 0", "Output Port 1", "Output Port 2", "reserved", 
+						"Polarity Inversion port 0",  "Polarity Inversion port 1", "Polarity Inversion port 2", "reserved", 
+						"Configuration port 0", "Configuration port 1", "Configuration port 2",
+						]
+	REG_NAME_0x40	= [ "Output drive strength register port 0A", "Output drive strength register port 0B", 
+						"Output drive strength register port 1A", "Output drive strength register port 1B", 
+						"Output drive strength register port 2A", "Output drive strength register port 2B", 
+						"reserved", "reserved", 
+						"Input latch register port 0", 
+						"Input latch register port 1", 
+						"Input latch register port 2", 
+						"reserved", 
+						"Pull-up/pull-down enable register port 0", 
+						"Pull-up/pull-down enable register port 1", 
+						"Pull-up/pull-down enable register port 2", 
+						"reserved", 
+						"Pull-up/pull-down selection register port 0", 
+						"Pull-up/pull-down selection register port 1", 
+						"Pull-up/pull-down selection register port 2", 
+						"reserved", 
+						"Interrupt mask register port 0", 
+						"Interrupt mask register port 1", 
+						"Interrupt mask register port 2", 
+						"reserved", 
+						"Interrupt status register port 0", 
+						"Interrupt status register port 1", 
+						"Interrupt status register port 2", 
+						"reserved", 
+						"Output port configuration register", 
+						"reserved", 
+						"reserved", 
+						"reserved", 
+						"Interrupt edge register port 0A", "Interrupt edge register port 0B", 
+						"Interrupt edge register port 1A", "Interrupt edge register port 1B", 
+						"Interrupt edge register port 2A", "Interrupt edge register port 2B", 
+						"reserved", "reserved", 
+						"Interrupt clear register port 0", 
+						"Interrupt clear register port 1", 
+						"Interrupt clear register port 2", 
+						"reserved", 
+						"Input status port 0", 
+						"Input status port 1", 
+						"Input status port 2", 
+						"reserved", 
+						"Individual pin output port 0 configuration register", 
+						"Individual pin output port 1 configuration register", 
+						"Individual pin output port 2 configuration register", 
+						"reserved", 
+						"Switch debounce enable 0", 
+						"Switch debounce enable 1", 
+						"Switch debounce count"
+						]
+	REG_NAME	= REG_NAME_0x00 + [ "reserved" ] * (0x40 - len( REG_NAME_0x00 )) + REG_NAME_0x40
+
+	def __init__( self, spi, cs = None, *, address = DEFAULT_ADDR, setup_EVB = False ):
+		"""
+		Parameters
+		----------
+		spi		: SPI instance
+		cs		: ChipSelect, option
+		address	: int, option
+		setup_EVB	: int, option
+
+		"""
+		super().__init__( spi, cs, address = address )
+
+		if setup_EVB:
+			self.__setup_EVB()
+			
+		self.__in	= "Input Port 0"
+		self.__out	= "Output Port 0"
+		self.__pol	= "Polarity Inversion port 0"
+		self.__cfg	= "Configuration port 0"
+		self.__im	= "Interrupt mask register port 0"
+		self.__is	= "Interrupt status register port 0"
+		self.__pe	= "Pull-up/pull-down enable register port 0"
+		self.__ps	= "Pull-up/pull-down selection register port 0"
+		self.__np	= self.N_PORTS
+
+from	machine		import	Pin, I2C, SPI, Timer
 import	utime
 
 def main():
+	main_test_PCAL9722()
+
+def main_test_PCAL9722():
+	spi	= SPI( 0, 1000 * 1000, cs = 0 )
+	gpio = PCAL9722(spi, setup_EVB=True)
+
+	io_config_and_pull_up = [0x00, 0x00, 0x3F]
+
+	gpio.config = io_config_and_pull_up
+	gpio.pull_up = io_config_and_pull_up
+	gpio.mask = [~v for v in io_config_and_pull_up]
+	gpio.pull_en = [0xFF] * gpio.__np
+
+	count = 0
+
+	while True:
+		gpio.value = [count] * 2
+		count = (count + 1) & 0xFF
+
+		r = gpio.value
+		print("port read = {}".format(["0b{:08b}".format(i) for i in r]), end="\r")
+		
+		utime.sleep( 0.1 )
+
+
+def main_test_PCAL65xx():
 	from nxp_periph.MikanUtil	import	MikanUtil
 
 	int_flag	= False
