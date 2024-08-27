@@ -2,7 +2,7 @@ from machine import Pin, I2C, SPI, ADC
 from utime import sleep
 from nxp_periph import AD5161, BusInOut
 
-sel_I2C = True  # set True for I2C demo, False for SPI demo
+sel_I2C = False  # set True for I2C demo, False for SPI demo
 
 """
 NTS0304EUK-ARD jumper settings may need to be changed. 
@@ -51,7 +51,7 @@ while True:
                     v1_values[v1], v2_values[v2]
                 )
             )
-            sleep(1)
+            sleep(0.8)
 
             for i in range(256):
                 if sel_I2C:
@@ -65,7 +65,7 @@ while True:
                     f"sent: {i:3}  read back{s0}: {rb:3}  output voltage: {ad:4.2f}V",
                     end="\r",
                 )
-                sleep(0.005)
+                sleep(0.01)
 
             print("")
             print("")
