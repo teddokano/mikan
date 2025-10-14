@@ -92,7 +92,7 @@ class NAFE13388( AFE_base, SPI_target ):
 		AFE periodic operation starter
 		"""
 		tim0 = Timer( MikanUtil.get_timer_id( 0 ) )
-		tim0.init( period= 100, callback = self.tim_cb )
+		tim0.init( period= 50, callback = self.tim_cb )
 
 	def sch_cb( self, _ ):
 		"""
@@ -367,9 +367,14 @@ def main():
 	while True:
 		if afe.done:
 			afe.done	= False
-#			print( f"{count},  {afe.ch[ 0 ]} μV,  {afe.ch[ 1 ]} μV" )
-			print( f"{afe.ch[ 0 ]:.3f},  {afe.ch[ 1 ]:.3f}" )
-#			print( f"{afe.ch[ 0 ]},  {afe.ch[ 1 ]}" )
+#			print( f"{afe.ch[ 0 ]:.3f},  {afe.ch[ 1 ]:.3f}" )
+
+			for i in range( afe.num_logcal_ch ):
+#				print( f">ch{i}: {afe.ch[i] / 1000_000}" )
+				print( f"{afe.ch[i] / 1000_000}, ", end = "" )
+
+			print( "" )
+				
 			count	+= 1
 
 if __name__ == "__main__":
