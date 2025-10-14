@@ -63,7 +63,7 @@ class NAFE13388( AFE_base, SPI_target ):
 		
 		self.pga_gain			= [ 0.2, 0.4, 0.8, 1, 2, 4, 8, 16 ]
 		self.coeff_microvolt	= [ 0 ] * 16
-		
+		self.num_logcal_ch		= 0
 		
 		cc0	= 0x0010;
 		cc1	= 0x007C;
