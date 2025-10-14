@@ -65,11 +65,8 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.coeff_microvolt	= [ 0 ] * 16
 		self.num_logcal_ch		= 0
 		
-		cc0	= 0x0010;
-		cc1	= 0x007C;
-		cc2	= 0x4C00;
-		cc3	= 0x0000;
-		
+		cc_base	= [ 0x0010, 0x007C, 0x4C00, 0x0000 ]
+		"""
 		self.logical_channel	= [
 									# self.logical_ch_config( 0, [ 0x1150, 0x00AC, 0x1400, 0x0000 ] ),
 									# self.logical_ch_config( 1, [ 0x3350, 0x00A4, 0x1400, 0x3060 ] ),
@@ -78,11 +75,17 @@ class NAFE13388( AFE_base, SPI_target ):
 									self.logical_ch_config( 0, [ 0x1070, 0x0084, 0x2900, 0x0000 ] ),
 									self.logical_ch_config( 1, [ 0x2070, 0x0084, 0x2900, 0x0000 ] ),
 									]
-
+		"""
+		for i in range( 4 ):
+			self.logical_ch_config( i * 2 + 0, [ cc_base[0] | ((i + 1) << 12) | (7       << 8), cc_base[1], cc_base[2], cc_base[3] ] )
+			self.logical_ch_config( i * 2 + 1, [ cc_base[0] | (7       << 12) | ((i + 1) << 8), cc_base[1], cc_base[2], cc_base[3] ] )
+			
 		print( f"================ self.num_logcal_ch = {self.num_logcal_ch}" )
 
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
+		
+		self.write_r16( 0x2003 )	# CMD_MC
 		
 	def periodic_measurement_start( self ):
 		"""
@@ -95,20 +98,16 @@ class NAFE13388( AFE_base, SPI_target ):
 		"""
 		AFE periodic operation callback via tim_cb()
 		"""
-		ch_start	= (self.cb_count + 1) % 2
-		ch_read		= self.cb_count % 2
 
 		# read data
-		self.ch[ ch_read ]	= self.read_r24( 0x2040 + ch_read )	* self.coeff_microvolt[ ch_read ]
+		
+		bits	= self.read_r16( 0x24 )
+		
+		for i in range( 16 ):
+			if bits & (0x1 << i):
+				self.ch[ i ]	= self.read_r24( 0x2040 + i )	* self.coeff_microvolt[ i ]
 
-		# start ADC operation
-		self.write_r16( 0x0000 + ch_start )
-		self.write_r16( 0x2000 )
-		
-		self.cb_count	+= 1
-		
-		if self.cb_count % 2:
-			self.done	= True
+		self.done	= True
 	
 	def tim_cb( self, tim_obj ):
 		"""
