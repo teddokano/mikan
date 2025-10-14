@@ -64,6 +64,12 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.pga_gain			= [ 0.2, 0.4, 0.8, 1, 2, 4, 8, 16 ]
 		self.coeff_microvolt	= [ 0 ] * 16
 		
+		
+		cc0	= 0x0010;
+		cc1	= 0x007C;
+		cc2	= 0x4C00;
+		cc3	= 0x0000;
+		
 		self.logical_channel	= [
 									# self.logical_ch_config( 0, [ 0x1150, 0x00AC, 0x1400, 0x0000 ] ),
 									# self.logical_ch_config( 1, [ 0x3350, 0x00A4, 0x1400, 0x3060 ] ),
@@ -230,7 +236,7 @@ class NAFE13388( AFE_base, SPI_target ):
 			else:
 				print( "" )
 
-	def logical_ch_config( self, logical_channel, list ):
+	def logical_ch_config( self, logical_channel_num, list ):
 		"""
 		Logical channel configuration
 
@@ -245,14 +251,14 @@ class NAFE13388( AFE_base, SPI_target ):
 				print( "0x{:04X} = {:04X}".format( r, self.read_r16( r ) ) )
 			else:
 				print( "" )
-		self.write_r16( 0x0000 + logical_channel )
+		self.write_r16( 0x0000 + logical_channel_num )
 
 		for r, v in zip( self.ch_cnfg_reg, list ):
 			self.write_r16( r, v )
 		self.dump( [ 0x20, 0x21, 0x22, 0x23 ] )
 		
 		mask	= 1
-		bits	= self.read_r16( 0x24 ) | mask << logical_channel
+		bits	= self.read_r16( 0x24 ) | mask << logical_channel_num
 		self.write_r16( 0x24, bits )
 		
 		print( f"bits = {bits}" )
@@ -261,9 +267,9 @@ class NAFE13388( AFE_base, SPI_target ):
 		cc0	= list[ 0 ]
 		
 		if cc0 & 0x0010:
-			self.coeff_microvolt[ logical_channel ]	= ((10.0 / (1 << 24)) / self.pga_gain[ (cc0 >> 5) & 0x7 ]) * 1e6
+			self.coeff_microvolt[ logical_channel_num ]	= ((10.0 / (1 << 24)) / self.pga_gain[ (cc0 >> 5) & 0x7 ]) * 1e6
 		else:
-			self.coeff_microvolt[ logical_channel ]	= (4.0 / (1 << 24)) * 1e6;
+			self.coeff_microvolt[ logical_channel_num ]	= (4.0 / (1 << 24)) * 1e6;
 
 		
 		self.num_logcal_ch	= 0
