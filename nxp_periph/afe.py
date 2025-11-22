@@ -78,9 +78,12 @@ class NAFE13388( AFE_base, SPI_target ):
 		"""
 
 		self.logical_channel	= [
-									self.logical_ch_config( 0, [ 0x22F0, 0x70AC, 0x5800, 0x0000 ] ),
+									self.logical_ch_config( 0, [ 0x22F0, 0x80B4, 0x5800, 0xA608 ] ),
 									self.logical_ch_config( 1, [ 0x33F0, 0x70B1, 0x5800, 0x3820 ] ),
 									]
+		
+		self.write_r24( 0x98, self.read_r24( 0xA3 ) )	# Set OPT_COEF3 into OFFSET_COEF8
+		self.write_r24( 0x88, self.read_r24( 0xA4 ) )	# Set OPT_COEF4 into GAIN_COEF8
 
 		"""
 		for i in range( 4 ):
@@ -94,7 +97,6 @@ class NAFE13388( AFE_base, SPI_target ):
 		self.done	= False
 		
 		self.write_r16( 0x2003 )	# CMD_MC
-		#	self.write_r16( 0x2001 )	# CMD_SC
 		
 	def periodic_measurement_start( self ):
 		"""
@@ -137,7 +139,6 @@ class NAFE13388( AFE_base, SPI_target ):
 			
 		"""
 		reg		<<= 1
-	
 		regH	= reg >> 8 & 0xFF
 		regL	= reg & 0xFF
 
@@ -145,7 +146,7 @@ class NAFE13388( AFE_base, SPI_target ):
 			self.send( [ regH, regL ] )
 		else:
 			valH	= val >> 8 & 0xFF
-			valL	= val & 0xFF
+			valL	= val      & 0xFF
 			self.send( [ regH, regL, valH, valL ] )
 
 	def	read_r16( self, reg, signed = False ):
@@ -167,12 +168,34 @@ class NAFE13388( AFE_base, SPI_target ):
 		reg		<<= 1
 		reg		|= 0x4000
 		regH	= reg >> 8 & 0xFF
-		regL	= reg & 0xFF
+		regL	= reg      & 0xFF
 
 		data	= bytearray( [ regH, regL, 0xFF, 0xFF ] )
 		self.__if.write_readinto( data, data )
 		
 		return unpack( ">h" if signed else ">H", data[2:] )[ 0 ]
+
+	def	write_r24( self, reg, val ):
+		"""
+		writing 16bit register
+	
+		Parameters
+		----------
+		reg : int
+			Register address/pointer.
+		val : int
+			16bit data
+			
+		"""
+		reg		<<= 1
+		regH	= reg >> 8 & 0xFF
+		regL	= reg & 0xFF
+
+		valH	= val >> 16 & 0xFF
+		valM	= val >>  8 & 0xFF
+		valL	= val       & 0xFF
+		self.send( [ regH, regL, valH, valM, valL ] )
+
 
 	def	read_r24( self, reg ):
 		"""
@@ -191,7 +214,7 @@ class NAFE13388( AFE_base, SPI_target ):
 		reg		<<= 1
 		reg		|= 0x4000
 		regH	= reg >> 8 & 0xFF
-		regL	= reg & 0xFF
+		regL	= reg      & 0xFF
 
 		data	= bytearray( [ regH, regL, 0xFF, 0xFF, 0xFF ] )
 		self.__if.write_readinto( data, data )

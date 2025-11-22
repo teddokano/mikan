@@ -11,6 +11,8 @@ from	demo_lib	import	DUT_base
 
 import	machine
 
+thermo_couple	= False
+
 DEFAULT_SETTING_FILE	= "demo_lib/local_setting/AFE_default_setting.json"
 UPDATED_SETTING_FILE	= "demo_lib/local_setting/AFE_updated_setting.json"
 
@@ -96,17 +98,24 @@ class DUT_AFE( DUT_base.DUT_base ):
 	def temperature( self ):
 		t	= self.dev.ch[ 0 ]
 		
-		if self.setting[ "temperature" ][ "select" ] == 0:
-			base	= self.setting[ "temperature" ][ "base" ]
-		elif self.setting[ "temperature" ][ "select" ] == 1:
-			if self.setting[ "temperature" ][ "measured" ] is None:
+		if thermo_couple:
+			if self.setting[ "temperature" ][ "select" ] == 0:
 				base	= self.setting[ "temperature" ][ "base" ]
+			elif self.setting[ "temperature" ][ "select" ] == 1:
+				if self.setting[ "temperature" ][ "measured" ] is None:
+					base	= self.setting[ "temperature" ][ "base" ]
+				else:
+					base	= self.setting[ "temperature" ][ "measured" ]
 			else:
-				base	= self.setting[ "temperature" ][ "measured" ]
-		else:
-			base	= self.dev.die_temp()
+				base	= self.dev.die_temp()
+				
+			return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + base
+		
+		else:	#RTD
+			r	= t / 250
 			
-		return (t - self.setting[ "temperature" ][ "ofst" ]) * self.setting[ "temperature" ][ "coeff" ] + base
+			return (r / 100 - 1) / 0.00385
+			
 		
 	def weight( self ):
 		w	= self.dev.ch[ 1 ]
