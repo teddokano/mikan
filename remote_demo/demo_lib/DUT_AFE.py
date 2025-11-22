@@ -37,8 +37,6 @@ class DUT_AFE( DUT_base.DUT_base ):
 
 		self.setting[ "weight"      ][ "ofst"  ]	= -38
 		self.setting[ "weight"      ][ "coeff" ]	= 1044 / (354 - self.setting[ "weight" ][ "ofst" ])
-		# self.setting[ "weight"      ][ "ofst"  ]	= -24
-		# self.setting[ "weight"      ][ "coeff" ]	= 2
 		self.setting[ "temperature" ][ "ofst"  ]	= -70
 		self.setting[ "temperature" ][ "coeff" ]	= 1 / 40
 		self.setting[ "temperature" ][ "base"  ]	= 25

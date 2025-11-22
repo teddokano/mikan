@@ -197,15 +197,8 @@ class NAFE13388( AFE_base, SPI_target ):
 		Boot-up procedure
 		"""
 		reg_init	= [
-						{	0x0010: None, 
-							0x002A: 0x0000,
-							0x002B: 0x0000,
-							0x002C: 0x0000,
-							0x002F: 0x0000,
-							0x0029: 0x0000,
-							},
-						{	0x0030: 0x0010, 
-							},
+						{	0x0010: None	},
+						{	0x0030: 0x0010	},
 					]
 					
 		for step in reg_init:
