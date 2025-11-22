@@ -76,16 +76,25 @@ class NAFE13388( AFE_base, SPI_target ):
 									self.logical_ch_config( 1, [ 0x2070, 0x0084, 0x2900, 0x0000 ] ),
 									]
 		"""
+
+		self.logical_channel	= [
+									self.logical_ch_config( 0, [ 0x22F0, 0x70AC, 0x5800, 0x0000 ] ),
+									self.logical_ch_config( 1, [ 0x33F0, 0x70B1, 0x5800, 0x3820 ] ),
+									]
+
+		"""
 		for i in range( 4 ):
 			self.logical_ch_config( i * 2 + 0, [ cc_base[0] | ((i + 1) << 12) | (7       << 8), cc_base[1], cc_base[2], cc_base[3] ] )
 			self.logical_ch_config( i * 2 + 1, [ cc_base[0] | (7       << 12) | ((i + 1) << 8), cc_base[1], cc_base[2], cc_base[3] ] )
-			
+		"""
+		
 		print( f"================ self.num_logcal_ch = {self.num_logcal_ch}" )
 
 		self.ch		= [ 0 ] * self.num_logcal_ch
 		self.done	= False
 		
 		self.write_r16( 0x2003 )	# CMD_MC
+		#	self.write_r16( 0x2001 )	# CMD_SC
 		
 	def periodic_measurement_start( self ):
 		"""
@@ -357,6 +366,9 @@ def main():
 
 	afe.periodic_measurement_start()
 
+	offset	= 0.00013948343694210
+	coeff	= 500.00 / (0.00035724453628063 - offset)
+
 	while True:
 		if afe.done:
 			afe.done	= False
@@ -364,7 +376,13 @@ def main():
 
 			for i in range( afe.num_logcal_ch ):
 #				print( f">ch{i}: {afe.ch[i] / 1000_000}" )
-				print( f"{afe.ch[i] / 1000_000}, ", end = "" )
+				voltage	= afe.ch[i] / 1000_000
+				print( f"{voltage}, ", end = "" )
+
+				gram	= (voltage - offset) * coeff
+				
+				print( f"{gram}", end = "" )
+
 
 			print( "" )
 				
