@@ -64,7 +64,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 											"get_data"	: self.temperature,
 											"setting"	: graph_setting( 	[	{ "label": "temperature", "color": "rgba( 0, 128,   0, 1 )"},
 																			], 
-																			title	= 'temperature', 
+																			title	= 'temperature (RTD)', 
 																			xlabel	= 'time',
 																			ylabel	= 'temperature [℃]',
 																			minmax	= ( self.setting[ "scales" ][ 0 ][ "min" ], self.setting[ "scales" ][ 0 ][ "max" ] )
@@ -76,7 +76,7 @@ class DUT_AFE( DUT_base.DUT_base ):
 											"get_data"	: self.weight,
 											"setting"	: graph_setting( 	[	{ "label": "weight", "color": "rgba( 0,   0, 255, 1 )"},
 																			 ], 
-																			 title	= 'weight', 
+																			 title	= 'weight (Load cell)', 
 																			 xlabel	= 'time',
 																			 ylabel	= 'weight [g]',
 																			 minmax	= ( self.setting[ "scales" ][ 1 ][ "min" ], self.setting[ "scales" ][ 1 ][ "max" ] )
