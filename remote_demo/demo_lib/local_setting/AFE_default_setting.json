@@ -16,12 +16,12 @@
 		{
 			"max":	35, 
 			"min":	20,
-			"text":	"temperature",
+			"text":	"temperature (RTD)",
 		},
 		{
 			"max":	1200, 
 			"min":	-10,
-			"text":	"weight"
+			"text":	"weight (Load cell)"
 		}
 	],
 	"remark": "AFE demo default setting file"
