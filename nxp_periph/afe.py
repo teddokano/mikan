@@ -404,7 +404,7 @@ def main():
 
 				gram	= (voltage - offset) * coeff
 				
-				print( f"{gram}", end = "" )
+				print( f"{gram}, ", end = "" )
 
 
 			print( "" )

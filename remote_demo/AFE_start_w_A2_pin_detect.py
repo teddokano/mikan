@@ -20,7 +20,7 @@ def main():
 		demo( config = "AFE" )
 	"""
 	
-	demo( ip = (	"192.168.1.1", 		#	IP address
+	demo( ip = (	"192.168.1.77", 		#	IP address
 					"255.255.255.0", 	#	Subnet mask
 					"10.0.0.1", 		#	Gateway
 					"0.0.0.0" 			#	DNS
